@@ -543,30 +543,216 @@ class MarkdownTutorialApp {
     // Copy buttons are added client-side after rendering
     
     private function renderHomePage() {
-        return '
+        // Stats and dynamic sections
+        $stats = $this->getTutorialStats();
+        $categories = $this->getTopCategories();
+        $recent = $this->getRecentTutorials(6);
+        $random = $this->getRandomTutorial();
+
+        ob_start();
+        ?>
         <div class="content-wrapper">
             <div class="home-page">
                 <h1><i class="fas fa-book-open"></i> Welcome to Markdown Tutorials</h1>
-                <p>Navigate through the tutorials using the sidebar on the left. Each tutorial includes:</p>
-                <div class="features">
+                <p>Find concise, practical guides. Use the sidebar search, browse by category, or jump into something new.</p>
+
+                <!-- Quick actions -->
+                <div class="tutorial-actions" style="display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;">
+                    <button class="btn" onclick="(function(){const s=document.getElementById('navigationSearch'); if(s){s.focus(); s.select();}})()" title="Focus the sidebar search">
+                        <i class="fas fa-search"></i> Search tutorials
+                    </button>
+                    <?php if (!empty($random)) { ?>
+                    <a class="btn-secondary" href="?page=<?php echo rawurlencode($random['page']); ?>" title="Open a random tutorial">
+                        <i class="fas fa-shuffle"></i> Random tutorial
+                    </a>
+                    <?php } ?>
+                    <a class="btn-secondary" href="?page=tutorials" onclick="return false;" style="display:none"></a>
+                </div>
+
+                <!-- Stats -->
+                <div class="features" style="margin-top:10px;">
                     <div class="feature">
-                        <i class="fas fa-code"></i>
-                        <h3>Syntax Highlighting</h3>
-                        <p>All code blocks are highlighted with Highlight.js for better readability</p>
+                        <i class="fas fa-file-alt"></i>
+                        <h3><?php echo (int)$stats['totalTutorials']; ?> Tutorials</h3>
+                        <p>Total number of guides available.</p>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-copy"></i>
-                        <h3>Copy to Clipboard</h3>
-                        <p>Each code block has a copy button for easy copying</p>
+                        <i class="fas fa-folder-tree"></i>
+                        <h3><?php echo (int)$stats['totalCategories']; ?> Categories</h3>
+                        <p>Top-level sections to explore.</p>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-sitemap"></i>
-                        <h3>Organized Structure</h3>
-                        <p>Tutorials are organized in folders and subfolders for easy navigation</p>
+                        <i class="fas fa-clock"></i>
+                        <h3>Updated <?php echo htmlspecialchars($stats['lastUpdatedAgo']); ?></h3>
+                        <p>Latest content refresh time.</p>
                     </div>
                 </div>
+
+                <!-- Browse by category -->
+                <div class="content-section" style="margin-top:18px;">
+                    <h2><i class="fas fa-sitemap"></i> Browse by category</h2>
+                    <div class="folder-grid">
+                        <?php if (empty($categories)) { ?>
+                            <div class="empty-folder"><i class="fas fa-inbox"></i><p>No categories found.</p></div>
+                        <?php } else { foreach ($categories as $cat) { ?>
+                            <div class="folder-card">
+                                <a href="?page=<?php echo rawurlencode($cat['page']); ?>">
+                                    <i class="fas fa-folder-open"></i>
+                                    <span><?php echo htmlspecialchars($cat['title']); ?></span>
+                                    <span style="opacity:.75;font-size:.9em;">(<?php echo (int)$cat['count']; ?>)</span>
+                                    <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        <?php }} ?>
+                    </div>
+                </div>
+
+                <!-- Recently added -->
+                <div class="content-section" style="margin-top:18px;">
+                    <h2><i class="fas fa-sparkles"></i> Recently added</h2>
+                    <div class="file-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
+                        <?php if (empty($recent)) { ?>
+                            <div class="file-card"><div style="padding:16px;opacity:.8;">No recent tutorials yet.</div></div>
+                        <?php } else { foreach ($recent as $item) { ?>
+                            <div class="file-card">
+                                <a href="?page=<?php echo rawurlencode($item['page']); ?>" title="<?php echo htmlspecialchars($item['title']); ?>">
+                                    <i class="fas fa-file-alt"></i>
+                                    <span><?php echo htmlspecialchars($item['title']); ?></span>
+                                    <span style="opacity:.75;font-size:.9em;"><?php echo htmlspecialchars($item['ago']); ?></span>
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        <?php }} ?>
+                    </div>
+                </div>
+
+                <!-- Getting started -->
+                <div class="content-section" style="margin-top:18px;">
+                    <h2><i class="fas fa-road"></i> Getting started</h2>
+                    <ul style="line-height:1.8; margin-left: 1rem;">
+                        <li>Use the sidebar search to filter tutorials quickly.</li>
+                        <li>Open a category to browse its guides; each page shows a table of contents.</li>
+                        <li>Use copy buttons on code blocks to grab commands and snippets.</li>
+                    </ul>
+                </div>
             </div>
-        </div>';
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    private function getTopCategories() {
+        $root = $this->baseDir . '/tutorials';
+        $out = [];
+        if (!is_dir($root)) return $out;
+
+        if ($handle = opendir($root)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry[0] === '.') continue;
+                $full = $root . '/' . $entry;
+                if (is_dir($full)) {
+                    $count = $this->countMarkdownFiles($full);
+                    $out[] = [
+                        'title' => ucwords(str_replace(['-', '_'], ' ', $entry)),
+                        'page' => $entry,
+                        'count' => $count,
+                    ];
+                }
+            }
+            closedir($handle);
+        }
+
+        usort($out, function($a, $b){
+            // Sort by name ascending
+            return strcmp($a['title'], $b['title']);
+        });
+
+        return $out;
+    }
+
+    private function countMarkdownFiles($dir) {
+        $count = 0;
+        if (!is_dir($dir)) return 0;
+        if ($handle = opendir($dir)) {
+            while (false !== ($entry = readdir($handle))) {
+                if ($entry[0] === '.') continue;
+                $full = $dir . '/' . $entry;
+                if (is_dir($full)) {
+                    $count += $this->countMarkdownFiles($full);
+                } elseif (pathinfo($entry, PATHINFO_EXTENSION) === 'md') {
+                    $count++;
+                }
+            }
+            closedir($handle);
+        }
+        return $count;
+    }
+
+    private function getRecentTutorials($limit = 6) {
+        $all = $this->getAllTutorials();
+        foreach ($all as &$t) {
+            $t['mtime'] = @filemtime($t['path']) ?: 0;
+        }
+        unset($t);
+        usort($all, function($a, $b){ return $b['mtime'] <=> $a['mtime']; });
+        $slice = array_slice($all, 0, $limit);
+        foreach ($slice as &$t) {
+            $t['ago'] = $this->relativeTime($t['mtime']);
+        }
+        unset($t);
+        return $slice;
+    }
+
+    private function getTutorialStats() {
+        $all = $this->getAllTutorials();
+        $total = count($all);
+        $root = $this->baseDir . '/tutorials';
+        $categories = 0;
+        if (is_dir($root) && ($h = opendir($root))) {
+            while (false !== ($e = readdir($h))) {
+                if ($e[0] === '.') continue;
+                if (is_dir($root . '/' . $e)) $categories++;
+            }
+            closedir($h);
+        }
+        $lastUpdated = 0;
+        foreach ($all as $t) {
+            $lastUpdated = max($lastUpdated, @filemtime($t['path']) ?: 0);
+        }
+        return [
+            'totalTutorials' => $total,
+            'totalCategories' => $categories,
+            'lastUpdated' => $lastUpdated,
+            'lastUpdatedAgo' => $lastUpdated ? $this->relativeTime($lastUpdated) : 'n/a',
+        ];
+    }
+
+    private function getRandomTutorial() {
+        $all = $this->getAllTutorials();
+        if (empty($all)) return null;
+        $idx = random_int(0, count($all) - 1);
+        return $all[$idx];
+    }
+
+    private function relativeTime($timestamp) {
+        if (!$timestamp) return 'n/a';
+        $diff = time() - $timestamp;
+        if ($diff < 60) return 'just now';
+        $units = [
+            31536000 => 'year',
+            2592000  => 'month',
+            604800   => 'week',
+            86400    => 'day',
+            3600     => 'hour',
+            60       => 'minute',
+        ];
+        foreach ($units as $secs => $name) {
+            if ($diff >= $secs) {
+                $val = floor($diff / $secs);
+                return $val . ' ' . $name . ($val > 1 ? 's' : '') . ' ago';
+            }
+        }
+        return 'just now';
     }
     
     private function render404() {
