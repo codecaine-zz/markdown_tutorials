@@ -2,6 +2,28 @@
 
 A modern web application for browsing and viewing markdown-based tutorials with syntax highlighting, navigation, and responsive design.
 
+## Related: neu_markdown_buddy (desktop, web, cloud)
+
+If you prefer a native desktop experience, check out neu_markdown_buddy — a cross‑platform NeutralinoJS port of this project for macOS, Windows, and Linux.
+
+- Repository: [codecaine-zz/neu_markdown_buddy](https://github.com/codecaine-zz/neu_markdown_buddy)
+- Platforms: macOS, Windows, Linux (desktop); core UI also runs in a regular browser
+- Highlights: advanced navigation, smart search, ToC, code copy, theme + zoom, random tutorial, and persistent UI state
+
+Quick desktop start (summary):
+
+- Install Node.js or Bun and the NeutralinoJS CLI (@neutralinojs/neu)
+- In the neu_markdown_buddy repo: run `neu update`, then `neu run` for dev or `neu build` for distributable binaries
+
+Use your existing tutorials with the desktop app:
+
+- Copy or symlink this repo’s `tutorials/` into neu_markdown_buddy at `resources/tutorials/` to browse the same content in the desktop UI
+
+Website/cloud usage options:
+
+- Host this PHP app (current repo) on any PHP-capable server or platform (see Installation below)
+- Or serve neu_markdown_buddy’s `resources/` (index.html, styles, main.js, libs) as a static site; desktop‑only features (e.g., tray, always‑on‑top, native FS access) won’t apply in browsers, but the core reader/navigation work well
+
 ## Features
 
 - 📚 **Interactive Tutorial Browser** - Navigate through organized tutorial collections
