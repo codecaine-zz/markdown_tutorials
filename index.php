@@ -34,6 +34,10 @@ class MarkdownTutorialApp {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Markdown Tutorials</title>
+            <!-- Site favicon -->
+            <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+            <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg">
+            <meta name="theme-color" content="#0f172a">
             <!-- Highlight.js with comprehensive language support -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
             <link rel="stylesheet" href="assets/css/style.css">

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Markdown Tutorials favicon">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="12" ry="12" fill="#0f172a"/>
+  <rect x="8" y="8" width="48" height="48" rx="10" ry="10" fill="#111827"/>
+  <g fill="none" stroke="url(#g)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Brackets like Markdown -->
+    <path d="M20 24 v16 M20 24 h8 M20 40 h8"/>
+    <path d="M44 24 v16 M36 24 h8 M36 40 h8"/>
+  </g>
+  <!-- M monogram -->
+  <path d="M18 46 L26 30 L32 38 L38 30 L46 46" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
