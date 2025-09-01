@@ -17,6 +17,9 @@ A modern web application for browsing and viewing markdown-based tutorials with 
 - 🌗 **Theme Toggle** - Light/Dark theme with instant switch and saved preference
 - 🔎 **Zoom Controls** - 80–180% zoom with live indicator and persistence
 - 💾 **Persistent UI State** - Remembers theme, zoom level, sidebar width, and folder open/closed states
+- 🧮 **Homepage Insights** - Stats (total tutorials, categories, last updated), browse-by-category, and recently added list
+- 🎲 **Random Tutorial** - Jump to a randomly selected guide from the homepage
+- 🖼️ **SVG Favicon + Theme Color** - Crisp tab icon and browser UI color via `<link rel="icon">` and `meta theme-color`
 
 ## Screenshots
 
@@ -166,6 +169,7 @@ def hello_world():
 
 ```text
 markdown_tutorials/
+├── favicon.svg              # SVG site favicon
 ├── index.php                 # Main application entry point
 ├── assets/
 │   ├── css/
@@ -182,6 +186,17 @@ markdown_tutorials/
 │   └── parsedown/           # Markdown parser
 └── README.md                # This file
 ```
+
+## Homepage Overview
+
+The homepage now helps you get to content faster:
+
+- Stats summary: total tutorials, total categories, and the time since the latest update
+- Quick actions: focus the sidebar search and open a random tutorial
+- Browse by category: top-level folders with tutorial counts
+- Recently added: most recently updated tutorials with “time ago” labels
+
+These sections are generated dynamically from the `tutorials/` directory.
 
 ## Key Features Explained
 
@@ -239,7 +254,15 @@ markdown_tutorials/
 
 ### What’s New
 
-Latest UI improvements bring a top toolbar, dark/light theme toggle, zoom controls with a live indicator, batch expand/collapse for the sidebar, and persistence of user preferences (theme, zoom, sidebar state, and folder states). This aligns the PHP app’s UX closer to the neu_markdown_buddy experience while staying fully web-based.
+Latest updates:
+
+- New homepage insights panel with quick actions (focus search, random tutorial), stats, browse-by-category, and recently added tutorials
+- Added SVG favicon (`favicon.svg`) and `theme-color` for better browser tab and mobile UI integration
+
+Previously shipped:
+
+- Top toolbar, dark/light theme toggle, zoom controls with live indicator
+- Batch expand/collapse for the sidebar and persistent UI state (theme, zoom, sidebar width, folder states)
 
 ### Syntax Highlighting
 
@@ -260,6 +283,15 @@ Latest UI improvements bring a top toolbar, dark/light theme toggle, zoom contro
 - **Collapsible sidebar** on small screens
 - **Touch-friendly** navigation elements
 - **Readable typography** across all devices
+
+## Favicon and Theme Color
+
+- Favicon lives at the repo root as `favicon.svg`
+- Included via:
+  - `<link rel="icon" type="image/svg+xml" href="/favicon.svg">`
+  - `<meta name="theme-color" content="#0f172a">`
+
+Modern browsers will show the SVG in the tab bar and use the theme color for UI accents (especially on mobile).
 
 ## Development
 
