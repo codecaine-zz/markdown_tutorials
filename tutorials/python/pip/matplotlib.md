@@ -12,6 +12,15 @@
 8. [Working with Colors and Styles](#working-with-colors-and-styles)
 9. [Interactive Features and Animation](#interactive-features-and-animation)
 10. [Best Practices and Tips](#best-practices-and-tips)
+11. [Optimized, reusable utility functions (copy-paste cookbook)](#optimized-reusable-utility-functions-copy-paste-cookbook)
+    - [Figure and axes helpers](#figure-and-axes-helpers)
+    - [Styling and themes](#styling-and-themes)
+    - [Annotations and labels](#annotations-and-labels)
+    - [Legends and colorbars](#legends-and-colorbars)
+    - [Grids and layout](#grids-and-layout)
+    - [Saving and exporting utilities](#saving-and-exporting-utilities)
+    - [Performance utilities](#performance-utilities)
+    - [Misc utilities](#misc-utilities)
 
 ---
 
@@ -564,6 +573,223 @@ plt.show()
 # Reset to default style
 plt.rcParams.update(plt.rcParamsDefault)
 ```
+
+## Optimized, reusable utility functions (copy-paste cookbook)
+
+Drop these into a `mpl_utils.py` module and import as needed. They focus on readable, DRY patterns and consistent, publication-ready output.
+
+```python
+# mpl_utils.py
+from __future__ import annotations
+
+import contextlib
+from dataclasses import dataclass
+from typing import Iterable, Sequence, Tuple
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+# =========================
+# Figure and axes helpers
+# =========================
+
+def new_fig_ax(size: Tuple[float, float] = (8, 6)) -> tuple[plt.Figure, plt.Axes]:
+    fig, ax = plt.subplots(figsize=size)
+    return fig, ax
+
+
+def subplots_grid(nrows: int, ncols: int, *, sharex: bool = False, sharey: bool = False, size=(12, 8)):
+    fig, axes = plt.subplots(nrows, ncols, figsize=size, sharex=sharex, sharey=sharey)
+    return fig, axes
+
+
+def despine(ax: plt.Axes, top: bool = True, right: bool = True, left: bool = False, bottom: bool = False) -> plt.Axes:
+    ax.spines['top'].set_visible(not top is True)
+    ax.spines['right'].set_visible(not right is True)
+    if left:
+        ax.spines['left'].set_visible(False)
+    if bottom:
+        ax.spines['bottom'].set_visible(False)
+    return ax
+
+
+def apply_grid(ax: plt.Axes, *, alpha: float = 0.3, which: str = 'major', linestyle: str = '--') -> plt.Axes:
+    ax.grid(True, alpha=alpha, which=which, linestyle=linestyle)
+    return ax
+
+
+# =========================
+# Styling and themes
+# =========================
+
+@dataclass
+class PubStyle:
+    figsize: Tuple[float, float] = (8, 6)
+    dpi: int = 300
+    font_size: int = 12
+    label_size: int = 14
+    title_size: int = 16
+    lw: float = 2.0
+
+
+def use_pub_style(s: PubStyle = PubStyle()) -> None:
+    params = {
+        'figure.figsize': s.figsize,
+        'figure.dpi': s.dpi,
+        'savefig.dpi': s.dpi,
+        'font.size': s.font_size,
+        'axes.labelsize': s.label_size,
+        'axes.titlesize': s.title_size,
+        'lines.linewidth': s.lw,
+        'legend.fontsize': s.font_size,
+    }
+    plt.rcParams.update(params)
+
+
+@contextlib.contextmanager
+def style_context(style: str | dict):
+    if isinstance(style, dict):
+        old = plt.rcParams.copy()
+        try:
+            plt.rcParams.update(style)
+            yield
+        finally:
+            plt.rcParams.update(old)
+    else:
+        with plt.style.context(style):
+            yield
+
+
+# =========================
+# Annotations and labels
+# =========================
+
+def annotate_point(ax: plt.Axes, x: float, y: float, text: str, *, xytext=(10, 10)) -> None:
+    ax.annotate(text, xy=(x, y), xytext=xytext, textcoords='offset points',
+                arrowprops=dict(arrowstyle='->', color='0.3'))
+
+
+def label_axes(ax: plt.Axes, title: str | None = None, xlabel: str | None = None, ylabel: str | None = None) -> plt.Axes:
+    if title:
+        ax.set_title(title)
+    if xlabel:
+        ax.set_xlabel(xlabel)
+    if ylabel:
+        ax.set_ylabel(ylabel)
+    return ax
+
+
+# =========================
+# Legends and colorbars
+# =========================
+
+def add_legend(ax: plt.Axes, loc: str = 'best', frameon: bool = True) -> plt.Axes:
+    ax.legend(loc=loc, frameon=frameon)
+    return ax
+
+
+def add_colorbar(mappable, ax: plt.Axes, label: str | None = None):
+    cb = plt.colorbar(mappable, ax=ax)
+    if label:
+        cb.set_label(label)
+    return cb
+
+
+# =========================
+# Grids and layout
+# =========================
+
+def tight_layout(fig: plt.Figure) -> None:
+    fig.tight_layout()
+
+
+def set_equal_aspect(ax: plt.Axes) -> plt.Axes:
+    ax.set_aspect('equal', adjustable='box')
+    return ax
+
+
+# =========================
+# Saving and exporting utilities
+# =========================
+
+def save_all(fig: plt.Figure, basename: str, *, dpi: int = 300, tight: bool = True) -> None:
+    if tight:
+        fig.tight_layout()
+    fig.savefig(f'{basename}.png', dpi=dpi, bbox_inches='tight')
+    fig.savefig(f'{basename}.pdf', bbox_inches='tight')
+    fig.savefig(f'{basename}.svg', bbox_inches='tight')
+
+
+# =========================
+# Performance utilities
+# =========================
+
+def scatter_fast(ax: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs) -> None:
+    """Scatter with rasterization for large datasets."""
+    kwargs.setdefault('s', 1)
+    kwargs.setdefault('alpha', 0.3)
+    kwargs.setdefault('rasterized', True)
+    ax.scatter(x, y, **kwargs)
+
+
+def hexbin_density(ax: plt.Axes, x: np.ndarray, y: np.ndarray, gridsize: int = 50, cmap: str = 'Blues'):
+    hb = ax.hexbin(x, y, gridsize=gridsize, cmap=cmap)
+    add_colorbar(hb, ax, label='Count')
+    return hb
+
+
+# =========================
+# Misc utilities
+# =========================
+
+def line(ax: plt.Axes, x: np.ndarray, y: np.ndarray, label: str | None = None, **kwargs) -> plt.Axes:
+    ax.plot(x, y, label=label, **kwargs)
+    return ax
+
+
+def vlines(ax: plt.Axes, xs: Iterable[float], ymin: float, ymax: float, **kwargs) -> plt.Axes:
+    ax.vlines(list(xs), ymin, ymax, **kwargs)
+    return ax
+
+
+def hlines(ax: plt.Axes, ys: Iterable[float], xmin: float, xmax: float, **kwargs) -> plt.Axes:
+    ax.hlines(list(ys), xmin, xmax, **kwargs)
+    return ax
+```
+
+### Figure and axes helpers
+
+- `new_fig_ax`, `subplots_grid`, `despine`, `apply_grid`.
+
+### Styling and themes
+
+- `PubStyle`, `use_pub_style`, `style_context`.
+
+### Annotations and labels
+
+- `annotate_point`, `label_axes`.
+
+### Legends and colorbars
+
+- `add_legend`, `add_colorbar`.
+
+### Grids and layout
+
+- `tight_layout`, `set_equal_aspect`.
+
+### Saving and exporting utilities
+
+- `save_all`.
+
+### Performance utilities
+
+- `scatter_fast`, `hexbin_density`.
+
+### Misc utilities
+
+- `line`, `vlines`, `hlines`.
 
 ## Interactive Features and Animation
 

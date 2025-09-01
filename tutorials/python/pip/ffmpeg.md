@@ -1,142 +1,486 @@
-# FFmpeg with Python: Complete Tutorial
+# FFmpeg + Python: Installation and Safe Processing (pip)
 
-FFmpeg is a powerful multimedia framework that can decode, encode, transcode, mux, demux, stream, filter, and play audio and video files. This tutorial covers how to use FFmpeg with Python through various libraries.
+## Table of Contents
 
-## Installation
+1. [Overview](#overview)
+2. [Prerequisites](#prerequisites)
+3. [Install FFmpeg](#install-ffmpeg)
+4. [Install Python packages](#install-python-packages)
+5. [Verify dependencies](#verify-dependencies)
+6. [Helper module (functions)](#helper-module-functions)
+   - [Core validators](#core-validators)
+   - [Video helpers](#video-helpers)
+   - [Audio helpers](#audio-helpers)
+   - [Info and quality checks](#info-and-quality-checks)
+   - [Batch processing](#batch-processing)
+7. [Using the helpers (demo)](#using-the-helpers-demo)
+8. [Troubleshooting](#troubleshooting)
+9. [Best practices and security](#best-practices-and-security)
+10. [Next steps](#next-steps)
 
-### Installing FFmpeg
+---
 
-**macOS (using Homebrew):**
+## Overview
+
+FFmpeg is a powerful multimedia toolkit for decoding, encoding, transcoding, muxing, demuxing, streaming, filtering, and playing audio/video. This guide shows how to set it up and use it safely from Python with small, reusable functions.
+
+## Prerequisites
+
+- macOS, Linux, or Windows
+- Python 3.8+ (3.10–3.12 recommended)
+- Sufficient disk space for media outputs
+
+## Install FFmpeg
+
+### macOS (Homebrew)
 
 ```bash
 brew install ffmpeg
 ```
 
-**Ubuntu/Debian:**
+### Ubuntu/Debian
 
 ```bash
 sudo apt update
-sudo apt install ffmpeg
+sudo apt install -y ffmpeg
 ```
 
-**Windows:**
-Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH.
+### Windows
 
-### Python Libraries
+- Download from: [ffmpeg.org/download.html](https://ffmpeg.org/download.html)
+- Extract and add the bin folder to PATH
+
+## Install Python packages
 
 ```bash
-# FFmpeg-python - Pythonic interface to FFmpeg
-pip install ffmpeg-python
-
-# PyDub - High-level audio manipulation
-pip install pydub
-
-# MoviePy - Video editing library
-pip install moviepy
-
-# OpenCV - Computer vision and video processing
-pip install opencv-python
+python3 -m pip install --upgrade pip
+python3 -m pip install ffmpeg-python pydub moviepy opencv-python
 ```
 
-### Dependency Verification
-
-Before using any FFmpeg functionality, it's crucial to verify that all dependencies are properly installed:
+## Verify dependencies
 
 ```python
+# deps_check.py
+import subprocess
+
 def check_dependencies():
-    """Check if all required dependencies are available."""
-    dependencies = {
-        'ffmpeg_system': False,
-        'ffmpeg_python': False,
-        'pydub': False,
-        'moviepy': False
+    """Return a dict of dependency availability."""
+    results = {
+        "ffmpeg_system": False,
+        "ffmpeg_python": False,
+        "pydub": False,
+        "moviepy": False,
     }
-    
-    # Check system FFmpeg
+
     try:
-        result = subprocess.run(['ffmpeg', '-version'], 
-                              capture_output=True, text=True, timeout=10)
-        dependencies['ffmpeg_system'] = result.returncode == 0
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        dependencies['ffmpeg_system'] = False
-    
-    # Check Python packages
-    try:
-        import ffmpeg
-        dependencies['ffmpeg_python'] = True
-    except ImportError:
-        dependencies['ffmpeg_python'] = False
-    
-    try:
-        import pydub
-        dependencies['pydub'] = True
-    except ImportError:
-        dependencies['pydub'] = False
-    
-    try:
-        import moviepy
-        dependencies['moviepy'] = True
-    except ImportError:
-        dependencies['moviepy'] = False
-    
-    return dependencies
+        out = subprocess.run(["ffmpeg", "-version"], capture_output=True, text=True, timeout=10)
+        results["ffmpeg_system"] = out.returncode == 0
+    except Exception:
+        results["ffmpeg_system"] = False
+
+    for mod in ("ffmpeg", "pydub", "moviepy"):
+        try:
+            __import__(mod)
+            results[mod] = True
+        except Exception:
+            results[mod] = False
+
+    return results
 
 def print_dependency_status():
-    """Print status of all dependencies."""
     deps = check_dependencies()
-    print("📋 Dependency Status:")
-    print(f"  FFmpeg (system): {'✅' if deps['ffmpeg_system'] else '❌'}")
-    print(f"  ffmpeg-python:   {'✅' if deps['ffmpeg_python'] else '❌'}")
-    print(f"  PyDub:           {'✅' if deps['pydub'] else '❌'}")
-    print(f"  MoviePy:         {'✅' if deps['moviepy'] else '❌'}")
-    
-    if not all(deps.values()):
-        print("\n⚠️  Some dependencies are missing. Please install them before proceeding.")
-    else:
-        print("\n✅ All dependencies are installed!")
+    print("Dependency status:")
+    for k, v in deps.items():
+        print(f"  {k}: {'OK' if v else 'MISSING'}")
 
-# Run dependency check
 if __name__ == "__main__":
     print_dependency_status()
 ```
 
-## 1. Using ffmpeg-python
+---
 
-### Basic Setup and Validation
+## Helper module (functions)
+
+Copy the snippets below into a file named `ffmpeg_helpers.py` and import the functions in your projects.
+
+### Core validators
 
 ```python
-import ffmpeg
-import os
-import sys
-import subprocess
-from pathlib import Path
+# ffmpeg_helpers.py (core)
+from __future__ import annotations
 
-def validate_ffmpeg_installation():
-    """Validate that FFmpeg is properly installed."""
+import os
+import subprocess
+from contextlib import contextmanager
+from pathlib import Path
+from typing import Any, Dict, Iterable, List, Optional
+
+
+def validate_ffmpeg_installation() -> bool:
+    """Return True if system ffmpeg is available."""
     try:
-        result = subprocess.run(['ffmpeg', '-version'], 
-                              capture_output=True, text=True, timeout=10)
-        if result.returncode == 0:
-            print("✅ FFmpeg is installed and accessible")
-            return True
-        else:
-            print("❌ FFmpeg not found in PATH")
-            return False
-    except (subprocess.TimeoutExpired, FileNotFoundError) as e:
-        print(f"❌ Error checking FFmpeg: {e}")
+        res = subprocess.run(["ffmpeg", "-version"], capture_output=True, text=True, timeout=10)
+        return res.returncode == 0
+    except Exception:
         return False
 
-def validate_input_file(file_path):
-    """Validate input file exists and is accessible."""
-    path = Path(file_path)
-    if not path.exists():
+
+def validate_input_file(file_path: str) -> str:
+    """Ensure input path exists, is a file, and is readable; return absolute path."""
+    p = Path(file_path)
+    if not p.exists():
         raise FileNotFoundError(f"Input file does not exist: {file_path}")
-    if not path.is_file():
+    if not p.is_file():
         raise ValueError(f"Path is not a file: {file_path}")
-    if not os.access(file_path, os.R_OK):
+    if not os.access(str(p), os.R_OK):
         raise PermissionError(f"Cannot read file: {file_path}")
-    return str(path.resolve())
+    return str(p.resolve())
+
+
+def safe_output_path(output_path: str, overwrite: bool = False) -> str:
+    """Validate output path, create parent directories, and avoid dangerous locations."""
+    out = Path(output_path).resolve()
+
+    restricted = {Path("/"), Path("/usr"), Path("/etc"), Path("/bin"), Path("/sbin"), Path.home()}
+    for r in restricted:
+        try:
+            if hasattr(out, "is_relative_to") and out.is_relative_to(r):
+                # prevent writing directly in restricted dirs themselves
+                if len(out.parts) <= len(r.parts) + 1:
+                    raise ValueError(f"Refusing to write near restricted path: {out}")
+        except Exception:
+            # Python < 3.9 fallback: best-effort check via string prefix
+            if str(out).startswith(str(r)) and len(out.parts) <= len(r.parts) + 1:
+                raise ValueError(f"Refusing to write near restricted path: {out}")
+
+    if out.exists() and not overwrite:
+        raise FileExistsError(f"Output exists (use overwrite=True): {out}")
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    return str(out)
+
+
+@contextmanager
+def safe_temp_file(suffix: Optional[str] = None, prefix: Optional[str] = None):
+    """Yield a temporary file path and clean it up afterwards."""
+    import tempfile
+    temp_file = None
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix, prefix=prefix) as f:
+            temp_file = f.name
+        yield temp_file
+    finally:
+        if temp_file and os.path.exists(temp_file):
+            try:
+                os.unlink(temp_file)
+            except OSError:
+                pass
 ```
+
+### Video helpers
+
+```python
+# ffmpeg_helpers.py (video)
+import ffmpeg
+
+
+def convert_video_format(
+    input_path: str,
+    output_path: str,
+    format_options: Optional[Dict[str, Any]] = None,
+    overwrite: bool = False,
+) -> str:
+    """Convert video with sensible defaults and error handling."""
+    input_path = validate_input_file(input_path)
+    output_path = safe_output_path(output_path, overwrite)
+
+    opts: Dict[str, Any] = {
+        "vcodec": "libx264",
+        "acodec": "aac",
+        "crf": 23,
+        "preset": "medium",
+    }
+    if format_options:
+        opts.update(format_options)
+
+    try:
+        stream = ffmpeg.input(input_path)
+        stream = ffmpeg.output(stream, output_path, **opts)
+        ffmpeg.run(stream, overwrite_output=overwrite, quiet=True)
+        return output_path
+    except ffmpeg.Error as e:
+        err = None
+        if getattr(e, "stderr", None):
+            try:
+                err = e.stderr.decode("utf-8")
+            except Exception:
+                err = str(e.stderr)
+        raise RuntimeError(f"FFmpeg conversion failed: {err or str(e)}")
+
+
+def trim_video(input_path: str, output_path: str, start: float, end: float, overwrite: bool = False) -> str:
+    """Trim a video between start and end seconds."""
+    if start < 0 or end <= start:
+        raise ValueError("Invalid trim range")
+    input_path = validate_input_file(input_path)
+    output_path = safe_output_path(output_path, overwrite)
+    try:
+        stream = ffmpeg.input(input_path, ss=start, to=end)
+        stream = ffmpeg.output(stream, output_path, c="copy")  # fast trim if possible
+        ffmpeg.run(stream, overwrite_output=overwrite, quiet=True)
+        return output_path
+    except ffmpeg.Error as e:
+        raise RuntimeError(f"Video trimming failed: {e}")
+
+
+def resize_video(input_path: str, output_path: str, width: int, height: int, overwrite: bool = False) -> str:
+    """Resize video to exact dimensions (consider aspect beforehand)."""
+    if width <= 0 or height <= 0:
+        raise ValueError("Width and height must be positive")
+    input_path = validate_input_file(input_path)
+    output_path = safe_output_path(output_path, overwrite)
+    try:
+        stream = ffmpeg.input(input_path)
+        stream = ffmpeg.filter(stream, "scale", width, height)
+        stream = ffmpeg.output(stream, output_path, vcodec="libx264", acodec="aac")
+        ffmpeg.run(stream, overwrite_output=overwrite, quiet=True)
+        return output_path
+    except ffmpeg.Error as e:
+        raise RuntimeError(f"Video resize failed: {e}")
+```
+
+### Audio helpers
+
+```python
+# ffmpeg_helpers.py (audio)
+import ffmpeg
+
+
+def extract_audio(
+    input_path: str,
+    output_path: str,
+    audio_format: str = "mp3",
+    bitrate: str = "192k",
+    overwrite: bool = False,
+) -> str:
+    """Extract audio from a video with codec selection."""
+    input_path = validate_input_file(input_path)
+    output_path = safe_output_path(output_path, overwrite)
+
+    codecs = {
+        "mp3": "libmp3lame",
+        "wav": "pcm_s16le",
+        "aac": "aac",
+        "flac": "flac",
+        "ogg": "libvorbis",
+    }
+    if audio_format.lower() not in codecs:
+        raise ValueError(f"Unsupported audio format: {audio_format}")
+
+    try:
+        stream = ffmpeg.input(input_path)
+        stream = ffmpeg.output(stream, output_path, acodec=codecs[audio_format.lower()], vn=None, audio_bitrate=bitrate)
+        ffmpeg.run(stream, overwrite_output=overwrite, quiet=True)
+        return output_path
+    except ffmpeg.Error as e:
+        raise RuntimeError(f"Audio extraction failed: {e}")
+```
+
+### Info and quality checks
+
+```python
+# ffmpeg_helpers.py (info)
+import ffmpeg
+
+
+def get_media_info(input_path: str) -> Dict[str, Any]:
+    """Return ffprobe info with safe parsing for common fields."""
+    input_path = validate_input_file(input_path)
+    probe = ffmpeg.probe(input_path)
+    return probe
+
+
+def print_media_info(input_path: str) -> None:
+    info = get_media_info(input_path)
+    fmt = info.get("format", {})
+    print(f"File: {Path(input_path).name}")
+    print(f"Format: {fmt.get('format_name', 'unknown')}")
+    try:
+        dur = float(fmt.get("duration", 0))
+        print(f"Duration: {dur:.2f} s")
+    except Exception:
+        print(f"Duration: {fmt.get('duration', 'unknown')}")
+    try:
+        size_mb = int(fmt.get("size", 0)) / 1024 / 1024
+        print(f"Size: {size_mb:.2f} MB")
+    except Exception:
+        print(f"Size: {fmt.get('size', 'unknown')}")
+
+
+def validate_output_quality(input_path: str, output_path: str, duration_tol: float = 0.1) -> bool:
+    """Rough quality check: duration similarity and non-trivial size."""
+    i, o = get_media_info(input_path), get_media_info(output_path)
+    try:
+        di = float(i["format"]["duration"])
+        do = float(o["format"]["duration"])
+        if abs(di - do) > duration_tol:
+            raise ValueError(f"Duration mismatch: {abs(di - do):.2f}s")
+        si = int(i["format"]["size"]) or 1
+        so = int(o["format"]["size"]) or 0
+        if so < si * 0.01:
+            raise ValueError("Output suspiciously small")
+        print("Quality validation: OK")
+        return True
+    except Exception as e:
+        print(f"Quality validation failed: {e}")
+        return False
+```
+
+### Batch processing
+
+```python
+# ffmpeg_helpers.py (batch)
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+
+def batch_convert(
+    inputs: Iterable[str],
+    output_dir: str,
+    *,
+    format_options: Optional[Dict[str, Any]] = None,
+    overwrite: bool = False,
+    max_workers: Optional[int] = None,
+) -> Dict[str, Any]:
+    """Convert many files in parallel, returning success/failure lists."""
+    out_dir = Path(output_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    successes: List[str] = []
+    failures: List[str] = []
+
+    def _target(inp: str) -> Optional[str]:
+        try:
+            src = validate_input_file(inp)
+            dest = out_dir / f"converted_{Path(src).stem}.mp4"
+            return convert_video_format(src, str(dest), format_options, overwrite)
+        except Exception:
+            return None
+
+    with ThreadPoolExecutor(max_workers=max_workers or min(4, (os.cpu_count() or 1))) as ex:
+        futures = {ex.submit(_target, path): path for path in inputs}
+        for fut in as_completed(futures):
+            src = futures[fut]
+            try:
+                result = fut.result()
+                if result:
+                    successes.append(result)
+                else:
+                    failures.append(src)
+            except Exception:
+                failures.append(src)
+
+    return {"successful": successes, "failed": failures}
+```
+
+---
+
+## Using the helpers (demo)
+
+```python
+# demo_ffmpeg.py
+from ffmpeg_helpers import (
+    validate_ffmpeg_installation,
+    convert_video_format,
+    extract_audio,
+    trim_video,
+    resize_video,
+    print_media_info,
+    validate_output_quality,
+)
+
+
+def run_demo():
+    if not validate_ffmpeg_installation():
+        print("FFmpeg not found. Install it and ensure it is on PATH.")
+        return
+
+    # Convert
+    out = convert_video_format("input.mp4", "out.mp4", {"crf": 22}, overwrite=True)
+    print("Converted:", out)
+
+    # Extract audio
+    audio = extract_audio("input.mp4", "audio.mp3", audio_format="mp3", bitrate="192k", overwrite=True)
+    print("Audio:", audio)
+
+    # Trim and resize
+    trimmed = trim_video("input.mp4", "trim.mp4", 5, 20, overwrite=True)
+    print("Trimmed:", trimmed)
+
+    resized = resize_video("input.mp4", "resized.mp4", 1280, 720, overwrite=True)
+    print("Resized:", resized)
+
+    # Info & quality
+    print_media_info("resized.mp4")
+    validate_output_quality("input.mp4", "resized.mp4")
+
+
+if __name__ == "__main__":
+    run_demo()
+```
+
+---
+
+## Troubleshooting
+
+### FFmpeg not found
+
+```text
+FileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'
+```
+
+- Ensure FFmpeg is installed and on PATH
+- macOS: `brew install ffmpeg`
+- Linux: `sudo apt install ffmpeg`
+- Windows: install from official site and add to PATH
+
+### Permission denied
+
+```text
+PermissionError: [Errno 13] Permission denied
+```
+
+- Check file permissions and output directory rights
+- Choose a safe output directory and set `overwrite=True` if re-running
+
+### Unknown encoder or codec not found
+
+- Try a different codec or container; not all codecs are available on all builds
+- Use defaults (`libx264` for video, `aac`/`libmp3lame` for audio) when unsure
+
+### Out-of-memory or very slow processing
+
+- Use faster presets (`preset=fast`), increase CRF, or process smaller resolutions
+- Avoid unnecessary re-encoding; use stream copy (`c='copy'`) for trims when possible
+
+---
+
+## Best practices and security
+
+1. Always validate inputs and sanitize output paths
+2. Avoid writing to restricted/system directories
+3. Use timeouts or chunking for very large files
+4. Monitor disk space and clean temporary files
+5. Provide clear error messages without leaking sensitive paths
+6. Prefer immutable inputs; write new outputs instead of in-place
+
+## Next steps
+
+- FFmpeg docs: [ffmpeg.org/documentation.html](https://ffmpeg.org/documentation.html)
+- ffmpeg-python: [github.com/kkroening/ffmpeg-python](https://github.com/kkroening/ffmpeg-python)
+- Explore higher-level tooling like MoviePy when you need editing pipelines
+
+This guide provides a safe, function-based toolkit you can drop into any project to work with FFmpeg from Python.
+
 
 ### Safe File Operations
 
@@ -963,208 +1307,3 @@ def main():
 if __name__ == "__main__":
     sys.exit(main())
 ```
-
-## Troubleshooting Guide
-
-### Common Issues and Solutions
-
-#### 1. FFmpeg Not Found
-**Error:** `FileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'`
-
-**Solutions:**
-- **macOS:** `brew install ffmpeg`
-- **Ubuntu/Debian:** `sudo apt install ffmpeg`
-- **Windows:** Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
-- **Verify installation:** `ffmpeg -version`
-
-#### 2. Permission Denied Errors
-**Error:** `PermissionError: [Errno 13] Permission denied`
-
-**Solutions:**
-```python
-# Check file permissions
-import os
-import stat
-
-def fix_permissions(file_path):
-    """Fix common permission issues."""
-    try:
-        # Make file readable
-        os.chmod(file_path, stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH)
-        print(f"✅ Fixed permissions for {file_path}")
-    except PermissionError:
-        print(f"❌ Cannot fix permissions for {file_path} - run as administrator")
-```
-
-#### 3. Codec Not Found
-**Error:** `ffmpeg.Error: Unknown encoder 'libx264'`
-
-**Solutions:**
-- Install FFmpeg with codec support: `brew install ffmpeg --with-fdk-aac --with-x264`
-- Use alternative codecs:
-```python
-# Fallback codec options
-CODEC_FALLBACKS = {
-    'video': ['libx264', 'h264', 'mpeg4'],
-    'audio': ['aac', 'libmp3lame', 'pcm_s16le']
-}
-```
-
-#### 4. Out of Memory Errors
-**Error:** `MemoryError` or system becomes unresponsive
-
-**Solutions:**
-```python
-def process_large_file(input_path, output_path):
-    """Process large files safely."""
-    # Check available memory
-    import psutil
-    available_memory = psutil.virtual_memory().available
-    file_size = Path(input_path).stat().st_size
-    
-    if file_size > available_memory * 0.5:  # Use max 50% of available memory
-        print("⚠️  Large file detected, processing in segments...")
-        # Implement segmented processing
-        return process_in_segments(input_path, output_path)
-    else:
-        return standard_process(input_path, output_path)
-```
-
-#### 5. Unsupported Format
-**Error:** `ffmpeg.Error: Invalid data found when processing input`
-
-**Solutions:**
-```python
-def detect_format(file_path):
-    """Safely detect file format."""
-    try:
-        probe = ffmpeg.probe(file_path)
-        return probe['format']['format_name']
-    except:
-        # Fallback to file extension
-        return Path(file_path).suffix.lower().lstrip('.')
-
-SUPPORTED_INPUT_FORMATS = ['mp4', 'avi', 'mov', 'mkv', 'wmv', 'flv', 'webm']
-SUPPORTED_AUDIO_FORMATS = ['mp3', 'wav', 'aac', 'flac', 'ogg', 'm4a']
-```
-
-### Performance Optimization Tips
-
-1. **Use appropriate CRF values:**
-   - CRF 18-24: High quality (larger files)
-   - CRF 25-30: Good quality (balanced)
-   - CRF 31-40: Lower quality (smaller files)
-
-2. **Choose the right preset:**
-   - `ultrafast`: Fastest encoding, largest files
-   - `fast`, `medium`: Balanced speed/quality
-   - `slower`, `veryslow`: Best quality, slowest
-
-3. **Monitor system resources:**
-```python
-import psutil
-
-def monitor_processing():
-    """Monitor system resources during processing."""
-    cpu_percent = psutil.cpu_percent(interval=1)
-    memory = psutil.virtual_memory()
-    
-    print(f"CPU: {cpu_percent:.1f}%")
-    print(f"Memory: {memory.percent:.1f}% used")
-    
-    if cpu_percent > 90:
-        print("⚠️  High CPU usage - consider reducing concurrent processes")
-    if memory.percent > 85:
-        print("⚠️  High memory usage - consider processing smaller files")
-```
-
-### Best Practices Summary
-
-1. **Always validate inputs** before processing
-2. **Use appropriate error handling** for different exception types
-3. **Implement timeout mechanisms** for long-running operations
-4. **Monitor system resources** during batch processing
-5. **Provide clear feedback** to users about processing status
-6. **Clean up temporary files** after processing
-7. **Test with various file formats** and edge cases
-8. **Use logging** for debugging and monitoring
-9. **Implement graceful degradation** for missing codecs
-10. **Document expected behavior** and limitations
-
-## Conclusion
-
-This tutorial provides a comprehensive foundation for working with FFmpeg in Python. The examples emphasize safety, error handling, and best practices to ensure reliable media processing applications.
-
-Remember to:
-- Test thoroughly with your specific use cases
-- Handle edge cases gracefully
-- Monitor performance and resource usage
-- Keep dependencies updated
-- Provide clear user feedback
-
-For additional resources, consult the official documentation:
-- [FFmpeg Documentation](https://ffmpeg.org/documentation.html)
-- [ffmpeg-python Documentation](https://github.com/kkroening/ffmpeg-python)
-- [PyDub Documentation](https://github.com/jiaaro/pydub)
-- [MoviePy Documentation](https://zulko.github.io/moviepy/)
-    
-    args = parser.parse_args()
-    
-    if not args.command:
-        parser.print_help()
-        return 1
-    
-    processor = MediaProcessor()
-    success = processor.run(args)
-    
-    return 0 if success else 1
-
-if __name__ == '__main__':
-    sys.exit(main())
-```
-
-## Security Considerations
-
-1. **Input Validation**: Always validate file paths and parameters
-2. **Path Traversal**: Use `Path.resolve()` and check for directory traversal attempts
-3. **File Size Limits**: Implement reasonable file size limits
-4. **Resource Limits**: Use timeouts and memory limits for processing
-5. **Temporary Files**: Clean up temporary files properly
-6. **Error Handling**: Never expose internal paths in error messages
-7. **Permissions**: Check file permissions before processing
-8. **Sandboxing**: Consider running FFmpeg in a restricted environment
-
-## Best Practices
-
-1. **Always use context managers** for file operations
-2. **Implement proper error handling** and logging
-3. **Use absolute paths** to avoid confusion
-4. **Validate inputs** before processing
-5. **Set reasonable timeouts** for long operations
-6. **Clean up resources** properly (close clips, delete temp files)
-7. **Use quality validation** to ensure output integrity
-8. **Implement progress monitoring** for long operations
-
-## Common Issues and Solutions
-
-### Issue: "FFmpeg not found"
-
-**Solution**: Install FFmpeg and ensure it's in PATH
-
-### Issue: "Permission denied"
-
-**Solution**: Check file permissions and output directory access
-
-### Issue: "Codec not supported"
-
-**Solution**: Install additional codec libraries or use alternative codecs
-
-### Issue: "Out of memory"
-
-**Solution**: Process files in chunks or reduce quality settings
-
-### Issue: "File corrupted after processing"
-
-**Solution**: Validate inputs and use quality control checks
-
-This tutorial provides a comprehensive, secure foundation for working with FFmpeg in Python. Always test with sample files before processing important media files.

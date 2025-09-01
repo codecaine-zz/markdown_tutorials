@@ -778,3 +778,342 @@ Cerberus is an excellent choice for data validation in Python applications due t
 - Extensible architecture
 
 Remember to always validate your input data before processing it, and use Cerberus's comprehensive error reporting to provide meaningful feedback to users or other systems.
+
+## Reusable, Optimized Cerberus Utilities (Copy‑Paste Ready)
+
+Use these drop-in helpers to speed up schema writing, normalization, and error handling. They are safe, dependency-free, and designed for Python 3.9+ and Cerberus 1.3+.
+
+### Quick validator factory with sensible defaults
+
+```python
+from cerberus import Validator
+
+def make_validator(schema, *, allow_unknown=False, purge_unknown=False, require_all=False, **kwargs):
+    """Create a configured Validator.
+    - allow_unknown: allow keys not present in schema
+    - purge_unknown: strip unknown keys during normalization
+    - require_all: treat all fields as required unless they have required=False
+    """
+    return Validator(
+        schema,
+        allow_unknown=allow_unknown,
+        purge_unknown=purge_unknown,
+        require_all=require_all,
+        **kwargs,
+    )
+
+class StrictValidator(Validator):
+    """Disallow unknown keys and strip them if they appear (safe for APIs)."""
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('allow_unknown', False)
+        kwargs.setdefault('purge_unknown', True)
+        super().__init__(*args, **kwargs)
+```
+
+### Common coercers (normalizers) you’ll reuse a lot
+
+Use these in your schema with the `coerce` rule. You can pass a single callable or a list to chain multiple coercers.
+
+```python
+import datetime as _dt
+import uuid as _uuid
+
+def _is_str(x):
+    return isinstance(x, str)
+
+def strip_str(v):
+    return v.strip() if _is_str(v) else v
+
+def to_lower(v):
+    return v.lower() if _is_str(v) else v
+
+def empty_to_none(v):
+    return None if v == '' else v
+
+def to_int(v):
+    try:
+        return int(v) if v is not None and v != '' else v
+    except (TypeError, ValueError):
+        return v
+
+def to_float(v):
+    try:
+        return float(v) if v is not None and v != '' else v
+    except (TypeError, ValueError):
+        return v
+
+def to_bool(v):
+    if isinstance(v, bool):
+        return v
+    if _is_str(v):
+        s = v.strip().lower()
+        if s in {'true', '1', 'yes', 'y', 'on'}:
+            return True
+        if s in {'false', '0', 'no', 'n', 'off'}:
+            return False
+    return v
+
+def to_datetime(v):
+    """Parse common ISO-8601 strings to datetime (timezone-aware when possible)."""
+    if isinstance(v, _dt.datetime):
+        return v
+    if not _is_str(v):
+        return v
+    s = v.strip()
+    if s.endswith('Z'):
+        s = s[:-1] + '+00:00'
+    try:
+        return _dt.datetime.fromisoformat(s)
+    except ValueError:
+        return v
+
+def to_uuid(v):
+    if isinstance(v, _uuid.UUID):
+        return v
+    if v is None:
+        return v
+    try:
+        return _uuid.UUID(str(v))
+    except (ValueError, AttributeError, TypeError):
+        return v
+
+def uniq_list(v):
+    """Deduplicate while preserving order (hashable items only)."""
+    if isinstance(v, list):
+        seen = set()
+        out = []
+        for item in v:
+            try:
+                if item not in seen:
+                    seen.add(item)
+                    out.append(item)
+            except TypeError:
+                # Unhashable, give up and return original
+                return v
+        return out
+    return v
+```
+
+### Extended validator: custom types and rules
+
+Add a UUID type, list uniqueness, and simple cross-field constraints.
+
+```python
+from cerberus import Validator
+import uuid
+
+class ExtendedValidator(Validator):
+    # Custom type: 'uuid'
+    def _validate_type_uuid(self, value):  # type: ignore[override]
+        """Enable 'type': 'uuid' in schemas.
+        The rule's arguments are validated against this schema:\n    {'type': 'uuid'}
+        """
+        if isinstance(value, uuid.UUID):
+            return True
+        try:
+            uuid.UUID(str(value))
+            return True
+        except Exception:
+            return False
+
+    # Custom rule: 'unique': True for lists
+    def _validate_unique(self, unique, field, value):
+        """{'type': 'boolean'} — Ensure list elements are unique."""
+        if unique and isinstance(value, list):
+            try:
+                if len(value) != len(set(value)):
+                    self._error(field, 'List elements must be unique')
+            except TypeError:
+                self._error(field, 'List contains unhashable elements; cannot enforce uniqueness')
+
+    # Custom rule: 'forbidden_with': ['other', ...]
+    def _validate_forbidden_with(self, other_fields, field, value):
+        """{'type': 'list'} — Field cannot appear together with any of the given fields."""
+        if value is None:
+            return
+        if isinstance(other_fields, (list, tuple)):
+            conflicts = [f for f in other_fields if f in (self.document or {})]
+            if conflicts:
+                self._error(field, f"Cannot be used together with: {', '.join(conflicts)}")
+
+    # Custom rule: 'requires_any': ['a', 'b'] — at least one must be present
+    def _validate_requires_any(self, fields, field, value):
+        """{'type': 'list'} — Require at least one of the provided fields when this field is present."""
+        if value is None:
+            return
+        doc = self.document or {}
+        if isinstance(fields, (list, tuple)) and not any(f in doc for f in fields):
+            self._error(field, f"Requires at least one of: {', '.join(map(str, fields))}")
+```
+
+Example usage:
+
+```python
+schema = {
+    'id': {'type': 'uuid', 'required': True, 'coerce': to_uuid},
+    'email': {'type': 'string', 'required': True, 'regex': r'^[^@\s]+@[^@\s]+\.[^@\s]+$', 'coerce': [strip_str, to_lower]},
+    'tags': {'type': 'list', 'schema': {'type': 'string', 'coerce': strip_str}, 'unique': True},
+    'note': {'type': 'string', 'forbidden_with': ['admin_only']},
+    'admin_only': {'type': 'boolean', 'requires_any': ['note']},
+}
+
+v = ExtendedValidator(schema, allow_unknown=False, purge_unknown=True)
+doc = {'id': '550e8400-e29b-41d4-a716-446655440000', 'email': ' USER@EXAMPLE.COM ', 'tags': ['a','a','b']}
+ok = v.validate(doc)
+print(ok, v.document, v.errors)
+```
+
+### Error formatting helpers (flat list, dot-paths)
+
+```python
+from collections.abc import Mapping
+
+def flatten_errors(errors_tree):
+    """Convert Cerberus errors to a flat list of {'path': 'a.b[2]', 'message': '...'} dicts."""
+    out = []
+
+    def _walk(prefix, node):
+        if isinstance(node, Mapping):
+            for k, v in node.items():
+                _walk(f"{prefix}.{k}" if prefix else str(k), v)
+        elif isinstance(node, list):
+            for item in node:
+                if isinstance(item, (Mapping, list)):
+                    _walk(prefix, item)
+                else:
+                    out.append({'path': prefix, 'message': str(item)})
+        else:
+            out.append({'path': prefix, 'message': str(node)})
+
+    _walk('', errors_tree)
+    return out
+
+def errors_as_string(errors_tree, sep='; '):
+    return sep.join(f"{e['path']}: {e['message']}" for e in flatten_errors(errors_tree))
+```
+
+Usage:
+
+```python
+v = Validator(schema)
+if not v.validate(doc):
+    print(errors_as_string(v.errors))
+```
+
+### Batch/stream validation utilities
+
+```python
+from dataclasses import dataclass
+from typing import Any, Iterable, Iterator, Optional
+
+@dataclass
+class ValidationResult:
+    index: int
+    valid: bool
+    document: dict | None
+    errors: Any  # Cerberus error tree
+
+class BatchValidator:
+    """Reuse one validator instance for many documents (single-threaded)."""
+    def __init__(self, schema: dict, validator_cls: type[Validator] = Validator, **kwargs):
+        self.validator = validator_cls(schema, **kwargs)
+
+    def validate_iter(self, docs: Iterable[dict]) -> Iterator[ValidationResult]:
+        for i, d in enumerate(docs):
+            ok = self.validator.validate(d)
+            yield ValidationResult(index=i, valid=ok, document=(self.validator.document if ok else None), errors=(None if ok else self.validator.errors))
+
+    def validate_list(self, docs: list[dict]) -> list[ValidationResult]:
+        return list(self.validate_iter(docs))
+```
+
+### Common field schema snippets
+
+Copy these into your schemas to stay consistent across modules.
+
+```python
+EMAIL_FIELD = {
+    'type': 'string',
+    'regex': r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+    'minlength': 3,
+    'maxlength': 254,
+    'coerce': [strip_str, to_lower],
+}
+
+NONEMPTY_STR_FIELD = {
+    'type': 'string',
+    'minlength': 1,
+    'empty': False,
+    'coerce': strip_str,
+}
+
+OPTIONAL_STR_FIELD = {
+    'type': 'string',
+    'nullable': True,
+    'empty': True,
+    'coerce': strip_str,
+}
+
+POS_INT_FIELD = {'type': 'integer', 'min': 0, 'coerce': to_int}
+
+DATETIME_FIELD = {'type': 'datetime', 'coerce': to_datetime}
+
+# Requires ExtendedValidator (custom 'uuid' type)
+UUID_FIELD = {'type': 'uuid', 'required': True, 'coerce': to_uuid}
+
+# Tags with trimming and uniqueness (requires ExtendedValidator for 'unique')
+TAGS_FIELD = {'type': 'list', 'schema': {'type': 'string', 'coerce': strip_str}, 'unique': True}
+```
+
+### Deep-merge schemas (compose reusable parts)
+
+```python
+from copy import deepcopy
+
+def deep_merge_schema(*schemas: dict) -> dict:
+    """Deep-merge dicts, combining nested 'schema' blocks for Cerberus."""
+    def _merge(a: dict, b: dict) -> dict:
+        out = deepcopy(a)
+        for k, v in b.items():
+            if k in out and isinstance(out[k], dict) and isinstance(v, dict):
+                out[k] = _merge(out[k], v)
+            else:
+                out[k] = deepcopy(v)
+        return out
+    if not schemas:
+        return {}
+    result = deepcopy(schemas[0])
+    for s in schemas[1:]:
+        result = _merge(result, s)
+    return result
+```
+
+### Minimal end-to-end example
+
+```python
+user_core = {
+    'id': UUID_FIELD,
+    'email': EMAIL_FIELD,
+    'created_at': {'type': 'datetime', 'coerce': to_datetime, 'nullable': True},
+    'tags': TAGS_FIELD,
+}
+
+profile_extras = {
+    'name': NONEMPTY_STR_FIELD,
+    'age': {'type': 'integer', 'min': 0, 'coerce': to_int},
+}
+
+schema = deep_merge_schema(user_core, profile_extras)
+
+docs = [
+    {'id': '550e8400-e29b-41d4-a716-446655440000', 'email': 'A@B.COM', 'name': '  Alice  ', 'tags': ['x','x','y']},
+    {'id': 'not-a-uuid', 'email': 'bad', 'age': -1},
+]
+
+bv = BatchValidator(schema, validator_cls=ExtendedValidator, allow_unknown=False, purge_unknown=True)
+for r in bv.validate_iter(docs):
+    if r.valid:
+        print('OK:', r.document)
+    else:
+        print('ERR:', errors_as_string(r.errors))
+```
