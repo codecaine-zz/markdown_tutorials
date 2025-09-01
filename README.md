@@ -13,6 +13,10 @@ A modern web application for browsing and viewing markdown-based tutorials with 
 - 🧩 **Toggleable Table of Contents** - Auto-generated ToC per tutorial with smooth anchor navigation
 - 🧱 **Sidebar Width Toggle** - Expand/collapse the sidebar for focus or overview
 - 🎯 **Smooth Scrolling** - In-page anchor navigation with smooth scrolling and target highlight
+- 🧰 **Top Toolbar** - Home, Collapse/Expand All, Refresh, Theme, and Zoom controls
+- 🌗 **Theme Toggle** - Light/Dark theme with instant switch and saved preference
+- 🔎 **Zoom Controls** - 80–180% zoom with live indicator and persistence
+- 💾 **Persistent UI State** - Remembers theme, zoom level, sidebar width, and folder open/closed states
 
 ## Screenshots
 
@@ -209,6 +213,33 @@ markdown_tutorials/
 
 - **Improved Code Copy UX**
    - Always-visible copy buttons on code blocks (mobile friendly), with success/failure feedback and clipboard fallback.
+
+- **Top Toolbar**
+   - Quick actions: Home, Collapse All, Expand All, Refresh.
+   - Theme toggle (sun/moon) and Zoom controls with a live percentage indicator.
+
+- **Theme & Zoom Persistence**
+   - Theme and zoom preferences are saved automatically and restored on page load.
+   - Zoom range: 80–180% for comfortable reading.
+
+- **Bulk Sidebar Actions & Busy Overlay**
+   - Collapse/Expand All folders with a brief, non-blocking spinner overlay.
+   - Keeps the UI responsive during batch updates.
+
+- **Persistent Navigation State**
+   - Remembers sidebar width state (normal/expanded/collapsed).
+   - Restores open/closed states of folders across visits.
+
+- **Keyboard Shortcuts**
+   - F1: Show shortcut help
+   - Cmd/Ctrl+F: Focus sidebar search
+   - Cmd/Ctrl+B: Toggle sidebar width
+   - Cmd/Ctrl+H: Home
+   - Plus/Minus: Zoom in/out
+
+### What’s New
+
+Latest UI improvements bring a top toolbar, dark/light theme toggle, zoom controls with a live indicator, batch expand/collapse for the sidebar, and persistence of user preferences (theme, zoom, sidebar state, and folder states). This aligns the PHP app’s UX closer to the neu_markdown_buddy experience while staying fully web-based.
 
 ### Syntax Highlighting
 

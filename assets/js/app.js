@@ -495,12 +495,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 sidebar.classList.remove('expanded');
                 sidebar.classList.add('collapsed');
                 sidebarToggle.querySelector('i').className = 'fas fa-arrows-alt-h';
+                saveUiState();
             } else if (sidebar.classList.contains('collapsed')) {
                 sidebar.classList.remove('collapsed');
                 sidebarToggle.querySelector('i').className = 'fas fa-arrows-alt-h';
+                saveUiState();
             } else {
                 sidebar.classList.add('expanded');
                 sidebarToggle.querySelector('i').className = 'fas fa-compress-alt';
+                saveUiState();
             }
         });
     }
@@ -563,4 +566,183 @@ document.addEventListener('DOMContentLoaded', function() {
         const isHidden = toc.style.display === 'none' || toc.style.display === '';
         toc.style.display = isHidden ? 'block' : 'none';
     }
+
+    // ===== Toolbar wiring =====
+    const busy = {
+        el: document.getElementById('busyOverlay'),
+        show() { this.el && this.el.classList.add('show'); },
+        hide() { this.el && this.el.classList.remove('show'); }
+    };
+
+    const TB = {
+        home: document.getElementById('tbHome'),
+        collapseAll: document.getElementById('tbCollapseAll'),
+        expandAll: document.getElementById('tbExpandAll'),
+        refresh: document.getElementById('tbRefresh'),
+        theme: document.getElementById('tbTheme'),
+        zoomOut: document.getElementById('tbZoomOut'),
+        zoomIn: document.getElementById('tbZoomIn'),
+        zoomIndicator: document.getElementById('tbZoomIndicator')
+    };
+
+    TB.home && TB.home.addEventListener('click', () => { window.location.href = '?page=home'; });
+
+    TB.collapseAll && TB.collapseAll.addEventListener('click', () => {
+        busy.show();
+        setTimeout(() => {
+            document.querySelectorAll('.nav-folder-content.open').forEach(f => { f.classList.remove('open'); f.style.maxHeight = '0px'; });
+            document.querySelectorAll('.nav-folder-header .folder-arrow.open').forEach(a => a.classList.remove('open'));
+            saveFolderStates();
+            busy.hide();
+        }, 150);
+    });
+
+    TB.expandAll && TB.expandAll.addEventListener('click', () => {
+        busy.show();
+        setTimeout(() => {
+            document.querySelectorAll('.nav-folder-content').forEach(f => { f.classList.add('open'); f.style.maxHeight = 'none'; });
+            document.querySelectorAll('.nav-folder-header .folder-arrow').forEach(a => a.classList.add('open'));
+            saveFolderStates();
+            busy.hide();
+        }, 150);
+    });
+
+    TB.refresh && TB.refresh.addEventListener('click', () => {
+        busy.show();
+        setTimeout(() => {
+            // Rebuild TOC and re-apply search filters; nav is server-rendered, so just reset states
+            initializeFolderStates();
+            initFolderToggles();
+            expandCurrentPath();
+            buildTableOfContents();
+            busy.hide();
+        }, 120);
+    });
+
+    // Theme toggle with persistence
+    const THEME_KEY = 'mt_theme';
+    function applyTheme(theme) {
+        const root = document.documentElement;
+        if (theme === 'dark') {
+            root.classList.add('theme-dark');
+            root.classList.remove('force-light');
+            TB.theme && (TB.theme.querySelector('i').className = 'fas fa-sun');
+        } else {
+            root.classList.remove('theme-dark');
+            root.classList.add('force-light');
+            TB.theme && (TB.theme.querySelector('i').className = 'fas fa-moon');
+        }
+        localStorage.setItem(THEME_KEY, theme);
+    }
+    function loadTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved) applyTheme(saved);
+    }
+    TB.theme && TB.theme.addEventListener('click', () => {
+        const isDark = document.documentElement.classList.contains('theme-dark');
+        applyTheme(isDark ? 'light' : 'dark');
+    });
+    loadTheme();
+
+    // Zoom controls with persistence
+    const ZOOM_KEY = 'mt_zoom';
+    const zoomContainer = document.getElementById('contentZoom');
+    let zoom = 1.0;
+    function applyZoom() {
+        if (!zoomContainer) return;
+        zoomContainer.style.transform = `scale(${zoom})`;
+        TB.zoomIndicator && (TB.zoomIndicator.textContent = `${Math.round(zoom*100)}%`);
+        localStorage.setItem(ZOOM_KEY, String(zoom));
+    }
+    function loadZoom() {
+        const v = parseFloat(localStorage.getItem(ZOOM_KEY) || '1');
+        if (!Number.isNaN(v)) {
+            zoom = Math.min(1.8, Math.max(0.8, v));
+            applyZoom();
+        }
+    }
+    TB.zoomIn && TB.zoomIn.addEventListener('click', () => { zoom = Math.min(1.8, zoom + 0.1); applyZoom(); });
+    TB.zoomOut && TB.zoomOut.addEventListener('click', () => { zoom = Math.max(0.8, zoom - 0.1); applyZoom(); });
+    loadZoom();
+
+    // Persist sidebar and folder states
+    const UI_KEY = 'mt_ui_state';
+    function saveFolderStates() {
+        const states = [];
+        document.querySelectorAll('.nav-folder').forEach((folder, idx) => {
+            const content = folder.querySelector(':scope > .nav-folder-content');
+            if (content) states.push({ idx, open: content.classList.contains('open') });
+        });
+        const data = loadUiState();
+        data.folders = states;
+        localStorage.setItem(UI_KEY, JSON.stringify(data));
+    }
+    function restoreFolderStates() {
+        try {
+            const data = loadUiState();
+            if (!data.folders) return;
+            const folders = Array.from(document.querySelectorAll('.nav-folder'));
+            data.folders.forEach(s => {
+                const f = folders[s.idx];
+                if (!f) return;
+                const content = f.querySelector(':scope > .nav-folder-content');
+                const header = f.querySelector(':scope > .nav-folder-header .folder-arrow');
+                if (content) {
+                    if (s.open) {
+                        content.classList.add('open');
+                        content.style.maxHeight = 'none';
+                        header && header.classList.add('open');
+                    } else {
+                        content.classList.remove('open');
+                        content.style.maxHeight = '0px';
+                        header && header.classList.remove('open');
+                    }
+                }
+            });
+        } catch {}
+    }
+    function saveUiState() {
+        const sidebar = document.getElementById('sidebar');
+        const data = loadUiState();
+        data.sidebar = {
+            expanded: sidebar.classList.contains('expanded'),
+            collapsed: sidebar.classList.contains('collapsed')
+        };
+        localStorage.setItem(UI_KEY, JSON.stringify(data));
+        return data;
+    }
+    function loadUiState() {
+        try { return JSON.parse(localStorage.getItem(UI_KEY) || '{}'); } catch { return {}; }
+    }
+    function restoreUiState() {
+        const data = loadUiState();
+        const sidebar = document.getElementById('sidebar');
+        if (data.sidebar) {
+            sidebar.classList.toggle('expanded', !!data.sidebar.expanded);
+            sidebar.classList.toggle('collapsed', !!data.sidebar.collapsed);
+        }
+        restoreFolderStates();
+    }
+    restoreUiState();
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        const cmd = e.metaKey || e.ctrlKey;
+        if (e.key === 'F1') { e.preventDefault(); alert('Shortcuts:\n• Cmd/Ctrl+F: focus search\n• Cmd/Ctrl+B: toggle sidebar width\n• Cmd/Ctrl+H: home\n• +/-: zoom'); }
+        if (cmd && (e.key === 'f' || e.key === 'F')) {
+            e.preventDefault();
+            const inp = document.getElementById('navigationSearch');
+            inp && inp.focus();
+        }
+        if (cmd && (e.key === 'b' || e.key === 'B')) {
+            e.preventDefault();
+            sidebarToggle && sidebarToggle.click();
+        }
+        if (cmd && (e.key === 'h' || e.key === 'H')) {
+            e.preventDefault();
+            TB.home && TB.home.click();
+        }
+        if ((e.key === '+' || e.key === '=')) { e.preventDefault(); TB.zoomIn && TB.zoomIn.click(); }
+        if ((e.key === '-') ) { e.preventDefault(); TB.zoomOut && TB.zoomOut.click(); }
+    });
 });

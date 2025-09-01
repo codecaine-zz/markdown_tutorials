@@ -78,10 +78,37 @@ class MarkdownTutorialApp {
                 
                 <!-- Main Content -->
                 <main class="main-content">
-                    <?php echo $this->renderContent($page); ?>
+                    <!-- Top Toolbar -->
+                    <header class="toolbar" role="toolbar" aria-label="Application toolbar">
+                        <div class="toolbar-left">
+                            <button id="tbHome" class="tb-btn" title="Home"><i class="fas fa-home"></i><span>Home</span></button>
+                            <button id="tbCollapseAll" class="tb-btn" title="Collapse all"><i class="fas fa-compress"></i><span>Collapse</span></button>
+                            <button id="tbExpandAll" class="tb-btn" title="Expand all"><i class="fas fa-expand"></i><span>Expand</span></button>
+                            <button id="tbRefresh" class="tb-btn" title="Refresh navigation"><i class="fas fa-rotate"></i><span>Refresh</span></button>
+                        </div>
+                        <div class="toolbar-right">
+                            <button id="tbTheme" class="tb-btn" title="Toggle theme"><i class="fas fa-moon"></i><span>Theme</span></button>
+                            <div class="tb-sep" aria-hidden="true"></div>
+                            <button id="tbZoomOut" class="tb-btn" title="Zoom out"><i class="fas fa-search-minus"></i></button>
+                            <span id="tbZoomIndicator" class="tb-indicator" aria-live="polite">100%</span>
+                            <button id="tbZoomIn" class="tb-btn" title="Zoom in"><i class="fas fa-search-plus"></i></button>
+                        </div>
+                    </header>
+
+                    <!-- Zoom container wraps the dynamic content -->
+                    <div id="contentZoom" class="zoom-container">
+                        <?php echo $this->renderContent($page); ?>
+                    </div>
                 </main>
             </div>
             
+            <!-- Busy spinner overlay -->
+            <div id="busyOverlay" class="busy-overlay" aria-hidden="true">
+                <div class="spinner" role="status" aria-label="Loading">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+            </div>
+
             <script src="assets/js/app.js"></script>
         </body>
         </html>
