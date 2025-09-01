@@ -9,8 +9,10 @@ A modern web application for browsing and viewing markdown-based tutorials with 
 - 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
 - 📋 **Copy to Clipboard** - One-click copying for all code blocks
 - 🧭 **Smart Navigation** - Breadcrumb navigation and expandable folder structure
-- 🔍 **Search & Discovery** - Easy browsing through categorized tutorials
-- 🎯 **Smooth Scrolling** - In-page anchor navigation with smooth scrolling
+- 🔍 **Search & Discovery** - Sidebar search with live filtering and auto-expanding results
+- 🧩 **Toggleable Table of Contents** - Auto-generated ToC per tutorial with smooth anchor navigation
+- 🧱 **Sidebar Width Toggle** - Expand/collapse the sidebar for focus or overview
+- 🎯 **Smooth Scrolling** - In-page anchor navigation with smooth scrolling and target highlight
 
 ## Screenshots
 
@@ -183,8 +185,30 @@ markdown_tutorials/
 
 - **Hierarchical browsing** with expandable folders
 - **Breadcrumb navigation** shows current location
-- **Mobile-responsive** sidebar with toggle button
+- **Mobile-responsive** sidebar with hamburger toggle
 - **Smart expansion** - folders open automatically when viewing contained files
+
+### UI Enhancements
+
+- **Sidebar Width Toggle**
+   - Click the chevron button in the sidebar to expand/collapse it.
+   - The main content shifts to accommodate the chosen width.
+
+- **Sidebar Search (Live Filter)**
+   - Type in the sidebar search box to filter tutorials by name.
+   - Matching items remain visible and parent folders auto-expand for quick access.
+   - Clear the query with the “×” button.
+
+- **Toggleable Table of Contents**
+   - On any tutorial page, click “Contents” to show/hide the ToC.
+   - The ToC is generated from headings and supports smooth scrolling.
+   - Target headings briefly highlight; a small inline “Previous” button returns to your prior scroll position.
+
+- **Enhanced Anchor Navigation**
+   - Stable, GitHub-like heading IDs, smooth in-page links, and automatic link rewrites for reliable anchors.
+
+- **Improved Code Copy UX**
+   - Always-visible copy buttons on code blocks (mobile friendly), with success/failure feedback and clipboard fallback.
 
 ### Syntax Highlighting
 

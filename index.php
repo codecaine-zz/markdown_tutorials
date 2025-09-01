@@ -62,11 +62,29 @@ class MarkdownTutorialApp {
             <div class="container">
                 <!-- Sidebar Navigation -->
                 <nav class="sidebar" id="sidebar">
+                        <!-- Width toggle like Neutralino app -->
+                        <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Navigation Width">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </button>
                     <div class="sidebar-header">
                         <h2><i class="fas fa-book"></i> Tutorials</h2>
                     </div>
                     <div class="sidebar-content">
-                        <?php echo $this->generateNavigation(); ?>
+                            <!-- Sidebar search -->
+                            <div class="search-container">
+                                <div class="search-box">
+                                    <i class="fas fa-search search-icon"></i>
+                                    <input type="text" id="navigationSearch" placeholder="Search tutorials..." autocomplete="off" />
+                                    <button class="clear-search" id="clearSearch" title="Clear search">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Navigation tree -->
+                            <div id="nav-items">
+                                <?php echo $this->generateNavigation(); ?>
+                            </div>
                     </div>
                 </nav>
                 
@@ -191,6 +209,19 @@ class MarkdownTutorialApp {
             
             // Add navigation between tutorials
             $output .= $this->generateTutorialNavigation($page);
+
+                // Controls above content (Table of Contents toggle)
+                $output .= '<div class="tutorial-actions" style="display:flex;gap:10px;margin:10px 0;">';
+                $output .= '<button class="btn-secondary" id="tocToggle" onclick="toggleTableOfContents()" title="Toggle table of contents">';
+                $output .= '<i class="fas fa-list"></i> Contents';
+                $output .= '</button>';
+                $output .= '</div>';
+
+                // Table of Contents container (hidden by default)
+                $output .= '<div class="table-of-contents" id="tableOfContents" style="display:none;">';
+                $output .= '<h3 class="toc-title"><i class="fas fa-list"></i> Table of Contents</h3>';
+                $output .= '<ul class="toc-list"></ul>';
+                $output .= '</div>';
             
             // Client-side render placeholder
             $output .= '<div class="markdown-content" data-md-src="' . htmlspecialchars($relative) . '">';

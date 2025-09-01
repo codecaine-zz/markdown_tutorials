@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         hljs.highlightAll();
                         addCopyButtons();
                         wireInPageLinks(contentDiv); // Enable smooth in-page navigation
+                        buildTableOfContents(); // Build ToC from headings
                         scrollToAnchor(); // Scroll to anchor after content is rendered
                     })
                     .catch(error => {
@@ -140,6 +141,68 @@ document.addEventListener('DOMContentLoaded', function() {
             copyBtn.addEventListener('touchstart', (e) => {
                 e.stopPropagation();
             }, { passive: true });
+        });
+    }
+
+    // Build a Table of Contents from headings
+    function buildTableOfContents() {
+        const toc = document.getElementById('tableOfContents');
+        if (!toc) return;
+        const list = toc.querySelector('.toc-list');
+        if (!list) return;
+        list.innerHTML = '';
+
+        const headings = document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4');
+        const stack = [{ level: 0, ul: list }];
+
+        headings.forEach(h => {
+            const level = parseInt(h.tagName.substring(1), 10);
+            const text = h.textContent.trim();
+            const id = h.id || githubSlugify(text);
+
+            while (stack[stack.length - 1].level >= level) stack.pop();
+            const current = stack[stack.length - 1];
+
+            let ul = current.ul;
+            if (current.level + 1 < level) {
+                // Skip overly nested jumps; normalize to +1
+                const li = ul.lastElementChild || ul.appendChild(document.createElement('li'));
+                const newUl = document.createElement('ul');
+                newUl.className = 'toc-nested';
+                li.appendChild(newUl);
+                stack.push({ level: current.level + 1, ul: newUl });
+            }
+
+            if (current.level + 1 === level) {
+                // same expected nesting
+            } else if (current.level !== level) {
+                // Create nested container
+                const li = ul.lastElementChild || ul.appendChild(document.createElement('li'));
+                const newUl = document.createElement('ul');
+                newUl.className = 'toc-nested';
+                li.appendChild(newUl);
+                stack.push({ level, ul: newUl });
+            }
+
+            const targetUl = stack[stack.length - 1].ul;
+            const li = document.createElement('li');
+            li.className = `toc-item toc-level-${level}`;
+            const a = document.createElement('a');
+            a.className = 'toc-link';
+            a.textContent = text;
+            a.href = `#${id}`;
+            a.addEventListener('click', (e) => {
+                e.preventDefault();
+                const el = getAnchorTarget(id);
+                if (el) {
+                    window.__lastAnchorScrollY = window.scrollY;
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    showInlinePreviousButton(el);
+                    if (history.pushState) history.pushState(null, '', `#${id}`);
+                }
+            });
+            li.appendChild(a);
+            targetUl.appendChild(li);
         });
     }
 
@@ -386,7 +449,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mobile sidebar toggle
     window.toggleSidebar = function() {
         const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('active');
+    // On mobile, slide in/out using 'open' class to match CSS
+    sidebar.classList.toggle('open');
     }
 
     // History navigation
@@ -420,5 +484,83 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+    }
+
+    // Sidebar width toggle (expanded/collapsed)
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    if (sidebarToggle) {
+        sidebarToggle.addEventListener('click', () => {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('expanded')) {
+                sidebar.classList.remove('expanded');
+                sidebar.classList.add('collapsed');
+                sidebarToggle.querySelector('i').className = 'fas fa-arrows-alt-h';
+            } else if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+                sidebarToggle.querySelector('i').className = 'fas fa-arrows-alt-h';
+            } else {
+                sidebar.classList.add('expanded');
+                sidebarToggle.querySelector('i').className = 'fas fa-compress-alt';
+            }
+        });
+    }
+
+    // Sidebar search filter
+    const searchInput = document.getElementById('navigationSearch');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    function filterNav(query) {
+        const items = document.querySelectorAll('#nav-items .nav-item, #nav-items .nav-folder, #nav-items .nav-folder-header');
+        if (!items.length) return;
+        const q = (query || '').trim().toLowerCase();
+        if (!q) {
+            // reset
+            document.querySelectorAll('#nav-items .nav-item, #nav-items .nav-folder').forEach(el => el.style.display = '');
+            return;
+        }
+        // Hide all then show matches and their ancestors
+        document.querySelectorAll('#nav-items .nav-item, #nav-items .nav-folder').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('#nav-items .nav-item a, #nav-items .nav-folder-header span').forEach(el => {
+            const text = (el.textContent || '').toLowerCase();
+            if (text.includes(q)) {
+                const block = el.closest('.nav-item, .nav-folder');
+                if (block) block.style.display = '';
+                // Show ancestors
+                let parent = el.closest('.nav-folder-content');
+                while (parent) {
+                    parent.style.display = '';
+                    parent.classList.add('open');
+                    parent.style.maxHeight = 'none';
+                    const header = parent.previousElementSibling;
+                    if (header && header.classList.contains('nav-folder-header')) {
+                        const arrow = header.querySelector('.folder-arrow');
+                        arrow && arrow.classList.add('open');
+                        header.parentElement && (header.parentElement.style.display = '');
+                    }
+                    parent = parent.parentElement?.closest('.nav-folder-content');
+                }
+            }
+        });
+    }
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const v = e.target.value;
+            filterNav(v);
+            if (clearSearchBtn) clearSearchBtn.style.opacity = v ? '1' : '0';
+        });
+    }
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', () => {
+            if (searchInput) searchInput.value = '';
+            filterNav('');
+            clearSearchBtn.style.opacity = '0';
+        });
+    }
+
+    // ToC toggle
+    window.toggleTableOfContents = function() {
+        const toc = document.getElementById('tableOfContents');
+        if (!toc) return;
+        const isHidden = toc.style.display === 'none' || toc.style.display === '';
+        toc.style.display = isHidden ? 'block' : 'none';
     }
 });
