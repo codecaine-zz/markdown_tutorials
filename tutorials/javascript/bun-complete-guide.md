@@ -105,6 +105,8 @@ console.log(server.url.toString()); // Prints the base URL, e.g. http://localhos
 // Run in terminal: bun server.js
 ```
 
+References: [HTTP server](https://bun.sh/docs/api/http)
+
 ### Simple REST API
 
 ```javascript
@@ -137,6 +139,8 @@ console.log(api.url.toString()); // http://localhost:3001
 // Run: bun api.js
 ```
 
+References: [HTTP server](https://bun.sh/docs/api/http)
+
 ### SQLite CRUD
 
 ```javascript
@@ -155,6 +159,8 @@ const all = db.query('SELECT id, text FROM notes').all();
 console.log(all);
 // Run: bun sqlite-demo.js
 ```
+
+References: [SQLite (bun:sqlite)](https://bun.sh/docs/api/sqlite)
 
 ### File Upload Handler
 
@@ -189,6 +195,8 @@ console.log('http://localhost:3002');
 // Run: bun upload.js
 ```
 
+References: [HTTP server](https://bun.sh/docs/api/http), [File I/O](https://bun.sh/docs/api/file-io)
+
 ### WebSocket Echo
 
 ```javascript
@@ -208,6 +216,8 @@ export default Bun.serve({
 console.log('ws://localhost:3003');
 // Run: bun ws.js
 ```
+
+References: [WebSocket](https://bun.sh/docs/api/websocket)
 
 ### Worker Queue
 
@@ -236,6 +246,8 @@ worker.postMessage(12);
 // Run: bun worker-main.js
 ```
 
+References: [Web Workers](https://bun.sh/docs/api/worker)
+
 ### CLI Script
 
 ```javascript
@@ -246,6 +258,8 @@ console.log(`Hello, ${name}!`);
 // Make executable: chmod +x greet.mjs
 // Run: ./greet.mjs Alice
 ```
+
+References: [CLI and shebang](https://bun.sh/docs/cli)
 
 ### Unit Test
 
@@ -264,6 +278,8 @@ describe('add', () => {
 });
 // Run: bun test
 ```
+
+References: [Test Runner](https://bun.sh/docs/test)
 
 
 
@@ -289,6 +305,8 @@ await appendFile('note.txt', '\nAnother line from Bun', 'utf8');
 console.log('appended');
 // Run: bun files-demo.js
 ```
+
+References: [File I/O](https://bun.sh/docs/api/file-io)
 
 ### Read and Write JSON
 
@@ -355,6 +373,8 @@ console.log('bumped retries');
 // Run: bun json-demo.js
 ```
 
+References: [File I/O](https://bun.sh/docs/api/file-io)
+
 ### Environment Variables (Quickstart)
 
 ```javascript
@@ -363,6 +383,8 @@ console.log('bumped retries');
 const name = Bun.env.MY_NAME || 'world';
 console.log(`Hello, ${name}!`);
 ```
+
+References: [Environment variables](https://bun.sh/docs/runtime/env)
 
 ### Console Apps (CLI)
 
@@ -400,6 +422,8 @@ if (args.includes('--upper')) {
 //   bun cli-examples.js --log --name TaskStarted
 //   echo "hello" | bun cli-examples.js --upper
 ```
+
+References: [Process API](https://bun.sh/docs/api/process), [CLI](https://bun.sh/docs/cli)
 
 ## JavaScript Fundamentals
 
@@ -1603,130 +1627,90 @@ bun package-demo.js
 
 ## File System Operations
 
-### Reading and Writing Files
+### Reading and Writing Files (Bun File I/O)
 
+The Bun runtime includes fast, high-level file I/O APIs. Use these for most tasks:
+
+- Bun.file(path) to get a blob-like file (read as text/json/bytes/stream)
+- Bun.write(pathOrFile, data) to write strings, bytes, Blobs/Files, Responses, or ReadableStreams
+- Bun.Glob for high-performance directory scanning
+
+Reference: [Bun File I/O docs](https://bun.sh/docs/api/file-io)
+
+ 
 ```javascript
-// file-operations.js - File system operations demo
-import { promises as fs } from 'fs';
-import { join } from 'path';
+// bun-file-io-demo.js - Idiomatic Bun File I/O examples
+import { mkdir, appendFile } from 'node:fs/promises';
+import { join } from 'node:path';
 
-console.log('=== File System Operations Demo ===');
+console.log('=== Bun File I/O Demo ===');
 
-async function fileOperationsDemo() {
+async function run() {
     const dataDir = './data';
-    const usersFile = join(dataDir, 'users.json');
-    const logFile = join(dataDir, 'app.log');
-    
-    try {
-        // Create directory if it doesn't exist
-        try {
-            await fs.access(dataDir);
-        } catch {
-            console.log('Creating data directory...');
-            await fs.mkdir(dataDir, { recursive: true });
-        }
-        
-        // Sample data
-        const users = [
-            { id: 1, name: 'Alice', email: 'alice@example.com' },
-            { id: 2, name: 'Bob', email: 'bob@example.com' },
-            { id: 3, name: 'Charlie', email: 'charlie@example.com' }
-        ];
-        
-        // Write JSON file
-        console.log('Writing users data...');
-        await fs.writeFile(usersFile, JSON.stringify(users, null, 2));
-        
-        // Read JSON file
-        console.log('Reading users data...');
-        const userData = await fs.readFile(usersFile, 'utf-8');
-        const parsedUsers = JSON.parse(userData);
-        
-        console.log('Users loaded:', parsedUsers.length);
-        parsedUsers.forEach(user => {
-            console.log(`  ${user.name} (${user.email})`);
-        });
-        
-        // Append to log file
-        const logEntry = `${new Date().toISOString()} - Application started, ${users.length} users loaded\n`;
-        await fs.appendFile(logFile, logEntry);
-        
-        // Read log file
-        console.log('\nReading log file...');
-        const logContent = await fs.readFile(logFile, 'utf-8');
-        console.log('Log contents:');
-        console.log(logContent);
-        
-        // File stats
-        console.log('File statistics:');
-        const userStats = await fs.stat(usersFile);
-        const logStats = await fs.stat(logFile);
-        
-        console.log(`  ${usersFile}: ${userStats.size} bytes, modified ${userStats.mtime}`);
-        console.log(`  ${logFile}: ${logStats.size} bytes, modified ${logStats.mtime}`);
-        
-        // List directory contents
-        console.log('\nDirectory contents:');
-        const files = await fs.readdir(dataDir);
-        for (const file of files) {
-            const filePath = join(dataDir, file);
-            const stats = await fs.stat(filePath);
-            console.log(`  ${file}: ${stats.isDirectory() ? 'DIR' : 'FILE'} (${stats.size} bytes)`);
-        }
-        
-    } catch (error) {
-        console.error('File operation error:', error.message);
+    await mkdir(dataDir, { recursive: true }); // Ensure directory exists
+
+    // 1) Write and read text
+    const helloPath = join(dataDir, 'hello.txt');
+    await Bun.write(helloPath, 'Hello from Bun\n');
+    const helloText = await Bun.file(helloPath).text();
+    console.log('text:', helloText.trim());
+
+    // 2) Append text (use Node fs for append semantics)
+    await appendFile(helloPath, 'Appended line\n', 'utf8');
+    console.log('appended');
+
+    // 3) JSON: write/read/update
+    const usersPath = join(dataDir, 'users.json');
+    const users = [
+        { id: 1, name: 'Alice', email: 'alice@example.com' },
+        { id: 2, name: 'Bob', email: 'bob@example.com' },
+    ];
+    await Bun.write(usersPath, JSON.stringify(users, null, 2));
+    const json = await Bun.file(usersPath).json();
+    console.log('users loaded:', json.length);
+
+    // 4) Binary: write/read bytes
+    const binPath = join(dataDir, 'bytes.bin');
+    const bytes = new Uint8Array([0xde, 0xad, 0xbe, 0xef]);
+    await Bun.write(binPath, bytes);
+    const readBytes = await Bun.file(binPath).bytes();
+    console.log('bytes length:', readBytes.length);
+
+    // 5) Copy file efficiently (File/Blob -> file)
+    const copyPath = join(dataDir, 'hello-copy.txt');
+    await Bun.write(copyPath, Bun.file(helloPath));
+    console.log('copied hello.txt -> hello-copy.txt');
+
+    // 6) Download directly to a file (Response/ReadableStream -> file)
+    const res = await fetch('https://example.com');
+    await Bun.write(join(dataDir, 'example.html'), res);
+    console.log('downloaded example.com -> data/example.html');
+
+    // 7) File metadata
+    const f = Bun.file(usersPath);
+    console.log('metadata:', {
+        size: f.size,                  // bytes
+        type: f.type || '',            // MIME type (if known)
+        lastModified: new Date(f.lastModified).toISOString(),
+    });
+
+    // 8) Scan directory contents with Bun.Glob
+    console.log('\nDirectory listing (txt/json):');
+    const glob = new Bun.Glob('**/*.{txt,json}');
+    for await (const p of glob.scan(dataDir)) {
+        console.log(' -', p);
     }
 }
 
-// Bun-specific file operations
-async function bunFileOperations() {
-    console.log('\n=== Bun-Specific File Operations ===');
-    
-    try {
-        // Using Bun.file() for optimized file operations
-        const configData = {
-            app: {
-                name: 'My Bun App',
-                version: '1.0.0',
-                debug: true
-            },
-            database: {
-                host: 'localhost',
-                port: 5432,
-                name: 'myapp'
-            }
-        };
-        
-        // Write file with Bun.write
-        await Bun.write('./config.json', JSON.stringify(configData, null, 2));
-        console.log('Config file written with Bun.write');
-        
-        // Read file with Bun.file
-        const file = Bun.file('./config.json');
-        const config = await file.json();
-        console.log('Config loaded:', config.app.name);
-        
-        // File info
-        console.log(`File size: ${file.size} bytes`);
-        console.log(`File type: ${file.type}`);
-        
-        // Read as different formats
-        const textContent = await file.text();
-        const buffer = await file.arrayBuffer();
-        
-        console.log(`Text length: ${textContent.length} characters`);
-        console.log(`Buffer size: ${buffer.byteLength} bytes`);
-        
-    } catch (error) {
-        console.error('Bun file operation error:', error.message);
-    }
-}
-
-// Run demos
-await fileOperationsDemo();
-await bunFileOperations();
+await run();
 ```
+
+Notes
+
+- Bun.write accepts: string, ArrayBuffer/TypedArray, Blob/File, Response, ReadableStream
+- Bun.file exposes: .text(), .json(), .arrayBuffer(), .bytes(), .stream(), plus .size, .type, .lastModified
+- For appending to an existing file, use Node's fs.appendFile as shown above
+
 
 ### Working with CSV and Data Files
 
@@ -1935,6 +1919,8 @@ process.on('SIGINT', () => {
     process.exit(0);
 });
 ```
+
+References: [HTTP server](https://bun.sh/docs/api/http)
 
 ### Idiomatic routing with routes (faster, simpler)
 
