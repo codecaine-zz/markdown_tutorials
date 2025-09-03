@@ -319,10 +319,17 @@ These sections are generated dynamically from the `tutorials/` directory.
 
 - **Keyboard Shortcuts**
    - F1: Show shortcut help
-   - Cmd/Ctrl+F: Focus sidebar search
+   - Ctrl/⌘+F: Find in page (browser)
+   - Ctrl/⌘+K: Focus sidebar search
    - Cmd/Ctrl+B: Toggle sidebar width
    - Cmd/Ctrl+H: Home
    - Plus/Minus: Zoom in/out
+
+#### Searching text (Find in page)
+
+- Find: Ctrl+F (Windows/Linux), ⌘+F (macOS)
+- Find next: F3 or Ctrl+G (Windows/Linux), ⌘+G (macOS)
+- Find previous: Shift+F3 or Ctrl+Shift+G (Windows/Linux), Shift+⌘+G (macOS)
 
 ### What's New
 
@@ -812,10 +819,17 @@ These sections are generated dynamically from the `tutorials/` directory.
 
 - **Keyboard Shortcuts**
    - F1: Show shortcut help
-   - Cmd/Ctrl+F: Focus sidebar search
+   - Ctrl/⌘+F: Find in page (browser)
+   - Ctrl/⌘+K: Focus sidebar search
    - Cmd/Ctrl+B: Toggle sidebar width
    - Cmd/Ctrl+H: Home
    - Plus/Minus: Zoom in/out
+
+#### Searching text (Find in page)
+
+- Find: Ctrl+F (Windows/Linux), ⌘+F (macOS)
+- Find next: F3 or Ctrl+G (Windows/Linux), ⌘+G (macOS)
+- Find previous: Shift+F3 or Ctrl+Shift+G (Windows/Linux), Shift+⌘+G (macOS)
 
 ### What’s New
 
