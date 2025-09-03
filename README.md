@@ -32,7 +32,7 @@ Website/cloud usage options:
 - 📋 **Copy to Clipboard** - One-click copying for all code blocks
 - 🧭 **Smart Navigation** - Breadcrumb navigation and expandable folder structure
 - 🔍 **Search & Discovery** - Sidebar search with live filtering and auto-expanding results
-- 🧩 **Toggleable Table of Contents** - Auto-generated ToC per tutorial with smooth anchor navigation
+- 🧩 **Auto-Display Table of Contents** - TOC automatically appears for all tutorials with dynamic toggle functionality
 - 🧱 **Sidebar Width Toggle** - Expand/collapse the sidebar for focus or overview
 - 🎯 **Smooth Scrolling** - In-page anchor navigation with smooth scrolling and target highlight
 - 🧰 **Top Toolbar** - Home, Collapse/Expand All, Refresh, Theme, and Zoom controls
@@ -278,6 +278,7 @@ These sections are generated dynamically from the `tutorials/` directory.
 
 Latest updates:
 
+- **Auto-Toggle Table of Contents**: TOC now appears automatically when viewing any markdown tutorial, with improved toggle functionality and dynamic button states
 - New homepage insights panel with quick actions (focus search, random tutorial), stats, browse-by-category, and recently added tutorials
 - Added SVG favicon (`favicon.svg`) and `theme-color` for better browser tab and mobile UI integration
 

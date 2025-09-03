@@ -231,13 +231,13 @@ class MarkdownTutorialApp {
 
                 // Controls above content (Table of Contents toggle)
                 $output .= '<div class="tutorial-actions" style="display:flex;gap:10px;margin:10px 0;">';
-                $output .= '<button class="btn-secondary" id="tocToggle" onclick="toggleTableOfContents()" title="Toggle table of contents">';
+                $output .= '<button class="btn-secondary" id="tocToggle" onclick="toggleTableOfContents()" title="Hide table of contents">';
                 $output .= '<i class="fas fa-list"></i> Contents';
                 $output .= '</button>';
                 $output .= '</div>';
 
-                // Table of Contents container (hidden by default)
-                $output .= '<div class="table-of-contents" id="tableOfContents" style="display:none;">';
+                // Table of Contents container (visible by default)
+                $output .= '<div class="table-of-contents" id="tableOfContents" style="display:block;">';
                 $output .= '<h3 class="toc-title"><i class="fas fa-list"></i> Table of Contents</h3>';
                 $output .= '<ul class="toc-list"></ul>';
                 $output .= '</div>';

@@ -563,8 +563,27 @@ document.addEventListener('DOMContentLoaded', function() {
     window.toggleTableOfContents = function() {
         const toc = document.getElementById('tableOfContents');
         if (!toc) return;
-        const isHidden = toc.style.display === 'none' || toc.style.display === '';
+        
+        const isHidden = toc.style.display === 'none';
         toc.style.display = isHidden ? 'block' : 'none';
+        
+        // Update button text based on new state
+        const toggleBtn = document.getElementById('tocToggle');
+        if (toggleBtn) {
+            const icon = toggleBtn.querySelector('i');
+            const text = toggleBtn.childNodes[toggleBtn.childNodes.length - 1];
+            if (isHidden) {
+                // Now showing
+                if (icon) icon.className = 'fas fa-list';
+                if (text) text.textContent = ' Contents';
+                toggleBtn.title = 'Hide table of contents';
+            } else {
+                // Now hiding
+                if (icon) icon.className = 'fas fa-list-ul';
+                if (text) text.textContent = ' Show Contents';
+                toggleBtn.title = 'Show table of contents';
+            }
+        }
     }
 
     // ===== Toolbar wiring =====
