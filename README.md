@@ -4,7 +4,42 @@ A modern web application for browsing and viewing markdown-based tutorials with 
 
 ## Related: neu_markdown_buddy (desktop, web, cloud)
 
-If you prefer a native desktop experience, check out neu_markdown_buddy — a cross‑platform NeutralinoJS port of this project for macOS, Windows, and Linux.
+If you prefer a native deskto- **Toggleabl- **Toggleab- **Toggleable Table of Contents**
+   - On any tutorial page, click "Contents" to show/hide the ToC.
+   - The ToC is generated from headings and supports smooth scrolling.
+   - Target headings briefly highlight when navigated to.
+
+- **Smart "Previous" Button Navigation**
+   - When clicking on table of contents links or in-page anchor links, a "Previous" button appears next to the target heading.
+   - The button allows you to return to your previous scroll position with one click.
+   - Buttons persist until used (they remove themselves after being clicked) or until you navigate to a different section.
+   - Only one "Previous" button is visible at a time - clicking new ToC links replaces the previous button location.
+   - No manual dismiss option keeps the interface clean and focused on core navigation functionality.able of Contents**
+  - On any tutorial page, click "Contents" to show/hide the ToC.
+  - The ToC is generated from headings and supports smooth scrolling.
+  - Target headings briefly highlight when navigated to.
+
+- **Smart "Previous" Button Navigation**
+  - When clicking on table of contents links or in-page anchor links, a "Previous" button appears next to the target heading.
+  - The button allows you to return to your previous scroll position with one click.
+  - Buttons persist until used (they remove themselves after being clicked) or until you navigate to a different section.
+  - Only one "Previous" button is visible at a time - clicking new ToC links replaces the previous button location.
+  - No manual dismiss option keeps the interface clean and focused on core navigation functionality.
+
+- **Enhanced Anchor Navigation**e of Contents**
+   - On any tutorial page, click "Contents" to show/hide the ToC.
+   - The ToC is generated from headings and supports smooth scrolling.
+   - Target headings briefly highlight when navigated to.
+
+- **Smart "Previous" Button Navigation**
+   - When clicking on table of contents links or in-page anchor links, a "Previous" button appears next to the target heading.
+   - The button allows you to return to your previous scroll position with one click.
+   - Buttons persist until used (they remove themselves after being clicked) or until you navigate to a different section.
+   - Only one "Previous" button is visible at a time - clicking new ToC links replaces the previous button location.
+   - No manual dismiss option keeps the interface clean and focused on core navigation functionality.
+
+- **Enhanced Anchor Navigation**
+   - Stable, GitHub-like heading IDs, smooth in-page links, and automatic link rewrites for reliable anchors.ience, check out neu_markdown_buddy — a cross‑platform NeutralinoJS port of this project for macOS, Windows, and Linux.
 
 - Repository: [codecaine-zz/neu_markdown_buddy](https://github.com/codecaine-zz/neu_markdown_buddy)
 - Platforms: macOS, Windows, Linux (desktop); core UI also runs in a regular browser

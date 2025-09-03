@@ -244,14 +244,17 @@ document.addEventListener('DOMContentLoaded', function() {
         target.classList.add('anchor-highlight');
         setTimeout(() => target.classList.remove('anchor-highlight'), 1500);
 
-        // Avoid duplicating buttons per target
-        if (target.querySelector('.anchor-prev-btn')) return;
+        // Remove any existing previous buttons from other headings
+        const existingButtons = document.querySelectorAll('.anchor-prev-btn');
+        existingButtons.forEach(btn => btn.remove());
 
         const btn = document.createElement('button');
         btn.className = 'anchor-prev-btn';
         btn.type = 'button';
         btn.title = 'Go back to previous position';
         btn.innerHTML = '<i class="fas fa-arrow-up"></i> Previous';
+        
+        // Add click handler that removes the button after use
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             if (window.__lastAnchorScrollY !== undefined && window.__lastAnchorScrollY !== null) {
@@ -259,6 +262,8 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+            // Remove button after it's been used
+            btn.remove();
         });
 
         const firstChild = target.firstElementChild;
@@ -267,8 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             target.appendChild(btn);
         }
-
-        setTimeout(() => { btn.remove(); }, 8000);
     }
 
     // Delegate in-page anchor clicks inside markdown so they scroll smoothly
