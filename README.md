@@ -1,11 +1,5 @@
 # Markdown Tutorials
 
-A modern web application for browsing and viewing markdown-based tutorials with syntax highlighting, navigation, and responsive design.
-
-## Related: neu_markdown_buddy (desktop, web, cloud)
-
-If you prefer a native deskto- **Toggleabl- **Toggleab- # Markdown Tutorials
-
 A modern, feature-rich web application for browsing and viewing markdown-based tutorials with advanced search, bookmarking, progress tracking, and responsive design.
 
 ## 🚀 Latest Features & Improvements
@@ -235,7 +229,7 @@ The homepage now helps you get to content faster:
 - Stats summary: total tutorials, total categories, and the time since the latest update
 - Quick actions: focus the sidebar search and open a random tutorial
 - Browse by category: top-level folders with tutorial counts
-- Recently added: most recently updated tutorials with “time ago” labels
+- Recently added: most recently updated tutorials with "time ago" labels
 
 These sections are generated dynamically from the `tutorials/` directory.
 
@@ -257,12 +251,19 @@ These sections are generated dynamically from the `tutorials/` directory.
 - **Sidebar Search (Live Filter)**
    - Type in the sidebar search box to filter tutorials by name.
    - Matching items remain visible and parent folders auto-expand for quick access.
-   - Clear the query with the “×” button.
+   - Clear the query with the "×" button.
 
 - **Toggleable Table of Contents**
-   - On any tutorial page, click “Contents” to show/hide the ToC.
+   - On any tutorial page, click "Contents" to show/hide the ToC.
    - The ToC is generated from headings and supports smooth scrolling.
-   - Target headings briefly highlight; a small inline “Previous” button returns to your prior scroll position.
+   - Target headings briefly highlight when navigated to.
+
+- **Smart "Previous" Button Navigation**
+   - When clicking on table of contents links or in-page anchor links, a "Previous" button appears next to the target heading.
+   - The button allows you to return to your previous scroll position with one click.
+   - Buttons persist until used (they remove themselves after being clicked) or until you navigate to a different section.
+   - Only one "Previous" button is visible at a time - clicking new ToC links replaces the previous button location.
+   - No manual dismiss option keeps the interface clean and focused on core navigation functionality.
 
 - **Enhanced Anchor Navigation**
    - Stable, GitHub-like heading IDs, smooth in-page links, and automatic link rewrites for reliable anchors.
@@ -293,7 +294,7 @@ These sections are generated dynamically from the `tutorials/` directory.
    - Cmd/Ctrl+H: Home
    - Plus/Minus: Zoom in/out
 
-### What’s New
+### What's New
 
 Latest updates:
 
@@ -341,8 +342,17 @@ Modern browsers will show the SVG in the tab bar and use the theme color for UI 
 
 - **Single-file application** (`index.php`) for simplicity
 - **Separation of concerns** with dedicated CSS and JS files
-- **Class-based architecture** with clean method separation
+- **Class-based architecture** with clean method separation and new features
 - **Error handling** with logging to `logs/` directory
+- **Modular JavaScript** with feature-specific functions and improved code organization
+
+### Performance Optimizations
+
+- **Debounced search** to prevent excessive queries
+- **Efficient local storage** usage for user data
+- **Smooth animations** optimized for performance
+- **Lazy loading** for better initial page load
+- **Mobile-first responsive** design with optimized touch interactions
 
 ### Adding Language Support
 
@@ -367,17 +377,7 @@ To add syntax highlighting for additional languages:
 ### Common Issues
 
 **Server not starting:**
-
-- Ensure you're running from the project root directory
-- Check PHP version: `php --version`
-- Try a different port: `php -S localhost:3000`
-
-**Tutorials not loading:**
-
-- Check file permissions on `tutorials/` directory
-- Verify markdown files have `.md` extension
-- Check browser console for JavaScript errors
-
+- Ensure you're running from the project
 **Styling issues:**
 
 - Clear browser cache
