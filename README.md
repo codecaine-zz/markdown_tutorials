@@ -5,6 +5,7 @@ A modern, feature-rich web application for browsing and viewing markdown-based t
 ## 🚀 Latest Features & Improvements
 
 ### Enhanced User Experience
+
 - **🔍 Fuzzy Search System** - Smart search with highlighting, suggestions, and history
 - **📖 Reading Progress Tracking** - Automatic progress tracking with visual indicators
 - **🔖 Advanced Bookmark System** - One-click bookmarking with progress persistence
@@ -16,6 +17,9 @@ A modern, feature-rich web application for browsing and viewing markdown-based t
 - **🖨️ Print-Optimized Styles** - Clean print layout removing navigation elements
 - **♿ Better Accessibility** - Keyboard navigation, focus styles, and ARIA labels
 - **📱 Mobile Enhancements** - Touch-friendly interactions and responsive design
+- **🧭 Right‑rail Sticky Table of Contents** - Always-visible ToC with scrollspy highlighting and persisted visibility
+- **🧰 Code-friendly Layout** - Wider content column, larger inter-column gap, and per-article zoom that doesn’t affect the ToC
+
 
 ## Related: neu_markdown_buddy (desktop, web, cloud)
 
@@ -26,19 +30,23 @@ If you prefer a native desktop experience, check out neu_markdown_buddy — a cr
 - Highlights: advanced navigation, smart search, ToC, code copy, theme + zoom, random tutorial, and persistent UI state
 
 Quick desktop start (summary):
+
 - Install Node.js or Bun and the NeutralinoJS CLI (@neutralinojs/neu)
 - In the neu_markdown_buddy repo: run `neu update`, then `neu run` for dev or `neu build` for distributable binaries
 
 Use your existing tutorials with the desktop app:
+
 - Copy or symlink this repo's `tutorials/` into neu_markdown_buddy at `resources/tutorials/` to browse the same content in the desktop UI
 
 Website/cloud usage options:
+
 - Host this PHP app (current repo) on any PHP-capable server or platform (see Installation below)
 - Or serve neu_markdown_buddy's `resources/` (index.html, styles, main.js, libs) as a static site; desktop‑only features (e.g., tray, always‑on‑top, native FS access) won't apply in browsers, but the core reader/navigation work well
 
 ## Features
 
 ### Core Functionality
+
 - 📚 **Interactive Tutorial Browser** - Navigate through organized tutorial collections
 - 🎨 **Syntax Highlighting** - Code blocks highlighted with Highlight.js for 20+ languages
 - 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
@@ -65,6 +73,26 @@ Website/cloud usage options:
 
 ![Tutorial View](screenshots/2.png)
 *Detailed tutorial view with syntax highlighting and copy functionality*
+
+## New Layout: Right‑rail Table of Contents
+
+The tutorial view uses a two-column article layout:
+
+- Content on the left, a Table of Contents (ToC) on the right.
+- The ToC is sticky (always visible) as you scroll, with smooth scrolling and active section highlighting (scrollspy).
+- The ToC visibility is persisted; use the “Contents” button to show/hide it per your preference.
+- On smaller screens, the ToC appears above the content and remains sticky at the top as you scroll.
+
+Reading experience improvements:
+
+- Wider content column designed to avoid wrapping long code lines and to keep copy buttons visible.
+- Increased gap between content and ToC to prevent overlap and create a uniform layout.
+- Zoom now applies only to the article (markdown content), not the ToC. This keeps the ToC fixed and readable while you scale the content.
+
+Notes:
+
+- If a tutorial has very few headings, the ToC will be minimal. You can still hide it via the “Contents” button.
+- Anchor navigation uses stable, GitHub-like heading IDs with smooth scrolling and a brief highlight on the target heading.
 
 ## Tutorial Categories
 
@@ -254,8 +282,9 @@ These sections are generated dynamically from the `tutorials/` directory.
    - Clear the query with the "×" button.
 
 - **Toggleable Table of Contents**
-   - On any tutorial page, click "Contents" to show/hide the ToC.
-   - The ToC is generated from headings and supports smooth scrolling.
+   - Right‑rail ToC (sticky) stays on screen while scrolling.
+   - Click "Contents" to show/hide the ToC; your choice is saved across visits.
+   - Generated from page headings with smooth scrolling and active section highlighting.
    - Target headings briefly highlight when navigated to.
 
 - **Smart "Previous" Button Navigation**
@@ -274,6 +303,7 @@ These sections are generated dynamically from the `tutorials/` directory.
 - **Top Toolbar**
    - Quick actions: Home, Collapse All, Expand All, Refresh.
    - Theme toggle (sun/moon) and Zoom controls with a live percentage indicator.
+   - Zoom scales only the article content; the ToC stays fixed for reliable navigation.
 
 - **Theme & Zoom Persistence**
    - Theme and zoom preferences are saved automatically and restored on page load.

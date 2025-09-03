@@ -245,7 +245,7 @@ body {
 }
 
 .content-wrapper {
-    max-width: 900px;
+    max-width: 1320px;
     margin: 0 auto;
     padding: 30px;
 }
@@ -619,6 +619,14 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     line-height: 1.7;
+    transform-origin: top left;
+    transform: scale(var(--md-scale, 1));
+    width: calc(100% / var(--md-scale, 1));
+}
+
+/* Ensure sticky children within content area are not clipped */
+.main-content, .content-wrapper, .article-layout {
+    overflow: visible;
 }
 
 .markdown-content h1,
@@ -1019,6 +1027,13 @@ body {
     transform: translateX(2px);
 }
 
+/* Active section highlighting */
+.toc-link.active {
+    background: rgba(52, 152, 219, 0.15);
+    color: #2c3e50;
+    border-left: 3px solid #3498db;
+}
+
 .toc-level-1 .toc-link {
     font-weight: 600;
     color: #2c3e50;
@@ -1106,6 +1121,7 @@ pre {
     font-size: 0.9rem;
     line-height: 1.5;
     padding: 0;
+    max-width: 100%;
 }
 
 code {
@@ -1273,7 +1289,7 @@ pre code {
 
 /* Ensure copy button appears above syntax highlighting */
 .copy-btn {
-    z-index: 100;
+    z-index: 5; /* keep above code but below ToC */
 }
 
 /* Mobile and tablet specific styles for copy button */
@@ -2458,6 +2474,54 @@ pre::-webkit-scrollbar-thumb:hover {
 /* Smooth scroll behavior for better UX */
 html {
     scroll-behavior: smooth;
+}
+
+/* Article layout with right-rail ToC like GitHub */
+.article-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 32px;
+    align-items: start;
+}
+
+.article-layout .markdown-content {
+    order: 1;
+}
+
+.article-layout .table-of-contents {
+    order: 2;
+    position: sticky;
+    top: 72px; /* below toolbar */
+    max-height: calc(100vh - 90px);
+    overflow: auto;
+    z-index: 10; /* above scaled content and copy buttons */
+}
+
+/* Give markdown a little breathing room from the ToC */
+.article-layout .markdown-content {
+    padding-right: 24px;
+}
+
+/* Collapse ToC below on small screens */
+@media (max-width: 1024px) {
+    .article-layout {
+        grid-template-columns: 1fr;
+    }
+    /* Keep ToC sticky even on narrower screens; place above content but sticky */
+    .article-layout .table-of-contents {
+        position: sticky;
+        top: 72px;
+        max-height: calc(100vh - 90px);
+        order: 0;
+        z-index: 5;
+    }
+}
+
+/* Dark theme active state */
+.theme-dark .toc-link.active {
+    background: #111827;
+    color: #e2e8f0;
+    border-left-color: #60a5fa;
 }
 
 /* High contrast mode support */

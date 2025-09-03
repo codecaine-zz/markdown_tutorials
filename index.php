@@ -238,16 +238,19 @@ class MarkdownTutorialApp {
                 
                 $output .= '</div>';
 
-                // Table of Contents container (visible by default)
-                $output .= '<div class="table-of-contents" id="tableOfContents" style="display:block;">';
-                $output .= '<h3 class="toc-title"><i class="fas fa-list"></i> Table of Contents</h3>';
-                $output .= '<ul class="toc-list"></ul>';
+                // Content + ToC layout wrapper
+                $output .= '<div class="article-layout">';
+                    // Table of Contents container (visible by default)
+                    $output .= '<div class="table-of-contents" id="tableOfContents" style="display:block;">';
+                    $output .= '<h3 class="toc-title"><i class="fas fa-list"></i> Table of Contents</h3>';
+                    $output .= '<ul class="toc-list"></ul>';
+                    $output .= '</div>';
+
+                    // Client-side render placeholder
+                    $output .= '<div class="markdown-content" data-md-src="' . htmlspecialchars($relative) . '">';
+                    $output .= '<div class="loading">Loading tutorial…</div>';
+                    $output .= '</div>';
                 $output .= '</div>';
-            
-            // Client-side render placeholder
-            $output .= '<div class="markdown-content" data-md-src="' . htmlspecialchars($relative) . '">';
-            $output .= '<div class="loading">Loading tutorial…</div>';
-            $output .= '</div>';
             $output .= '</div>';
             return $output;
         } else {

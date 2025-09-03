@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         addCopyButtons();
                         wireInPageLinks(contentDiv); // Enable smooth in-page navigation
                         buildTableOfContents(); // Build ToC from headings
+                        initTocScrollSpy(); // Highlight active section while scrolling
                         scrollToAnchor(); // Scroll to anchor after content is rendered
                     })
                     .catch(error => {
@@ -204,6 +205,45 @@ document.addEventListener('DOMContentLoaded', function() {
             li.appendChild(a);
             targetUl.appendChild(li);
         });
+    }
+
+    // ScrollSpy: mark active ToC link based on headings in view
+    function initTocScrollSpy() {
+        const toc = document.getElementById('tableOfContents');
+        if (!toc) return;
+        const links = Array.from(toc.querySelectorAll('.toc-link'));
+        if (!links.length) return;
+
+        const idToLink = new Map();
+        links.forEach(a => {
+            const id = decodeURIComponent((a.getAttribute('href') || '').replace('#',''));
+            if (id) idToLink.set(id, a);
+        });
+
+        const headings = Array.from(document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4'))
+            .filter(h => h.id);
+
+        let ticking = false;
+        function onScroll() {
+            if (ticking) return;
+            ticking = true;
+            requestAnimationFrame(() => {
+                const fromTop = window.scrollY + 90; // offset for toolbar, matches CSS top
+                let active = null;
+                for (const h of headings) {
+                    if (h.offsetTop <= fromTop) active = h;
+                    else break;
+                }
+                links.forEach(a => a.classList.remove('active'));
+                if (active) {
+                    const link = idToLink.get(active.id) || idToLink.get(`user-content-${active.id}`);
+                    link && link.classList.add('active');
+                }
+                ticking = false;
+            });
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
     }
 
     function getAnchorTarget(id) {
@@ -751,8 +791,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const toc = document.getElementById('tableOfContents');
         if (!toc) return;
         
-        const isHidden = toc.style.display === 'none';
-        toc.style.display = isHidden ? 'block' : 'none';
+    const isHidden = toc.style.display === 'none';
+    const nowVisible = isHidden; // after toggle, it'll be visible if it was hidden
+    toc.style.display = isHidden ? 'block' : 'none';
+    try { localStorage.setItem('tocVisible', String(nowVisible)); } catch {}
         
         // Update button text based on new state
         const toggleBtn = document.getElementById('tocToggle');
@@ -855,11 +897,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Zoom controls with persistence
     const ZOOM_KEY = 'mt_zoom';
-    const zoomContainer = document.getElementById('contentZoom');
+    let zoomTarget = null;
+    function resolveZoomTarget() {
+        // Prefer zooming the markdown article only, so ToC stays sticky
+        zoomTarget = document.querySelector('.markdown-content')
+            || document.querySelector('#contentZoom .content-wrapper')
+            || document.getElementById('contentZoom');
+    }
     let zoom = 1.0;
     function applyZoom() {
-        if (!zoomContainer) return;
-        zoomContainer.style.transform = `scale(${zoom})`;
+        if (!zoomTarget) resolveZoomTarget();
+        if (!zoomTarget) return;
+        zoomTarget.style.setProperty('--md-scale', String(zoom));
         TB.zoomIndicator && (TB.zoomIndicator.textContent = `${Math.round(zoom*100)}%`);
         localStorage.setItem(ZOOM_KEY, String(zoom));
     }
