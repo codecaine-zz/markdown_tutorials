@@ -356,6 +356,7 @@ For more details, do: `v check-md`
 ## Hello World
 
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
 	println('hello world')
 }
@@ -388,6 +389,7 @@ For brevity, `fn main()` will be skipped in this tutorial.
 This means that a "hello world" program in V is as simple as
 
 ```v
+// Docs: https://docs.vlang.io
 println('hello world')
 ```
 
@@ -420,6 +422,8 @@ after your folder/project), and then it will execute the program with
 Your program can then use the CLI parameters like this:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 println(os.args)
@@ -438,6 +442,7 @@ println(os.args)
 ## Comments
 
 ```v
+// Docs: https://docs.vlang.io
 // This is a single line comment.
 /*
 This is a multiline comment.
@@ -452,6 +457,7 @@ Functions are reusable blocks of code that perform specific tasks. They are the 
 ### Basic Function Syntax
 
 ```v
+// Docs: https://docs.vlang.io
 // Our main function - this runs when the program starts
 fn main() {
     // Call our custom functions and show the results
@@ -498,6 +504,7 @@ fn multiply(a int, b int) int {
 The type comes after each parameter's name. V requires explicit types for all parameters:
 
 ```v
+// Docs: https://docs.vlang.io
 // Different parameter types
 fn greet(name string, age int) string {
     return 'Hello ${name}, you are ${age} years old!'
@@ -531,6 +538,7 @@ processed := process_items(['apple', 'banana'], 'fruit: ')
 Functions that don't return anything have no return type specified:
 
 ```v
+// Docs: https://docs.vlang.io
 fn print_header(title string) {
     println('=' * 50)
     println('  ${title.to_upper()}')
@@ -561,6 +569,7 @@ display_menu()
 Functions can be used before their declaration. This is called "hoisting":
 
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
     // These functions are called before they're defined below
     result := calculate_total(100, 0.08, 15.00)
@@ -585,6 +594,7 @@ This is true for all declarations in V and eliminates the need for header files 
 V functions can return multiple values as a tuple:
 
 ```v
+// Docs: https://docs.vlang.io
 fn get_name_age() (string, int) {
     return 'Alice', 30
 }
@@ -631,6 +641,7 @@ println('Maximum: ${max_value}')
 
 **User Authentication System:**
 ```v
+// Docs: https://docs.vlang.io
 struct User {
     username string
     password string
@@ -680,6 +691,8 @@ if has_permission(user, true) {
 
 **Mathematical Functions Library:**
 ```v
+// Docs: https://docs.vlang.io
+// Module: math — https://modules.vlang.io/math.html
 import math
 
 fn factorial(n int) int {
@@ -736,6 +749,7 @@ println('LCM of 12 and 15: ${lcm(12, 15)}')      // 60
 
 **String Processing Functions:**
 ```v
+// Docs: https://docs.vlang.io
 // Function to capitalize the first letter of each word (Unicode-safe)
 fn capitalize_words(text string) string {
     words := text.split(' ')
@@ -805,6 +819,8 @@ fn demo_strings() {
 
 **File Processing Functions:**
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 // Function to read and parse a configuration file
@@ -919,6 +935,7 @@ fn demo_file_processing() {
 
 **1. Single Responsibility:**
 ```v
+// Docs: https://docs.vlang.io
 // ❌ Bad: Function does too many things
 fn process_user_data_badly(data string) {
     // validation, parsing, saving, logging, emailing...
@@ -933,6 +950,7 @@ fn log_user_action(action string) { /* ... */ }
 
 **2. Clear Naming:**
 ```v
+// Docs: https://docs.vlang.io
 // ❌ Bad: Unclear function names
 fn process(data string) { /* ... */ }
 fn calc(x int, y int) int { /* ... */ }
@@ -944,6 +962,7 @@ fn calculate_monthly_payment(principal f64, rate f64, months int) f64 { /* ... *
 
 **3. Parameter Validation:**
 ```v
+// Docs: https://docs.vlang.io
 fn calculate_circle_area(radius f64) ?f64 {
     if radius < 0 {
         return error('Radius cannot be negative')
@@ -964,6 +983,7 @@ Just like in Go and C, functions cannot be overloaded. This simplifies the code 
 ## Symbol visibility
 
 ```v
+// Docs: https://docs.vlang.io
 pub fn public_function() {
 }
 
@@ -988,6 +1008,7 @@ A [variable](https://en.wikipedia.org/wiki/Variable_(computer_science)) is a "na
 To create a variable in V, use the `:=` operator:
 
 ```v
+// Docs: https://docs.vlang.io
 name := 'Bob'
 println(name) // Bob
 ```
@@ -995,6 +1016,7 @@ println(name) // Bob
 Now we can put some data into it and access it using the variable name:
 
 ```v
+// Docs: https://docs.vlang.io
 name := 'Bob'
 age := 20
 large_number := i64(9999999999)
@@ -1012,6 +1034,7 @@ For instance, the variable `name` can be imagined as a box labelled `"name"` wit
 We can put any value in the box, and we can also change it:
 
 ```v
+// Docs: https://docs.vlang.io
 mut message := 'Hello'
 println(message)  // Hello
 
@@ -1024,6 +1047,7 @@ println(message)  // World
 Variables are declared and initialized with `:=`. This is the only way to declare variables in V. This means that variables always have an initial value.
 
 ```v
+// Docs: https://docs.vlang.io
 // Step-by-step variable declarations
 username := 'alice'          // Create a string variable
 user_age := 25              // Create an integer variable  
@@ -1042,6 +1066,7 @@ println('Items: ${items}')            // Items: [1, 2, 3, 4, 5]
 The variable's type is inferred from the value on the right hand side. To choose a different type, use type conversion: the expression `T(v)` converts the value `v` to the type `T`.
 
 ```v
+// Docs: https://docs.vlang.io
 // Type conversion examples (changing one type to another)
 
 // Convert number to string
@@ -1074,6 +1099,7 @@ There are several rules for variable names in V:
 3. **Descriptive names**: Use clear, meaningful names that describe the data
 
 ```v
+// Docs: https://docs.vlang.io
 // ✅ Good variable names
 user_name := 'John'
 total_price := 99.99
@@ -1092,6 +1118,7 @@ IsLoggedIn := true       // PascalCase not allowed
 You can declare multiple variables in one line:
 
 ```v
+// Docs: https://docs.vlang.io
 name, age, city := 'Alice', 25, 'New York'
 println('${name} is ${age} years old and lives in ${city}')
 // Alice is 25 years old and lives in New York
@@ -1102,6 +1129,7 @@ println('${name} is ${age} years old and lives in ${city}')
 Here are some common variable usage patterns:
 
 ```v
+// Docs: https://docs.vlang.io
 // User information
 user_id := 12345
 full_name := 'John Smith'
@@ -1130,6 +1158,7 @@ For consistency across different code bases, all variable and function names mus
 ### Mutable variables
 
 ```v
+// Docs: https://docs.vlang.io
 mut age := 20
 println(age)  // 20
 age = 21
@@ -1142,6 +1171,7 @@ To change the value of a variable, use `=`. In V, variables are **immutable by d
 
 **Immutable variables** (default):
 ```v
+// Docs: https://docs.vlang.io
 name := 'Alice'
 score := 100
 // name = 'Bob'    // ❌ Error: cannot assign to `name` (not mutable)
@@ -1150,6 +1180,7 @@ score := 100
 
 **Mutable variables** (with `mut`):
 ```v
+// Docs: https://docs.vlang.io
 mut counter := 0
 mut message := 'Loading'
 mut items := []string{}
@@ -1164,6 +1195,7 @@ println('Counter: ${counter}, Status: ${message}, Items: ${items}')
 
 **Game Score Tracking:**
 ```v
+// Docs: https://docs.vlang.io
 mut player_score := 0
 mut level := 1
 mut lives := 3
@@ -1193,6 +1225,7 @@ if lives == 0 {
 
 **Shopping Cart Management:**
 ```v
+// Docs: https://docs.vlang.io
 mut cart_total := 0.0
 mut item_count := 0
 mut discount_applied := false
@@ -1218,6 +1251,7 @@ if cart_total > 75.0 && !discount_applied {
 
 **String Building:**
 ```v
+// Docs: https://docs.vlang.io
 mut html_output := '<html><body>'
 mut css_classes := []string{}
 mut element_count := 0
@@ -1254,6 +1288,7 @@ Note the (important) difference between `:=` and `=`:
 
 **❌ This will not compile** (variable not declared):
 ```v failcompile
+// Docs: https://docs.vlang.io
 fn main() {
     age = 21  // Error: variable `age` not declared
 }
@@ -1261,6 +1296,7 @@ fn main() {
 
 **✅ This works** (proper declaration):
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
     age := 21  // Declare and initialize
 }
@@ -1271,6 +1307,7 @@ fn main() {
 The values of multiple variables can be changed in one line. In this way, their values can be swapped without an intermediary variable:
 
 ```v
+// Docs: https://docs.vlang.io
 mut a := 0
 mut b := 1
 println('Before: a=${a}, b=${b}')  // Before: a=0, b=1
@@ -1283,6 +1320,7 @@ println('After: a=${a}, b=${b}')   // After: a=1, b=0
 
 **Variable Swapping in Data Processing:**
 ```v
+// Docs: https://docs.vlang.io
 mut temperatures := [72.5, 68.3, 75.1, 70.2]
 println('Original temperatures: ${temperatures}')
 
@@ -1298,6 +1336,8 @@ println('After swapping: ${temperatures}')
 
 **User Input Processing:**
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 // Get user information
@@ -1319,6 +1359,7 @@ if processed_username.len < 3 {
 
 **Configuration Variables:**
 ```v
+// Docs: https://docs.vlang.io
 // Application configuration (immutable after setup)
 app_name := 'MyApp'
 version := '1.0.0'
@@ -1378,6 +1419,7 @@ Create a simple program that does the following:
 <summary>💡 Show Solution</summary>
 
 ```v
+// Docs: https://docs.vlang.io
 // Step 1: Create name variable with value "John"
 name := 'John'
 
@@ -1410,6 +1452,7 @@ Build a simple counter program:
 <summary>💡 Show Solution</summary>
 
 ```v
+// Docs: https://docs.vlang.io
 // Step 1: Create a mutable counter starting at 0
 mut counter := 0
 println('Starting counter: ${counter}')  // Shows: 0
@@ -1451,6 +1494,7 @@ Create a shopping calculator:
 <summary>💡 Show Solution</summary>
 
 ```v
+// Docs: https://docs.vlang.io
 // Step 1: Start with text values (like user input)
 price_text := '29.99'     // Price as string
 quantity_text := '3'      // Quantity as string
@@ -1480,6 +1524,7 @@ println('Total cost: $${total:.2f}')  // Shows: Total cost: $89.97
 </details>
 
 ```v
+// Docs: https://docs.vlang.io
 price_str := '29.99'
 quantity_str := '3'
 
@@ -1498,6 +1543,7 @@ println('Total: $${total:.2f}')
 Which of these variable names are valid in V? Fix the invalid ones:
 
 ```v
+// Docs: https://docs.vlang.io
 // Evaluate these:
 userName := 'Alice'        // ?
 user_name := 'Alice'       // ?
@@ -1512,6 +1558,7 @@ is_logged_in := true       // ?
 <summary>Solution</summary>
 
 ```v
+// Docs: https://docs.vlang.io
 // userName := 'Alice'        // ❌ Should use snake_case
 user_name := 'Alice'       // ✅ Correct
 // 3count := 5                // ❌ Cannot start with digit  
@@ -1539,6 +1586,7 @@ Create a shopping cart program that:
 <summary>Solution</summary>
 
 ```v
+// Docs: https://docs.vlang.io
 mut total_cost := 0.0
 mut item_count := 0
 discount_rate := 0.1
@@ -1578,6 +1626,7 @@ In development mode the compiler will warn you that you haven't used the variabl
 In production mode (enabled by passing the `-prod` flag to v – `v -prod foo.v`)
 it will not compile at all (like in Go).
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
     a := 10
     // warning: unused variable `a`
@@ -1587,6 +1636,7 @@ fn main() {
 To ignore values returned by a function `_` can be used
 
 ```v
+// Docs: https://docs.vlang.io
 fn foo() (int, int) {
     return 2, 3
 }
@@ -1602,6 +1652,7 @@ Unlike most languages, variable shadowing is not allowed. Declaring a variable w
 that is already used in a parent scope will cause a compilation error.
 
 ```v failcompile nofmt
+// Docs: https://docs.vlang.io
 fn main() {
     a := 10
     {
@@ -1613,6 +1664,7 @@ fn main() {
 While variable shadowing is not allowed, field shadowing is allowed.
 
 ```v
+// Docs: https://docs.vlang.io
 pub struct Dimension {
     width  int = -1
     height int = -1
@@ -1637,6 +1689,8 @@ Here are some common, copy-paste ready examples to get you started with V progra
 ### Simple Calculator
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn add(x f64, y f64) f64 {
@@ -1688,6 +1742,8 @@ fn main() {
 ### File Reader and Writer
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -1722,6 +1778,8 @@ fn main() {
 ### Simple HTTP Request
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
 import net.http
 
 fn main() {
@@ -1751,6 +1809,9 @@ fn main() {
 ### Working with JSON
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -1797,6 +1858,9 @@ fn main() {
 ### Simple Web Server
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: vweb — https://modules.vlang.io/vweb.html
+// Module: json — https://modules.vlang.io/json.html
 import vweb
 import json
 
@@ -1840,6 +1904,8 @@ pub fn (mut app App) echo() vweb.Result {
 ### Command Line Tool with Arguments
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn print_usage() {
@@ -1957,6 +2023,7 @@ V provides these main categories of types:
 The `bool` type represents logical values - either `true` or `false`:
 
 ```v
+// Docs: https://docs.vlang.io
 is_active := true
 is_disabled := false
 
@@ -1974,6 +2041,7 @@ if is_active {
 
 **Practical Boolean Examples:**
 ```v
+// Docs: https://docs.vlang.io
 // User authentication system
 mut user_logged_in := false
 mut has_admin_rights := false
@@ -2003,6 +2071,7 @@ if enable_dark_mode {
 V provides several integer types of different sizes:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 i8    // 8-bit signed integer (-128 to 127)
 i16   // 16-bit signed integer (-32,768 to 32,767)
 int   // 32-bit signed integer (-2,147,483,648 to 2,147,483,647)
@@ -2021,6 +2090,7 @@ usize // platform-dependent unsigned integer
 
 **Integer Examples:**
 ```v
+// Docs: https://docs.vlang.io
 // Age and counting
 age := 25                    // int (default)
 population := i64(7800000000) // Large numbers need explicit typing
@@ -2045,6 +2115,7 @@ println('${x} ^ ${y} = ${x ^ y}')   // XOR: 6 (0110)
 
 **Real-world Integer Examples:**
 ```v
+// Docs: https://docs.vlang.io
 // E-commerce system
 product_id := u32(501234)
 stock_count := 15
@@ -2068,12 +2139,14 @@ println('File size: ${file_size_mb}MB (${file_size_bytes} bytes)')
 V provides two floating-point types:
 
 ```v ignore  
+// Docs: https://docs.vlang.io
 f32  // 32-bit floating point
 f64  // 64-bit floating point (default)
 ```
 
 **Float Examples:**
 ```v
+// Docs: https://docs.vlang.io
 // Default float is f64
 temperature := 23.5
 pi := 3.14159265359
@@ -2098,6 +2171,7 @@ println('Circumference: ${circumference:.2f}')
 
 **Financial Calculations Example:**
 ```v
+// Docs: https://docs.vlang.io
 // Banking system - be careful with float precision!
 balance := 1250.75
 deposit := 500.25
@@ -2120,6 +2194,7 @@ V supports automatic type promotion for compatible types, but explicit conversio
 
 **Automatic Promotion:**
 ```v ignore
+// Docs: https://docs.vlang.io
    i8 → i16 → int → i64
                   ↘     ↘
                     f32 → f64
@@ -2131,6 +2206,7 @@ V supports automatic type promotion for compatible types, but explicit conversio
 
 **Type Conversion Examples:**
 ```v
+// Docs: https://docs.vlang.io
 // Explicit conversions
 age_int := 25
 age_float := f64(age_int)        // int to f64
@@ -2165,6 +2241,8 @@ println('Result: ${result}')  // Output: 123
 
 **Practical Type Conversion Example:**
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 // Configuration file parser
@@ -2210,6 +2288,7 @@ Strings in V are one of the most fundamental data types. They represent text dat
 In V, strings are UTF-8 encoded and **immutable** (read-only) by default:
 
 ```v
+// Docs: https://docs.vlang.io
 // Basic string creation
 name := 'Alice'
 message := 'Hello, World!'
@@ -2230,6 +2309,7 @@ double_quoted := "Hello"  // vfmt will convert to single quotes
 Strings cannot be modified after creation:
 
 ```v failcompile
+// Docs: https://docs.vlang.io
 mut text := 'hello'
 text[0] = 'H'  // ❌ Error: strings are immutable
 ```
@@ -2237,6 +2317,7 @@ text[0] = 'H'  // ❌ Error: strings are immutable
 To "modify" a string, you create a new one:
 
 ```v
+// Docs: https://docs.vlang.io
 original := 'hello'
 capitalized := original.to_upper()  // Creates new string: "HELLO"
 println('Original: ${original}')    // Still "hello"
@@ -2248,6 +2329,7 @@ println('Capitalized: ${capitalized}')
 **Indexing** returns bytes (`u8`), not characters:
 
 ```v
+// Docs: https://docs.vlang.io
 name := 'Bob'
 first_byte := name[0]        // u8(66) - ASCII value of 'B'
 first_char := name[0].ascii_str()  // 'B' as string
@@ -2259,6 +2341,7 @@ println('First character: ${first_char}')   // B
 **Slicing** creates new strings:
 
 ```v
+// Docs: https://docs.vlang.io
 sentence := 'Hello World'
 hello := sentence[0..5]      // 'Hello' 
 world := sentence[6..11]     // 'World'
@@ -2273,6 +2356,7 @@ println('Parts: "${hello}" and "${world}"')
 For proper Unicode handling, use `runes()`:
 
 ```v
+// Docs: https://docs.vlang.io
 text := 'Hi 👋 there! 🌟'
 println('Byte length: ${text.len}')           // Counts bytes
 println('Character length: ${text.runes().len}')  // Counts Unicode chars
@@ -2289,6 +2373,7 @@ for i, r in runes {
 V supports various escape sequences:
 
 ```v
+// Docs: https://docs.vlang.io
 // Common escapes
 newline := 'Line 1\nLine 2'
 tab_separated := 'Name\tAge\tCity'
@@ -2312,6 +2397,7 @@ println('Star: ${star}, Smiley: ${smiley}, Heart: ${heart}')
 Use raw strings when you don't want escape processing:
 
 ```v
+// Docs: https://docs.vlang.io
 // Regular string with escapes
 regular := 'Path: C:\\Users\\Name\\file.txt\nLine 2'
 println(regular)  // Escapes are processed
@@ -2327,6 +2413,7 @@ V provides powerful string interpolation with `${}`:
 
 **Basic Interpolation:**
 ```v
+// Docs: https://docs.vlang.io
 name := 'Alice'
 age := 30
 city := 'New York'
@@ -2337,6 +2424,7 @@ println(message)
 
 **Expressions in Interpolation:**
 ```v
+// Docs: https://docs.vlang.io
 x := 10
 y := 20
 println('${x} + ${y} = ${x + y}')          // Arithmetic
@@ -2346,6 +2434,7 @@ println('Uppercase name: ${name.to_upper()}')  // Method calls
 
 **Format Specifiers:**
 ```v
+// Docs: https://docs.vlang.io
 price := 29.99
 quantity := 3
 discount := 0.15
@@ -2367,6 +2456,7 @@ V provides many useful string methods:
 
 **Case Conversion:**
 ```v
+// Docs: https://docs.vlang.io
 text := 'Hello World'
 println(text.to_lower())    // 'hello world'
 println(text.to_upper())    // 'HELLO WORLD'
@@ -2375,6 +2465,7 @@ println(text.capitalize())  // 'Hello world' (first letter only)
 
 **Searching and Testing:**
 ```v
+// Docs: https://docs.vlang.io
 sentence := 'The quick brown fox jumps over the lazy dog'
 
 // Searching
@@ -2393,6 +2484,7 @@ println(url.starts_with('https://'))       // true
 
 **String Splitting and Joining:**
 ```v
+// Docs: https://docs.vlang.io
 // Splitting
 csv_line := 'Alice,30,Engineer,New York'
 parts := csv_line.split(',')
@@ -2411,6 +2503,7 @@ println('Names: ${name_list}')  // 'Alice, Bob, Charlie'
 
 **Trimming:**
 ```v
+// Docs: https://docs.vlang.io
 // Remove whitespace
 messy := '   Hello World   '
 clean := messy.trim(' ')
@@ -2426,6 +2519,7 @@ println(clean_path)  // 'home/user/documents'
 
 **Email Validation:**
 ```v
+// Docs: https://docs.vlang.io
 fn is_valid_email(email string) bool {
     return email.contains('@') && 
            email.contains('.') && 
@@ -2445,6 +2539,7 @@ for email in emails {
 
 **URL Builder:**
 ```v
+// Docs: https://docs.vlang.io
 struct URLBuilder {
 mut:
     base_url string
@@ -2487,6 +2582,8 @@ println(final_url)  // https://api.example.com/users/123?format=json&fields=name
 
 **Log Message Formatter:**
 ```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
 import time
 
 enum LogLevel {
@@ -2531,6 +2628,7 @@ println(log_msg)
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 s := r'hello\nworld' // the `\n` will be preserved as two characters
 println(s) // "hello\nworld"
 ```
@@ -2538,6 +2636,7 @@ println(s) // "hello\nworld"
 Strings can be easily converted to integers:
 
 ```v
+// Docs: https://docs.vlang.io
 s := '42'
 n := s.int() // 42
 
@@ -2557,6 +2656,7 @@ Basic interpolation syntax is pretty simple - use `${` before a variable name an
 variable will be converted to a string and embedded into the literal:
 
 ```v
+// Docs: https://docs.vlang.io
 name := 'Bob'
 println('Hello, ${name}!') // Hello, Bob!
 ```
@@ -2613,6 +2713,7 @@ See
 for more information.
 
 ```v
+// Docs: https://docs.vlang.io
 x := 123.4567
 println('[${x:.2}]') // round to two decimal places => [123.46]
 println('[${x:10}]') // right-align with spaces on the left => [   123.457]
@@ -2629,6 +2730,7 @@ println('[${10.0000:.2f}]') // do show the 0s at the end, even though they do no
 V also has `r` and `R` switches, which will repeat the string the specified amount of times.
 
 ```v
+// Docs: https://docs.vlang.io
 println('[${'abc':3r}]') // [abcabcabc]
 println('[${'abc':3R}]') // [ABCABCABC]
 ```
@@ -2636,6 +2738,7 @@ println('[${'abc':3R}]') // [ABCABCABC]
 #### String operators
 
 ```v
+// Docs: https://docs.vlang.io
 name := 'Bob'
 bobby := name + 'by' // + is used to concatenate strings
 println(bobby) // "Bobby"
@@ -2648,6 +2751,7 @@ All operators in V must have values of the same type on both sides. You cannot c
 integer to a string:
 
 ```v failcompile
+// Docs: https://docs.vlang.io
 age := 10
 println('age = ' + age) // not allowed
 ```
@@ -2657,6 +2761,7 @@ println('age = ' + age) // not allowed
 We have to either convert `age` to a `string`:
 
 ```v
+// Docs: https://docs.vlang.io
 age := 11
 println('age = ' + age.str())
 ```
@@ -2664,6 +2769,7 @@ println('age = ' + age.str())
 or use string interpolation (preferred):
 
 ```v
+// Docs: https://docs.vlang.io
 age := 12
 println('age = ${age}')
 ```
@@ -2678,12 +2784,14 @@ A `rune` represents a single UTF-32 encoded Unicode character and is an alias fo
 To denote them, use <code>`</code> (backticks) :
 
 ```v
+// Docs: https://docs.vlang.io
 rocket := `🚀`
 ```
 
 A `rune` can be converted to a UTF-8 string by using the `.str()` method.
 
 ```v
+// Docs: https://docs.vlang.io
 rocket := `🚀`
 assert rocket.str() == '🚀'
 ```
@@ -2691,6 +2799,7 @@ assert rocket.str() == '🚀'
 A `rune` can be converted to UTF-8 bytes by using the `.bytes()` method.
 
 ```v
+// Docs: https://docs.vlang.io
 rocket := `🚀`
 assert rocket.bytes() == [u8(0xf0), 0x9f, 0x9a, 0x80]
 ```
@@ -2698,6 +2807,7 @@ assert rocket.bytes() == [u8(0xf0), 0x9f, 0x9a, 0x80]
 Hex, Unicode, and Octal escape sequences also work in a `rune` literal:
 
 ```v
+// Docs: https://docs.vlang.io
 assert `\x61` == `a`
 assert `\141` == `a`
 assert `\u0061` == `a`
@@ -2716,6 +2826,7 @@ error at compile time.
 Also remember that strings are indexed as bytes, not runes, so beware:
 
 ```v
+// Docs: https://docs.vlang.io
 rocket_string := '🚀'
 assert rocket_string[0] != `🚀`
 assert 'aloha!'[0] == `a`
@@ -2724,6 +2835,7 @@ assert 'aloha!'[0] == `a`
 A string can be converted to runes by the `.runes()` method.
 
 ```v
+// Docs: https://docs.vlang.io
 hello := 'Hello World 👋'
 hello_runes := hello.runes() // [`H`, `e`, `l`, `l`, `o`, ` `, `W`, `o`, `r`, `l`, `d`, ` `, `👋`]
 assert hello_runes.string() == hello
@@ -2732,6 +2844,7 @@ assert hello_runes.string() == hello
 ### Numbers
 
 ```v
+// Docs: https://docs.vlang.io
 a := 123
 ```
 
@@ -2741,6 +2854,7 @@ type `int`.
 You can also use hexadecimal, binary or octal notation for integer literals:
 
 ```v
+// Docs: https://docs.vlang.io
 a := 0x7B
 b := 0b01111011
 c := 0o173
@@ -2752,6 +2866,7 @@ All of these will be assigned the same value, 123. They will all have type
 V also supports writing numbers with `_` as separator:
 
 ```v
+// Docs: https://docs.vlang.io
 num := 1_000_000 // same as 1000000
 three := 0b0_11 // same as 0b11
 float_num := 3_122.55 // same as 3122.55
@@ -2762,6 +2877,7 @@ oct := 0o17_3 // same as 0o173
 If you want a different type of integer, you can use casting:
 
 ```v
+// Docs: https://docs.vlang.io
 a := i64(123)
 b := u8(42)
 c := i16(12345)
@@ -2770,6 +2886,7 @@ c := i16(12345)
 Assigning floating point numbers works the same way:
 
 ```v
+// Docs: https://docs.vlang.io
 f := 1.0
 f1 := f64(3.14)
 f2 := f32(3.14)
@@ -2781,6 +2898,7 @@ will have the type of `f64`.
 Float literals can also be declared as a power of ten:
 
 ```v
+// Docs: https://docs.vlang.io
 f0 := 42e1 // 420
 f1 := 123e-2 // 1.23
 f2 := 456e+2 // 45600
@@ -2795,6 +2913,7 @@ An array is an ordered collection of data elements of the same type. Arrays are 
 Arrays in V are created using square brackets `[]`. Each element can be accessed using an *index* starting from `0`:
 
 ```v
+// Docs: https://docs.vlang.io
 // Creating arrays with initial values
 numbers := [1, 2, 3, 4, 5]
 names := ['Alice', 'Bob', 'Charlie']
@@ -2816,6 +2935,7 @@ println('Last temperature: ${temperatures[temperatures.len - 1]}')  // 25.4
 To modify arrays, declare them as mutable with `mut`:
 
 ```v
+// Docs: https://docs.vlang.io
 mut scores := [85, 92, 78, 95, 88]
 println('Original scores: ${scores}')
 
@@ -2837,6 +2957,7 @@ println('After adding more scores: ${scores}')
 
 **Adding Elements:**
 ```v
+// Docs: https://docs.vlang.io
 mut shopping_list := ['bread', 'milk']
 println('Initial list: ${shopping_list}')
 
@@ -2852,6 +2973,7 @@ println('Final list: ${shopping_list}')
 
 **Checking if Element Exists:**
 ```v
+// Docs: https://docs.vlang.io
 fruits := ['apple', 'banana', 'orange', 'grape']
 
 // Using 'in' operator
@@ -2873,6 +2995,7 @@ if user_choice in valid_colors {
 
 **Empty Arrays:**
 ```v
+// Docs: https://docs.vlang.io
 // Empty arrays with explicit type
 mut integers := []int{}
 mut strings := []string{}
@@ -2886,6 +3009,7 @@ floats << 3.14
 
 **Pre-allocated Arrays:**
 ```v
+// Docs: https://docs.vlang.io
 // Create array with specific length and initial value
 mut zeros := []int{len: 5, init: 0}
 println(zeros)  // [0, 0, 0, 0, 0]
@@ -2903,6 +3027,7 @@ println(squares)   // [0, 1, 4, 9, 16]
 
 **Performance Optimized Arrays:**
 ```v
+// Docs: https://docs.vlang.io
 // Pre-allocate capacity to avoid reallocations
 mut large_numbers := []int{cap: 10000}
 println('Length: ${large_numbers.len}, Capacity: ${large_numbers.cap}')
@@ -2919,6 +3044,7 @@ println('After adding 5000 elements: len=${large_numbers.len}, cap=${large_numbe
 V supports arrays of arrays (matrices):
 
 ```v
+// Docs: https://docs.vlang.io
 // 2D array (matrix)
 mut matrix := [][]int{}
 
@@ -2946,6 +3072,7 @@ println('3D array: ${cube}')
 
 **Student Grade Management:**
 ```v
+// Docs: https://docs.vlang.io
 struct Student {
     name string
     grades []int
@@ -2990,6 +3117,7 @@ for student in students {
 
 **Inventory Management System:**
 ```v
+// Docs: https://docs.vlang.io
 struct Product {
     id int
     name string
@@ -3047,6 +3175,7 @@ println('Low stock items: ${low_items.len}')
 
 **Data Processing and Statistics:**
 ```v
+// Docs: https://docs.vlang.io
 // Function to find only even numbers in an array
 fn filter_even_numbers(numbers []int) []int {
     mut evens := []int{}  // Create empty array for results
@@ -3141,6 +3270,7 @@ println('Sorted data: ${sorted_data}')
 
 **Restaurant Menu System with Arrays:**
 ```v
+// Docs: https://docs.vlang.io
 // Define what a menu item looks like
 struct MenuItem {
     id          int     // Unique identifier (1, 2, 3...)
@@ -3227,6 +3357,7 @@ println('Total: $${final_total:.2f}')
 V arrays are strongly typed and homogeneous (all elements must be the same type):
 
 ```v
+// Docs: https://docs.vlang.io
 // Valid arrays
 integers := [1, 2, 3, 4, 5]                    // []int
 strings := ['hello', 'world', 'from', 'V']     // []string
@@ -3261,6 +3392,7 @@ result3 := operations[2](10, 5)  // Multiplication: 50
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 arr := []int{len: 5, init: -1}
 // `arr == [-1, -1, -1, -1, -1]`, arr.cap == 5
 
@@ -3272,6 +3404,7 @@ Setting the capacity improves performance of pushing elements to the array
 as reallocations can be avoided:
 
 ```v
+// Docs: https://docs.vlang.io
 mut numbers := []int{cap: 1000}
 println(numbers.len) // 0
 // Now appending elements won't reallocate
@@ -3287,6 +3420,7 @@ You can initialize the array by accessing the `index` variable which gives
 the index as shown here:
 
 ```v
+// Docs: https://docs.vlang.io
 count := []int{len: 4, init: index}
 assert count == [0, 1, 2, 3]
 
@@ -3325,6 +3459,7 @@ This example uses [Structs](#structs) and [Sum Types](#sum-types) to create an a
 which can handle different types (e.g. Points, Lines) of data elements.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Point {
 	x int
 	y int
@@ -3368,6 +3503,7 @@ Arrays can have more than one dimension.
 2d array example:
 
 ```v
+// Docs: https://docs.vlang.io
 mut a := [][]int{len: 2, init: []int{len: 3}}
 a[0][1] = 2
 println(a) // [[0, 2, 0], [0, 0, 0]]
@@ -3376,6 +3512,7 @@ println(a) // [[0, 2, 0], [0, 0, 0]]
 3d array example:
 
 ```v
+// Docs: https://docs.vlang.io
 mut a := [][][]int{len: 2, init: [][]int{len: 3, init: []int{len: 2}}}
 a[0][1][1] = 2
 println(a) // [[[0, 0], [0, 2], [0, 0]], [[0, 0], [0, 0], [0, 0]]]
@@ -3389,6 +3526,7 @@ with `s := arr.str()`.
 Copying the data from the array is done with `.clone()`:
 
 ```v
+// Docs: https://docs.vlang.io
 nums := [1, 2, 3]
 nums_copy := nums.clone()
 ```
@@ -3397,6 +3535,7 @@ Arrays can be efficiently filtered and mapped with the `.filter()` and
 `.map()` methods:
 
 ```v
+// Docs: https://docs.vlang.io
 nums := [1, 2, 3, 4, 5, 6]
 even := nums.filter(it % 2 == 0)
 println(even) // [2, 4, 6]
@@ -3408,6 +3547,7 @@ println(even_fn)
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 words := ['hello', 'world']
 upper := words.map(it.to_upper())
 println(upper) // ['HELLO', 'WORLD']
@@ -3425,6 +3565,7 @@ Additionally, `.any()` and `.all()` can be used to conveniently test
 for elements that satisfy a condition.
 
 ```v
+// Docs: https://docs.vlang.io
 nums := [1, 2, 3]
 println(nums.any(it == 2)) // true
 println(nums.all(it >= 2)) // false
@@ -3462,12 +3603,14 @@ Sorting arrays of all kinds is very simple and intuitive. Special variables `a` 
 are used when providing a custom sorting condition.
 
 ```v
+// Docs: https://docs.vlang.io
 mut numbers := [1, 3, 2]
 numbers.sort() // 1, 2, 3
 numbers.sort(a > b) // 3, 2, 1
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	age  int
 	name string
@@ -3484,6 +3627,7 @@ Useful for sorting on multiple fields at the same time by custom sorting rules.
 The code below sorts the array ascending on `name` and descending `age`.
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	age  int
 	name string
@@ -3524,6 +3668,7 @@ If a right-side index is absent, it is assumed to be the array length. If a
 left-side index is absent, it is assumed to be 0.
 
 ```v
+// Docs: https://docs.vlang.io
 nums := [0, 10, 20, 30, 40]
 println(nums[1..4]) // [10, 20, 30]
 println(nums[..4]) // [0, 10, 20, 30]
@@ -3535,6 +3680,7 @@ all array operations may be performed on them. E.g. they can be pushed onto an
 array of the same type:
 
 ```v
+// Docs: https://docs.vlang.io
 array_1 := [3, 5, 4, 7, 6]
 mut array_2 := [0, 1]
 array_2 << array_1[..3]
@@ -3549,6 +3695,7 @@ parent array (*copy on grow*). In particular pushing elements to a slice
 does not alter the parent:
 
 ```v
+// Docs: https://docs.vlang.io
 mut a := [0, 1, 2, 3, 4, 5]
 
 // Create a slice, that reuses the *same memory* as the parent array
@@ -3572,6 +3719,7 @@ Appending to the parent array, may or may not make it independent from its child
 The behaviour depends on the *parent's capacity* and is predictable:
 
 ```v
+// Docs: https://docs.vlang.io
 mut a := []int{len: 5, cap: 6, init: 2}
 mut b := unsafe { a[1..4] } // the contents of `b` uses part of the same memory, that is used by `a` too
 
@@ -3590,6 +3738,7 @@ println(b) // `[2, 3, 13]`
 You can call .clone() on the slice, if you *do* want to have an independent copy right away:
 
 ```v
+// Docs: https://docs.vlang.io
 mut a := [0, 1, 2, 3, 4, 5]
 mut b := a[2..4].clone()
 b[0] = 7 // Note: `b[0]` is NOT referring to `a[2]`, as it would have been, without the `.clone()`
@@ -3609,6 +3758,7 @@ the result is "locked" inside the array.
 The returned slice is always a valid array, though it may be empty:
 
 ```v
+// Docs: https://docs.vlang.io
 a := [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 println(a#[-3..]) // [7, 8, 9]
 println(a#[-20..]) // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -3627,6 +3777,7 @@ You can chain the calls of array methods like `.filter()` and `.map()` and use
 the `it` built-in variable to achieve a classic `map/filter` functional paradigm:
 
 ```v
+// Docs: https://docs.vlang.io
 // using filter, map and negatives array slices
 files := ['pippo.jpg', '01.bmp', '_v.txt', 'img_02.jpg', 'img_01.JPG']
 filtered := files.filter(it#[-4..].to_lower() == '.jpg').map(it.to_upper())
@@ -3648,6 +3799,7 @@ Most methods are defined to work on ordinary arrays, not on fixed size arrays.
 You can convert a fixed size array to an ordinary array with slicing:
 
 ```v
+// Docs: https://docs.vlang.io
 mut fnums := [3]int{} // fnums is a fixed size array with 3 elements.
 fnums[0] = 1
 fnums[1] = 10
@@ -3668,6 +3820,7 @@ the newly created ordinary array.
 ### Maps
 
 ```v
+// Docs: https://docs.vlang.io
 mut m := map[string]int{} // a map with `string` keys and `int` values
 m['one'] = 1
 m['two'] = 2
@@ -3683,6 +3836,7 @@ Maps can have keys of type string, rune, integer, float or voidptr.
 The whole map can be initialized using this short syntax:
 
 ```v
+// Docs: https://docs.vlang.io
 numbers := {
 	'one': 1
 	'two': 2
@@ -3693,6 +3847,7 @@ println(numbers)
 If a key is not found, a zero value is returned by default:
 
 ```v
+// Docs: https://docs.vlang.io
 sm := {
 	'abc': 'xyz'
 }
@@ -3701,6 +3856,7 @@ println(val) // ''
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 intm := {
 	1: 1234
 	2: 5678
@@ -3712,6 +3868,7 @@ println(s) // 0
 It's also possible to use an `or {}` block to handle missing keys:
 
 ```v
+// Docs: https://docs.vlang.io
 mm := map[string]int{}
 val := mm['bad_key'] or { panic('key not found') }
 ```
@@ -3719,6 +3876,7 @@ val := mm['bad_key'] or { panic('key not found') }
 You can also check, if a key is present, and get its value, if it was present, in one go:
 
 ```v
+// Docs: https://docs.vlang.io
 m := {
 	'abc': 'def'
 }
@@ -3730,6 +3888,7 @@ if v := m['abc'] {
 The same option check applies to arrays:
 
 ```v
+// Docs: https://docs.vlang.io
 arr := [1, 2, 3]
 large_index := 999
 val := arr[large_index] or { panic('out of bounds') }
@@ -3742,6 +3901,7 @@ println(val2)
 V also supports nested maps:
 
 ```v
+// Docs: https://docs.vlang.io
 mut m := map[string]map[string]int{}
 m['greet'] = {
 	'Hello': 1
@@ -3767,6 +3927,7 @@ As with structs, V lets you initialise a map with an update applied on top of
 another map:
 
 ```v
+// Docs: https://docs.vlang.io
 const base_map = {
 	'a': 4
 	'b': 5
@@ -3785,6 +3946,7 @@ This is functionally equivalent to cloning the map and updating it, except that
 you don't have to declare a mutable variable:
 
 ```v failcompile
+// Docs: https://docs.vlang.io
 // same as above (except mutable)
 mut foo := base_map.clone()
 foo['b'] = 88
@@ -3798,6 +3960,9 @@ V provides excellent support for maps with various key-value types and JSON seri
 ### String to String Maps
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -3847,6 +4012,9 @@ fn main() {
 ### String to Number Maps
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -3906,6 +4074,9 @@ fn main() {
 ### String to Struct Maps
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -4059,6 +4230,9 @@ fn main() {
 ### String to Map (Nested Maps)
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -4223,6 +4397,9 @@ fn main() {
 ### Integer and Other Key Types Maps
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -4429,6 +4606,10 @@ fn main() {
 ### Real-World Map Applications
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
+// Module: time — https://modules.vlang.io/time.html
 import json
 import os
 import time
@@ -4653,6 +4834,8 @@ For information about creating a module, see [Modules](#modules).
 Modules can be imported using the `import` keyword:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -4669,6 +4852,8 @@ V provides several ways to handle console input and output through the `os` modu
 ### Basic Input Examples
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -4694,6 +4879,9 @@ fn main() {
 ### Reading Different Data Types
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: strconv — https://modules.vlang.io/strconv.html
 import os
 import strconv
 
@@ -4727,6 +4915,8 @@ fn main() {
 ### Interactive Menu System
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn show_menu() {
@@ -4790,6 +4980,9 @@ fn main() {
 ### Reading from Standard Input (stdin)
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: io — https://modules.vlang.io/io.html
 import os
 import io
 
@@ -4815,6 +5008,9 @@ fn main() {
 ### Password Input (Hidden)
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: term — https://modules.vlang.io/term.html
 import os
 import term
 
@@ -4860,6 +5056,8 @@ V provides comprehensive file I/O operations through the `os` module:
 ### Basic File Operations
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -4899,6 +5097,8 @@ This example uses V's built-in sqlite module with parameterized queries to preve
 Prerequisites on macOS with Homebrew: `brew install sqlite` (provides libsqlite3).
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: db.sqlite — https://modules.vlang.io/db.sqlite.html
 import db.sqlite
 
 struct User {
@@ -4971,6 +5171,8 @@ Notes:
 ### Reading Files Line by Line
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -5000,6 +5202,8 @@ fn main() {
 ### Working with CSV Files
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 struct Person {
@@ -5051,6 +5255,8 @@ fn main() {
 ### File and Directory Management
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -5108,6 +5314,8 @@ fn main() {
 ### Binary File Operations
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -5161,6 +5369,8 @@ V provides powerful process management capabilities through the `os` module for 
 ### Basic Command Execution
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -5185,6 +5395,8 @@ fn main() {
 ### Advanced Process Execution
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -5212,6 +5424,9 @@ fn main() {
 ### Process Management with os.Process
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: time — https://modules.vlang.io/time.html
 import os
 import time
 
@@ -5240,6 +5455,9 @@ fn main() {
 ### Interactive Process Communication
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: time — https://modules.vlang.io/time.html
 import os
 import time
 
@@ -5283,6 +5501,8 @@ fn main() {
 ### Running System Commands Safely
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn run_command_safely(cmd string, args []string) ?string {
@@ -5328,6 +5548,9 @@ fn main() {
 ### Parallel Process Execution
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: sync — https://modules.vlang.io/sync.html
 import os
 import sync
 
@@ -5368,6 +5591,8 @@ fn main() {
 ### Environment Variables and Process Context
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn main() {
@@ -5406,6 +5631,8 @@ fn main() {
 ### Cross-Platform Process Management
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn get_system_info() {
@@ -5469,6 +5696,9 @@ V provides excellent support for networking operations including HTTP requests, 
 ### HTTP Client Operations
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
+// Module: json — https://modules.vlang.io/json.html
 import net.http
 import json
 
@@ -5499,6 +5729,9 @@ fn main() {
 ### HTTP POST Requests with JSON
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
+// Module: json — https://modules.vlang.io/json.html
 import net.http
 import json
 
@@ -5538,6 +5771,9 @@ fn main() {
 ### HTTP Web Server
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: vweb — https://modules.vlang.io/vweb.html
+// Module: json — https://modules.vlang.io/json.html
 import vweb
 import json
 
@@ -5604,6 +5840,8 @@ pub fn (mut app App) get_user() vweb.Result {
 ### TCP Socket Programming
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net — https://modules.vlang.io/net.html
 import net
 
 // TCP Server
@@ -5695,6 +5933,8 @@ fn main() {
 ### UDP Socket Programming
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net — https://modules.vlang.io/net.html
 import net
 
 // UDP Server
@@ -5768,6 +6008,9 @@ fn main() {
 ### HTTP File Download with Progress
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
+// Module: os — https://modules.vlang.io/os.html
 import net.http
 import os
 
@@ -5804,6 +6047,9 @@ fn main() {
 ### WebSocket Client
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net.websocket — https://modules.vlang.io/net.websocket.html
+// Module: time — https://modules.vlang.io/time.html
 import net.websocket
 import time
 
@@ -5871,6 +6117,9 @@ V provides excellent support for JSON serialization and deserialization with arr
 ### Basic Struct Array to JSON
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -5934,6 +6183,9 @@ fn main() {
 ### Loading JSON Array Back to Structs
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
 import json
 import os
 
@@ -5994,6 +6246,10 @@ fn main() {
 ### Complex Nested Struct Arrays
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
+// Module: time — https://modules.vlang.io/time.html
 import json
 import os
 import time
@@ -6319,6 +6575,10 @@ fn main() {
 ### JSON Array Processing with Error Handling
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: json — https://modules.vlang.io/json.html
+// Module: os — https://modules.vlang.io/os.html
+// Module: time — https://modules.vlang.io/time.html
 import json
 import os
 
@@ -6601,6 +6861,10 @@ fn main() {
 ### Error Handling Best Practices
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: net.http — https://modules.vlang.io/net.http.html
+// Module: time — https://modules.vlang.io/time.html
 import os
 import net.http
 
@@ -6727,6 +6991,9 @@ fn main() {
 ### Concurrent Programming with Channels
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
+// Module: sync — https://modules.vlang.io/sync.html
 import time
 import sync
 
@@ -6848,6 +7115,9 @@ fn main() {
 ### Memory Management and Performance
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: benchmark — https://modules.vlang.io/benchmark.html
+// Module: math — https://modules.vlang.io/math.html
 import benchmark
 import math
 
@@ -6925,6 +7195,8 @@ fn main() {
 ### Database Operations (Generic Pattern)
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: db.sqlite — https://modules.vlang.io/db.sqlite.html
 import db.sqlite
 
 struct User {
@@ -7051,6 +7323,9 @@ fn main() {
 ### Command-Line Tool: File Organizer
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: time — https://modules.vlang.io/time.html
 import os
 import time
 
@@ -7207,6 +7482,12 @@ fn main() {
 ### Simple Web API Server
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: vweb — https://modules.vlang.io/vweb.html
+// Module: json — https://modules.vlang.io/json.html
+// Module: time — https://modules.vlang.io/time.html
+// Module: crypto.rand — https://modules.vlang.io/crypto.rand.html
+// Module: encoding.base64 — https://modules.vlang.io/encoding.base64.html
 import vweb
 import json
 import time
@@ -7479,6 +7760,12 @@ pub fn (mut app App) delete_task() vweb.Result {
 ### Multi-threaded File Processor
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: time — https://modules.vlang.io/time.html
+// Module: sync — https://modules.vlang.io/sync.html
+// Module: crypto.md5 — https://modules.vlang.io/crypto.md5.html
+// Module: crypto.sha256 — https://modules.vlang.io/crypto.sha256.html
 import os
 import time
 import sync
@@ -7746,6 +8033,7 @@ Cyclic module imports are not allowed, like in Go.
 You can also import specific functions and types from modules directly:
 
 ```v
+// Docs: https://docs.vlang.io
 import os { input }
 
 fn main() {
@@ -7762,6 +8050,7 @@ fn main() {
 You can import several specific symbols at once:
 
 ```v
+// Docs: https://docs.vlang.io
 import os { input, user_os }
 
 name := input('Enter your name: ')
@@ -7791,6 +8080,7 @@ So in `abc/def/source.v` the first line will be `module def`, and not `module ab
 Referring to a module symbol such as a function or const, only needs module name as prefix:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 module def
 
 // func is a dummy example function.
@@ -7802,6 +8092,8 @@ pub fn func() {
 can be called like this:
 
 ```v ignore
+// Docs: https://docs.vlang.io
+// Module: def — https://modules.vlang.io/def.html
 module main
 
 import def
@@ -7826,6 +8118,8 @@ Any imported module name can be aliased using the `as` keyword:
 > (submodule names are determined by their path, not by the names of the .v file(s) in them).
 
 ```v failcompile
+// Docs: https://docs.vlang.io
+// Module: crypto.sha256 — https://modules.vlang.io/crypto.sha256.html
 import crypto.sha256
 import mymod.sha256 as mysha256
 
@@ -7840,6 +8134,9 @@ You cannot alias an imported function or type.
 However, you _can_ redeclare a type.
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
+// Module: math — https://modules.vlang.io/math.html
 import time
 import math
 
@@ -7865,6 +8162,7 @@ fn main() {
 ### If
 
 ```v
+// Docs: https://docs.vlang.io
 a := 10
 b := 20
 if a < b {
@@ -7888,6 +8186,7 @@ boolean condition, would be: `x = if c { 1 } else { 2 }`.
 
 Here is another example:
 ```v
+// Docs: https://docs.vlang.io
 num := 777
 s := if num % 2 == 0 { 'even' } else { 'odd' }
 println(s)
@@ -7897,6 +8196,7 @@ println(s)
 You can use multiple statements in each of the branches of an `if` expression, followed by a final
 value, that will become the value of the entire `if` expression, when it takes that branch:
 ```v
+// Docs: https://docs.vlang.io
 n := arguments().len
 x := if n > 2 {
 	dump(arguments())
@@ -7913,6 +8213,7 @@ Anywhere you can use `or {}`, you can also use "if unwrapping". This binds the u
 of an expression to a variable when that expression is not none nor an error.
 
 ```v
+// Docs: https://docs.vlang.io
 m := {
 	'foo': 'bar'
 }
@@ -7926,6 +8227,7 @@ if v := m['foo'] {
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 fn res() !int {
 	return 42
 }
@@ -7937,6 +8239,7 @@ if v := res() {
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	name string
 }
@@ -7959,6 +8262,7 @@ You can check the current type of a sum type using `is` and its negated form `!i
 You can do it either in an `if`:
 
 ```v cgen
+// Docs: https://docs.vlang.io
 struct Abc {
 	val string
 }
@@ -7982,6 +8286,7 @@ if x !is Abc {
 or using `match`:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 match x {
 	Abc {
 		// x is automatically cast to Abc and can be used here
@@ -7997,6 +8302,7 @@ match x {
 This works also with struct fields:
 
 ```v
+// Docs: https://docs.vlang.io
 struct MyStruct {
 	x int
 }
@@ -8039,6 +8345,7 @@ to tell the compiler that they know what they're doing.
 It works like this:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 mut x := MySumType(MyStruct{123})
 if mut x is MyStruct {
 	// x is cast to MyStruct even if it's mutable
@@ -8058,6 +8365,7 @@ match mut x {
 ### Match
 
 ```v
+// Docs: https://docs.vlang.io
 os := 'windows'
 print('V is running on ')
 match os {
@@ -8072,6 +8380,7 @@ When a matching branch is found, the following statement block will be run.
 The else branch will be run when no other branches match.
 
 ```v
+// Docs: https://docs.vlang.io
 number := 2
 s := match number {
 	1 { 'one' }
@@ -8083,6 +8392,7 @@ s := match number {
 A match statement can also to be used as an `if - else if - else` alternative:
 
 ```v
+// Docs: https://docs.vlang.io
 match true {
 	2 > 4 { println('if') }
 	3 == 4 { println('else if') }
@@ -8095,6 +8405,7 @@ match true {
 or as an `unless` alternative: [unless Ruby](https://www.tutorialspoint.com/ruby/ruby_if_else.htm)
 
 ```v
+// Docs: https://docs.vlang.io
 match false {
 	2 > 4 { println('if') }
 	3 == 4 { println('else if') }
@@ -8107,6 +8418,7 @@ match false {
 A match expression returns the value of the final expression from the matching branch.
 
 ```v
+// Docs: https://docs.vlang.io
 enum Color {
 	red
 	blue
@@ -8126,6 +8438,7 @@ by using the shorthand `.variant_here` syntax. An `else` branch is not allowed
 when all the branches are exhaustive.
 
 ```v
+// Docs: https://docs.vlang.io
 c := `v`
 typ := match c {
 	`0`...`9` { 'digit' }
@@ -8142,6 +8455,7 @@ in that case, the match is exhaustive, since all variant types are mentioned
 explicitly, so there is no need for an `else{}` branch.
 
 ```v nofmt
+// Docs: https://docs.vlang.io
 struct Dog {}
 struct Cat {}
 struct Veasel {}
@@ -8162,6 +8476,7 @@ because the range is *inclusive* of the last element, rather than exclusive
 (as `..` ranges are). Using `..` in a match branch will throw an error.
 
 ```v
+// Docs: https://docs.vlang.io
 const start = 1
 
 const end = 10
@@ -8190,6 +8505,7 @@ Constants can also be used in the range branch expressions.
 To do the opposite, use `!in`.
 
 ```v
+// Docs: https://docs.vlang.io
 nums := [1, 2, 3]
 println(1 in nums) // true
 println(4 !in nums) // true
@@ -8199,6 +8515,7 @@ println(4 !in nums) // true
 > `in` checks if map contains a key, not a value.
 
 ```v
+// Docs: https://docs.vlang.io
 m := {
 	'one': 1
 	'two': 2
@@ -8211,6 +8528,7 @@ println('three' !in m) // true
 It's also useful for writing boolean expressions that are clearer and more compact:
 
 ```v
+// Docs: https://docs.vlang.io
 enum Token {
 	plus
 	minus
@@ -8246,6 +8564,7 @@ numeric range.
 ##### Array `for`
 
 ```v
+// Docs: https://docs.vlang.io
 numbers := [1, 2, 3, 4, 5]
 for num in numbers {
 	println(num)
@@ -8265,6 +8584,7 @@ Note that the value is read-only.
 If you need to modify the array while looping, you need to declare the element as mutable:
 
 ```v
+// Docs: https://docs.vlang.io
 mut numbers := [0, 1, 2]
 for mut num in numbers {
 	num++
@@ -8280,6 +8600,7 @@ Types that implement a `next` method returning an `Option` can be iterated
 with a `for` loop.
 
 ```v
+// Docs: https://docs.vlang.io
 struct SquareIterator {
 	arr []int
 mut:
@@ -8318,6 +8639,7 @@ The code above prints:
 ##### Map `for`
 
 ```v
+// Docs: https://docs.vlang.io
 m := {
 	'one': 1
 	'two': 2
@@ -8332,6 +8654,7 @@ for key, value in m {
 Either key or value can be ignored by using a single underscore as the identifier.
 
 ```v
+// Docs: https://docs.vlang.io
 m := {
 	'one': 1
 	'two': 2
@@ -8353,6 +8676,7 @@ for _, value in m {
 ##### Range `for`
 
 ```v
+// Docs: https://docs.vlang.io
 // Prints '01234'
 for i in 0 .. 5 {
 	print(i)
@@ -8375,6 +8699,7 @@ and reducing confusion in programming.
 #### Condition `for`
 
 ```v
+// Docs: https://docs.vlang.io
 mut sum := 0
 mut i := 0
 for i <= 100 {
@@ -8391,6 +8716,7 @@ Again, there are no parentheses surrounding the condition, and the braces are al
 #### Bare `for`
 
 ```v
+// Docs: https://docs.vlang.io
 mut num := 0
 for {
 	num += 2
@@ -8406,6 +8732,7 @@ The condition can be omitted, resulting in an infinite loop.
 #### C `for`
 
 ```v
+// Docs: https://docs.vlang.io
 for i := 0; i < 10; i += 2 {
 	// Don't print 6
 	if i == 6 {
@@ -8428,6 +8755,7 @@ You can also use `break` and `continue` followed by a label name to refer to an 
 loop:
 
 ```v
+// Docs: https://docs.vlang.io
 outer: for i := 4; true; i++ {
 	println(i)
 	for {
@@ -8456,6 +8784,8 @@ A defer statement defers the execution of a block of statements
 until the surrounding function returns.
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 fn read_log() {
@@ -8478,6 +8808,8 @@ If the function returns a value the `defer` block is executed *after* the return
 expression is evaluated:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 
 enum State {
@@ -8522,6 +8854,7 @@ To access the result of the function inside a `defer` block the `$res()` express
 is parameterized.
 
 ```v ignore
+// Docs: https://docs.vlang.io
 fn (mut app App) auth_middleware() bool {
 	defer {
 		if !$res() {
@@ -8562,6 +8895,7 @@ jumping back to code that accesses memory that has already been freed, so it req
 `unsafe`.
 
 ```v ignore
+// Docs: https://docs.vlang.io
 if x {
 	// ...
 	if y {
@@ -8581,6 +8915,7 @@ a nested loop, and those do not risk violating memory-safety.
 ## Structs
 
 ```v
+// Docs: https://docs.vlang.io
 struct Point {
 	x int
 	y int
@@ -8599,6 +8934,7 @@ assert p.x == 10
 Struct fields can re-use reserved keywords:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Employee {
 	type string
 	name string
@@ -8617,6 +8953,7 @@ Structs are allocated on the stack. To allocate a struct on the heap
 and get a [reference](#references) to it, use the `&` prefix:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Point {
 	x int
 	y int
@@ -8631,6 +8968,7 @@ The type of `p` is `&Point`. It's a [reference](#references) to `Point`.
 References are similar to Go pointers and C++ references.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {
 mut:
 	x int
@@ -8660,6 +8998,7 @@ see also [Stack and Heap](#stack-and-heap)
 ### Default field values
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {
 	n   int    // n is 0 by default
 	s   string // s is '' by default
@@ -8677,6 +9016,7 @@ It's also possible to define custom default values.
 ### Required fields
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {
 	n int @[required]
 }
@@ -8688,6 +9028,7 @@ that field must be initialized when creating an instance of that struct.
 This example will not compile, since the field `n` isn't explicitly initialized:
 
 ```v failcompile
+// Docs: https://docs.vlang.io
 _ = Foo{}
 ```
 
@@ -8696,6 +9037,7 @@ _ = Foo{}
 ### Short struct literal syntax
 
 ```v
+// Docs: https://docs.vlang.io
 struct Point {
 	x int
 	y int
@@ -8724,6 +9066,7 @@ as a function argument.
 V makes it easy to return a modified version of an object:
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	name          string
 	age           int
@@ -8751,6 +9094,7 @@ V doesn't have default function arguments or named arguments, for that trailing 
 literal syntax can be used instead:
 
 ```v
+// Docs: https://docs.vlang.io
 @[params]
 struct ButtonConfig {
 	text        string
@@ -8781,6 +9125,7 @@ assert button.height == 20
 As you can see, both the struct name and braces can be omitted, instead of:
 
 ```v oksyntax nofmt
+// Docs: https://docs.vlang.io
 new_button(ButtonConfig{text:'Click me', width:100})
 ```
 
@@ -8801,6 +9146,7 @@ Their access modifiers can be changed with
 `pub` and `mut`. In total, there are 5 possible options:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {
 	a int // private immutable (default)
 mut:
@@ -8826,6 +9172,7 @@ V supports anonymous structs: structs that don't have to be declared separately
 with a struct name.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Book {
 	author struct {
 		name string
@@ -8851,6 +9198,7 @@ V now supports static type methods like `User.new()`. These are defined on a str
 `fn [Type name].[function name]` and allow to organize all functions related to a struct:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 struct User {}
 
 fn User.new() User {
@@ -8876,6 +9224,7 @@ through _factory functions_.
 For an example, consider the following source in a directory `sample`:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 module sample
 
 @[noinit]
@@ -8898,6 +9247,8 @@ Note that `new_information` is a _factory_ function. Now when we want to use thi
 outside the module:
 
 ```v okfmt
+// Docs: https://docs.vlang.io
+// Module: sample — https://modules.vlang.io/sample.html
 import sample
 
 fn main() {
@@ -8916,6 +9267,7 @@ fn main() {
 ### Methods
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	age int
 }
@@ -8948,6 +9300,7 @@ but a short, preferably one letter long, name.
 V supports embedded structs.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Size {
 mut:
 	width  int
@@ -8968,6 +9321,7 @@ With embedding, the struct `Button` will automatically get all the fields and me
 the struct `Size`, which allows you to do:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 mut button := Button{
 	title:  'Click me'
 	height: 2
@@ -9002,6 +9356,7 @@ in OOP, *NOT* base classes.
 You can also initialize an embedded struct:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 mut button := Button{
 	Size: Size{
 		width:  3
@@ -9013,6 +9368,7 @@ mut button := Button{
 or assign values:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 button.Size = Size{
 	width:  4
 	height: 5
@@ -9030,6 +9386,7 @@ targeted.
 Just like structs, unions support embedding.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Rgba32_Component {
 	r u8
 	g u8
@@ -9089,6 +9446,7 @@ intended for low-level applications like kernels and drivers.
 It is possible to modify function arguments by declaring them with the keyword `mut`:
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	name string
 mut:
@@ -9109,6 +9467,7 @@ In this example, the receiver (which is just the first argument) is explicitly m
 so `register()` can change the user object. The same works with non-receiver arguments:
 
 ```v
+// Docs: https://docs.vlang.io
 fn multiply_by_2(mut arr []int) {
 	for i in 0 .. arr.len {
 		arr[i] *= 2
@@ -9139,6 +9498,7 @@ Below, `a ...int` refers to an arbitrary amount of parameters that will be colle
 into an array named `a`.
 
 ```v
+// Docs: https://docs.vlang.io
 fn sum(a ...int) int {
 	mut total := 0
 	for x in a {
@@ -9160,6 +9520,7 @@ println(sum(...b)) // output: 18
 ### Anonymous & higher order functions
 
 ```v
+// Docs: https://docs.vlang.io
 fn sqr(n int) int {
 	return n * n
 }
@@ -9203,6 +9564,7 @@ This means that anonymous functions can inherit variables from the scope they we
 They must do so explicitly by listing all variables that are inherited.
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 my_int := 1
 my_closure := fn [my_int] () {
 	println(my_int)
@@ -9215,6 +9577,7 @@ This means that if the original variable is modified after the creation of the f
 the modification won't be reflected in the function.
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 mut i := 1
 func := fn [i] () int {
 	return i
@@ -9228,6 +9591,7 @@ However, the variable can be modified inside the anonymous function.
 The change won't be reflected outside, but will be in the later function calls.
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 fn new_counter() fn () int {
 	mut i := 0
 	return fn [mut i] () int {
@@ -9245,6 +9609,7 @@ println(c()) // 3
 If you need the value to be modified outside the function, use a reference.
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 mut i := 0
 mut ref := &i
 print_counter := fn [ref] () {
@@ -9262,6 +9627,7 @@ The evaluation order of the parameters of function calls is *NOT* guaranteed.
 Take for example the following program:
 
 ```v
+// Docs: https://docs.vlang.io
 fn f(a1 int, a2 int, a3 int) {
 	dump(a1 + a2 + a3)
 }
@@ -9279,6 +9645,7 @@ This *may* change in V 1.0 .
 ## References
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {}
 
 fn (foo Foo) bar_method() {
@@ -9301,6 +9668,7 @@ You can ensure that the struct is always passed by reference by
 adding `&`:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {
 	abc int
 }
@@ -9317,6 +9685,7 @@ In general, V's references are similar to Go pointers and C++ references.
 For example, a generic tree structure definition would look like this:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Node[T] {
 	val   T
 	left  &Node[T]
@@ -9329,6 +9698,7 @@ To dereference a reference, use the `*` operator, just like in C.
 ## Constants
 
 ```v
+// Docs: https://docs.vlang.io
 const pi = 3.14
 const world = '世界'
 
@@ -9342,12 +9712,14 @@ Constant values can never be changed. You can also declare a single
 constant separately:
 
 ```v
+// Docs: https://docs.vlang.io
 const e = 2.71828
 ```
 
 V constants are more flexible than in most languages. You can assign more complex values:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Color {
 	r int
 	g int
@@ -9385,6 +9757,7 @@ Global variables are not normally allowed, so this can be really useful.
 Constants can be made public with `pub const`:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 module mymodule
 
 pub const golden_ratio = 1.61803
@@ -9418,6 +9791,7 @@ They can represent complex structures, and this is used quite often since there
 are no globals:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 println('Top cities: ${top_cities.filter(.usa)}')
 ```
 -->
@@ -9427,6 +9801,7 @@ println('Top cities: ${top_cities.filter(.usa)}')
 Some functions are builtin like `println`. Here is the complete list:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 fn print(s string) // prints anything on stdout
 fn println(s string) // prints anything and a newline on stdout
 
@@ -9450,6 +9825,7 @@ There is also a special built-in function called [`dump`](#dumping-expressions-a
 strings, numbers, arrays, maps, structs.
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	name string
 	age  int
@@ -9471,6 +9847,7 @@ If you want to define a custom print value for your type, simply define a
 `str() string` method:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Color {
 	r int
 	g int
@@ -9496,6 +9873,7 @@ For example, save this code sample as `factorial.v`, then run it with
 `v run factorial.v`:
 
 ```v
+// Docs: https://docs.vlang.io
 fn factorial(n u32) u32 {
 	if dump(n <= 1) {
 		return dump(1)
@@ -9548,6 +9926,7 @@ vim mymodule/myfile.v
 ```
 
 ```v failcompile
+// Docs: https://docs.vlang.io
 // myfile.v
 module mymodule
 
@@ -9559,6 +9938,7 @@ pub fn say_hi() {
 All items inside a module can be used between the files of a module regardless of whether or
 not they are prefaced with the `pub` keyword.
 ```v failcompile
+// Docs: https://docs.vlang.io
 // myfile2.v
 module mymodule
 
@@ -9571,6 +9951,8 @@ pub fn say_hi_and_bye() {
 You can now use `mymodule` in your code:
 
 ```v failcompile
+// Docs: https://docs.vlang.io
+// Module: mymodule — https://modules.vlang.io/mymodule.html
 import mymodule
 
 fn main() {
@@ -9605,6 +9987,7 @@ If you want a module to automatically call some setup/initialization code when i
 you can define a module `init` function:
 
 ```v
+// Docs: https://docs.vlang.io
 fn init() {
 	// your setup code here ...
 }
@@ -9620,6 +10003,7 @@ If you want a module to automatically call some cleanup/deinitialization code, w
 ends, you can define a module `cleanup` function:
 
 ```v
+// Docs: https://docs.vlang.io
 fn cleanup() {
 	// your deinitialisation code here ...
 }
@@ -9643,6 +10027,7 @@ An enum is a group of constant integer values, each having its own name,
 whose values start at 0 and increase by 1 for each name listed.
 For example:
 ```v
+// Docs: https://docs.vlang.io
 enum Color as u8 {
 	red   // the default start value is 0
 	green // the value is automatically incremented to 1
@@ -9669,6 +10054,7 @@ This ensures that if a new enum field is added, it's handled everywhere in the c
 Enum fields can re-use reserved keywords:
 
 ```v
+// Docs: https://docs.vlang.io
 enum Color {
 	none
 	red
@@ -9683,6 +10069,7 @@ println(color)
 Integers may be assigned to enum fields.
 
 ```v
+// Docs: https://docs.vlang.io
 enum Grocery {
 	apple
 	orange = 5
@@ -9702,6 +10089,7 @@ Operations are not allowed on enum variables; they must be explicitly cast to `i
 Enums can have methods, just like structs.
 
 ```v
+// Docs: https://docs.vlang.io
 enum Cycle {
 	one
 	two
@@ -9747,6 +10135,7 @@ one
 Enums can be created from string or integer value and converted into string
 
 ```v
+// Docs: https://docs.vlang.io
 enum Cycle {
 	one
 	two = 2
@@ -9775,6 +10164,7 @@ You can use type aliases for naming specific function signatures - for
 example:
 
 ```v
+// Docs: https://docs.vlang.io
 type Filter = fn (string) string
 ```
 
@@ -9782,6 +10172,7 @@ This works like any other type - for example, a function can accept an
 argument of a function type:
 
 ```v
+// Docs: https://docs.vlang.io
 type Filter = fn (string) string
 
 fn filter(s string, f Filter) string {
@@ -9793,6 +10184,7 @@ V has duck-typing, so functions don't need to declare compatibility with
 a function type - they just have to be compatible:
 
 ```v
+// Docs: https://docs.vlang.io
 fn uppercase(s string) string {
 	return s.to_upper()
 }
@@ -9803,6 +10195,7 @@ fn uppercase(s string) string {
 Compatible functions can also be explicitly cast to a function type:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 my_filter := Filter(uppercase)
 ```
 
@@ -9810,12 +10203,14 @@ The cast here is purely informational - again, duck-typing means that the
 resulting type is the same without an explicit cast:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 my_filter := uppercase
 ```
 
 You can pass the assigned function as an argument:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 println(filter('Hello world', my_filter)) // prints `HELLO WORLD`
 ```
 
@@ -9823,12 +10218,14 @@ And you could of course have passed it directly as well, without using a
 local variable:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 println(filter('Hello world', uppercase))
 ```
 
 And this works with anonymous functions as well:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 println(filter('Hello world', fn (s string) string {
 	return s.to_upper()
 }))
@@ -9840,6 +10237,7 @@ You can see the complete
 ### Interfaces
 
 ```v
+// Docs: https://docs.vlang.io
 // interface-example.1
 struct Dog {
 	breed string
@@ -9885,6 +10283,7 @@ to have a `mut` receiver, for methods declared in the `mut:` section
 of an interface.
 
 ```v
+// Docs: https://docs.vlang.io
 // interface-example.2
 module main
 
@@ -9929,6 +10328,7 @@ There is an **optional** `implements` keyword for explicit declaration
 of intent, which applies to `struct` declarations.
 
 ```v
+// Docs: https://docs.vlang.io
 struct PathError implements IError {
 	Error
 	path string
@@ -9956,6 +10356,7 @@ We can test the underlying type of an interface using dynamic cast operators.
 > Dynamic cast converts variable `s` into a pointer inside the `if` statements in this example:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 // interface-example.3 (continued from interface-example.1)
 interface Something {}
 
@@ -9978,6 +10379,7 @@ fn main() {
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 // interface-example.4
 interface IFoo {
 	foo()
@@ -10035,6 +10437,7 @@ implemented a method with the same name `speak`, as a method implemented by
 the struct, and you do `a.speak()`, *only* the interface method is called:
 
 ```v
+// Docs: https://docs.vlang.io
 interface Adoptable {}
 
 fn (a Adoptable) speak() string {
@@ -10075,6 +10478,7 @@ fn main() {
 Interfaces support embedding, just like structs:
 
 ```v
+// Docs: https://docs.vlang.io
 pub interface Reader {
 mut:
 	read(mut buf []u8) ?int
@@ -10101,6 +10505,7 @@ A sum type instance can hold a value of several different types. Use the `type`
 keyword to declare a sum type:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Moon {}
 
 struct Mars {}
@@ -10120,6 +10525,7 @@ type.
 With sum types you could build recursive structures and write concise but powerful code on them.
 
 ```v
+// Docs: https://docs.vlang.io
 // V's binary tree
 struct Empty {}
 
@@ -10154,6 +10560,7 @@ To check whether a sum type instance holds a certain type, use `sum is Type`.
 To cast a sum type to one of its variants you can use `sum as Type`:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Moon {}
 
 struct Mars {}
@@ -10184,6 +10591,7 @@ A safer way is to use a smart cast.
 #### Smart casting
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 if w is Mars {
 	assert typeof(w).name == 'Mars'
 	if w.dust_storm() {
@@ -10198,6 +10606,7 @@ If `w` is a mutable identifier, it would be unsafe if the compiler smart casts i
 That's why you have to declare a `mut` before the `is` expression:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 if mut w is Mars {
 	assert typeof(w).name == 'Mars'
 	if w.dust_storm() {
@@ -10214,6 +10623,7 @@ Otherwise `w` would keep its original type.
 You can also use `match` to determine the variant:
 
 ```v
+// Docs: https://docs.vlang.io
 struct Moon {}
 
 struct Mars {}
@@ -10244,6 +10654,7 @@ fn land(w World) {
 `match` must have a pattern for each variant or have an `else` branch.
 
 ```v ignore
+// Docs: https://docs.vlang.io
 struct Moon {}
 struct Mars {}
 struct Venus {}
@@ -10273,6 +10684,7 @@ represent an error returned from a function.
 `Result` types use `!`: `!Type`.
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	id   int
 	name string
@@ -10336,6 +10748,7 @@ Unlike other languages, V does not handle exceptions with `throw/try/catch` bloc
 to the `error()` function.
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 user := repo.find_user_by_id(7) or {
 	println(err) // "User 7 not found"
 	return
@@ -10348,6 +10761,7 @@ Only one `Option` or `Result` is allowed to be returned from a function. It is
 possible to return multiple values and still signal an error.
 
 ```v
+// Docs: https://docs.vlang.io
 fn multi_return(v int) !(int, int) {
 	if v < 0 {
 		return error('must be positive')
@@ -10362,6 +10776,8 @@ There are four ways of handling an option/result. The first method is to
 propagate the error:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
 import net.http
 
 fn f(url string) !string {
@@ -10380,6 +10796,7 @@ any further.
 The body of `f` is essentially a condensed version of:
 
 ```v ignore
+// Docs: https://docs.vlang.io
     resp := http.get(url) or { return err }
     return resp.body
 ```
@@ -10387,6 +10804,7 @@ The body of `f` is essentially a condensed version of:
 The second method is to break from execution early:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 user := repo.find_user_by_id(7) or { return }
 ```
 
@@ -10405,6 +10823,7 @@ In case of an error, that value would be assigned instead,
 so it must have the same type as the content of the `Option` being handled.
 
 ```v
+// Docs: https://docs.vlang.io
 fn do_something(s string) !string {
 	if s == 'foo' {
 		return 'foo'
@@ -10421,6 +10840,8 @@ println(b)
 The fourth method is to use `if` unwrapping:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
 import net.http
 
 if resp := http.get('https://google.com') {
@@ -10445,6 +10866,7 @@ so you only have to implement what you really need, and may provide additional u
 functions in the future.
 
 ```v
+// Docs: https://docs.vlang.io
 struct PathError {
 	Error
 	path string
@@ -10469,6 +10891,7 @@ fn main() {
 ### Generics
 
 ```v wip
+// Docs: https://docs.vlang.io
 
 struct Repo[T] {
     db DB
@@ -10511,6 +10934,7 @@ receiver argument `r` uses a generic type `T`.
 Another example:
 
 ```v
+// Docs: https://docs.vlang.io
 fn compare[T](a T, b T) int {
 	if a < b {
 		return -1
@@ -10546,6 +10970,8 @@ V's model of concurrency is similar to Go's.
 `spawn foo()` runs `foo()` concurrently in a different thread:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: math — https://modules.vlang.io/math.html
 import math
 
 fn p(a f64, b f64) { // ordinary function without return value
@@ -10576,6 +11002,8 @@ be done by assigning a *handle* to the started thread and calling the `wait()` m
 to this handle later:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: math — https://modules.vlang.io/math.html
 import math
 
 fn p(a f64, b f64) { // ordinary function without return value
@@ -10596,6 +11024,7 @@ parallel thread. There is no need to modify the function itself to be able to ca
 concurrently.
 
 ```v
+// Docs: https://docs.vlang.io
 import math { sqrt }
 
 fn get_hypot(a f64, b f64) f64 { //       ordinary function returning a value
@@ -10615,6 +11044,8 @@ If there is a large number of tasks, it might be easier to manage them
 using an array of threads.
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
 import time
 
 fn task(id int, duration int) {
@@ -10646,6 +11077,7 @@ Additionally for threads that return the same type, calling `wait()`
 on the thread array will return all computed values.
 
 ```v
+// Docs: https://docs.vlang.io
 fn expensive_computing(i int) int {
 	return i * i
 }
@@ -10677,6 +11109,7 @@ Channels are declared with the type `chan objtype`.
 You can optionally specify a buffer length using the `cap` field:
 
 ```v
+// Docs: https://docs.vlang.io
 ch := chan int{} // unbuffered - "synchronous"
 ch2 := chan f64{cap: 100} // buffered with a capacity of 100
 ```
@@ -10686,6 +11119,8 @@ a field of the individual channel object. Channels can be passed to threads like
 variables:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
 import time
 
 fn worker(ch chan int) {
@@ -10723,6 +11158,7 @@ Buffered channels allow you to push multiple items without blocking,
 as long as the buffer is not full:
 
 ```v
+// Docs: https://docs.vlang.io
 ch := chan string{cap: 2}
 ch <- 'hello'
 ch <- 'world'
@@ -10741,6 +11177,7 @@ associated channel has been closed and the buffer is empty. This situation can b
 handled using an `or {}` block (see [Handling options/results](#handling-optionsresults)).
 
 ```v wip
+// Docs: https://docs.vlang.io
 ch := chan int{}
 ch2 := chan f64{}
 // ...
@@ -10761,6 +11198,8 @@ without noticeable CPU load. It consists of a list of possible transfers and ass
 of statements - similar to the [match](#match) command:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
 import time
 
 fn main() {
@@ -10813,6 +11252,7 @@ The `select` command can be used as an *expression* of type `bool`
 that becomes `false` if all channels are closed:
 
 ```v wip
+// Docs: https://docs.vlang.io
 if select {
     ch <- a {
         // ...
@@ -10829,6 +11269,7 @@ if select {
 For special purposes there are some builtin fields and methods:
 
 ```v
+// Docs: https://docs.vlang.io
 ch := chan int{cap: 2}
 println(ch.try_push(42)) // `.success` if pushed, `.not_ready` if full, `.closed` if closed
 println(ch.len) // Number of items in the buffer
@@ -10837,6 +11278,7 @@ println(ch.closed) // Whether the channel is closed
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 struct Abc {
 	x int
 }
@@ -10876,6 +11318,7 @@ Note: Shared variables must be structs, arrays or maps.
 #### Example of Shared Objects
 
 ```v
+// Docs: https://docs.vlang.io
 struct Counter {
 mut:
 	value int
@@ -11058,6 +11501,7 @@ An attribute is a compiler instruction specified inside `[]` right before a
 function/struct/enum declaration and applies only to the following declaration.
 
 ```v
+// Docs: https://docs.vlang.io
 // @[flag] enables Enum types to be used as bitfields
 
 @[flag]
@@ -11102,6 +11546,7 @@ fn main() {
 ```
 
 ```v
+// Docs: https://docs.vlang.io
 // @[_allow_multiple_values] allows an enum to have multiple duplicate values.
 // Use it carefully, only when you really need it.
 
@@ -11138,6 +11583,7 @@ fn main() {
 Struct field deprecations:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 module abc
 
 // Note that only *direct* accesses to Xyz.d in *other modules*, will produce deprecation notices/warnings:
@@ -11168,6 +11614,7 @@ Depending on the type and impact of the change, you may want to consult with the
 deprecating a function.
 
 ```v
+// Docs: https://docs.vlang.io
 // Calling this function will result in a deprecation warning
 
 @[deprecated]
@@ -11194,6 +11641,7 @@ fn legacy_function2() {}
 ```
 
 ```v globals
+// Docs: https://docs.vlang.io
 // This function's calls will be inlined.
 @[inline]
 fn inlined_function() {
@@ -11326,6 +11774,7 @@ final executable, due to the passed -d flags.
 In order to see it in action, run the following example with `v run example.v` once,
 and then a second time with `v -d trace_logs example.v`:
 ```v
+// Docs: https://docs.vlang.io
 @[if trace_logs ?]
 fn elog(s string) {
 	eprintln(s)
@@ -11342,6 +11791,7 @@ Conditional compilation, based on custom flags, can also be used to produce slig
 executables, which share the majority of the same code, but where some of the logic, is needed
 only some of the time, for example a network server/client program can be written like so:
 ```v ignore
+// Docs: https://docs.vlang.io
 fn act_as_client() { ... }
 fn act_as_server() { ... }
 fn main() {
@@ -11397,12 +11847,15 @@ The compile time pseudo variables allow you to do the following
 example, which is useful while debugging/logging/tracing your code:
 
 ```v
+// Docs: https://docs.vlang.io
 eprintln(@LOCATION)
 ```
 
 Another example, is if you want to embed the version/name from v.mod *inside* your executable:
 
 ```v ignore
+// Docs: https://docs.vlang.io
+// Module: v.vmod — https://modules.vlang.io/v.vmod.html
 import v.vmod
 vm := vmod.decode( @VMOD_FILE ) or { panic(err) }
 eprintln('${vm.name} ${vm.version}\n ${vm.description}')
@@ -11410,11 +11863,14 @@ eprintln('${vm.name} ${vm.version}\n ${vm.description}')
 
 A program that prints its own source code (a quine):
 ```v
+// Docs: https://docs.vlang.io
 print($embed_file(@FILE).to_string())
 ```
 
 A program that prints the time when it was built:
 ```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
 import time
 
 println('This program, was compiled at ${time.unix(@BUILD_TIMESTAMP.i64()).format_ss_milli()} .')
@@ -11439,6 +11895,7 @@ You can iterate over struct fields using `.fields`, it also works with generic t
 (e.g. `T.fields`) and generic arguments (e.g. `param.fields` where `fn gen[T](param T) {`).
 
 ```v
+// Docs: https://docs.vlang.io
 struct User {
 	name string
 	age  int
@@ -11461,6 +11918,7 @@ fn main() {
 You can read [Enum](#enums) values and their attributes.
 
 ```v
+// Docs: https://docs.vlang.io
 enum Color {
 	red   @[RED]  // first attribute
 	blue  @[BLUE] // second attribute
@@ -11485,6 +11943,7 @@ fn main() {
 You can read [Struct](#structs) attributes.
 
 ```v
+// Docs: https://docs.vlang.io
 @[COLOR]
 struct Foo {
 	a int
@@ -11510,6 +11969,7 @@ fn main() {
 You can read variant types from [Sum type](#sum-types).
 
 ```v
+// Docs: https://docs.vlang.io
 type MySum = int | string
 
 fn main() {
@@ -11532,6 +11992,7 @@ fn main() {
 You can retrieve information about struct methods.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {
 }
 
@@ -11566,6 +12027,7 @@ fn main() {
 You can retrieve information about struct method params.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Test {
 }
 
@@ -11593,6 +12055,7 @@ for a more complete example.
 #### `$if` condition
 
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
 	// Support for multiple conditions in one branch
 	$if ios || android {
@@ -11654,6 +12117,8 @@ Full list of builtin options:
 #### `$embed_file`
 
 ```v ignore
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 fn main() {
 	embedded_file := $embed_file('v.png')
@@ -11680,6 +12145,8 @@ and it will always return the same data.
 Currently only one compression type is supported: `zlib`.
 
 ```v ignore
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
 import os
 fn main() {
 	embedded_file := $embed_file('x.css', .zlib) // compressed using zlib
@@ -11701,6 +12168,7 @@ V has a simple template language for text and html templates, and they can easil
 be embedded via `$tmpl('path/to/template.txt')`:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 fn build() string {
 	name := 'Peter'
 	age := 25
@@ -11746,6 +12214,7 @@ See more [details](https://github.com/vlang/v/blob/master/vlib/v/TEMPLATES.md)
 #### `$env`
 
 ```v
+// Docs: https://docs.vlang.io
 module main
 
 fn main() {
@@ -11772,6 +12241,7 @@ When a flag is not provided via the command line, `$d()` will return the `defaul
 value provided as the *second* argument.
 
 ```v
+// Docs: https://docs.vlang.io
 module main
 
 const my_i64 = $d('my_i64', 1024)
@@ -11797,6 +12267,7 @@ V rocks
 
 Here is an example of how to use the default values, which have to be *pure* literals:
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
 	val_str := $d('id_str', 'value') // can be changed by providing `-d id_str="my id"`
 	val_f64 := $d('id_f64', 42.0) // can be changed by providing `-d id_f64=84.0`
@@ -11827,6 +12298,7 @@ compile time.
 Both receive as their only argument a string literal that contains the message to display:
 
 ```v failcompile nofmt
+// Docs: https://docs.vlang.io
 // x.v
 module main
 
@@ -11891,6 +12363,7 @@ Here is a more complete example:
 `main.v`:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 module main
 fn main() { println(message) }
 ```
@@ -11898,6 +12371,7 @@ fn main() { println(message) }
 `main_default.c.v`:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 module main
 const message = 'Hello world'
 ```
@@ -11905,6 +12379,7 @@ const message = 'Hello world'
 `main_linux.c.v`:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 module main
 const message = 'Hello linux'
 ```
@@ -11912,6 +12387,7 @@ const message = 'Hello linux'
 `main_windows.c.v`:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 module main
 const message = 'Hello windows'
 ```
@@ -11945,6 +12421,7 @@ To use the native *V debugger*, add the `$dbg` statement to your source, where y
 want the debugger to be invoked.
 
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
 	a := 1
 	$dbg;
@@ -12073,6 +12550,8 @@ To enable this feature, add the `-d callstack` switch when building or running
 your code:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: v.debug — https://modules.vlang.io/v.debug.html
 import v.debug
 
 fn test(i int) {
@@ -12111,6 +12590,8 @@ To enable this feature, add the `-d trace` switch when building or running
 your code:
 
 ```v
+// Docs: https://docs.vlang.io
+// Module: v.debug — https://modules.vlang.io/v.debug.html
 import v.debug
 
 fn main() {
@@ -12160,6 +12641,7 @@ Examples of potentially memory-unsafe operations are:
 To mark potentially memory-unsafe operations, enclose them in an `unsafe` block:
 
 ```v wip
+// Docs: https://docs.vlang.io
 // allocate 2 uninitialized bytes & return a reference to them
 mut p := unsafe { malloc(2) }
 p[0] = `h` // Error: pointer indexing is only allowed in `unsafe` blocks
@@ -12197,6 +12679,7 @@ fields that can use the value `0`, understanding that it is unsafe, and that it 
 cause a panic.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Node {
 	a &Node
 	b &Node = unsafe { nil } // Auto-initialized to nil, use with caution!
@@ -12228,6 +12711,7 @@ println(qux)
 * `__offsetof(Struct, field_name)` gives the offset in bytes of a struct field.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Foo {
 	a int
 	b int
@@ -12243,6 +12727,7 @@ assert __offsetof(Foo, b) == 4
 Operator overloading defines the behavior of certain binary operators for certain types.
 
 ```v
+// Docs: https://docs.vlang.io
 struct Vec {
 	x int
 	y int
@@ -12389,6 +12874,7 @@ all of the members of the struct or union.
 
 Example:
 ```v
+// Docs: https://docs.vlang.io
 // Each u16 in the `data` field below, takes 2 bytes, and we have 3 of them = 6 bytes.
 // The smallest power of 2, bigger than 6 is 8, i.e. with `@[aligned]`, the alignment
 // for the entire struct U16s, will be 8:
@@ -12595,6 +13081,7 @@ To use these functions the C header for the used OS has to be included and the f
 that are intended to be used have to be declared. Example:
 
 ```v globals
+// Docs: https://docs.vlang.io
 $if windows {
 	#include "@VEXEROOT/thirdparty/stdatomic/win/atomic.h"
 } $else {
@@ -12681,6 +13168,8 @@ not with a value returned from a function call but with a method call by referen
 A separate `init()` function can be used for this purpose &ndash; it will be called before `main()`:
 
 ```v globals
+// Docs: https://docs.vlang.io
+// Module: sync — https://modules.vlang.io/sync.html
 import sync
 
 __global (
@@ -12730,6 +13219,7 @@ state stored in them.
 
 Here is a small example of how static variables can be used:
 ```v
+// Docs: https://docs.vlang.io
 @[unsafe]
 fn counter() int {
 	mut static x := 42
@@ -12875,6 +13365,7 @@ C compiler backend itself.
 
 **Example of #include**
 ```v oksyntax
+// Docs: https://docs.vlang.io
 #include <stdio.h>
 ```
 After this statement, V will *not* know anything about the functions and
@@ -12896,6 +13387,7 @@ refer to 1 of them, you can declare it like this:
 
 **Example of C struct redeclaration**
 ```v oksyntax
+// Docs: https://docs.vlang.io
 struct C.NameOfTheStruct {
 	a_field int
 }
@@ -12906,6 +13398,7 @@ that are defined with `typedef struct SomeName { ..... } TypeName;` in the C hea
 
 For that case, you will have to write something like this in your .c.v file:
 ```v oksyntax
+// Docs: https://docs.vlang.io
 @[typedef]
 pub struct C.TypeName {
 }
@@ -12919,16 +13412,19 @@ function, for example:
 
 **Example of C function redeclaration**
 ```v oksyntax
+// Docs: https://docs.vlang.io
 fn C.name_of_the_C_function(param1 int, const_param2 &char, param3 f32) f64
 ```
 ... and then later, you will be able to call the same way you would V function:
 ```v oksyntax
+// Docs: https://docs.vlang.io
 f := C.name_of_the_C_function(123, c'here is some C style string', 1.23)
 dump(f)
 ```
 
 **Example of using a C function from stdio, by redeclaring it on the V side**
 ```v
+// Docs: https://docs.vlang.io
 #include <stdio.h>
 
 // int dprintf(int fd, const char *format, ...)
@@ -12967,6 +13463,7 @@ functions.
 **Example**
 
 ```v
+// Docs: https://docs.vlang.io
 #flag freebsd -I/usr/local/include -L/usr/local/lib
 #flag -lsqlite3
 #include "sqlite3.h"
@@ -13057,6 +13554,7 @@ Currently the `linux`, `darwin` , `freebsd`, and `windows` flags are supported.
 > Each flag must go on its own line (for now)
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 #flag linux -lsdl2
 #flag linux -Ivig
 #flag linux -DCIMGUI_DEFINE_ENUMS_AND_STRUCTS=1
@@ -13087,6 +13585,7 @@ If no flags are passed it will add `--cflags` and `--libs` to pkgconfig (not to 
 In other words, both lines below do the same:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 #pkgconfig r_core
 #pkgconfig --cflags --libs r_core
 ```
@@ -13099,6 +13598,7 @@ check if a pkg-config exists. If it exists the branch will be created. Use `$els
 to handle other cases.
 
 ```v ignore
+// Docs: https://docs.vlang.io
 $if $pkgconfig('mysqlclient') {
 	#pkgconfig mysqlclient
 } $else $if $pkgconfig('mariadb') {
@@ -13116,6 +13616,7 @@ Then:
   created your module with `v new` you already have v.mod file). For example:
 
 ```v ignore
+// Docs: https://docs.vlang.io
 Module {
 	name: 'mymodule',
 	description: 'My nice module wraps a simple C library.',
@@ -13127,6 +13628,7 @@ Module {
 * Add these lines to the top of your module:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 #flag -I @VMODROOT/c
 #flag @VMODROOT/c/implementation.o
 #include "header.h"
@@ -13207,6 +13709,7 @@ struct SomeCStruct {
 members of sub-data-structures may be directly declared in the containing struct as below:
 
 ```v
+// Docs: https://docs.vlang.io
 pub struct C.SomeCStruct {
 	implTraits  u8
 	memPoolData u16
@@ -13266,6 +13769,7 @@ int main() {
 Run `v translate test.c`, and V will generate `test.v`:
 
 ```v
+// Docs: https://docs.vlang.io
 fn main() {
 	for i := 0; i < 10; i++ {
 		println('hello world')
@@ -13317,6 +13821,7 @@ declarations and definitions are already present).
 
 Example usage:
 ```v ignore
+// Docs: https://docs.vlang.io
 // This will include before built in libraries are used.
 #preinclude "pre_include.h"
 
@@ -13347,6 +13852,7 @@ Consider using them as a last resort!
 <!-- ignore because it doesn't pass fmt test (why?) -->
 
 ```v ignore
+// Docs: https://docs.vlang.io
 a := 100
 b := 20
 mut c := 0
@@ -13369,6 +13875,8 @@ For more examples, see
 ### Hot code reloading
 
 ```v live
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
 module main
 
 import time
@@ -13436,6 +13944,7 @@ be faster, since there is no need for a re-compilation of a script, that has not
 An example `deploy.vsh`:
 
 ```v oksyntax
+// Docs: https://docs.vlang.io
 #!/usr/bin/env -S v
 
 // Note: The shebang line above, associates the .vsh file to V on Unix-like systems,
@@ -13515,6 +14024,7 @@ See https://github.com/vlang/v/blob/master/cmd/tools/vrun for more details.
 V has 45 reserved keywords (3 are literals):
 
 ```v ignore
+// Docs: https://docs.vlang.io
 as
 asm
 assert
@@ -13569,6 +14079,7 @@ See also [V Types](#v-types).
 This lists operators for [primitive types](#primitive-types) only.
 
 ```v ignore
+// Docs: https://docs.vlang.io
 +    sum                    integers, floats, strings
 -    difference             integers, floats
 *    product                integers, floats
