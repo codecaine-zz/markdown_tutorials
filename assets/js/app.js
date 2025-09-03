@@ -30,6 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         buildTableOfContents(); // Build ToC from headings
                         initTocScrollSpy(); // Highlight active section while scrolling
                         scrollToAnchor(); // Scroll to anchor after content is rendered
+
+                        // Update document title from first heading and record correct history entry
+                        try {
+                            const h = contentDiv.querySelector('h1, h2');
+                            const pageTitle = (h ? h.textContent : '').trim();
+                            if (pageTitle) {
+                                setDocumentTitle(pageTitle);
+                                addOrUpdateHistory(pageTitle);
+                            }
+                        } catch {}
                     })
                     .catch(error => {
                         console.error('Error fetching markdown:', error);
@@ -1260,8 +1270,19 @@ function addQuickActionsMenu() {
 
 // Recent History Tracking
 function initRecentHistory() {
-    if (window.location.search) {
-        addToHistory();
+    if (!window.location.search) return;
+    // For non-markdown pages (home, folder listings, 404), derive title from server-rendered H1
+    const isMarkdownPage = !!document.querySelector('.markdown-content');
+    if (!isMarkdownPage) {
+        const h = document.querySelector('.content-wrapper h1');
+        const title = (h ? h.textContent : '').trim();
+        if (title) {
+            setDocumentTitle(title);
+            addOrUpdateHistory(title);
+        } else {
+            // Fallback to document.title if no H1
+            addOrUpdateHistory(document.title || 'Markdown Tutorials');
+        }
     }
 }
 
@@ -1270,16 +1291,36 @@ function addToHistory() {
     if (!page) return;
     
     try {
+        // Prefer in-content titles when available
+        const mdH1 = document.querySelector('.markdown-content h1');
+        const srvH1 = document.querySelector('.content-wrapper h1');
+        const derived = (mdH1?.textContent || srvH1?.textContent || document.title || '').trim();
+        addOrUpdateHistory(derived || 'Markdown Tutorials');
+    } catch (e) {}
+}
+
+// Helper: set document.title with consistent branding
+function setDocumentTitle(pageTitle) {
+    try {
+        const base = 'Markdown Tutorials';
+        const clean = String(pageTitle || '').replace(/\s+/g, ' ').trim();
+        document.title = clean ? `${clean} - ${base}` : base;
+    } catch {}
+}
+
+// Helper: add or update history entry with the latest correct title
+function addOrUpdateHistory(title) {
+    const page = new URLSearchParams(window.location.search).get('page');
+    if (!page) return;
+    const url = window.location.href;
+    try {
         let history = JSON.parse(localStorage.getItem('pageHistory') || '[]');
-        const title = document.title;
-        const url = window.location.href;
-        
+        // Remove any existing entry for this page
         history = history.filter(h => h.page !== page);
         history.unshift({ page, title, url, timestamp: Date.now() });
         history = history.slice(0, 20);
-        
         localStorage.setItem('pageHistory', JSON.stringify(history));
-    } catch (e) {}
+    } catch {}
 }
 
 // Modal System
