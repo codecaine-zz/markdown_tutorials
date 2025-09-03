@@ -182,6 +182,118 @@ Tutorials for automating Google services:
 4. **Open in browser**:
    Navigate to `http://localhost:8080`
 
+## Run as a Desktop App (NeutralinoJS)
+
+You can package and run this PHP app in a native desktop window using NeutralinoJS. Two simple options are below.
+
+### Option A — Quick connect to your running PHP server (recommended)
+
+Prerequisites:
+
+- Node.js (or Bun) and the NeutralinoJS CLI: `npm i -g @neutralinojs/neu` (or `bun add -g @neutralinojs/neu`)
+
+Steps:
+
+1. Start the PHP server in this repo (choose a port):
+
+```bash
+php -S 127.0.0.1:8080
+```
+
+1. In a separate folder (e.g., `desktop/`), create a Neutralino app and point the window to your local URL:
+
+```bash
+neu create markdown_tutorials_desktop
+cd markdown_tutorials_desktop
+```
+
+1. Edit `neutralino.config.json` to load the PHP app URL. For recent Neutralino versions, set it under the window mode:
+
+```json
+{
+   "applicationId": "com.markdown.tutorials",
+   "defaultMode": "window",
+   "modes": {
+      "window": {
+         "title": "Markdown Tutorials",
+         "width": 1200,
+         "height": 800,
+         "resizable": true,
+         "url": "http://127.0.0.1:8080/"
+      }
+   },
+   "nativeAllowList": ["app.*", "window.*"]
+}
+```
+
+Note: Some Neutralino templates use a top-level `url` instead of `modes.window.url`. If so, set `"url": "http://127.0.0.1:8080/"` at the top level.
+
+1. Run the desktop app:
+
+```bash
+neu run
+```
+
+1. Build distributables (optional):
+
+```bash
+neu build --release
+```
+
+### Option B — Auto‑start the PHP server from Neutralino (advanced)
+
+You can have Neutralino start/stop the PHP server when the app launches/exits.
+
+1. In your Neutralino project, allow OS process APIs in `neutralino.config.json`:
+
+```json
+{
+   "nativeAllowList": [
+      "app.*",
+      "events.*",
+      "window.*",
+      "os.spawnProcess",
+      "os.updateProcess",
+      "os.killProcess"
+   ]
+}
+```
+
+1. In `resources/js/main.js` (or your app’s entry script), spawn PHP on startup and kill it on exit. Adjust `projectDir` to this repo’s absolute path and `port` if needed:
+
+```javascript
+let phpPid = null;
+const port = 8080;
+const projectDir = "/absolute/path/to/markdown_tutorials"; // change this
+
+async function startPhp() {
+   // php -S 127.0.0.1:8080 -t /path/to/docroot
+   const result = await Neutralino.os.spawnProcess('php', ['-S', `127.0.0.1:${port}`, '-t', projectDir]);
+   phpPid = result.id || result.pid;
+}
+
+async function stopPhp() {
+   if (phpPid) {
+      try { await Neutralino.os.killProcess(phpPid); } catch (_) {}
+   }
+}
+
+Neutralino.events.on('ready', async () => {
+   await startPhp();
+   await Neutralino.window.setTitle('Markdown Tutorials');
+   // Ensure your config points the window to http://127.0.0.1:8080
+});
+
+Neutralino.events.on('windowClose', async () => {
+   await stopPhp();
+   await Neutralino.app.exit();
+});
+```
+
+1. Point the Neutralino window to `http://127.0.0.1:8080/` as in Option A. Then `neu run` will boot PHP and open the desktop window automatically.
+
+If you prefer a ready‑made desktop wrapper with extra features, see: [codecaine-zz/neu_markdown_buddy](https://github.com/codecaine-zz/neu_markdown_buddy).
+
 ## Usage
 
 ### Adding New Tutorials
