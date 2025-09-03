@@ -973,6 +973,52 @@ console.log(square(4)); // 16
 // Run: bun app.js (ensure both files are in the same folder)
 ```
 
+More import/export patterns you’ll use with Bun:
+
+```javascript
+// 1) Namespace import (import everything as an object)
+import * as math from './math-utils.js';
+console.log(math.add(1, 2), math.PI, math.default(5)); // 3 3.14159 25
+
+// 2) Import with renaming (aliases)
+import { add as sum, PI as pi } from './math-utils.js';
+console.log(sum(2, 2), pi); // 4 3.14159
+
+// 3) Re-export from another module (barrel/aggregator file)
+// index.js
+export { add, PI } from './math-utils.js'; // named re-exports
+export { default as square } from './math-utils.js'; // re-export default under a name
+
+// consumer.js
+import { add, PI, square } from './index.js';
+
+// 4) Export groups and aliases from your own file
+// stats.js
+const mean = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
+const median = arr => arr.toSorted((a, b) => a - b)[Math.floor(arr.length / 2)];
+function mode(arr) { /* ...impl... */ }
+
+export { mean, median as mid, mode };
+
+// consumer
+import { mean, mid } from './stats.js';
+
+// 5) Dynamic import with top-level await (supported in Bun)
+const { add: addFn } = await import('./math-utils.js');
+console.log(addFn(10, 5));
+
+// 6) Import Node built-ins using the `node:` scheme (recommended)
+import { readFile } from 'node:fs/promises';
+const text = await readFile(new URL('./README.md', import.meta.url), 'utf8');
+
+// 7) Import Bun built-ins with the `bun:` scheme
+import { Database } from 'bun:sqlite';
+// const db = new Database('app.db');
+
+// 8) Test utilities from Bun
+import { describe, it, expect } from 'bun:test';
+```
+
 #### Class Inheritance
 
 ```javascript
