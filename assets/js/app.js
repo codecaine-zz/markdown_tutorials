@@ -996,12 +996,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
         const cmd = e.metaKey || e.ctrlKey;
-        if (e.key === 'F1') { e.preventDefault(); alert('Shortcuts:\n• Cmd/Ctrl+F: focus search\n• Cmd/Ctrl+B: toggle sidebar width\n• Cmd/Ctrl+H: home\n• +/-: zoom'); }
-        if (cmd && (e.key === 'f' || e.key === 'F')) {
-            e.preventDefault();
-            const inp = document.getElementById('navigationSearch');
-            inp && inp.focus();
-        }
+        // Let F1 be handled by the enhanced handler below to show the modal
+        // Don't intercept Cmd/Ctrl+F so the browser's Find-in-page works
         if (cmd && (e.key === 'b' || e.key === 'B')) {
             e.preventDefault();
             sidebarToggle && sidebarToggle.click();
@@ -1541,8 +1537,12 @@ document.addEventListener('keydown', (e) => {
 
 function showKeyboardShortcuts() {
     const shortcuts = [
+        // Browser Find-in-page tips (cross‑platform) — prioritized at top
+        { key: 'Ctrl/⌘ + F', description: 'Find in page (browser)' },
+        { key: '⌘ + G (mac), F3 / Ctrl + G (Win/Linux)', description: 'Find next (browser)' },
+        { key: 'Shift + ⌘ + G (mac), Shift + F3 / Ctrl + Shift + G (Win/Linux)', description: 'Find previous (browser)'},
         { key: 'F1', description: 'Show keyboard shortcuts' },
-        { key: 'Ctrl/⌘ + K', description: 'Focus search' },
+        { key: 'Ctrl/⌘ + K', description: 'Focus sidebar search' },
         { key: 'Ctrl/⌘ + D', description: 'Toggle bookmark' },
         { key: 'Ctrl/⌘ + P', description: 'Print tutorial' },
         { key: 'Ctrl/⌘ + B', description: 'Toggle sidebar width' },

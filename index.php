@@ -114,7 +114,8 @@ class MarkdownTutorialApp {
                 </div>
             </div>
 
-            <script src="assets/js/app.js"></script>
+            <?php $appJsV = @filemtime(__DIR__ . '/assets/js/app.js') ?: time(); ?>
+            <script src="assets/js/app.js?v=<?php echo $appJsV; ?>"></script>
         </body>
         </html>
         <?php
