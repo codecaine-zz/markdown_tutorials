@@ -511,55 +511,239 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Sidebar search filter
+    // Enhanced sidebar search filter with fuzzy search and bookmarks
     const searchInput = document.getElementById('navigationSearch');
     const clearSearchBtn = document.getElementById('clearSearch');
-    function filterNav(query) {
-        const items = document.querySelectorAll('#nav-items .nav-item, #nav-items .nav-folder, #nav-items .nav-folder-header');
-        if (!items.length) return;
-        const q = (query || '').trim().toLowerCase();
-        if (!q) {
-            // reset
-            document.querySelectorAll('#nav-items .nav-item, #nav-items .nav-folder').forEach(el => el.style.display = '');
-            return;
-        }
-        // Hide all then show matches and their ancestors
-        document.querySelectorAll('#nav-items .nav-item, #nav-items .nav-folder').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('#nav-items .nav-item a, #nav-items .nav-folder-header span').forEach(el => {
-            const text = (el.textContent || '').toLowerCase();
-            if (text.includes(q)) {
-                const block = el.closest('.nav-item, .nav-folder');
-                if (block) block.style.display = '';
-                // Show ancestors
-                let parent = el.closest('.nav-folder-content');
+    let allNavItems = []; // Cache for search
+    
+    function cacheNavItems() {
+        allNavItems = [];
+        const links = document.querySelectorAll('#nav-items .nav-item a');
+        links.forEach(link => {
+            const span = link.querySelector('span');
+            if (span) {
+                const folderPath = [];
+                let parent = link.closest('.nav-folder-content');
                 while (parent) {
-                    parent.style.display = '';
-                    parent.classList.add('open');
-                    parent.style.maxHeight = 'none';
                     const header = parent.previousElementSibling;
                     if (header && header.classList.contains('nav-folder-header')) {
-                        const arrow = header.querySelector('.folder-arrow');
-                        arrow && arrow.classList.add('open');
-                        header.parentElement && (header.parentElement.style.display = '');
+                        const headerSpan = header.querySelector('span');
+                        if (headerSpan) folderPath.unshift(headerSpan.textContent);
                     }
                     parent = parent.parentElement?.closest('.nav-folder-content');
                 }
+                
+                allNavItems.push({
+                    element: link.closest('.nav-item'),
+                    link: link,
+                    title: span.textContent,
+                    path: folderPath.join(' > '),
+                    fullPath: [...folderPath, span.textContent].join(' ').toLowerCase(),
+                    href: link.href
+                });
             }
         });
     }
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const v = e.target.value;
-            filterNav(v);
-            if (clearSearchBtn) clearSearchBtn.style.opacity = v ? '1' : '0';
-        });
+    
+    function enhancedFilterNav(query) {
+        if (!allNavItems.length) cacheNavItems();
+        
+        const q = (query || '').trim().toLowerCase();
+        const searchContainer = document.getElementById('nav-items');
+        
+        if (!q) {
+            // Reset to original navigation
+            searchContainer.innerHTML = originalNavContent;
+            initFolderToggles();
+            expandCurrentPath();
+            initializeFolderStates();
+            return;
+        }
+        
+        // Fuzzy search
+        const results = allNavItems
+            .map(item => ({
+                ...item,
+                score: calculateSearchScore(item.title.toLowerCase(), item.fullPath, q)
+            }))
+            .filter(item => item.score > 0)
+            .sort((a, b) => b.score - a.score);
+        
+        // Save search term
+        saveSearchTerm(query);
+        
+        // Render search results
+        if (results.length === 0) {
+            searchContainer.innerHTML = `
+                <div class="search-no-results">
+                    <i class="fas fa-search"></i>
+                    <p>No tutorials found</p>
+                    <small>Try different keywords</small>
+                </div>
+            `;
+        } else {
+            let html = `<div class="search-results-header">
+                <i class="fas fa-search"></i>
+                <span>${results.length} result${results.length !== 1 ? 's' : ''}</span>
+            </div>`;
+            
+            results.forEach(item => {
+                const highlightedTitle = highlightSearchTerm(item.title, q);
+                const isBookmarked = isItemBookmarked(item.href);
+                html += `
+                    <div class="search-result-item">
+                        <a href="${item.href}">
+                            <i class="fas fa-file-alt"></i>
+                            <div class="search-result-content">
+                                <div class="search-result-title">${highlightedTitle}</div>
+                                ${item.path ? `<div class="search-result-path">${item.path}</div>` : ''}
+                            </div>
+                            ${isBookmarked ? '<i class="fas fa-bookmark bookmark-icon"></i>' : ''}
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                `;
+            });
+            
+            searchContainer.innerHTML = html;
+        }
     }
+    
+    function calculateSearchScore(title, fullPath, query) {
+        let score = 0;
+        
+        // Exact title match gets highest score
+        if (title === query) return 1000;
+        if (title.includes(query)) return 500 + (100 - title.length);
+        
+        // Full path match
+        if (fullPath.includes(query)) score += 200;
+        
+        // Word boundary matches
+        const words = query.split(' ');
+        words.forEach(word => {
+            if (word.length > 2) {
+                const regex = new RegExp('\\b' + escapeRegExp(word), 'i');
+                if (regex.test(title)) score += 50;
+                if (regex.test(fullPath)) score += 25;
+            }
+        });
+        
+        // Fuzzy match
+        let queryIndex = 0;
+        let consecutiveMatches = 0;
+        for (let i = 0; i < title.length && queryIndex < query.length; i++) {
+            if (title[i] === query[queryIndex]) {
+                score += 2;
+                consecutiveMatches++;
+                queryIndex++;
+            } else {
+                if (consecutiveMatches > 2) score += consecutiveMatches * 5;
+                consecutiveMatches = 0;
+            }
+        }
+        
+        return queryIndex === query.length ? score : 0;
+    }
+    
+    function highlightSearchTerm(text, term) {
+        if (!term) return text;
+        const regex = new RegExp(`(${escapeRegExp(term)})`, 'gi');
+        return text.replace(regex, '<mark>$1</mark>');
+    }
+    
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+    
+    // Save/load search history
+    function saveSearchTerm(term) {
+        if (!term.trim()) return;
+        try {
+            let history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            history = history.filter(t => t !== term);
+            history.unshift(term);
+            history = history.slice(0, 10);
+            localStorage.setItem('searchHistory', JSON.stringify(history));
+        } catch (e) {}
+    }
+    
+    const originalNavContent = document.getElementById('nav-items')?.innerHTML || '';
+    
+    if (searchInput) {
+        // Cache nav items on load
+        setTimeout(cacheNavItems, 100);
+        
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const v = e.target.value;
+                enhancedFilterNav(v);
+                if (clearSearchBtn) clearSearchBtn.style.opacity = v ? '1' : '0';
+            }, 200);
+        });
+        
+        // Add search suggestions on focus
+        searchInput.addEventListener('focus', showSearchSuggestions);
+    }
+    
     if (clearSearchBtn) {
         clearSearchBtn.addEventListener('click', () => {
             if (searchInput) searchInput.value = '';
-            filterNav('');
+            enhancedFilterNav('');
             clearSearchBtn.style.opacity = '0';
+            hideSearchSuggestions();
         });
+    }
+    
+    // Search suggestions
+    function showSearchSuggestions() {
+        if (searchInput.value.trim()) return;
+        
+        try {
+            const history = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+            if (history.length === 0) return;
+            
+            const suggestions = document.createElement('div');
+            suggestions.className = 'search-suggestions';
+            suggestions.innerHTML = `
+                <div class="suggestions-header">Recent searches:</div>
+                ${history.slice(0, 5).map(term => 
+                    `<div class="suggestion-item" tabindex="0">${term}</div>`
+                ).join('')}
+            `;
+            
+            const container = searchInput.closest('.search-container');
+            container.appendChild(suggestions);
+            
+            // Add click handlers
+            suggestions.addEventListener('click', (e) => {
+                if (e.target.classList.contains('suggestion-item')) {
+                    searchInput.value = e.target.textContent;
+                    enhancedFilterNav(e.target.textContent);
+                    hideSearchSuggestions();
+                    clearSearchBtn.style.opacity = '1';
+                }
+            });
+            
+            // Hide on outside click
+            setTimeout(() => {
+                document.addEventListener('click', hideSuggestionsOnOutsideClick);
+            }, 10);
+            
+        } catch (e) {}
+    }
+    
+    function hideSearchSuggestions() {
+        document.querySelectorAll('.search-suggestions').forEach(el => el.remove());
+        document.removeEventListener('click', hideSuggestionsOnOutsideClick);
+    }
+    
+    function hideSuggestionsOnOutsideClick(e) {
+        if (!e.target.closest('.search-container')) {
+            hideSearchSuggestions();
+        }
     }
 
     // ToC toggle
@@ -601,6 +785,7 @@ document.addEventListener('DOMContentLoaded', function() {
         collapseAll: document.getElementById('tbCollapseAll'),
         expandAll: document.getElementById('tbExpandAll'),
         refresh: document.getElementById('tbRefresh'),
+        help: document.getElementById('tbHelp'),
         theme: document.getElementById('tbTheme'),
         zoomOut: document.getElementById('tbZoomOut'),
         zoomIn: document.getElementById('tbZoomIn'),
@@ -608,6 +793,8 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     TB.home && TB.home.addEventListener('click', () => { window.location.href = '?page=home'; });
+
+    TB.help && TB.help.addEventListener('click', showKeyboardShortcuts);
 
     TB.collapseAll && TB.collapseAll.addEventListener('click', () => {
         busy.show();
@@ -767,4 +954,525 @@ document.addEventListener('DOMContentLoaded', function() {
         if ((e.key === '+' || e.key === '=')) { e.preventDefault(); TB.zoomIn && TB.zoomIn.click(); }
         if ((e.key === '-') ) { e.preventDefault(); TB.zoomOut && TB.zoomOut.click(); }
     });
+
+    // Initialize enhanced features when content is loaded
+    if (document.querySelector('.markdown-content')) {
+        initEnhancedFeatures();
+    }
 });
+
+// Enhanced UI Features - Bookmark System & Reading Progress
+function initEnhancedFeatures() {
+    addBookmarkButton();
+    updateBookmarkButton();
+    trackReadingProgress();
+    showReadingProgress();
+    addQuickActionsMenu();
+    initRecentHistory();
+    restorePreferences();
+}
+
+function addBookmarkButton() {
+    const actions = document.querySelector('.tutorial-actions');
+    if (!actions || document.getElementById('bookmarkBtn')) return;
+    
+    const bookmarkBtn = document.createElement('button');
+    bookmarkBtn.className = 'btn-secondary bookmark-btn';
+    bookmarkBtn.id = 'bookmarkBtn';
+    bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i> Bookmark';
+    bookmarkBtn.title = 'Bookmark this tutorial';
+    
+    bookmarkBtn.addEventListener('click', toggleBookmark);
+    actions.appendChild(bookmarkBtn);
+}
+
+function toggleBookmark() {
+    const currentUrl = window.location.href;
+    // Get the actual tutorial name from the page content instead of document.title
+    const titleElement = document.querySelector('.markdown-content h1');
+    const currentTitle = titleElement ? titleElement.textContent.trim() : 
+                        document.querySelector('title') ? document.querySelector('title').textContent.trim() :
+                        'Markdown Tutorial';
+    const currentPage = new URLSearchParams(window.location.search).get('page') || 'home';
+    
+    if (isItemBookmarked(currentUrl)) {
+        removeBookmark(currentUrl);
+        showNotification('Bookmark removed', 'success');
+    } else {
+        addBookmark(currentUrl, currentTitle, currentPage);
+        showNotification('Tutorial bookmarked', 'success');
+    }
+    updateBookmarkButton();
+}
+
+function isItemBookmarked(url) {
+    try {
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        return bookmarks.some(b => b.url === url);
+    } catch {
+        return false;
+    }
+}
+
+function addBookmark(url, title, page) {
+    try {
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        bookmarks = bookmarks.filter(b => b.url !== url);
+        bookmarks.unshift({
+            url,
+            title,
+            page,
+            timestamp: Date.now(),
+            progress: getReadingProgress()
+        });
+        bookmarks = bookmarks.slice(0, 50);
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    } catch (e) {}
+}
+
+function removeBookmark(url) {
+    try {
+        let bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        bookmarks = bookmarks.filter(b => b.url !== url);
+        localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+    } catch (e) {}
+}
+
+function updateBookmarkButton() {
+    const btn = document.getElementById('bookmarkBtn');
+    if (!btn) return;
+    
+    const isBookmarked = isItemBookmarked(window.location.href);
+    
+    if (isBookmarked) {
+        btn.classList.add('bookmarked');
+        btn.innerHTML = '<i class="fas fa-bookmark"></i> Bookmarked';
+        btn.title = 'Remove bookmark';
+    } else {
+        btn.classList.remove('bookmarked');
+        btn.innerHTML = '<i class="far fa-bookmark"></i> Bookmark';
+        btn.title = 'Bookmark this tutorial';
+    }
+}
+
+// Reading Progress Tracking
+function trackReadingProgress() {
+    if (!document.querySelector('.markdown-content')) return;
+    
+    let scrollTimer;
+    const page = new URLSearchParams(window.location.search).get('page') || 'home';
+    
+    function updateProgress() {
+        const progress = calculateReadingProgress();
+        saveReadingProgress(page, progress);
+    }
+    
+    window.addEventListener('scroll', () => {
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(updateProgress, 500);
+    });
+    
+    window.addEventListener('beforeunload', updateProgress);
+}
+
+function calculateReadingProgress() {
+    const content = document.querySelector('.markdown-content');
+    if (!content) return 0;
+    
+    const contentRect = content.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    const contentStart = scrollTop + contentRect.top;
+    const contentHeight = contentRect.height;
+    const viewportBottom = scrollTop + windowHeight;
+    
+    if (viewportBottom <= contentStart) return 0;
+    if (scrollTop >= contentStart + contentHeight) return 100;
+    
+    const progress = Math.round(((viewportBottom - contentStart) / contentHeight) * 100);
+    return Math.min(100, Math.max(0, progress));
+}
+
+function saveReadingProgress(page, progress) {
+    try {
+        let progressData = JSON.parse(localStorage.getItem('readingProgress') || '{}');
+        progressData[page] = {
+            progress,
+            timestamp: Date.now(),
+            url: window.location.href
+        };
+        localStorage.setItem('readingProgress', JSON.stringify(progressData));
+    } catch (e) {}
+}
+
+function getReadingProgress() {
+    const page = new URLSearchParams(window.location.search).get('page') || 'home';
+    try {
+        const progressData = JSON.parse(localStorage.getItem('readingProgress') || '{}');
+        return progressData[page]?.progress || 0;
+    } catch {
+        return 0;
+    }
+}
+
+function showReadingProgress() {
+    const progress = getReadingProgress();
+    if (progress > 10) {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'reading-progress-indicator';
+        progressBar.innerHTML = `
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${progress}%"></div>
+            </div>
+            <span class="progress-text">${progress}% completed</span>
+        `;
+        
+        const actions = document.querySelector('.tutorial-actions');
+        if (actions) {
+            actions.appendChild(progressBar);
+        }
+    }
+}
+
+// Quick Actions Menu
+function addQuickActionsMenu() {
+    if (document.querySelector('.quick-actions-fab')) return; // Already exists
+    
+    const fab = document.createElement('div');
+    fab.className = 'quick-actions-fab';
+    fab.innerHTML = `
+        <button class="fab-main" title="Quick Actions">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div class="fab-menu">
+            <button class="fab-action" data-action="bookmarks" title="View Bookmarks">
+                <i class="fas fa-bookmark"></i>
+            </button>
+            <button class="fab-action" data-action="history" title="Recent Pages">
+                <i class="fas fa-history"></i>
+            </button>
+            <button class="fab-action" data-action="print" title="Print Tutorial">
+                <i class="fas fa-print"></i>
+            </button>
+            <button class="fab-action" data-action="share" title="Share Tutorial">
+                <i class="fas fa-share"></i>
+            </button>
+        </div>
+    `;
+    
+    document.body.appendChild(fab);
+    
+    const mainBtn = fab.querySelector('.fab-main');
+    const menu = fab.querySelector('.fab-menu');
+    let isOpen = false;
+    
+    mainBtn.addEventListener('click', () => {
+        isOpen = !isOpen;
+        fab.classList.toggle('open', isOpen);
+        mainBtn.querySelector('i').className = isOpen ? 'fas fa-times' : 'fas fa-plus';
+    });
+    
+    // Handle quick actions
+    fab.addEventListener('click', (e) => {
+        const action = e.target.closest('.fab-action')?.dataset.action;
+        if (!action) return;
+        
+        switch (action) {
+            case 'bookmarks':
+                showBookmarksModal();
+                break;
+            case 'history':
+                showHistoryModal();
+                break;
+            case 'print':
+                window.print();
+                break;
+            case 'share':
+                shareCurrentPage();
+                break;
+        }
+        
+        // Close menu after action
+        isOpen = false;
+        fab.classList.remove('open');
+        mainBtn.querySelector('i').className = 'fas fa-plus';
+    });
+    
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.quick-actions-fab') && isOpen) {
+            isOpen = false;
+            fab.classList.remove('open');
+            mainBtn.querySelector('i').className = 'fas fa-plus';
+        }
+    });
+}
+
+// Recent History Tracking
+function initRecentHistory() {
+    if (window.location.search) {
+        addToHistory();
+    }
+}
+
+function addToHistory() {
+    const page = new URLSearchParams(window.location.search).get('page');
+    if (!page) return;
+    
+    try {
+        let history = JSON.parse(localStorage.getItem('pageHistory') || '[]');
+        const title = document.title;
+        const url = window.location.href;
+        
+        history = history.filter(h => h.page !== page);
+        history.unshift({ page, title, url, timestamp: Date.now() });
+        history = history.slice(0, 20);
+        
+        localStorage.setItem('pageHistory', JSON.stringify(history));
+    } catch (e) {}
+}
+
+// Modal System
+function showBookmarksModal() {
+    const modal = createModal('Bookmarks', getBookmarksHTML());
+    document.body.appendChild(modal);
+    modal.classList.add('show');
+}
+
+function showHistoryModal() {
+    const modal = createModal('Recent Pages', getHistoryHTML());
+    document.body.appendChild(modal);
+    modal.classList.add('show');
+}
+
+function createModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay';
+    modal.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <h3>${title}</h3>
+                <button class="modal-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-content">${content}</div>
+        </div>
+    `;
+    
+    modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal(modal);
+    });
+    
+    return modal;
+}
+
+function closeModal(modal) {
+    modal.classList.remove('show');
+    setTimeout(() => {
+        if (modal.parentNode) modal.parentNode.removeChild(modal);
+    }, 300);
+}
+
+function getBookmarksHTML() {
+    try {
+        const bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+        if (bookmarks.length === 0) {
+            return '<div class="empty-state"><i class="fas fa-bookmark"></i><p>No bookmarks yet</p></div>';
+        }
+        
+        return bookmarks.map(bookmark => `
+            <div class="bookmark-item">
+                <div class="bookmark-content">
+                    <a href="${bookmark.url}" class="bookmark-title">${bookmark.title}</a>
+                    <div class="bookmark-meta">
+                        <span class="bookmark-date">${new Date(bookmark.timestamp).toLocaleDateString()}</span>
+                        ${bookmark.progress ? `<span class="bookmark-progress">${bookmark.progress}% read</span>` : ''}
+                    </div>
+                </div>
+                <button class="bookmark-remove" onclick="removeBookmarkFromModal('${bookmark.url}', this)" title="Remove bookmark">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `).join('');
+    } catch {
+        return '<div class="empty-state"><p>Error loading bookmarks</p></div>';
+    }
+}
+
+function getHistoryHTML() {
+    try {
+        const history = JSON.parse(localStorage.getItem('pageHistory') || '[]');
+        if (history.length === 0) {
+            return '<div class="empty-state"><i class="fas fa-history"></i><p>No recent pages</p></div>';
+        }
+        
+        return history.map(item => `
+            <div class="history-item">
+                <a href="${item.url}" class="history-title">${item.title}</a>
+                <div class="history-date">${new Date(item.timestamp).toLocaleString()}</div>
+            </div>
+        `).join('');
+    } catch {
+        return '<div class="empty-state"><p>Error loading history</p></div>';
+    }
+}
+
+window.removeBookmarkFromModal = function(url, button) {
+    removeBookmark(url);
+    button.closest('.bookmark-item').remove();
+    updateBookmarkButton();
+    showNotification('Bookmark removed', 'success');
+};
+
+function shareCurrentPage() {
+    const url = window.location.href;
+    const title = document.title;
+    
+    if (navigator.share) {
+        navigator.share({ title, url });
+    } else {
+        navigator.clipboard.writeText(url).then(() => {
+            showNotification('Link copied to clipboard', 'success');
+        }).catch(() => {
+            showNotification('Could not copy link', 'error');
+        });
+    }
+}
+
+function showNotification(message, type = 'info', duration = 3000) {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+        <button class="notification-close"><i class="fas fa-times"></i></button>
+    `;
+    
+    document.body.appendChild(notification);
+    setTimeout(() => notification.classList.add('show'), 10);
+    
+    const autoHide = setTimeout(() => hideNotification(notification), duration);
+    
+    notification.querySelector('.notification-close').addEventListener('click', () => {
+        clearTimeout(autoHide);
+        hideNotification(notification);
+    });
+}
+
+function hideNotification(notification) {
+    notification.classList.remove('show');
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 300);
+}
+
+function restorePreferences() {
+    const tocVisible = localStorage.getItem('tocVisible');
+    if (tocVisible === 'false') {
+        const toc = document.getElementById('tableOfContents');
+        if (toc) {
+            toc.style.display = 'none';
+            const toggleBtn = document.getElementById('tocToggle');
+            if (toggleBtn) {
+                const icon = toggleBtn.querySelector('i');
+                const text = toggleBtn.childNodes[toggleBtn.childNodes.length - 1];
+                if (icon) icon.className = 'fas fa-list-ul';
+                if (text) text.textContent = ' Show Contents';
+                toggleBtn.title = 'Show table of contents';
+            }
+        }
+    }
+}
+
+// Keyboard shortcuts enhancement
+document.addEventListener('keydown', (e) => {
+    const cmd = e.metaKey || e.ctrlKey;
+    
+    // F1 for help - show keyboard shortcuts
+    if (e.key === 'F1') {
+        e.preventDefault();
+        showKeyboardShortcuts();
+    }
+    
+    // Ctrl/Cmd + K for quick search
+    if (cmd && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('navigationSearch');
+        if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+        }
+    }
+    
+    // Ctrl/Cmd + D for bookmark toggle
+    if (cmd && e.key === 'd') {
+        e.preventDefault();
+        const bookmarkBtn = document.getElementById('bookmarkBtn');
+        if (bookmarkBtn) {
+            bookmarkBtn.click();
+        }
+    }
+    
+    // Ctrl/Cmd + P for print (override default to show notification)
+    if (cmd && e.key === 'p') {
+        showNotification('Printing tutorial...', 'info');
+        // Let default print behavior continue
+    }
+    
+    // ESC to close modals or menus
+    if (e.key === 'Escape') {
+        // Close modals
+        const modal = document.querySelector('.modal-overlay.show');
+        if (modal) {
+            closeModal(modal);
+            return;
+        }
+        
+        // Close FAB menu
+        const fab = document.querySelector('.quick-actions-fab.open');
+        if (fab) {
+            fab.classList.remove('open');
+            fab.querySelector('.fab-main i').className = 'fas fa-plus';
+            return;
+        }
+        
+        // Clear search
+        const searchInput = document.getElementById('navigationSearch');
+        if (searchInput && searchInput.value) {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            return;
+        }
+    }
+});
+
+function showKeyboardShortcuts() {
+    const shortcuts = [
+        { key: 'F1', description: 'Show keyboard shortcuts' },
+        { key: 'Ctrl/⌘ + K', description: 'Focus search' },
+        { key: 'Ctrl/⌘ + D', description: 'Toggle bookmark' },
+        { key: 'Ctrl/⌘ + P', description: 'Print tutorial' },
+        { key: 'Ctrl/⌘ + B', description: 'Toggle sidebar width' },
+        { key: 'Ctrl/⌘ + H', description: 'Go to home' },
+        { key: '+/-', description: 'Zoom in/out' },
+        { key: 'Esc', description: 'Close dialogs/clear search' }
+    ];
+    
+    const shortcutsHTML = `
+        <div class="shortcuts-grid">
+            ${shortcuts.map(shortcut => `
+                <div class="shortcut-item">
+                    <kbd>${shortcut.key}</kbd>
+                    <span>${shortcut.description}</span>
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    const modal = createModal('Keyboard Shortcuts', shortcutsHTML);
+    document.body.appendChild(modal);
+    modal.classList.add('show');
+}

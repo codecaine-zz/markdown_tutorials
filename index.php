@@ -91,6 +91,7 @@ class MarkdownTutorialApp {
                             <button id="tbRefresh" class="tb-btn" title="Refresh navigation"><i class="fas fa-rotate"></i><span>Refresh</span></button>
                         </div>
                         <div class="toolbar-right">
+                            <button id="tbHelp" class="tb-btn" title="Keyboard shortcuts (F1)"><i class="fas fa-question-circle"></i><span>Help</span></button>
                             <button id="tbTheme" class="tb-btn" title="Toggle theme"><i class="fas fa-moon"></i><span>Theme</span></button>
                             <div class="tb-sep" aria-hidden="true"></div>
                             <button id="tbZoomOut" class="tb-btn" title="Zoom out"><i class="fas fa-search-minus"></i></button>
@@ -230,10 +231,11 @@ class MarkdownTutorialApp {
             $output .= $this->generateTutorialNavigation($page);
 
                 // Controls above content (Table of Contents toggle)
-                $output .= '<div class="tutorial-actions" style="display:flex;gap:10px;margin:10px 0;">';
+                $output .= '<div class="tutorial-actions" style="display:flex;gap:10px;margin:10px 0;flex-wrap:wrap;align-items:center;">';
                 $output .= '<button class="btn-secondary" id="tocToggle" onclick="toggleTableOfContents()" title="Hide table of contents">';
                 $output .= '<i class="fas fa-list"></i> Contents';
                 $output .= '</button>';
+                
                 $output .= '</div>';
 
                 // Table of Contents container (visible by default)
