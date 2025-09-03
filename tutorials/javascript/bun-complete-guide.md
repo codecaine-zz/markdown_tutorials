@@ -1,12 +1,13 @@
 # The Complete Bun JavaScript Guide
 
-*From JavaScript Fundamentals to Bun Runtime Mastery*
+## From JavaScript Fundamentals to Bun Runtime Mastery
 
 ## Introduction
 
 Bun is an all-in-one JavaScript runtime & toolkit designed as a faster, leaner, more modern replacement for Node.js. At its core is the Bun runtime, a fast JavaScript runtime written in Zig and powered by JavaScriptCore under the hood, dramatically reducing startup times and memory usage.
 
-**What makes Bun special:**
+### What makes Bun special
+
 - **Blazing fast** - Processes start 4x faster than Node.js with up to 2.5x more requests per second
 - **All-in-one toolkit** - Runtime, bundler, transpiler, package manager, and test runner in a single executable
 - **Node.js compatibility** - Drop-in replacement for most Node.js applications with full compatibility for built-in globals and modules
@@ -14,7 +15,8 @@ Bun is an all-in-one JavaScript runtime & toolkit designed as a faster, leaner, 
 - **Zero-configuration** - Works out of the box with sensible defaults
 - **Web-standard APIs** - Implements standard Web APIs like `fetch`, `WebSocket`, and `ReadableStream`
 
-**Design Goals:**
+### Design Goals
+
 - **Speed**: Built from the ground-up for performance
 - **TypeScript & JSX support**: Direct execution of `.jsx`, `.ts`, and `.tsx` files
 - **ESM & CommonJS compatibility**: Supports both module systems seamlessly  
@@ -40,8 +42,16 @@ Bun is an all-in-one JavaScript runtime & toolkit designed as a faster, leaner, 
     - [Package Management](#package-management)
     - [File System Operations](#file-system-operations)
     - [HTTP Server](#http-server)
+    - [HTTP Client](#http-client)
     - [Environment Variables](#environment-variables)
     - [WebSockets](#websockets)
+    - [SQLite](#sqlite)
+    - [Redis](#redis)
+    - [Workers and Child Processes](#workers-and-child-processes)
+    - [FFI](#ffi)
+    - [ESM and CJS Interop](#esm-and-cjs-interop)
+    - [URL Imports and Transpilation](#url-imports-and-transpilation)
+    - [Shebang CLI Scripts](#shebang-cli-scripts)
 
 - Development Tools
     - [Test Runner](#test-runner)
@@ -49,8 +59,347 @@ Bun is an all-in-one JavaScript runtime & toolkit designed as a faster, leaner, 
     - [Watch Mode](#watch-mode)
     - [Debugging](#debugging)
     - [TypeScript Support](#typescript-support)
+    - [Workspaces and Monorepos](#workspaces-and-monorepos)
+    - [Docker and Deployment](#docker-and-deployment)
+    - [Tips and Pitfalls](#tips-and-pitfalls)
+    - [Bun CLI Cheat Sheet](#bun-cli-cheat-sheet)
+
+- Quickstart Recipes
+    - [Hello HTTP Server](#hello-http-server)
+    - [Simple REST API](#simple-rest-api)
+    - [SQLite CRUD](#sqlite-crud)
+    - [File Upload Handler](#file-upload-handler)
+    - [WebSocket Echo](#websocket-echo)
+    - [Worker Queue](#worker-queue)
+    - [CLI Script](#cli-script)
+    - [Unit Test](#unit-test)
+    - [Read and Write Files](#read-and-write-files)
+    - [Read and Write JSON](#read-and-write-json)
+    - [Environment Variables](#environment-variables-quickstart)
+    - [Console Apps (CLI)](#console-apps-cli)
 
 ---
+
+## Quickstart Recipes
+
+Beginner-friendly, copy–paste snippets you can run with Bun right away.
+
+### Hello HTTP Server
+
+```javascript
+// server.js
+// A minimal HTTP server using Bun.serve
+// - Bun.serve starts an HTTP server
+// - routes lets you map paths (like "/" or "/health") to responses
+// - fetch() below is a fallback when no route matches
+const server = Bun.serve({
+    port: 3000, // The TCP port; can also use env vars $BUN_PORT or $PORT
+    routes: {
+        '/': new Response('Hello from Bun!'), // Quick static response (fastest path)
+        '/health': new Response('OK'),        // Useful for health checks
+    },
+    // Fallback for unmatched routes
+    fetch() { return new Response('Not Found', { status: 404 }); },
+});
+console.log(server.url.toString()); // Prints the base URL, e.g. http://localhost:3000
+// Run in terminal: bun server.js
+```
+
+### Simple REST API
+
+```javascript
+// api.js
+// Simple in-memory REST API for beginners
+// - We keep data in a plain array for now (resets on restart)
+// - routes object supports per-method handlers (GET/POST)
+const todos = [{ id: 1, text: 'Learn Bun' }];
+
+const api = Bun.serve({
+    port: 3001,
+    routes: {
+        '/todos': {
+            GET: () => Response.json(todos), // Return JSON with Response.json()
+            POST: async (req) => {
+                // Read JSON body safely; default to empty object on parse error
+                const body = await req.json().catch(() => ({}));
+                // Create a new todo; crypto.randomUUID() generates a unique id
+                const todo = { id: crypto.randomUUID(), text: String(body.text || '') };
+                todos.push(todo);
+                return Response.json(todo, { status: 201 }); // 201 Created
+            },
+        },
+        // Static responses are great for health/readiness
+        '/health': new Response('OK'),
+    },
+    fetch() { return new Response('Not Found', { status: 404 }); },
+});
+console.log(api.url.toString()); // http://localhost:3001
+// Run: bun api.js
+```
+
+### SQLite CRUD
+
+```javascript
+// sqlite-demo.js
+import { Database } from 'bun:sqlite';
+
+// Opens (or creates) a file named app.db next to this script
+const db = new Database('app.db');
+// Create a table if it doesn't exist yet
+db.run('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, text TEXT)');
+
+const insert = db.query('INSERT INTO notes (text) VALUES (?)');
+insert.run('hello'); // Add a row
+
+const all = db.query('SELECT id, text FROM notes').all();
+console.log(all);
+// Run: bun sqlite-demo.js
+```
+
+### File Upload Handler
+
+```javascript
+// upload.js
+export default Bun.serve({
+    port: 3002,
+    async fetch(req) {
+        const url = new URL(req.url);
+        if (url.pathname === '/upload' && req.method === 'POST') {
+            const form = await req.formData();
+            const file = form.get('file'); // Returns a Blob (file-like object)
+            if (file) {
+                // Ensure the uploads directory exists (creates it on first run)
+                await Bun.write('uploads/.keep', '');
+                // Save the uploaded file by name
+                await Bun.write(`uploads/${file.name}`, file);
+                return new Response('uploaded');
+            }
+            return new Response('no file', { status: 400 });
+        }
+
+        // simple HTML form for testing
+        return new Response(`<!doctype html>
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <input type="file" name="file" />
+    <button>Upload</button>
+</form>`, { headers: { 'Content-Type': 'text/html' }});
+    },
+});
+console.log('http://localhost:3002');
+// Run: bun upload.js
+```
+
+### WebSocket Echo
+
+```javascript
+// ws.js
+export default Bun.serve({
+    port: 3003,
+    fetch(req, server) {
+    // Upgrade HTTP request to a WebSocket connection
+    if (server.upgrade(req)) return; // After upgrade, handlers in `websocket` take over
+        return new Response('WebSocket server');
+    },
+    websocket: {
+    open(ws) { ws.send('Welcome'); }, // Called when a client connects
+    message(ws, msg) { ws.send(msg); }, // Echo back whatever the client sent
+    },
+});
+console.log('ws://localhost:3003');
+// Run: bun ws.js
+```
+
+### Worker Queue
+
+```javascript
+// worker.js
+self.onmessage = (e) => {
+    // Receive a number from the main thread
+    const n = Number(e.data || 0);
+    // Do some work (here: square the number)
+    const result = n * n; // pretend heavy work
+    // Send the result back to the main thread
+    self.postMessage(result);
+};
+```
+
+```javascript
+// worker-main.js
+// Create a Worker from a separate file
+const worker = new Worker(new URL('./worker.js', import.meta.url));
+worker.onmessage = (e) => {
+    // Log the received result and end the worker
+    console.log('result:', e.data);
+    worker.terminate(); // Always terminate when done to free resources
+};
+worker.postMessage(12);
+// Run: bun worker-main.js
+```
+
+### CLI Script
+
+```javascript
+#!/usr/bin/env bun
+// greet.mjs
+const [, , name = 'world'] = process.argv;
+console.log(`Hello, ${name}!`);
+// Make executable: chmod +x greet.mjs
+// Run: ./greet.mjs Alice
+```
+
+### Unit Test
+
+```typescript
+// math.test.ts
+import { describe, expect, it } from 'bun:test';
+
+// A simple function to test
+function add(a: number, b: number) { return a + b; }
+
+describe('add', () => {
+    it('adds numbers', () => {
+        // expect(...).toBe(...) is an assertion
+        expect(add(2, 3)).toBe(5);
+    });
+});
+// Run: bun test
+```
+
+
+
+### Read and Write Files
+
+```javascript
+// files-demo.js
+// Write text
+await Bun.write('note.txt', 'Hello from Bun');
+
+// Read text
+const text = await Bun.file('note.txt').text();
+console.log('text:', text);
+
+// Write binary (copy a file)
+const src = Bun.file('note.txt');
+await Bun.write('note-copy.txt', src);
+console.log('copied');
+
+// Append text (idiomatic: use Node's fs.appendFile in Bun)
+import { appendFile } from 'node:fs/promises';
+await appendFile('note.txt', '\nAnother line from Bun', 'utf8');
+console.log('appended');
+// Run: bun files-demo.js
+```
+
+### Read and Write JSON
+
+```javascript
+// json-utils.js
+// Reusable helpers for JSON files using Bun APIs
+
+export async function writeJSON(filePath, data, { pretty = 2 } = {}) {
+    // pretty: 0 for compact, 2 for indented output
+    const text = JSON.stringify(data, null, pretty);
+    return Bun.write(filePath, text);
+}
+
+export async function readJSON(filePath, { fallback, reviver } = {}) {
+    try {
+        if (reviver) {
+            // If a JSON.parse reviver is needed
+            const text = await Bun.file(filePath).text();
+            return JSON.parse(text, reviver);
+        }
+        // Fast path
+        return await Bun.file(filePath).json();
+    } catch (err) {
+        // Return fallback for missing or malformed JSON when provided
+        const isNotFound = err && (err.code === 'ENOENT' || err.name === 'NotFoundError');
+        const isSyntax = err instanceof SyntaxError || err?.name === 'SyntaxError';
+        if (fallback !== undefined && (isNotFound || isSyntax)) {
+            return typeof fallback === 'function' ? fallback(err) : fallback;
+        }
+        throw err;
+    }
+}
+
+export async function updateJSON(filePath, updater, { pretty = 2, fallback = {} } = {}) {
+    // Read existing (or fallback), compute next state, then write it back
+    const current = await readJSON(filePath, { fallback });
+    const next = await Promise.resolve(updater(current));
+    await writeJSON(filePath, next, { pretty });
+    return next;
+}
+
+// Demo when run directly: create, read, then update a JSON file
+if (import.meta.main) {
+    await writeJSON('data.json', { count: 1, tags: ['bun'] });
+    const data = await readJSON('data.json');
+    console.log('read:', data);
+    const updated = await updateJSON('data.json', (d) => ({ ...d, count: d.count + 1 }));
+    console.log('updated:', updated);
+}
+// Run: bun json-utils.js
+```
+
+```javascript
+// json-demo.js
+// Example usage by importing the helpers
+import { readJSON, writeJSON, updateJSON } from './json-utils.js';
+
+await writeJSON('config.json', { featureFlag: true, retries: 3 });
+const cfg = await readJSON('config.json');
+console.log('config:', cfg);
+
+await updateJSON('config.json', (c) => ({ ...c, retries: (c.retries ?? 0) + 1 }));
+console.log('bumped retries');
+// Run: bun json-demo.js
+```
+
+### Environment Variables (Quickstart)
+
+```javascript
+// env-demo.js
+// Set before running: MY_NAME=Alice bun env-demo.js
+const name = Bun.env.MY_NAME || 'world';
+console.log(`Hello, ${name}!`);
+```
+
+### Console Apps (CLI)
+
+```javascript
+// cli-examples.js
+// 1) Hello with flags
+const args = process.argv.slice(2);
+const idx = args.indexOf('--name');
+const name = idx !== -1 ? args[idx + 1] : 'world';
+console.log(`Hello, ${name}!`);
+
+// 2) Pretty-print JSON from a file using Bun APIs
+if (args.includes('--pp') && args[idx + 2]) {
+    const filePath = args[idx + 2];
+    const data = await Bun.file(filePath).json();
+    console.log(JSON.stringify(data, null, 2));
+}
+
+// 3) Append logs (idiomatic append with fs.appendFile)
+import { appendFile } from 'node:fs/promises';
+if (args.includes('--log')) {
+    await appendFile('cli.log', `[${new Date().toISOString()}] ${name}\n`, 'utf8');
+    console.log('logged');
+}
+
+// 4) Read stdin -> uppercase
+if (args.includes('--upper')) {
+    let input = '';
+    for await (const chunk of process.stdin) input += chunk;
+    process.stdout.write(input.toUpperCase());
+}
+// Usage examples:
+//   bun cli-examples.js --name Alice
+//   bun cli-examples.js --name data --pp ./config.json
+//   bun cli-examples.js --log --name TaskStarted
+//   echo "hello" | bun cli-examples.js --upper
+```
 
 ## JavaScript Fundamentals
 
@@ -77,9 +426,61 @@ function greet(person) {
 console.log(greet('Alice'));
 ```
 
+#### Control Flow and Comparisons (Beginner Essentials)
+
+```javascript
+// if/else decides which block to run based on a condition
+const score = 85;
+if (score >= 90) {
+    console.log('Grade: A');
+} else if (score >= 80) {
+    console.log('Grade: B');
+} else {
+    console.log('Keep practicing!');
+}
+
+// switch is handy for multiple fixed cases
+const role = 'admin';
+switch (role) {
+    case 'admin':
+        console.log('Full access');
+        break; // Prevents falling through to the next case
+    case 'editor':
+        console.log('Can edit content');
+        break;
+    default:
+        console.log('Read-only');
+}
+
+// Loops
+const nums = [1, 2, 3];
+for (let i = 0; i < nums.length; i++) {
+    console.log('for i =', i, 'value =', nums[i]);
+}
+
+for (const n of nums) {
+    console.log('for...of value =', n); // Preferred for arrays
+}
+
+// Strict equality (===) compares value AND type; prefer it over ==
+console.log(1 === '1'); // false (number vs string)
+console.log(1 == '1');  // true  (coerces types; avoid in beginners code)
+
+// Truthy/falsy and the nullish coalescing operator
+// || uses truthiness, ?? only checks null or undefined
+const input = '';
+console.log(input || 'fallback when empty string'); // prints fallback ('' is falsy)
+console.log(input ?? 'only for null/undefined');    // prints '' (not null/undefined)
+
+// Optional chaining avoids errors when a property might be missing
+const user = { profile: null };
+console.log(user.profile?.email); // undefined instead of throwing
+```
+
 #### Understanding JavaScript Basics
 
 JavaScript is a dynamic, interpreted programming language that's:
+
 - **Dynamically typed** - Variables can hold any type of value
 - **Interpreted** - No compilation step needed (though Bun optimizes this)
 - **Multi-paradigm** - Supports object-oriented, functional, and procedural programming
@@ -331,6 +732,23 @@ const result = numbers
 console.log('Sum of squares of even numbers:', result);
 ```
 
+#### forEach vs for...of (Beginner tip)
+
+```javascript
+const items = ['a', 'b', 'c'];
+
+// forEach passes each element to a callback; you cannot break early
+items.forEach((item, index) => {
+    console.log(index, item);
+});
+
+// for...of loops over values and allows break/continue
+for (const item of items) {
+    if (item === 'b') continue; // skip 'b'
+    console.log(item);
+}
+```
+
 ### Objects and Arrays
 
 #### Working with Objects
@@ -533,6 +951,26 @@ try {
 
 console.log('Final balance:', account.getBalance());
 console.log('Account statement:', account.getStatement());
+```
+
+#### Modules 101 (import/export basics)
+
+```javascript
+// math-utils.js (module file)
+export function add(a, b) { return a + b; }
+export const PI = 3.14159;
+
+// You can also have a default export (one per file)
+export default function square(n) { return n * n; }
+```
+
+```javascript
+// app.js (import from another file)
+import square, { add, PI } from './math-utils.js';
+console.log(add(2, 3)); // 5
+console.log(PI);        // 3.14159
+console.log(square(4)); // 16
+// Run: bun app.js (ensure both files are in the same folder)
 ```
 
 #### Class Inheritance
@@ -765,7 +1203,8 @@ Bun works on macOS, Linux, and Windows (WSL).
 curl -fsSL https://bun.sh/install | bash
 
 # Restart your terminal or run:
-source ~/.bashrc  # or ~/.zshrc
+source ~/.zshrc  # if you use zsh (macOS default)
+# or source ~/.bashrc if you use bash
 
 # Verify installation
 bun --version
@@ -1451,6 +1890,90 @@ process.on('SIGINT', () => {
 });
 ```
 
+### Idiomatic routing with routes (faster, simpler)
+
+```javascript
+// routes-server.js - use Bun.serve "routes" and per-method handlers
+const routesServer = Bun.serve({
+    port: 3002,
+    routes: {
+        '/': new Response('Home'),
+        '/health': new Response('OK'),
+        '/api/time': () => Response.json({ now: new Date().toISOString() }),
+        '/api/posts': {
+            GET: () => Response.json([{ id: 1, title: 'Hello' }]),
+            POST: async (req) => {
+                const post = await req.json().catch(() => ({}));
+                return Response.json({ id: crypto.randomUUID(), ...post }, { status: 201 });
+            },
+        },
+        // Parameter and wildcard routes
+        '/users/:id': (req) => new Response(`User ${req.params.id}`),
+        '/api/*': new Response('Not found', { status: 404 }),
+    },
+    fetch() { return new Response('Not Found', { status: 404 }); },
+});
+console.log('Routes server:', routesServer.url.toString());
+```
+
+### Static vs File responses
+
+```javascript
+// static-vs-file.js - choose based on size/update pattern
+Bun.serve({
+    routes: {
+        // Static: buffers content at startup, fastest and supports ETag
+        '/logo.png': new Response(await Bun.file('./public/logo.png').bytes(), {
+            headers: { 'Content-Type': 'image/png' },
+        }),
+        // File: streams per-request, supports Range/Last-Modified and 404
+        '/download.zip': new Response(Bun.file('./files/app.zip')),
+    },
+    fetch() { return new Response('404', { status: 404 }); },
+});
+```
+
+### Lifecycle and hot reload
+
+```javascript
+// lifecycle.js
+const srv = Bun.serve({
+    routes: { '/version': Response.json({ v: '1' }) },
+    fetch() { return new Response('v1'); },
+});
+console.log('Running at', srv.url.toString());
+
+// Update handlers without restart
+setTimeout(() => {
+    srv.reload({
+        routes: { '/version': Response.json({ v: '2' }) },
+        fetch() { return new Response('v2'); },
+    });
+}, 2000);
+
+// Graceful stop after 5s (finishes in-flight by default)
+setTimeout(async () => { await srv.stop(); }, 5000);
+```
+
+### Per-request controls and client info
+
+```javascript
+// per-request.js
+Bun.serve({
+    async fetch(req, server) {
+        // Increase idle timeout to 60s for this request
+        server.timeout(req, 60);
+
+        const ip = server.requestIP(req);
+        const who = ip ? `${ip.address}:${ip.port}` : 'unknown';
+        if (new URL(req.url).pathname === '/whoami') {
+            return Response.json({ who });
+        }
+        return new Response('ok');
+    },
+});
+```
+
 ### Advanced Server with Routing
 
 ```javascript
@@ -1676,6 +2199,208 @@ console.log('  curl http://localhost:3001/api/users');
 console.log('  curl -X POST http://localhost:3001/api/users -H "Content-Type: application/json" -d \'{"name":"Charlie","email":"charlie@example.com"}\'');
 ```
 
+## HTTP Client
+
+Use Bun's fetch (WHATWG standard with Bun extensions) for fast, flexible HTTP(S) requests.
+
+### Basic requests and JSON
+
+```javascript
+// basic-get.js
+try {
+    const res = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    console.log('todo:', data.title);
+} catch (err) {
+    console.error('request failed:', err.message);
+}
+
+// timeout with AbortSignal
+try {
+    const res = await fetch('https://httpbin.org/delay/3', {
+        signal: AbortSignal.timeout(1000), // cancel after 1s
+    });
+    console.log('status:', res.status);
+} catch (err) {
+    console.error('timed out:', err.name || err.message);
+}
+// Run: bun basic-get.js
+```
+
+### POST JSON, FormData, and file upload
+
+```javascript
+// post-examples.js
+// JSON body
+const created = await fetch('https://httpbin.org/post', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ hello: 'bun' }),
+});
+console.log('json response:', (await created.json()).json);
+
+// FormData (Content-Type set automatically with boundary)
+const form = new FormData();
+form.set('name', 'alice');
+form.set('avatar', new Blob(['hi'], { type: 'text/plain' }), 'note.txt');
+const formRes = await fetch('https://httpbin.org/post', { method: 'POST', body: form });
+console.log('form files:', Object.keys((await formRes.json()).files));
+
+// Upload a real file with Bun.file
+const fd = new FormData();
+fd.set('file', Bun.file('./README.md'));
+const up = await fetch('https://httpbin.org/post', { method: 'POST', body: fd });
+console.log('uploaded size:', (await up.json()).headers['Content-Length']);
+// Run: bun post-examples.js
+```
+
+### Streaming responses and requests
+
+```javascript
+// streaming.js
+// Stream response directly to disk (fast path)
+const res = await fetch('https://httpbin.org/stream/5');
+await Bun.write('out.txt', res); // Bun.write can take a Response/ReadableStream
+console.log('saved to out.txt');
+
+// Read chunks manually
+const r = await fetch('https://httpbin.org/bytes/64');
+for await (const chunk of r.body) {
+    console.log('chunk', chunk.byteLength || chunk.length);
+}
+
+// Streaming request body
+const stream = new ReadableStream({
+    start(controller) {
+        controller.enqueue('Hello');
+        controller.enqueue(' from ');
+        controller.enqueue('ReadableStream');
+        controller.close();
+    },
+});
+const echoed = await fetch('https://httpbin.org/post', { method: 'POST', body: stream });
+console.log('echoed length:', (await echoed.json()).headers['Content-Length']);
+// Run: bun streaming.js
+```
+
+### Headers, cookies, and debugging
+
+```javascript
+// headers-debug.js
+const headers = new Headers({ 'X-Trace-Id': crypto.randomUUID() });
+headers.set('Accept', 'application/json');
+
+const res = await fetch('https://httpbin.org/headers', {
+    headers,
+    // Bun extension: verbose logging of request/response
+    verbose: true,
+});
+console.log((await res.json()).headers);
+// Note: Cookies follow standard fetch semantics (no cookie jar by default).
+```
+
+### Advanced transports and options
+
+```javascript
+// advanced-transports.js
+// HTTP proxy
+await fetch('http://example.com', { proxy: 'http://localhost:3128' }).catch(e => console.error('proxy error:', e.message));
+
+// Unix domain socket
+// await fetch('http://localhost/status', { unix: '/var/run/my.sock' });
+
+// TLS options (use with care!)
+await fetch('https://example.com', {
+    tls: {
+        // Provide client certs when required
+        // key: Bun.file('/path/to/key.pem'),
+        // cert: Bun.file('/path/to/cert.pem'),
+        // Custom validation
+        // checkServerIdentity: (hostname, cert) => undefined, // return Error to reject
+        // Trust-all (INSECURE):
+        rejectUnauthorized: false,
+    },
+    // Bun extensions
+    decompress: true, // automatic gzip/br/deflate (default true)
+    keepalive: true,  // connection reuse (default true); set false to disable
+}).catch(e => console.error('tls fetch:', e.message));
+```
+
+### Protocols beyond HTTP(S)
+
+```javascript
+// protocols.js
+// file://
+const fileRes = await fetch(`file://${import.meta.dir}/../README.md`);
+console.log('file bytes:', (await fileRes.bytes()).length);
+
+// data:
+const dataRes = await fetch('data:text/plain;base64,SGVsbG8sIEJ1biE=');
+console.log(await dataRes.text());
+
+// blob:
+const blob = new Blob(['Hello Blob'], { type: 'text/plain' });
+const url = URL.createObjectURL(blob);
+console.log('blob text:', await (await fetch(url)).text());
+
+// S3 (credentials required; see Bun docs)
+// const s3Get = await fetch('s3://my-bucket/path/to/object');
+// console.log('s3 status:', s3Get.status);
+```
+
+### Performance helpers
+
+```javascript
+// performance-helpers.js
+import { dns, fetch as bunFetch } from 'bun';
+
+dns.prefetch('bun.com');         // warm DNS cache
+bunFetch.preconnect('https://bun.com'); // warm TCP/TLS connection
+
+const resPerf = await fetch('https://bun.com');
+console.log('status:', resPerf.status);
+```
+
+### Robust error handling pattern
+
+```javascript
+// error-handling.js
+async function safeFetch(url, init) {
+    try {
+        const res = await fetch(url, init);
+        if (!res.ok) {
+            const body = await res.text().catch(() => '');
+            throw new Error(`HTTP ${res.status} ${res.statusText} — ${body.slice(0, 200)}`);
+        }
+        return res;
+    } catch (e) {
+        // Network/TLS/timeout/etc
+        console.error('fetch failed:', e.message);
+        throw e;
+    }
+}
+
+const r = await safeFetch('https://httpbin.org/status/200');
+console.log('ok:', r.status);
+```
+
+### Calling your local Bun server
+
+```javascript
+// local-call.js
+// If you have: const server = Bun.serve({ fetch: () => new Response('ok') })
+// You can call it using its base URL
+// const res = await fetch(new URL('/health', server.url));
+// console.log(await res.text());
+```
+
+Notes
+
+- Bun implements standard fetch plus extensions: proxy, unix, tls, verbose, keepalive, decompress, and more.
+- For large downloads, prefer Bun.write(response, filePath) to avoid buffering.
+- Avoid rejectUnauthorized: false in production; use proper CAs/certs.
+
 ## Environment Variables
 
 Working with configuration is simple in Bun. Use a .env file for secrets and access values via process.env (Node-compatible) or Bun.env.
@@ -1782,6 +2507,830 @@ console.log(`🔌 WebSocket server on ws://localhost:${server.port}/ws`);
 const socket = new WebSocket('ws://localhost:3003/ws');
 socket.onopen = () => socket.send('Hello from client!');
 socket.onmessage = (e) => console.log('Message:', e.data);
+```
+
+## SQLite
+
+Bun ships a built-in, zero-dependency SQLite3 driver via the `bun:sqlite` module. It’s fast, synchronous, and ideal for small services, CLIs, and local apps.
+
+### Open a database
+
+```javascript
+import { Database } from 'bun:sqlite';
+
+// File-backed DB (created if missing when { create: true } or by default on most platforms)
+const db = new Database('app.db', { readonly: false, create: true });
+
+// In-memory DB (all of these open an in-memory database)
+const mem1 = new Database(':memory:');
+const mem2 = new Database();
+const mem3 = new Database('');
+
+// Readonly mode
+const ro = new Database('app.db', { readonly: true });
+```
+
+Load via ES module import attribute:
+
+```javascript
+// Equivalent to: new Database('./mydb.sqlite')
+import db from './mydb.sqlite' with { type: 'sqlite' };
+console.log(db.query('select 1 as x').get());
+```
+
+Recommended: enable WAL for performance (especially many readers, single writer):
+
+```javascript
+db.exec("PRAGMA journal_mode = WAL;");
+```
+
+### Constructor options worth knowing
+
+- strict: true — throw when a named parameter is missing and allow binding without prefixes ($/:/@)
+- safeIntegers: true — return SQLite 64-bit integers as bigint; validate bound bigints are 64-bit
+
+```javascript
+const strictDb = new Database(':memory:', { strict: true, safeIntegers: true });
+```
+
+### Closing, lifetime, and utilities
+
+- db.close(false) — close connection, let in-flight queries finish (called automatically on GC)
+- db.close(true) — throw if there are pending queries
+- using — auto-close when leaving scope (Bun ≥ 1.1.14)
+- serialize/deserialize — snapshot a DB to a Uint8Array and restore later
+
+```javascript
+{
+    using scoped = new Database('scoped.sqlite');
+    using q = scoped.query("select 'Hello' as msg");
+    console.log(q.get()); // { msg: 'Hello' }
+}
+
+const contents = db.serialize();
+const restored = Database.deserialize(contents);
+```
+
+### Preparing and executing queries
+
+- db.query(sql) — prepare and cache a Statement on the Database
+- db.prepare(sql) — prepare without caching
+- db.run(sql, params?) / db.exec(sql, params?) — execute immediately; returns { lastInsertRowid, changes }
+
+```javascript
+// Schema
+db.run(`
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE NOT NULL,
+        created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    )
+`);
+
+// Prepared, cached statement
+const insert = db.query('INSERT INTO users (name, email) VALUES ($name, $email)');
+insert.run({ $name: 'Alice', $email: 'alice@example.com' });
+insert.run({ $name: 'Bob', $email: 'bob@example.com' });
+
+// Statement APIs
+const select = db.query('SELECT id, name, email, created_at FROM users ORDER BY id');
+console.log(select.all());        // Array<{...}>
+console.log(select.get());        // First row or undefined
+console.log(select.values());     // Array<Array<values>>
+for (const row of select.iterate()) { /* stream rows */ }
+
+// Debug & lifecycle
+console.log(select.toString());   // Expanded SQL with last bound params
+select.finalize();                // Free resources (GC normally handles this)
+```
+
+Parameter binding:
+
+- Named: { $param: value } or with strict: true — { param: value }
+- Positional: ?1, ?2 … pass values in order
+
+```javascript
+db.query('SELECT $greet as g').get({ $greet: 'hi' });
+db.query('SELECT ?1, ?2').all('hello', 42);
+```
+
+Map rows to a class (constructor isn’t called; prototype/methods are attached):
+
+```javascript
+class UserRow { get isGmail() { return this.email?.endsWith('@gmail.com'); } }
+const users = db.query('SELECT id, email FROM users').as(UserRow).all();
+console.log(users[0].isGmail);
+```
+
+Iterate large result sets lazily:
+
+```javascript
+for (const row of db.query('SELECT * FROM users').iterate()) {
+    // process row
+}
+```
+
+### Transactions
+
+Wrap multiple statements atomically with db.transaction(fn). It returns a callable function; variants: .deferred/.immediate/.exclusive. Nested transactions become savepoints.
+
+```javascript
+const insertUser = db.query('INSERT INTO users (name, email) VALUES ($name, $email)');
+
+const insertMany = db.transaction((rows) => {
+    for (const r of rows) insertUser.run(r);
+    return rows.length;
+});
+
+const n = insertMany([
+    { $name: 'Charlie', $email: 'charlie@example.com' },
+    { $name: 'Diana', $email: 'diana@example.com' },
+]);
+console.log('Inserted', n);
+
+insertMany.deferred([...]);   // BEGIN DEFERRED
+insertMany.immediate([...]);  // BEGIN IMMEDIATE
+insertMany.exclusive([...]);  // BEGIN EXCLUSIVE
+```
+
+### Extensions and file control
+
+```javascript
+import { Database, constants } from 'bun:sqlite';
+
+db.loadExtension('myext');
+
+// Prevent persistent WAL files (platform-dependent)
+db.fileControl(constants.SQLITE_FCNTL_PERSIST_WAL, 0);
+```
+
+### Datatypes
+
+- string → TEXT
+- number → INTEGER/DECIMAL
+- boolean → INTEGER (1/0)
+- Uint8Array/Buffer → BLOB
+- bigint → INTEGER (enable safeIntegers to read as bigint)
+- null → NULL
+
+### Minimal CRUD example
+
+```javascript
+// sqlite-crud.js
+import { Database } from 'bun:sqlite';
+const db = new Database('app.db', { create: true });
+db.exec('PRAGMA journal_mode = WAL;');
+
+db.run(`CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, text TEXT)`);
+const add = db.query('INSERT INTO notes (text) VALUES ($text)');
+add.run({ $text: 'hello' });
+add.run({ $text: 'world' });
+
+console.log(db.query('SELECT id, text FROM notes').all());
+console.log(db.run('UPDATE notes SET text = $t WHERE id = $id', { $id: 1, $t: 'hi' }));
+console.log(db.query('SELECT COUNT(*) as c FROM notes').get().c);
+```
+
+## Redis
+
+Bun provides a native, promise-based Redis client (v1.2.9+). By default it reads connection info from REDIS_URL, otherwise redis://localhost:6379.
+
+### Quick sanity check
+
+```ts
+import { redis } from "bun";
+
+await redis.set("greeting", "Hello from Bun Redis");
+console.log(await redis.get("greeting"));
+await redis.del("greeting");
+```
+
+### Connecting and lifecycle
+
+```ts
+import { redis, RedisClient } from "bun";
+
+// Shared default client (uses REDIS_URL)
+await redis.set("hello", "world");
+console.log(await redis.get("hello"));
+
+// Dedicated client
+const client = new RedisClient("redis://localhost:6379");
+await client.set("counter", "0");
+await client.incr("counter");
+console.log("counter:", await client.get("counter"));
+client.close();
+```
+
+Manual connect/close and connection status:
+
+```ts
+import { RedisClient } from "bun";
+
+const c = new RedisClient();
+console.log("connected?", c.connected);
+await c.connect();
+console.log("connected?", c.connected);
+await c.set("k", "v");
+console.log("bufferedAmount:", c.bufferedAmount);
+c.close();
+```
+
+Connection events:
+
+```ts
+import { RedisClient } from "bun";
+
+const c = new RedisClient();
+c.onconnect = () => console.log("Connected to Redis");
+c.onclose = (err) => console.error("Disconnected:", err);
+await c.connect();
+c.close();
+```
+
+### Connection options and URL formats
+
+```ts
+import { RedisClient } from "bun";
+
+const c = new RedisClient("redis://localhost:6379", {
+    connectionTimeout: 5_000,
+    idleTimeout: 30_000,
+    autoReconnect: true,
+    maxRetries: 10,
+    enableOfflineQueue: true,
+    enableAutoPipelining: true,
+    // tls: true,
+    // tls: { rejectUnauthorized: true },
+});
+
+// URLs
+new RedisClient("redis://localhost:6379");
+new RedisClient("redis://username:password@localhost:6379");
+new RedisClient("redis://localhost:6379/0");
+new RedisClient("rediss://localhost:6379");
+new RedisClient("redis+tls://localhost:6379");
+new RedisClient("redis+unix:///tmp/redis.sock");
+new RedisClient("redis+tls+unix:///tmp/redis.sock");
+```
+
+Reconnection uses exponential backoff (to 2s cap), controlled by the options above. Commands queue while offline if enableOfflineQueue=true.
+
+### Error handling
+
+```ts
+import { redis } from "bun";
+
+try {
+    await redis.get("missing");
+} catch (error: any) {
+    if (error.code === "ERR_REDIS_CONNECTION_CLOSED") {
+        console.error("Connection closed");
+    } else if (error.code === "ERR_REDIS_AUTHENTICATION_FAILED") {
+        console.error("Auth failed");
+    } else if (error.code === "ERR_REDIS_INVALID_RESPONSE") {
+        console.error("Invalid response");
+    } else {
+        console.error("Unexpected:", error);
+    }
+}
+```
+
+### Basic operations
+
+Strings and keys:
+
+```ts
+import { redis } from "bun";
+
+await redis.set("user:1:name", "Alice");
+console.log(await redis.get("user:1:name"));
+await redis.del("user:1:name");
+console.log(await redis.exists("user:1:name"));
+
+await redis.set("session:123", "active");
+await redis.expire("session:123", 3600);
+console.log(await redis.ttl("session:123"));
+```
+
+Numeric:
+
+```ts
+await redis.set("counter", "0");
+await redis.incr("counter");
+await redis.decr("counter");
+```
+
+Hashes:
+
+```ts
+await redis.hmset("user:123", [
+    "name", "Alice",
+    "email", "alice@example.com",
+    "active", "true",
+]);
+const [name, email] = await redis.hmget("user:123", ["name", "email"]);
+await redis.hincrby("user:123", "visits", 1);
+await redis.hincrbyfloat("user:123", "score", 1.5);
+```
+
+Sets:
+
+```ts
+await redis.sadd("tags", "javascript");
+console.log(await redis.sismember("tags", "javascript"));
+console.log(await redis.smembers("tags"));
+console.log(await redis.srandmember("tags"));
+console.log(await redis.spop("tags"));
+await redis.srem("tags", "javascript");
+```
+
+Lists (via raw commands):
+
+```ts
+await redis.send("LPUSH", ["mylist", "value1", "value2"]);
+const items = await redis.send("LRANGE", ["mylist", "0", "-1"]);
+console.log(items);
+```
+
+### Advanced usage
+
+Auto-pipelining and batching:
+
+```ts
+import { redis, RedisClient } from "bun";
+
+const [n1, n2] = await Promise.all([
+    redis.get("user:1:name"),
+    redis.get("user:2:email"),
+]);
+
+const noPipe = new RedisClient("redis://localhost:6379", { enableAutoPipelining: false });
+await noPipe.set("x", "1");
+noPipe.close();
+```
+
+Raw commands:
+
+```ts
+const info = await redis.send("INFO", []);
+await redis.send("LPUSH", ["mylist", "a", "b"]);
+const list = await redis.send("LRANGE", ["mylist", "0", "-1"]);
+```
+
+Transactions (MULTI/EXEC) via raw:
+
+```ts
+import { RedisClient } from "bun";
+const tx = new RedisClient();
+await tx.send("MULTI", []);
+await tx.send("SET", ["balance:1", "100"]);
+await tx.send("INCR", ["balance:1"]);
+const replies = await tx.send("EXEC", []);
+console.log(replies);
+tx.close();
+```
+
+Type conversion notes
+
+- Integers → number; bulk/simple strings → string; null bulk → null
+- Arrays → arrays; RESP3 booleans → boolean; maps → objects; sets → arrays
+- EXISTS and SISMEMBER return booleans
+- Not auto-pipelined: AUTH, INFO, QUIT, MULTI/EXEC, WATCH, SCRIPT, SELECT, CLUSTER, DISCARD, UNWATCH, PIPELINE, SUBSCRIBE/UNSUBSCRIBE
+
+### Reusable helpers
+
+JSON cache, rate limiter, and session store you can drop into any app:
+
+```ts
+// redis-helpers.ts
+import { RedisClient, redis as shared } from "bun";
+
+type JsonValue = unknown;
+export async function withClient<T>(fn: (c: RedisClient) => Promise<T>, c: RedisClient = (shared as unknown as RedisClient)) {
+    return fn(c);
+}
+
+export const jsonCache = {
+    async get<T = JsonValue>(key: string, c: RedisClient = (shared as unknown as RedisClient)) {
+        const v = await c.get(key);
+        return v ? (JSON.parse(v) as T) : null;
+    },
+    async set(key: string, value: JsonValue, ttlSecs?: number, c: RedisClient = (shared as unknown as RedisClient)) {
+        await c.set(key, JSON.stringify(value));
+        if (ttlSecs && ttlSecs > 0) await c.expire(key, ttlSecs);
+    },
+    async del(key: string, c: RedisClient = (shared as unknown as RedisClient)) {
+        await c.del(key);
+    },
+};
+
+export function createRateLimiter({ limit = 100, windowSecs = 3600 } = {}) {
+    return async function check(ip: string, c: RedisClient = (shared as unknown as RedisClient)) {
+        const key = `ratelimit:${ip}`;
+        const count = await c.incr(key);
+        if (count === 1) await c.expire(key, windowSecs);
+        return { limited: count > limit, remaining: Math.max(0, limit - count) };
+    };
+}
+
+export const sessionStore = {
+    async create(userId: number | string, data: Record<string, unknown>, ttlSecs = 86_400, c: RedisClient = (shared as unknown as RedisClient)) {
+        const id = crypto.randomUUID();
+        const key = `session:${id}`;
+        await c.hmset(key, [
+            "userId", String(userId),
+            "created", String(Date.now()),
+            "data", JSON.stringify(data),
+        ]);
+        await c.expire(key, ttlSecs);
+        return id;
+    },
+    async get(id: string, c: RedisClient = (shared as unknown as RedisClient)) {
+        const key = `session:${id}`;
+        const exists = await c.exists(key);
+        if (!exists) return null;
+        const [userId, created, data] = await c.hmget(key, ["userId", "created", "data"]);
+        return { userId: Number(userId), created: Number(created), data: JSON.parse(String(data || "null")) } as {
+            userId: number; created: number; data: unknown;
+        };
+    },
+    async destroy(id: string, c: RedisClient = (shared as unknown as RedisClient)) {
+        await c.del(`session:${id}`);
+    },
+};
+
+// usage
+await jsonCache.set("user:42", { name: "Ada" }, 3600);
+console.log(await jsonCache.get("user:42"));
+const rateLimit = createRateLimiter({ limit: 10, windowSecs: 60 });
+console.log(await rateLimit("127.0.0.1"));
+const id = await sessionStore.create(42, { role: "admin" });
+console.log(await sessionStore.get(id));
+await sessionStore.destroy(id);
+```
+
+### Example use cases
+
+Caching:
+
+```ts
+import { redis } from "bun";
+async function getUserWithCache(userId: number) {
+    const key = `user:${userId}`;
+    const cached = await redis.get(key);
+    if (cached) return JSON.parse(cached);
+    const user = { id: userId, name: "Alice" }; // replace with DB
+    await redis.set(key, JSON.stringify(user));
+    await redis.expire(key, 3600);
+    return user;
+}
+```
+
+Rate limiting:
+
+```ts
+import { redis } from "bun";
+async function rateLimit(ip: string, limit = 100, windowSecs = 3600) {
+    const key = `ratelimit:${ip}`;
+    const count = await redis.incr(key);
+    if (count === 1) await redis.expire(key, windowSecs);
+    return { limited: count > limit, remaining: Math.max(0, limit - count) };
+}
+```
+
+Session storage:
+
+```ts
+import { redis } from "bun";
+export async function createSession(userId: number, data: unknown) {
+    const id = crypto.randomUUID();
+    const key = `session:${id}`;
+    await redis.hmset(key, [
+        "userId", String(userId),
+        "created", String(Date.now()),
+        "data", JSON.stringify(data),
+    ]);
+    await redis.expire(key, 86_400);
+    return id;
+}
+export async function getSession(id: string) {
+    const key = `session:${id}`;
+    const exists = await redis.exists(key);
+    if (!exists) return null;
+    const [userId, created, data] = await redis.hmget(key, ["userId", "created", "data"]);
+    return { userId: Number(userId), created: Number(created), data: JSON.parse(String(data)) };
+}
+```
+
+Notes
+
+- Pub/Sub and Streams currently lack high-level APIs in Bun; prefer alternative patterns or another client when you need them.
+- Some commands are intentionally not auto-pipelined for correctness (see type conversion notes above).
+
+## Workers and Child Processes
+
+Run parallel work with Web Workers and spawn external processes when needed.
+
+### Web Workers
+
+```javascript
+// worker.js
+self.onmessage = (e) => {
+    const n = Number(e.data || 35);
+    const fib = (x) => (x <= 1 ? x : fib(x - 1) + fib(x - 2));
+    postMessage({ n, result: fib(n) });
+};
+```
+
+```javascript
+// worker-main.js
+const worker = new Worker(new URL('./worker.js', import.meta.url).href);
+worker.onmessage = (e) => console.log('Worker result:', e.data);
+worker.postMessage(25);
+```
+
+### Spawn processes
+
+```javascript
+// Basic spawn
+const proc = Bun.spawn(["bun", "--version"]);
+const versionText = await proc.stdout.text();
+console.log(versionText.trim()); // e.g. 1.x.y
+```
+
+Configure options like cwd, env, and an onExit handler. You can also read the PID and await `exited`.
+
+```javascript
+const p = Bun.spawn(["bun", "--version"], {
+    cwd: "./", // working directory
+    env: { ...process.env, FOO: "bar" },
+    onExit(sub, exitCode, signalCode, error) {
+        console.log("exited", { exitCode, signalCode, err: error?.message });
+    },
+});
+
+console.log("pid:", p.pid);
+await p.exited; // resolves when process exits
+```
+
+Input streams (stdin)
+
+```javascript
+// 1) Incremental writes with a pipe
+const cat1 = Bun.spawn(["cat"], { stdin: "pipe", stdout: "pipe" });
+cat1.stdin.write("hello");
+cat1.stdin.write(new TextEncoder().encode(" world"));
+cat1.stdin.flush();
+cat1.stdin.end();
+console.log((await cat1.stdout.text()).trim()); // "hello world"
+
+// 2) Pipe a ReadableStream to stdin
+const stream = new ReadableStream({
+    start(controller) {
+        controller.enqueue("Hello from ");
+        controller.enqueue("ReadableStream!");
+        controller.close();
+    },
+});
+const cat2 = Bun.spawn(["cat"], { stdin: stream, stdout: "pipe" });
+console.log((await cat2.stdout.text()).trim()); // "Hello from ReadableStream!"
+
+// 3) Use a Response/Request/File as stdin
+const file = Bun.file("README.md");
+const cat3 = Bun.spawn(["cat"], { stdin: file, stdout: "pipe" });
+console.log((await cat3.stdout.text()).split("\n")[0]); // prints first line
+```
+
+Output streams (stdout/stderr)
+
+```javascript
+// Defaults: stdout is "pipe", stderr is "inherit"
+const ls = Bun.spawn(["echo", "hi"], { stdout: "pipe" });
+console.log((await ls.stdout.text()).trim()); // hi
+
+// Write output directly to a file
+await Bun.spawn(["echo", "file out"], { stdout: Bun.file("out.txt") }).exited;
+
+// Stream all stdio to the parent terminal (useful for daemons/tools)
+const tool = Bun.spawn(["bash", "-lc", "echo on stderr 1>&2 && echo on stdout"], {
+    stdio: ["inherit", "inherit", "inherit"],
+});
+await tool.exited;
+```
+
+Exit handling and signals
+
+```javascript
+const sleep = Bun.spawn(["sleep", "100"], { stdout: "ignore" });
+sleep.kill("SIGTERM");           // or sleep.kill(15)
+await sleep.exited;
+console.log({ killed: sleep.killed, code: sleep.exitCode, signal: sleep.signalCode });
+
+// Detach so parent can exit without waiting
+const daemon = Bun.spawn(["sleep", "5"], { stdio: ["ignore", "ignore", "ignore"] });
+daemon.unref();
+```
+
+AbortSignal, timeout, and killSignal
+
+```javascript
+// Abort via AbortController
+const ac = new AbortController();
+const long = Bun.spawn({ cmd: ["sleep", "10"], signal: ac.signal });
+ac.abort(); // later
+await long.exited;
+
+// Auto-kill after N ms (default SIGTERM; customize with killSignal)
+const timed = Bun.spawn({ cmd: ["sleep", "10"], timeout: 500, killSignal: "SIGKILL" });
+await timed.exited;
+console.log("signal:", timed.signalCode); // e.g. "SIGKILL"
+```
+
+Resource usage
+
+```javascript
+const r = Bun.spawn(["bun", "--version"]);
+await r.exited;
+console.log(r.resourceUsage()); // { maxRSS, cpuTime, ... }
+```
+
+Synchronous API (spawnSync)
+
+```javascript
+// Good for small, short-lived commands in CLIs
+const res = Bun.spawnSync(["echo", "hello"]);
+console.log(res.stdout.toString().trim()); // "hello"
+
+// Limit output buffer (kill if exceeded)
+const limited = Bun.spawnSync({ cmd: ["yes"], maxBuffer: 100 }); // may exit early
+```
+
+IPC between processes
+
+```typescript
+// parent.ts — Bun ↔ Bun IPC
+const child = Bun.spawn(["bun", new URL("./child.ts", import.meta.url).href], {
+    ipc(message, sub) {
+        console.log("from child:", message);
+        sub.send({ pong: true });
+        sub.kill();
+    },
+    stdio: ["inherit", "inherit", "inherit"],
+});
+
+child.send("ping");
+```
+
+```typescript
+// child.ts
+process.on("message", (msg) => {
+    console.log("from parent:", msg);
+    process.send({ ok: true });
+});
+```
+
+```javascript
+// Bun ↔ Node IPC: set serialization: "json"
+const node = Bun.spawn({
+    cmd: ["node", new URL("./node-child.cjs", import.meta.url).href],
+    serialization: "json",
+    ipc(message) {
+        console.log("node says:", message);
+        node.send({ from: "bun" });
+        node.kill();
+    },
+    stdio: ["inherit", "inherit", "inherit"],
+});
+node.send({ hello: "node" });
+```
+
+Notes
+
+- `stdout`/`stderr` can be: "pipe" (default for stdout), "inherit" (default for stderr), "ignore", a Bun.file, or a file descriptor.
+- `stdin` accepts: null (default), "pipe" (for incremental writes), ReadableStream, Response/Request, Bun.file, TypedArray/DataView, Blob, or a file descriptor.
+- Prefer `Bun.spawn` in servers/apps; use `Bun.spawnSync` in small CLI tools.
+
+## FFI
+
+Call native C libraries directly. Handy for system calls or tapping into existing C APIs.
+
+```javascript
+// ffi-demo.js
+import { dlopen, FFIType, ptr } from 'bun:ffi';
+
+const libcPath = process.platform === 'darwin'
+    ? '/usr/lib/libSystem.B.dylib'
+    : 'libc.so.6'; // Linux
+
+const lib = dlopen(libcPath, {
+    puts: { args: [FFIType.cstring], returns: FFIType.int },
+});
+
+lib.symbols.puts(ptr('Hello from bun:ffi'));
+```
+
+Notes:
+
+- Paths differ by OS; `libc.so.6` (Linux) vs `libSystem.B.dylib` (macOS).
+- Be careful with memory ownership; prefer passing strings and numbers unless you know how to free buffers.
+
+## ESM and CJS Interop
+
+Bun runs ESM by default but supports CommonJS seamlessly.
+
+```javascript
+// esm.mjs
+import { readFileSync } from 'node:fs';
+console.log('ESM ok', typeof readFileSync);
+```
+
+```javascript
+// cjs.cjs
+const os = require('node:os');
+console.log('CJS ok', os.platform());
+```
+
+In `package.json`:
+
+```json
+{
+    "type": "module" // use ESM by default; .cjs stays CJS
+}
+```
+
+Importing CJS from ESM works for most packages; if you hit issues, check if the package ships dual builds or use dynamic `await import()`.
+
+## URL Imports and Transpilation
+
+Bun can import remote modules and transpile TS/JSX on the fly.
+
+```javascript
+// url-imports.js
+import _ from 'https://cdn.jsdelivr.net/npm/lodash-es@4.17.21/lodash.min.js';
+console.log('chunk size:', _.chunk([1,2,3,4], 2).length);
+```
+
+Transpile TypeScript without a build step:
+
+```typescript
+// ts-demo.ts
+type User = { id: number; name: string };
+const u: User = { id: 1, name: 'TS' };
+console.log(u);
+```
+
+Run directly:
+
+```bash
+bun ts-demo.ts
+```
+
+Advanced bundling/transpilation flags:
+
+```bash
+bun build src/index.ts \
+    --outdir=dist \
+    --target=browser \
+    --sourcemap \
+    --minify \
+    --splitting \
+    --define:process.env.NODE_ENV='"production"' \
+    --external:react --external:react-dom
+```
+
+## Shebang CLI Scripts
+
+Write fast CLIs that start instantly.
+
+```javascript
+#!/usr/bin/env bun
+// bin/hello
+import { argv, env } from 'node:process';
+
+const nameIdx = argv.indexOf('--name');
+const name = nameIdx !== -1 ? argv[nameIdx + 1] : env.USER || 'friend';
+console.log(`Hello, ${name}!`);
+```
+
+Make it executable and run:
+
+```bash
+chmod +x bin/hello
+./bin/hello --name Alice
+```
+
+Optionally wire in package.json bin field:
+
+```json
+{
+    "name": "my-cli",
+    "version": "1.0.0",
+    "bin": {
+        "hello": "bin/hello"
+    }
+}
 ```
 
 ## Test Runner
@@ -1977,7 +3526,94 @@ console.log('Typed server on', server.port);
 
 ---
 
-*This is the beginning of our comprehensive Bun guide. The complete tutorial continues with Web Development, Testing, TypeScript integration, and advanced deployment topics...*
+## Workspaces and Monorepos
+
+Manage multi-package repos similar to npm/pnpm workspaces.
+
+```json
+// package.json (root)
+{
+    "name": "acme-monorepo",
+    "private": true,
+    "workspaces": ["packages/*", "apps/*"],
+    "scripts": {
+        "build": "bun run --filter ./packages/* build"
+    }
+}
+```
+
+Each workspace has its own `package.json`. Install deps at the root with `bun install`. You can filter script runs with `bun run --filter` targeting paths or package names.
+
+## Docker and Deployment
+
+Use a small base image and copy only what you need.
+
+```dockerfile
+# Dockerfile
+FROM oven/bun:1.1-alpine
+WORKDIR /app
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile
+COPY . .
+EXPOSE 3000
+CMD ["bun", "server.js"]
+```
+
+### Docker tips
+
+- Use `--frozen-lockfile` for deterministic installs.
+- For TypeScript, build inside the image and start with compiled files or run TS directly.
+- Multi-stage builds can reduce image size further.
+
+## Tips and Pitfalls
+
+- Prefer ESM (`"type":"module"`) and use `.cjs` only when needed.
+- Use `Bun.file`/`Bun.write` for fast file ops; they’re faster than Node’s fs for common cases.
+- Use `--watch` for servers and `bun test --watch` for tests to speed feedback.
+- Keep long-running work off the main request path—use Workers or queues.
+- If a Node package fails, try the ESM entry, or update it; Bun tracks Node compat but some dynamic CJS loaders can break.
+- For multipart forms in `Bun.serve`, prefer `await request.formData()`:
+
+```javascript
+// inside fetch handler
+if (url.pathname === '/upload' && request.method === 'POST') {
+    const form = await request.formData();
+    const file = form.get('file'); // Blob
+    if (file) await Bun.write(`./uploads/${file.name}`, file);
+    return new Response('ok');
+}
+```
+
+- Password hashing with Bun:
+
+```javascript
+// password-demo.js
+const hash = await Bun.password.hash('secret');
+const ok = await Bun.password.verify('secret', hash);
+console.log({ ok });
+```
+
+## Bun CLI Cheat Sheet
+
+- Runtime
+    - Run a file: `bun file.ts`
+    - Watch mode: `bun --watch server.js`
+    - Inspector: `bun --inspect app.js`
+
+- Packages
+    - Add: `bun add react@latest`
+    - Dev add: `bun add -d typescript bun-types`
+    - Remove: `bun remove lodash`
+    - Install from manifest: `bun install`
+
+- Build
+    - Bundle: `bun build src/index.ts --outdir dist --target browser`
+    - Minify: add `--minify` and `--sourcemap`
+
+- Test
+    - Run: `bun test`
+    - Filter: `bun test --filter math`
+    - Watch: `bun test --watch`
 
 ## Summary
 
