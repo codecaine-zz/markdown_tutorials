@@ -50,6 +50,7 @@ Website/cloud usage options:
 - 📱 **Responsive Design** - Works seamlessly on desktop and mobile devices
 - 📋 **Copy to Clipboard** - One-click copying for all code blocks
 - 🧭 **Smart Navigation** - Breadcrumb navigation and expandable folder structure
+- 🔍 **Search & Discovery** - Sidebar search with live filtering and auto-expanding results
 - 🧩 **Auto-Display Table of Contents** - TOC automatically appears for all tutorials with dynamic toggle functionality
 - 🧱 **Sidebar Width Toggle** - Expand/collapse the sidebar for focus or overview
 - 🎯 **Smooth Scrolling** - In-page anchor navigation with smooth scrolling and target highlight
@@ -60,69 +61,6 @@ Website/cloud usage options:
 - 🧮 **Homepage Insights** - Stats (total tutorials, categories, last updated), browse-by-category, and recently added list
 - 🎲 **Random Tutorial** - Jump to a randomly selected guide from the homepage
 - 🖼️ **SVG Favicon + Theme Color** - Crisp tab icon and browser UI color via `<link rel="icon">` and `meta theme-color`
-
-### Advanced Features
-- **🔍 Enhanced Search System**
-  - Fuzzy search that finds tutorials even with partial matches
-  - Search highlighting with query terms highlighted in results
-  - Search history with recent searches saved and suggested
-  - Search suggestions dropdown with recent search terms
-  - Better results display showing full path context and result count
-
-- **🔖 Advanced Bookmark System**
-  - One-click bookmarking with bookmark button next to tutorials
-  - Bookmark management modal showing all saved tutorials
-  - Reading progress saved with bookmarks for resuming later
-  - Quick access through floating action button
-  - Metadata including bookmark date and reading progress
-
-- **📖 Reading Progress Tracking**
-  - Automatic tracking of how much of each tutorial you've read
-  - Visual progress indicators showing completion percentage
-  - Progress persisted locally and restored on revisit
-  - Progress displayed in bookmark listings
-
-- **📱 Quick Actions Menu (FAB)**
-  - Floating action button always accessible from bottom-right
-  - Multiple quick actions: View Bookmarks, Recent Pages, Print, Share
-  - Mobile-friendly with optimized touch targets
-  - Smooth animations and intuitive interactions
-
-- **⏱️ Recent History Tracking**
-  - Automatically tracks recently viewed tutorials
-  - Quick access to recent pages through FAB menu
-  - Chronological order with most recent pages shown first
-  - Persistent across sessions with local storage
-
-- **⌨️ Enhanced Keyboard Shortcuts**
-  - **F1**: Show keyboard shortcuts help modal
-  - **Ctrl/Cmd+K**: Focus search input for quick searching
-  - **Ctrl/Cmd+D**: Toggle bookmark for current tutorial
-  - **Ctrl/Cmd+P**: Print current tutorial with optimized layout
-  - **Ctrl/Cmd+B**: Toggle sidebar width (normal/expanded/collapsed)
-  - **Ctrl/Cmd+H**: Navigate to home page
-  - **+/-**: Zoom in/out for better readability
-  - **Esc**: Close dialogs, clear search, or close menus
-
-- **🔔 Smart Notification System**
-  - Toast notifications for user actions (bookmark added/removed, etc.)
-  - Multiple notification types: success, error, and info
-  - Auto-hide after 3 seconds with manual close option
-  - Non-intrusive design that doesn't block interface
-
-- **♿ Enhanced Accessibility**
-  - Comprehensive keyboard navigation for all features
-  - Clear visual focus indicators for keyboard users
-  - Proper ARIA labels and descriptions for screen readers
-  - High contrast mode support
-  - Reduced motion respect for user preferences
-  - Mobile accessibility with touch-friendly interactions
-
-- **🖨️ Print-Optimized Styles**
-  - Clean print layout removing navigation and interactive elements
-  - Optimized typography with better font sizes and spacing
-  - Smart page break handling around headings and code blocks
-  - Print-friendly color scheme and layout adjustments
 
 ## Screenshots
 
@@ -178,11 +116,10 @@ Tutorials for automating Google services:
 
 ### Frontend
 
-- **Pure CSS** - Custom responsive styling with modern features
+- **Pure CSS** - Custom responsive styling
 - **Highlight.js** - Syntax highlighting for 20+ languages
 - **Marked.js** - Client-side markdown processing
 - **Font Awesome** - Icons and visual elements
-- **LocalStorage** - Client-side data persistence for user preferences
 
 ### Supported Languages
 
@@ -204,7 +141,7 @@ Tutorials for automating Google services:
 1. **Clone the repository**:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/codecaine-zz/markdown_tutorials.git
    cd markdown_tutorials
    ```
 
@@ -217,28 +154,13 @@ Tutorials for automating Google services:
 3. **Start the development server**:
 
    ```bash
-   php -S localhost:8000
+   php -S localhost:8080
    ```
 
 4. **Open in browser**:
-   Navigate to `http://localhost:8000`
+   Navigate to `http://localhost:8080`
 
-## Usage Guide
-
-### Getting Started
-
-1. **Search Tutorials**: Press `Ctrl/Cmd+K` or click the search box to try fuzzy search
-2. **Bookmark Tutorials**: Navigate to any tutorial and click the bookmark button
-3. **Quick Actions**: Click the blue + button in the bottom-right corner
-4. **Keyboard Shortcuts**: Press `F1` or click "Help" in the toolbar to see all shortcuts
-
-### Power User Features
-
-- **Advanced Search**: Use partial terms - the fuzzy search will find relevant tutorials
-- **Bookmark Organization**: Use bookmarks to create your personal tutorial collection
-- **Progress Tracking**: Resume reading exactly where you left off with automatic progress tracking
-- **Keyboard Navigation**: Learn the shortcuts (F1) for faster navigation
-- **Mobile Usage**: The floating action button provides quick access to all features on mobile
+## Usage
 
 ### Adding New Tutorials
 
@@ -292,9 +214,9 @@ markdown_tutorials/
 ├── index.php                 # Main application entry point
 ├── assets/
 │   ├── css/
-│   │   └── style.css         # All application styles (enhanced with new features)
+│   │   └── style.css         # All application styles
 │   └── js/
-│       └── app.js            # Frontend functionality (significantly enhanced)
+│       └── app.js            # Frontend functionality
 ├── logs/                     # Application logs
 ├── screenshots/              # Documentation images
 ├── tutorials/                # Tutorial content
@@ -306,103 +228,181 @@ markdown_tutorials/
 └── README.md                # This file
 ```
 
+## Homepage Overview
+
+The homepage now helps you get to content faster:
+
+- Stats summary: total tutorials, total categories, and the time since the latest update
+- Quick actions: focus the sidebar search and open a random tutorial
+- Browse by category: top-level folders with tutorial counts
+- Recently added: most recently updated tutorials with “time ago” labels
+
+These sections are generated dynamically from the `tutorials/` directory.
+
 ## Key Features Explained
 
-### Enhanced Navigation System
+### Navigation System
 
-- **Hierarchical browsing** with expandable folders and improved visual hierarchy
-- **Breadcrumb navigation** shows current location with clickable path segments
-- **Mobile-responsive** sidebar with hamburger toggle and touch-friendly interactions
+- **Hierarchical browsing** with expandable folders
+- **Breadcrumb navigation** shows current location
+- **Mobile-responsive** sidebar with hamburger toggle
 - **Smart expansion** - folders open automatically when viewing contained files
-- **Search integration** - search results show full folder context
 
-### Advanced UI Features
-
-- **Enhanced Search System**
-  - Real-time fuzzy search with intelligent matching
-  - Search result highlighting with query term emphasis
-  - Search history and suggestions for faster discovery
-  - Context-aware results showing folder paths
-  - Mobile-optimized search interface
-
-- **Bookmark & Progress System**
-  - One-click bookmarking with visual feedback
-  - Reading progress automatically tracked and displayed
-  - Bookmark management with metadata (date, progress)
-  - Cross-session persistence with local storage
-  - Quick access through floating action button
-
-- **Rating & Community Features**
-  - 5-star rating system for tutorial quality feedback
-  - Average ratings displayed with vote counts
-  - User-specific ratings remembered across sessions
-  - Visual feedback with star animations on hover/click
-
-- **Smart Notifications**
-  - Non-intrusive toast notifications for user actions
-  - Success/error/info notification types
-  - Auto-hide with manual close option
-  - Mobile-friendly positioning and sizing
-
-### Improved Core Features
+### UI Enhancements
 
 - **Sidebar Width Toggle**
-  - Click the chevron button in the sidebar to expand/collapse it
-  - The main content shifts to accommodate the chosen width
-  - State persisted across page loads
+   - Click the chevron button in the sidebar to expand/collapse it.
+   - The main content shifts to accommodate the chosen width.
 
-- **Enhanced Table of Contents**
-  - Auto-generated from headings with improved navigation
-  - Toggleable visibility with preference persistence
-  - Smooth scrolling with visual feedback
-  - "Previous" button for returning to prior position
+- **Sidebar Search (Live Filter)**
+   - Type in the sidebar search box to filter tutorials by name.
+   - Matching items remain visible and parent folders auto-expand for quick access.
+   - Clear the query with the “×” button.
 
-- **Advanced Code Block Features**
-  - Always-visible copy buttons with improved mobile support
-  - Success/failure feedback with visual indicators
-  - Clipboard fallback for broader browser support
-  - Syntax highlighting with 20+ language support
+- **Toggleable Table of Contents**
+   - On any tutorial page, click “Contents” to show/hide the ToC.
+   - The ToC is generated from headings and supports smooth scrolling.
+   - Target headings briefly highlight; a small inline “Previous” button returns to your prior scroll position.
 
-- **Top Toolbar Enhancements**
-  - Quick actions: Home, Collapse All, Expand All, Refresh
-  - Help button for keyboard shortcuts discovery
-  - Theme toggle with improved dark mode support
-  - Zoom controls with live percentage indicator
+- **Enhanced Anchor Navigation**
+   - Stable, GitHub-like heading IDs, smooth in-page links, and automatic link rewrites for reliable anchors.
 
-### Keyboard Shortcuts & Accessibility
+- **Improved Code Copy UX**
+   - Always-visible copy buttons on code blocks (mobile friendly), with success/failure feedback and clipboard fallback.
 
-- **Comprehensive Keyboard Support**
-  - F1: Show keyboard shortcuts help
-  - Ctrl/Cmd+K: Focus search (quick access)
-  - Ctrl/Cmd+D: Toggle bookmark current tutorial
-  - Ctrl/Cmd+P: Print with optimized layout
-  - Ctrl/Cmd+B: Toggle sidebar width
-  - Ctrl/Cmd+H: Navigate to home
-  - +/-: Zoom in/out
-  - Esc: Universal close/cancel action
+- **Top Toolbar**
+   - Quick actions: Home, Collapse All, Expand All, Refresh.
+   - Theme toggle (sun/moon) and Zoom controls with a live percentage indicator.
 
-- **Accessibility Improvements**
-  - Clear focus indicators for keyboard navigation
-  - ARIA labels and descriptions for screen readers
-  - High contrast mode support
-  - Reduced motion respect
-  - Mobile accessibility enhancements
+- **Theme & Zoom Persistence**
+   - Theme and zoom preferences are saved automatically and restored on page load.
+   - Zoom range: 80–180% for comfortable reading.
 
-### Data Persistence
+- **Bulk Sidebar Actions & Busy Overlay**
+   - Collapse/Expand All folders with a brief, non-blocking spinner overlay.
+   - Keeps the UI responsive during batch updates.
 
-- **Local Storage Features**
-  - User preferences (theme, zoom, sidebar width)
-  - Bookmarks with metadata and progress
-  - Reading progress for all tutorials
-  - Search history and suggestions
-  - Recent page history
+- **Persistent Navigation State**
+   - Remembers sidebar width state (normal/expanded/collapsed).
+   - Restores open/closed states of folders across visits.
+
+- **Keyboard Shortcuts**
+   - F1: Show shortcut help
+   - Cmd/Ctrl+F: Focus sidebar search
+   - Cmd/Ctrl+B: Toggle sidebar width
+   - Cmd/Ctrl+H: Home
+   - Plus/Minus: Zoom in/out
+
+### What’s New
+
+Latest updates:
+
+- **Auto-Toggle Table of Contents**: TOC now appears automatically when viewing any markdown tutorial, with improved toggle functionality and dynamic button states
+- New homepage insights panel with quick actions (focus search, random tutorial), stats, browse-by-category, and recently added tutorials
+- Added SVG favicon (`favicon.svg`) and `theme-color` for better browser tab and mobile UI integration
+
+Previously shipped:
+
+- Top toolbar, dark/light theme toggle, zoom controls with live indicator
+- Batch expand/collapse for the sidebar and persistent UI state (theme, zoom, sidebar width, folder states)
+
+### Syntax Highlighting
+
+- Powered by **Highlight.js 11.9.0**
+- Supports **20+ programming languages**
+- **GitHub Dark theme** for consistent appearance
+- **Automatic language detection**
+
+### Copy Functionality
+
+- **One-click copying** for all code blocks
+- **Visual feedback** with success/error states
+- **Preserves formatting** and indentation
+
+### Responsive Design
+
+- **Mobile-first approach**
+- **Collapsible sidebar** on small screens
+- **Touch-friendly** navigation elements
+- **Readable typography** across all devices
+
+## Favicon and Theme Color
+
+- Favicon lives at the repo root as `favicon.svg`
+- Included via:
+  - `<link rel="icon" type="image/svg+xml" href="/favicon.svg">`
+  - `<meta name="theme-color" content="#0f172a">`
+
+Modern browsers will show the SVG in the tab bar and use the theme color for UI accents (especially on mobile).
 
 ## Development
 
 ### File Organization
 
-- **Enhanced single-file application** (`index.php`) with improved organization
-- **Separation of concerns** with dedicated CSS and JS files significantly expanded
+- **Single-file application** (`index.php`) for simplicity
+- **Separation of concerns** with dedicated CSS and JS files
+- **Class-based architecture** with clean method separation
+- **Error handling** with logging to `logs/` directory
+
+### Adding Language Support
+
+To add syntax highlighting for additional languages:
+
+1. Add the language script in `index.php`:
+
+   ```php
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/language-name.min.js"></script>
+   ```
+
+2. The highlighting will work automatically in code blocks:
+
+   ````markdown
+   ```language-name
+   // Your code here
+   ```
+   ````
+
+## Troubleshooting
+
+### Common Issues
+
+**Server not starting:**
+
+- Ensure you're running from the project root directory
+- Check PHP version: `php --version`
+- Try a different port: `php -S localhost:3000`
+
+**Tutorials not loading:**
+
+- Check file permissions on `tutorials/` directory
+- Verify markdown files have `.md` extension
+- Check browser console for JavaScript errors
+
+**Styling issues:**
+
+- Clear browser cache
+- Check that `assets/` directory is accessible
+- Verify CSS file loads in browser developer tools
+
+## License
+
+This project is open source. Feel free to use, modify, and distribute according to your needs.
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## Support
+
+For issues or questions:
+
+- Check the browser console for JavaScript errors
+- Review PHP error logs in `logs/php_errors.log`
+- Verify file permissions and server configuration
 - **Class-based architecture** with clean method separation and new features
 - **Error handling** with logging to `logs/` directory
 - **Modular JavaScript** with feature-specific functions and improved code organization
