@@ -84,6 +84,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Normalize all in-page anchor hrefs (#...) so they match the final unique heading IDs
+    function rewriteAnchorHrefs(root) {
+        if (!root) return;
+        const anchors = root.querySelectorAll('a[href^="#"]');
+        anchors.forEach(a => {
+            const href = a.getAttribute('href') || '';
+            const raw = decodeURIComponent(href.replace('#',''));
+            if (!raw) return;
+            const target = getAnchorTarget(raw);
+            if (target && target.id) {
+                // Update href to the exact final id to keep history/scroll spy consistent
+                a.setAttribute('href', `#${target.id}`);
+            } else {
+                // As a fallback, normalize the hash using our slugifier
+                const slug = githubSlugify(raw);
+                if (slug) a.setAttribute('href', `#${slug}`);
+            }
+        });
+    }
+
     // Function to add copy buttons to code blocks
     function addCopyButtons() {
         const codeBlocks = document.querySelectorAll('pre code');
@@ -521,23 +541,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle hash changes for in-page navigation
     window.addEventListener('hashchange', scrollToAnchor);
 
-    function rewriteAnchorHrefs(root) {
-        const map = new Map();
-        root.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(h => {
-            map.set(githubSlugify(h.textContent || ''), h.id);
-        });
-        root.querySelectorAll('a[href^="#"]').forEach(a => {
-            const href = a.getAttribute('href');
-            const rawId = decodeURIComponent(href.slice(1));
-            // If there's no exact element for this id, try mapping via slug
-            if (!document.getElementById(rawId) && !document.getElementById(`user-content-${rawId}`)) {
-                const mapped = map.get(rawId);
-                if (mapped) {
-                    a.setAttribute('href', `#${mapped}`);
-                }
-            }
-        });
-    }
+    
 
     // Sidebar width toggle (expanded/collapsed)
     const sidebarToggle = document.getElementById('sidebarToggle');

@@ -8,6 +8,7 @@
 6.  [The Command Bar (`Ctrl+E`)](https://www.google.com/search?q=%236-the-command-bar-ctrle)
 7.  [Interactive Example: Editing a File](https://www.google.com/search?q=%237-interactive-example-editing-a-file)
 8.  [Uninstallation](https://www.google.com/search?q=%238-uninstallation)
+9.  [Make micro better on macOS (ARM): plugins, tips, and config](https://www.google.com/search?q=%239-make-micro-better-on-macos-arm-plugins-tips-and-config)
 
 -----
 
@@ -135,3 +136,88 @@ If you need to remove `micro`, you can do so easily with Homebrew.
 ```bash
 brew uninstall micro
 ```
+
+### 9\. Make micro better on macOS (ARM): plugins, tips, and config
+
+The plugin command doesn’t support an “all” meta-package. Install specific plugins by name (space-separated):
+
+```bash
+# List available plugins
+micro -plugin available
+
+# Install a curated set (safe defaults that work well on macOS ARM)
+micro -plugin install \
+  filemanager fzf detectindent editorconfig quickfix snippets jump wc \
+  cheat monokai-dark palettero gotham-colors nordcolors wakatime lsp aspell bookmark joinLines
+
+# See what’s installed
+micro -plugin list
+```
+
+
+### How to Use Installed Plugins in `micro`
+
+Once plugins are installed, you can use them as follows:
+
+1. **Via the Command Bar:**
+  - Press `Ctrl+E` to open the command bar at the bottom.
+  - Type the plugin command (e.g., `filemanager`, `fzf`, `quickfix`) and press `Enter`.
+
+2. **With Keybindings:**
+  - Assign plugin commands to custom keys in `~/.config/micro/bindings.json`. Example:
+    ```json
+    {
+     "Alt-f": "command:fzf",
+     "Alt-b": "command:filemanager",
+     "Alt-q": "command:quickfix"
+    }
+    ```
+
+3. **Plugin Examples:**
+  - `filemanager`: Opens a file tree sidebar.
+  - `fzf`: Fuzzy file finder for quick file access.
+  - `quickfix`: Shows diagnostics/errors if available.
+  - `cheat`: Opens built-in cheatsheets.
+  - `snippets`: Expands common code snippets.
+
+4. **List Installed Plugins:**
+  - Run `micro -plugin list` in your terminal to see all installed plugins.
+
+5. **Get Help:**
+  - Press `Ctrl+G` in `micro` for the help menu, or check plugin documentation online for more details.
+
+---
+
+Notes
+
+- fzf and ripgrep are recommended for fast file and text search: `brew install fzf ripgrep`.
+- aspell needs dictionaries: `brew install aspell`.
+- wakatime needs an API key in `~/.wakatime.cfg`.
+- lsp requires language servers per language (e.g., `brew install lua-language-server gopls typescript-language-server`), then they’ll be auto-detected.
+
+Optional settings (`~/.config/micro/settings.json`)
+
+```json
+{
+  "colorscheme": "monokai-dark",
+  "tabstospaces": true,
+  "tabsize": 4,
+  "autoindent": true,
+  "softwrap": true
+}
+```
+
+Optional keybindings (`~/.config/micro/bindings.json`)
+
+```json
+{
+  "Alt-f": "command:fzf",
+  "Alt-b": "command:filemanager",
+  "Alt-q": "command:quickfix"
+}
+```
+
+Troubleshooting “Unknown plugin \"all\"”
+
+- There is no `all` plugin. Use `micro -plugin available` to see valid names and install the ones you want: `micro -plugin install name1 name2 ...`.
+- If a plugin fails to load, run `micro -debug` and check the log path printed at startup.

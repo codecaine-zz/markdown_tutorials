@@ -72,37 +72,7 @@ v version
 Uninstall:
 
 ```bash
-brew uninstall vlang
-```
-
-Notes:
-
-- Homebrew packages may lag behind the latest source; use `--HEAD` or build from source for cutting-edge features.
-- When installed via Homebrew, the `v` binary is already on your PATH; `v symlink` is not required.
-
-
-## Upgrading V to latest version
-
-If V is already installed on a machine, it can be upgraded to its latest version
-by using the V's built-in self-updater.
-To do so, run the command `v up`.
-
-## Packaging V for distribution
-
-See the [notes on how to prepare a package for V](packaging_v_for_distributions.md) .
-
-## Getting started
-
-You can let V automatically set up the bare-bones structure of a project for you
-by using any of the following commands in a terminal:
-
-- `v init` → adds necessary files to the current folder to make it a V project
-- `v new abc` → creates a new project in the new folder `abc`, by default a "hello world" project.
-- `v new --web abcd` → creates a new project in the new folder `abcd`, using the vweb template.
-
-## Tutorial learning path (recommended order)
-
-Use this path to learn V step by step. Each item links to the relevant section below.
+## Table of Contents
 
 - Start here
     - [Introduction](#introduction)
@@ -110,19 +80,38 @@ Use this path to learn V step by step. Each item links to the relevant section b
     - [Installing V on macOS (Homebrew)](#installing-v-on-macos-homebrew)
     - [Upgrading V to latest version](#upgrading-v-to-latest-version)
     - [Getting started](#getting-started)
-    - [Hello world](#hello-world)
+    - [Hello World](#hello-world)
     - [Running a project folder](#running-a-project-folder-with-several-files)
     - [Comments](#comments)
-- Core language basics
+
+- Language basics
+    - [Functions](#functions)
+        - [Hoisting](#hoisting)
+        - [Returning Multiple Values](#returning-multiple-values)
+    - [Symbol visibility](#symbol-visibility)
     - [Variables](#variables)
+        - [Mutable variables](#mutable-variables)
+        - [Initialization vs assignment](#initialization-vs-assignment)
+        - [Warnings and declaration errors](#warnings-and-declaration-errors)
     - [V Data Types](#v-data-types)
         - [Primitive Types](#primitive-types)
         - [Strings](#strings)
         - [Runes](#runes)
         - [Numbers](#numbers)
         - [Arrays](#arrays)
+            - [Array methods](#array-methods)
+            - [Sorting Arrays](#sorting-arrays)
+            - [Array Slices](#array-slices)
         - [Fixed size arrays](#fixed-size-arrays)
-        - [Maps](#maps) → [Map update syntax](#map-update-syntax)
+        - [Maps](#maps)
+            - [Map update syntax](#map-update-syntax)
+        - [Advanced Maps and JSON Examples](#advanced-maps-and-json-examples)
+
+- Modules and organization
+    - [Module imports](#module-imports)
+        - [Selective imports](#selective-imports)
+        - [Module hierarchy](#module-hierarchy)
+        - [Module import aliasing](#module-import-aliasing)
     - [Statements & expressions](#statements--expressions)
         - [If](#if)
         - [Match](#match)
@@ -130,121 +119,91 @@ Use this path to learn V step by step. Each item links to the relevant section b
         - [For loop](#for-loop)
         - [Defer](#defer)
         - [Goto](#goto)
-    - [Functions](#functions)
-        - [Hoisting](#hoisting)
-        - [Returning Multiple Values](#returning-multiple-values)
-- Data modeling
     - [Structs](#structs)
+    - [Unions](#unions)
+    - [Functions 2](#functions-2)
+    - [References](#references)
+    - [Constants](#constants)
+    - [Builtin functions](#builtin-functions)
+    - [Modules](#modules)
     - [Type Declarations](#type-declarations)
         - [Type aliases](#type-aliases)
         - [Enums](#enums)
         - [Function Types](#function-types)
         - [Interfaces](#interfaces)
         - [Sum types](#sum-types)
-        - [Option/Result types & error handling](#optionresult-types-and-error-handling)
+        - [Option/Result types and error handling](#optionresult-types-and-error-handling)
         - [Custom error types](#custom-error-types)
         - [Generics](#generics)
-- Organization and reuse
-    - [Module imports](#module-imports)
-    - [Modules](#modules)
-    - [Constants](#constants)
-    - [References](#references)
-    - [Builtin functions](#builtin-functions)
-- Advanced functions
-    - [Functions 2](#functions-2)
-- Hands-on practice and I/O
+
+- Concurrency
+    - [Concurrency](#concurrency)
+        - [Spawning Concurrent Tasks](#spawning-concurrent-tasks)
+        - [Channels](#channels)
+        - [Shared Objects](#shared-objects)
+        - [Difference Between Channels and Shared Objects](#difference-between-channels-and-shared-objects)
+
+- Advanced topics
+    - [Attributes](#attributes)
+    - [Conditional compilation](#conditional-compilation)
+        - [Compile time pseudo variables](#compile-time-pseudo-variables)
+        - [Compile time reflection](#compile-time-reflection)
+        - [Compile time code](#compile-time-code)
+        - [Compile time types](#compile-time-types)
+        - [Environment specific files](#environment-specific-files)
+    - [Debugger](#debugger)
+        - [Call stack](#call-stack)
+        - [Trace](#trace)
+    - [Memory-unsafe code](#memory-unsafe-code)
+    - [Structs with reference fields](#structs-with-reference-fields)
+    - [sizeof and __offsetof](#sizeof-and-__offsetof)
+    - [Limited operator overloading](#limited-operator-overloading)
+    - [Performance tuning](#performance-tuning)
+    - [Atomics](#atomics)
+    - [Global Variables](#global-variables)
+    - [Static Variables](#static-variables)
+    - [Cross compilation](#cross-compilation)
+    - [Debugging](#debugging)
+        - [C Backend binaries (Default)](#c-backend-binaries-default)
+        - [Native Backend binaries](#native-backend-binaries)
+        - [Javascript Backend](#javascript-backend)
+
+- V and C
+    - [Calling C from V](#calling-c-from-v)
+    - [Calling V from C](#calling-v-from-c)
+    - [Passing C compilation flags](#passing-c-compilation-flags)
+    - [#pkgconfig](#pkgconfig)
+    - [Including C code](#including-c-code)
+    - [C types](#c-types)
+    - [C Declarations](#c-declarations)
+    - [Export to shared library](#export-to-shared-library)
+    - [Translating C to V](#translating-c-to-v)
+    - [Working around C issues](#working-around-c-issues)
+
+- Other features and examples
+    - [Other V Features](#other-v-features)
+    - [Practical Examples and Mini Projects](#practical-examples-and-mini-projects)
+        - [Command-Line Tool: File Organizer](#command-line-tool-file-organizer)
+        - [Simple Web API Server](#simple-web-api-server)
+        - [Multi-threaded File Processor](#multi-threaded-file-processor)
+    - [Utility Helpers (Lodash-style)](#utility-helpers-lodash-style)
+
+- Hands-on examples (more examples)
     - [Quick Start: Practical Examples](#quick-start-practical-examples)
+        - [Simple Calculator](#simple-calculator)
+        - [File Reader and Writer](#file-reader-and-writer)
+        - [Simple HTTP Request](#simple-http-request)
+        - [Working with JSON](#working-with-json)
+        - [Simple Web Server](#simple-web-server)
+        - [Command Line Tool with Arguments](#command-line-tool-with-arguments)
+    - [Utility Helpers (Lodash-style)](#utility-helpers-lodash-style)
     - [Console Input and Output](#console-input-and-output)
     - [File Input and Output](#file-input-and-output)
     - [SQLite: Secure CRUD with parameterized queries](#sqlite-secure-crud-with-parameterized-queries)
     - [Process Management and Subprocesses](#process-management-and-subprocesses)
     - [Networking and HTTP](#networking-and-http)
     - [JSON Serialization with Struct Arrays](#json-serialization-with-struct-arrays)
-- Concurrency and patterns
-    - [Concurrency](#concurrency)
     - [Advanced Programming Patterns](#advanced-programming-patterns)
-        - [Memory Management and Performance](#memory-management-and-performance)
-- Deep dive and integrations
-    - [Conditional compilation](#conditional-compilation)
-    - [Attributes](#attributes)
-    - [Cross compilation](#cross-compilation)
-    - [Debugging](#debugging)
-    - [V and C](#v-and-c)
-    - [Other V Features](#other-v-features)
-    - Appendices: [Keywords](#appendix-i-keywords), [Operators](#appendix-ii-operators)
-
-## Table of Contents
-
-<table>
-<tr><td width=33% valign=top>
-
-* [Hello world](#hello-world)
-* [Running a project folder](#running-a-project-folder-with-several-files)
-* [Comments](#comments)
-* [Functions](#functions)
-    * [Hoisting](#hoisting)
-    * [Returning multiple values](#returning-multiple-values)
-* [Symbol visibility](#symbol-visibility)
-* [Variables](#variables)
-    * [Mutable variables](#mutable-variables)
-    * [Initialization vs assignment](#initialization-vs-assignment)
-    * [Warnings and declaration errors](#warnings-and-declaration-errors)
-* [V types](#v-types)
-    * [Primitive types](#primitive-types)
-    * [Strings](#strings)
-    * [Runes](#runes)
-    * [Numbers](#numbers)
-    * [Arrays](#arrays)
-        * [Multidimensional arrays](#multidimensional-arrays)
-        * [Array methods](#array-methods)
-        * [Array slices](#array-slices)
-    * [Fixed size arrays](#fixed-size-arrays)
-    * [Maps](#maps)
-        * [Map update syntax](#map-update-syntax)
-
-</td><td width=33% valign=top>
-
-* [Module imports](#module-imports)
-    * [Selective imports](#selective-imports)
-    * [Module hierarchy](#module-hierarchy)
-    * [Module import aliasing](#module-import-aliasing)
-* [Statements & expressions](#statements--expressions)
-    * [If](#if)
-        * [`If` expressions](#if-expressions)
-        * [`If` unwrapping](#if-unwrapping)
-    * [Match](#match)
-    * [In operator](#in-operator)
-    * [For loop](#for-loop)
-    * [Defer](#defer)
-    * [Goto](#goto)
-* [Structs](#structs)
-    * [Heap structs](#heap-structs)
-    * [Default field values](#default-field-values)
-    * [Required fields](#required-fields)
-    * [Short struct literal syntax](#short-struct-literal-syntax)
-    * [Struct update syntax](#struct-update-syntax)
-    * [Trailing struct literal arguments](#trailing-struct-literal-arguments)
-    * [Access modifiers](#access-modifiers)
-    * [Anonymous structs](#anonymous-structs)
-    * [Static type methods](#static-type-methods)
-    * [[noinit] structs](#noinit-structs)
-    * [Methods](#methods)
-    * [Embedded structs](#embedded-structs)
-* [Unions](#unions)
-
-</td><td valign=top>
-
-* [Functions 2](#functions-2)
-    * [Immutable function args by default](#immutable-function-args-by-default)
-    * [Mutable arguments](#mutable-arguments)
-    * [Variable number of arguments](#variable-number-of-arguments)
-    * [Anonymous & higher-order functions](#anonymous--higher-order-functions)
-    * [Closures](#closures)
-    * [Parameter evaluation order](#parameter-evaluation-order)
-* [References](#references)
-* [Constants](#constants)
-    * [Required module prefix](#required-module-prefix)
-* [Builtin functions](#builtin-functions)
     * [println](#println)
     * [Printing custom types](#printing-custom-types)
     * [Dumping expressions at runtime](#dumping-expressions-at-runtime)
@@ -254,98 +213,7 @@ Use this path to learn V step by step. Each item links to the relevant section b
     * [init functions](#init-functions)
     * [cleanup functions](#cleanup-functions)
 
-</td></tr>
-<tr><td width=33% valign=top>
-
-* [Type Declarations](#type-declarations)
-    * [Type aliases](#type-aliases)
-    * [Enums](#enums)
-    * [Function Types](#function-types)
-    * [Interfaces](#interfaces)
-    * [Sum types](#sum-types)
-    * [Option/Result types & error handling](#optionresult-types-and-error-handling)
-        * [Handling options/results](#handling-optionsresults)
-    * [Custom error types](#custom-error-types)
-    * [Generics](#generics)
-* [Concurrency](#concurrency)
-    * [Spawning Concurrent Tasks](#spawning-concurrent-tasks)
-    * [Channels](#channels)
-    * [Shared Objects](#shared-objects)
-* [JSON](#json)
-    * [Decoding JSON](#decoding-json)
-    * [Encoding JSON](#encoding-json)
-* [Testing](#testing)
-    * [Asserts](#asserts)
-    * [Asserts with an extra message](#asserts-with-an-extra-message)
-    * [Asserts that do not abort your program](#asserts-that-do-not-abort-your-program)
-    * [Test files](#test-files)
-    * [Running tests](#running-tests)
-* [Memory management](#memory-management)
-    * [Control](#control)
-    * [Stack and Heap](#stack-and-heap)
-* [ORM](#orm)
-* [Writing documentation](#writing-documentation)
-    * [Newlines in Documentation Comments](#newlines-in-documentation-comments)
-
-</td><td width=33% valign=top>
-
-* [Tools](#tools)
-    * [v fmt](#v-fmt)
-    * [v shader](#v-shader)
-    * [Profiling](#profiling)
-* [Package Management](#package-management)
-    * [Package commands](#package-commands)
-    * [Publish package](#publish-package)
-* [Advanced Topics](#advanced-topics)
-    * [Attributes](#attributes)
-    * [Conditional compilation](#conditional-compilation)
-        * [Compile time pseudo variables](#compile-time-pseudo-variables)
-        * [Compile time reflection](#compile-time-reflection)
-        * [Compile time code](#compile-time-code)
-        * [Compile time types](#compile-time-types)
-        * [Environment specific files](#environment-specific-files)
-	* [Debugger](#debugger)
- 		* [Call stack](#call-stack)
-   		* [Trace](#trace)
-    * [Memory-unsafe code](#memory-unsafe-code)
-    * [Structs with reference fields](#structs-with-reference-fields)
-    * [sizeof and __offsetof](#sizeof-and-__offsetof)
-    * [Limited operator overloading](#limited-operator-overloading)
-    * [Performance tuning](#performance-tuning)
-    * [Atomics](#atomics)
-    * [Global Variables](#global-variables)
-    * [Static Variables](#static-variables)
-    * [Cross compilation](#cross-compilation)
-    * [Debugging](#debugging)
-        * [C Backend binaries Default](#c-backend-binaries-default)
-        * [Native Backend binaries](#native-backend-binaries)
-        * [Javascript Backend](#javascript-backend)
-
-</td><td valign=top>
-
-* [V and C](#v-and-c)
-    * [Calling C from V](#calling-c-from-v)
-    * [Calling V from C](#calling-v-from-c)
-    * [Passing C compilation flags](#passing-c-compilation-flags)
-    * [#pkgconfig](#pkgconfig)
-    * [Including C code](#including-c-code)
-    * [C types](#c-types)
-    * [C Declarations](#c-declarations)
-    * [Export to shared library](#export-to-shared-library)
-    * [Translating C to V](#translating-c-to-v)
-    * [Working around C issues](#working-around-c-issues)
-* [Other V Features](#other-v-features)
-    * [Inline assembly](#inline-assembly)
-    * [Hot code reloading](#hot-code-reloading)
-    * [Cross-platform shell scripts in V](#cross-platform-shell-scripts-in-v)
-    * [Vsh scripts with no extension](#vsh-scripts-with-no-extension)
-* [Appendices](#appendices)
-    * [Keywords](#appendix-i-keywords)
-    * [Operators](#appendix-ii-operators)
-    * [Other online resources](#other-online-resources)
-
-</td></tr>
-</table>
+<!-- (Old HTML table TOC removed in favor of Markdown list above) -->
 
 <!--
 Note: There are several special keywords, which you can put after the code fences for v:
@@ -358,14 +226,14 @@ For more details, do: `v check-md`
 ```v
 // Docs: https://docs.vlang.io
 fn main() {
-	println('hello world')
+    println('hello world')
 }
 ```
 
 Save this snippet into a file named `hello.v`. Now do: `v run hello.v`.
 
-> That is assuming you have symlinked your V with `v symlink`, as described
-[here](https://github.com/vlang/v/blob/master/README.md#symlinking).
+> That is assuming you have symlinked your V with `v symlink`, as described in the
+[V symlinking instructions](https://github.com/vlang/v/blob/master/README.md#symlinking).
 > If you haven't yet, you have to type the path to V manually.
 
 Congratulations - you just wrote and executed your first V program!
@@ -2279,7 +2147,7 @@ println('  Timeout: ${config.timeout}s')
 println('  Max clients: ${config.max_clients}')
 ```
 
-### Strings
+### Strings (utils)
 
 Strings in V are one of the most fundamental data types. They represent text data and are heavily used in most programs.
 
@@ -2904,7 +2772,7 @@ f1 := 123e-2 // 1.23
 f2 := 456e+2 // 45600
 ```
 
-### Arrays
+### Arrays (utils)
 
 An array is an ordered collection of data elements of the same type. Arrays are fundamental data structures that allow you to store multiple values in a single variable and access them by their position (index).
 
@@ -8016,6 +7884,1271 @@ fn main() {
         eprintln('Processing failed: ${err}')
         exit(1)
     }
+}
+```
+
+## Utility Helpers (Lodash-style)
+
+Practical, copy-pasteable helpers for rapid development. Each snippet is small, readable, and comes with a tiny usage example you can run immediately.
+
+> Tip: You can collect these in a file like `utils.v` and import them across projects.
+
+> Best practices:
+> - Keep helpers small, pure, and side-effect free when possible.
+> - Validate inputs (empty/null, ranges) and document behavior.
+> - Prefer rune-safe string ops for Unicode; note ASCII-only where used.
+> - For HTTP/JSON, set headers and check status codes.
+> - Use math.round for numeric rounding; avoid truncation bias.
+
+### Strings (utils pack)
+
+```v
+// Docs: https://docs.vlang.io
+import strings
+
+// Convert "Hello World" -> "hello-world"
+pub fn to_kebab(s string) string {
+    return s.trim_space()
+        .to_lower()
+        .replace(' ', '-')
+        .replace('_', '-')
+        .replace('--', '-')
+}
+
+// Convert "Hello World" -> "hello_world"
+pub fn to_snake(s string) string {
+    return s.trim_space()
+        .to_lower()
+        .replace(' ', '_')
+        .replace('-', '_')
+        .replace('__', '_')
+}
+
+// Convert "hello world" -> "helloWorld"
+pub fn to_camel(s string) string {
+    parts := s.trim_space().to_lower().split_any(' -_')
+    if parts.len == 0 { return '' }
+    mut out := parts[0]
+    for i in 1 .. parts.len {
+        if parts[i].len == 0 { continue }
+        out += parts[i][0..1].to_upper() + parts[i][1..]
+    }
+    return out
+}
+
+// Capitalize first letter: "v lang" -> "V lang"
+pub fn capitalize(s string) string {
+    if s.len == 0 { return s }
+    return s[0..1].to_upper() + s[1..]
+}
+
+// Pad left to min length with a char
+pub fn pad_start(s string, min_len int, pad byte) string {
+    if s.len >= min_len { return s }
+    return strings.repeat(pad.ascii_str(), min_len - s.len) + s
+}
+
+// Pad right to min length with a char
+pub fn pad_end(s string, min_len int, pad byte) string {
+    if s.len >= min_len { return s }
+    return s + strings.repeat(pad.ascii_str(), min_len - s.len)
+}
+
+// Case-insensitive starts_with/ends_with
+pub fn starts_with_ci(s string, prefix string) bool { return s.to_lower().starts_with(prefix.to_lower()) }
+pub fn ends_with_ci(s string, suffix string) bool { return s.to_lower().ends_with(suffix.to_lower()) }
+
+// Usage
+fn main() {
+    println(to_kebab('Hello V Lang'))       // hello-v-lang
+    println(to_snake('Hello V Lang'))       // hello_v_lang
+    println(to_camel('hello v lang'))       // helloVLang
+    println(capitalize('v is fast'))        // V is fast
+    println(pad_start('7', 3, `0`))         // 007
+    println(pad_end('7', 3, `0`))           // 700
+    println(starts_with_ci('Hello', 'he'))  // true
+    println(ends_with_ci('Hello', 'LO'))    // true
+}
+```
+
+### Arrays
+
+```v
+// Docs: https://docs.vlang.io
+
+// Split array into chunks of size n (last chunk may be smaller)
+pub fn chunk[T](arr []T, n int) [][]T {
+    if n <= 0 || arr.len == 0 { return [][]T{} }
+    mut out := [][]T{}
+    mut i := 0
+    for i < arr.len {
+        end := if i + n < arr.len { i + n } else { arr.len }
+        out << arr[i..end]
+        i = end
+    }
+    return out
+}
+
+// Remove empty strings: ["a", "", "b"] -> ["a", "b"]
+pub fn compact_strings(arr []string) []string {
+    mut out := []string{}
+    for s in arr { if s != '' { out << s } }
+    return out
+}
+
+// Unique strings preserving order
+pub fn unique_strings(arr []string) []string {
+    mut seen := map[string]bool{}
+    mut out := []string{}
+    for s in arr {
+        if !seen[s] {
+            seen[s] = true
+            out << s
+        }
+    }
+    return out
+}
+
+// Flatten one level of nested string arrays
+pub fn flatten_strings(arr [][]string) []string {
+    mut out := []string{}
+    for sub in arr { out << sub }
+    return out
+}
+
+// Group by key selector: returns map key -> items
+pub fn group_by[T](items []T, key_fn fn (T) string) map[string][]T {
+    mut m := map[string][]T{}
+    for item in items {
+        key := key_fn(item)
+        if key !in m { m[key] = []T{} }
+        m[key] << item
+    }
+    return m
+}
+
+// Usage
+struct User { name string, city string }
+
+fn main() {
+    println(chunk([1,2,3,4,5], 2))                // [[1,2],[3,4],[5]]
+    println(compact_strings(['a','', 'b']))       // ['a','b']
+    println(unique_strings(['a','b','a']))        // ['a','b']
+    users := [User{'Ana','NY'}, User{'Ben','SF'}, User{'Cara','NY'}]
+    by_city := group_by[User](users, fn (u User) string { return u.city })
+    println(by_city['NY'].map(it.name))           // ['Ana','Cara']
+}
+```
+
+### Maps (object-like, utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn pick[T](m map[string]T, keys []string) map[string]T {
+    mut out := map[string]T{}
+    for k in keys { if k in m { out[k] = m[k] } }
+    return out
+}
+
+pub fn omit[T](m map[string]T, keys []string) map[string]T {
+    mut skip := map[string]bool{}
+    for k in keys { skip[k] = true }
+    mut out := map[string]T{}
+    for k, v in m { if !skip[k] { out[k] = v } }
+    return out
+}
+
+pub fn merge[T](a map[string]T, b map[string]T) map[string]T {
+    mut out := map[string]T{}
+    for k, v in a { out[k] = v }
+    for k, v in b { out[k] = v }
+    return out
+}
+
+// Usage
+fn main() {
+    m := {
+        'name': 'Ada'
+        'role': 'dev'
+        'city': 'Rome'
+    }
+    println(pick(m, ['name','role'])) // {'name':'Ada','role':'dev'}
+    println(omit(m, ['city']))        // {'name':'Ada','role':'dev'}
+    println(merge(m, {'role':'lead'}))// role replaced
+}
+```
+
+### Numbers (utils)
+
+```v
+// Docs: https://docs.vlang.io
+import math
+
+pub fn clamp_int(x int, a int, b int) int {
+    return if x < a { a } else if x > b { b } else { x }
+}
+
+pub fn clamp_f64(x f64, a f64, b f64) f64 {
+    return if x < a { a } else if x > b { b } else { x }
+}
+
+pub fn in_range_int(x int, start int, end int) bool {
+    low := if start <= end { start } else { end }
+    high := if start <= end { end } else { start }
+    return x >= low && x < high
+}
+
+pub fn round_to(x f64, places int) f64 {
+    if places <= 0 { return math.round(x) }
+    factor := math.pow(10.0, places)
+    return math.round(x * factor) / factor
+}
+
+// Usage (example outputs shown as comments)
+fn main() {
+    println(clamp_int(10, 0, 5)) // 5
+    println(in_range_int(3, 0, 5)) // true
+    println(round_to(3.14159, 2)) // 3.14
+}
+```
+
+### Dates and time (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
+import time
+
+pub fn add_days(t time.Time, days int) time.Time {
+    return t.add_days(days)
+}
+
+pub fn yyyymmdd(t time.Time) string {
+    return '${t.year:04}-${t.month:02}-${t.day:02}'
+}
+
+// Usage
+fn main() {
+    today := time.now()
+    println(yyyymmdd(today))
+    println(yyyymmdd(add_days(today, 7)))
+}
+```
+
+### Objects and misc (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+// Shallow clone for map[string]T
+pub fn clone_map[T](m map[string]T) map[string]T {
+    mut out := map[string]T{}
+    for k, v in m { out[k] = v }
+    return out
+}
+
+// Apply defaults without overwriting existing keys
+pub fn defaults[T](m map[string]T, defs map[string]T) map[string]T {
+    mut out := clone_map(m)
+    for k, v in defs { if k !in out { out[k] = v } }
+    return out
+}
+
+// Simple pipe for readability
+pub fn pipe[T](value T, fns ...fn (T) T) T {
+    mut cur := value
+    for f in fns { cur = f(cur) }
+    return cur
+}
+
+// Usage
+fn main() {
+    cfg := defaults({'env':'dev'}, {'env':'prod','region':'eu'})
+    println(cfg) // {'env':'dev','region':'eu'}
+
+    res := pipe(5, fn (x int) int { return x + 1 }, fn (x int) int { return x * 2 })
+    println(res) // 12
+}
+```
+
+### Collections extras (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+// Difference: a - b (strings)
+pub fn difference_strings(a []string, b []string) []string {
+    mut setb := map[string]bool{}
+    for x in b { setb[x] = true }
+    mut out := []string{}
+    for x in a { if !setb[x] { out << x } }
+    return out
+}
+
+// Intersection: common items (strings)
+pub fn intersection_strings(a []string, b []string) []string {
+    mut setb := map[string]bool{}
+    for x in b { setb[x] = true }
+    mut out := []string{}
+    for x in a { if setb[x] { out << x } }
+    return unique_strings(out)
+}
+
+// Union with uniqueness (strings)
+pub fn union_strings(a []string, b []string) []string {
+    return unique_strings(a.clone() + b)
+}
+
+// Partition into pass/fail by predicate
+pub struct Parts {
+    pass []string
+    fail []string
+}
+
+pub fn partition_strings(items []string, pred fn (string) bool) Parts {
+    mut p := Parts{pass: []string{}, fail: []string{}}
+    for s in items {
+        if pred(s) { p.pass << s } else { p.fail << s }
+    }
+    return p
+}
+
+// Key by selector: map key -> item
+pub fn key_by[T](items []T, key_fn fn (T) string) map[string]T {
+    mut m := map[string]T{}
+    for it in items { m[key_fn(it)] = it }
+    return m
+}
+
+// Count by classifier: map key -> count
+pub fn count_by[T](items []T, classifier fn (T) string) map[string]int {
+    mut m := map[string]int{}
+    for it in items { m[classifier(it)] = m[classifier(it)] + 1 }
+    return m
+}
+
+// Zip two arrays into pairs
+pub struct Pair[A, B] {
+    a A
+    b B
+}
+
+pub fn zip[A, B](a []A, b []B) []Pair[A, B] {
+    n := if a.len < b.len { a.len } else { b.len }
+    mut out := []Pair[A, B]{}
+    for i in 0 .. n { out << Pair[A, B]{ a: a[i], b: b[i] } }
+    return out
+}
+
+pub fn unzip[A, B](pairs []Pair[A, B]) ([]A, []B) {
+    mut aa := []A{}
+    mut bb := []B{}
+    for p in pairs { aa << p.a; bb << p.b }
+    return aa, bb
+}
+
+// Usage
+struct UserC { name string, age int }
+
+fn main() {
+    println(difference_strings(['a','b','c'], ['b','d'])) // ['a','c']
+    println(intersection_strings(['a','b'], ['b','c']))  // ['b']
+    println(union_strings(['a','b'], ['b','c']))         // ['a','b','c']
+
+    p := partition_strings(['ant','bear','cat'], fn (s string) bool { return s.len > 3 })
+    println(p.pass) // ['bear']
+    println(p.fail) // ['ant','cat']
+
+    users := [UserC{'Ana', 30}, UserC{'Ben', 24}]
+    kb := key_by[UserC](users, fn (u UserC) string { return u.name })
+    println(kb['Ana'].age) // 30
+
+    pairs := zip([1,2,3], ['a','b'])
+    aa, bb := unzip(pairs)
+    println(aa) // [1,2]
+    println(bb) // ['a','b']
+}
+```
+
+### Ranges & generation (utils)
+
+```v
+// Docs: https://docs.vlang.io
+import strings
+
+pub fn range_int(n int) []int {
+    if n <= 0 { return []int{} }
+    mut out := []int{cap: n}
+    for i in 0 .. n { out << i }
+    return out
+}
+
+pub fn range_step(start int, end int, step int) []int {
+    if step == 0 { return []int{} }
+    mut out := []int{}
+    mut i := start
+    if step > 0 {
+        for i < end { out << i; i += step }
+    } else {
+        for i > end { out << i; i += step }
+    }
+    return out
+}
+
+pub fn times[T](n int, f fn (int) T) []T {
+    if n <= 0 { return []T{} }
+    mut out := []T{cap: n}
+    for i in 0 .. n { out << f(i) }
+    return out
+}
+
+pub fn repeat_str(s string, n int) string {
+    if n <= 0 { return '' }
+    return strings.repeat(s, n)
+}
+
+// Usage
+fn main() {
+    println(range_int(5))           // [0,1,2,3,4]
+    println(range_step(10, 0, -3))  // [10,7,4,1]
+    squares := times[int](5, fn (i int) int { return i * i })
+    println(squares)                // [0,1,4,9,16]
+    println(repeat_str('ab', 3))    // ababab
+}
+```
+
+### Math & stats (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn sum_int(xs []int) int {
+    mut s := 0
+    for x in xs { s += x }
+    return s
+}
+
+pub fn sum_f64(xs []f64) f64 {
+    mut s := 0.0
+    for x in xs { s += x }
+    return s
+}
+
+pub fn avg_f64(xs []f64) f64 {
+    return if xs.len == 0 { 0.0 } else { sum_f64(xs) / xs.len }
+}
+
+pub fn min_int(xs []int) ?int {
+    if xs.len == 0 { return none }
+    mut m := xs[0]
+    for x in xs[1..] { if x < m { m = x } }
+    return m
+}
+
+pub fn max_int(xs []int) ?int {
+    if xs.len == 0 { return none }
+    mut m := xs[0]
+    for x in xs[1..] { if x > m { m = x } }
+    return m
+}
+
+// Usage
+fn main() {
+    println(sum_int([1,2,3]))  // 6
+    println(avg_f64([1.0,2,3]))// 2.0
+    println(min_int([3,1,2])!) // 1
+    println(max_int([3,1,2])!) // 3
+}
+```
+
+### Random & IDs (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: rand — https://modules.vlang.io/rand.html
+// Module: crypto.rand — https://modules.vlang.io/crypto.rand.html
+// Module: encoding.base64 — https://modules.vlang.io/encoding.base64.html
+import rand
+import crypto.rand as crand
+import encoding.base64
+
+pub fn random_int(min int, max int) int {
+    if max <= min { return min }
+    return min + rand.intn(max - min) or { min }
+}
+
+pub fn sample_one[T](items []T) ?T {
+    if items.len == 0 { return none }
+    idx := rand.intn(items.len) or { return none }
+    return items[idx]
+}
+
+pub fn shuffle_in_place[T](mut items []T) {
+    // Fisher–Yates
+    for i := items.len - 1; i > 0; i-- {
+        j := rand.intn(i + 1) or { 0 }
+        items[i], items[j] = items[j], items[i]
+    }
+}
+
+pub fn new_id(bytes_len int) string {
+    n := if bytes_len <= 0 { 16 } else { bytes_len }
+    b := crand.bytes(n) or { return '' }
+    // URL-safe base64 without padding
+    mut s := base64.encode(b)
+    s = s.replace('+', '-').replace('/', '_').trim_right('=')
+    return s
+}
+
+// Usage
+fn main() {
+    println(random_int(10, 20))
+    println(sample_one(['a','b','c']) or { 'none' })
+    mut xs := [1,2,3,4,5]
+    shuffle_in_place(mut xs)
+    println(xs)
+    println(new_id(16))
+}
+```
+
+### Functional extras (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Note: These are simple, readable helpers, not fully thread-safe abstractions.
+
+// Identity and noop
+pub fn identity[T](x T) T { return x }
+pub fn noop() {}
+
+// Once for no-arg functions
+pub fn once0[T](f fn () T) fn () T {
+    mut ran := false
+    mut result := option[T]{}
+    return fn [mut ran, mut result, f] () T {
+        if ran { return result or { panic('unreachable') } }
+        val := f()
+        result = val
+        ran = true
+        return val
+    }
+}
+
+// Memoize int -> int example
+pub fn memoize_i2i(f fn (int) int) fn (int) int {
+    mut cache := map[int]int{}
+    return fn [f, mut cache] (x int) int {
+        if x in cache { return cache[x] }
+        v := f(x)
+        cache[x] = v
+        return v
+    }
+}
+
+// Coalesce utilities
+pub fn coalesce_str(values ...string) string {
+    for v in values { if v.trim_space() != '' { return v } }
+    return ''
+}
+
+pub fn coalesce_int(values ...int) int {
+    for v in values { if v != 0 { return v } }
+    return 0
+}
+
+// Usage
+fn fib(n int) int { return if n < 2 { n } else { fib(n-1) + fib(n-2) } }
+
+fn main() {
+    once_hello := once0(fn () string { return 'hello' })
+    println(once_hello())
+    println(once_hello()) // cached
+
+    fast_fib := memoize_i2i(fib)
+    println(fast_fib(10)) // 55
+
+    println(identity(123))      // 123
+    println(coalesce_str('', 'x', 'y')) // 'x'
+}
+```
+
+### Equality & checks (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn is_str_blank(s string) bool { return s.trim_space() == '' }
+
+pub fn is_empty_arr[T](a []T) bool { return a.len == 0 }
+
+pub fn is_empty_map[T](m map[string]T) bool { return m.len == 0 }
+
+pub fn equal_strings(a []string, b []string) bool {
+    if a.len != b.len { return false }
+    for i in 0 .. a.len { if a[i] != b[i] { return false } }
+    return true
+}
+
+pub fn equal_map_ss(a map[string]string, b map[string]string) bool {
+    if a.len != b.len { return false }
+    for k, v in a { if k !in b || b[k] != v { return false } }
+    return true
+}
+
+// Usage
+fn main() {
+    println(is_str_blank('  '))
+    println(is_empty_arr([]int{}))
+    println(equal_strings(['a','b'], ['a','b']))
+}
+```
+
+### Filesystem & JSON (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+// Module: json — https://modules.vlang.io/json.html
+import os
+import json
+
+pub fn ensure_dir(path string) ! {
+    if !os.exists(path) {
+        os.mkdir_all(path) or { return error('Failed to create ${path}: ${err}') }
+    }
+}
+
+pub fn read_lines(path string) ![]string {
+    text := os.read_file(path) or { return error('Read failed: ${err}') }
+    return text.split_into_lines()
+}
+
+pub fn write_lines(path string, lines []string) ! {
+    os.write_file(path, lines.join('\n')) or { return error('Write failed: ${err}') }
+}
+
+pub fn read_json_from_file[T](path string) !T {
+    data := os.read_file(path) or { return error('Read failed: ${err}') }
+    return json.decode(T, data) or { return error('JSON decode failed: ${err}') }
+}
+
+pub fn write_json_to_file[T](path string, v T) ! {
+    s := json.encode(v)
+    os.write_file(path, s) or { return error('Write failed: ${err}') }
+}
+
+// Usage
+struct Cfg { name string, debug bool }
+
+fn main() {
+    ensure_dir('./data')!
+    write_lines('./data/hello.txt', ['hi','there'])!
+    println(read_lines('./data/hello.txt')!)
+
+    cfg := Cfg{'app', true}
+    write_json_to_file('./data/cfg.json', cfg)!
+    loaded := read_json_from_file[Cfg]('./data/cfg.json')!
+    println(loaded.name)
+}
+```
+
+### Strings extras (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn truncate(s string, max int) string {
+    if max <= 0 { return '' }
+    if s.runes().len <= max { return s }
+    // naive rune-safe truncation with ellipsis
+    mut r := s.runes()
+    r = r[..max]
+    return string(r) + '…'
+}
+
+pub fn remove_prefix(s string, prefix string) string {
+    return if s.starts_with(prefix) { s[prefix.len..] } else { s }
+}
+
+pub fn remove_suffix(s string, suffix string) string {
+    return if s.ends_with(suffix) { s[..s.len - suffix.len] } else { s }
+}
+
+pub fn contains_ci(s string, sub string) bool {
+    return s.to_lower().contains(sub.to_lower())
+}
+
+// ASCII-only reverse for simplicity
+pub fn reverse_ascii(s string) string {
+    mut b := s.bytes()
+    for i := 0; i < b.len/2; i++ { b[i], b[b.len-1-i] = b[b.len-1-i], b[i] }
+    return b.bytestr()
+}
+
+// Rune-safe reverse (handles Unicode)
+pub fn reverse_runes(s string) string {
+    mut rs := s.runes()
+    for i := 0; i < rs.len/2; i++ { rs[i], rs[rs.len-1-i] = rs[rs.len-1-i], rs[i] }
+    return string(rs)
+}
+
+pub fn slugify(s string) string {
+    return to_kebab(s)
+}
+
+// Usage
+fn main() {
+    println(truncate('The quick brown fox', 10)) // 'The quick …'
+    println(remove_prefix('prefix-name', 'prefix-')) // 'name'
+    println(contains_ci('Hello', 'he')) // true
+    println(reverse_ascii('abc')) // 'cba'
+    println(reverse_runes('hé😊')) // '😊éh'
+    println(slugify('V Lang Guide')) // 'v-lang-guide'
+}
+```
+
+### Arrays advanced (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn take[T](arr []T, n int) []T { return if n <= 0 { []T{} } else if n < arr.len { arr[..n] } else { arr.clone() } }
+
+pub fn drop[T](arr []T, n int) []T { return if n <= 0 { arr.clone() } else if n < arr.len { arr[n..] } else { []T{} } }
+
+pub fn take_while[T](arr []T, pred fn (T) bool) []T {
+    mut i := 0
+    for i < arr.len && pred(arr[i]) { i++ }
+    return arr[..i]
+}
+
+pub fn drop_while[T](arr []T, pred fn (T) bool) []T {
+    mut i := 0
+    for i < arr.len && pred(arr[i]) { i++ }
+    return arr[i..]
+}
+
+pub fn find_item[T](arr []T, pred fn (T) bool) ?T {
+    for x in arr { if pred(x) { return x } }
+    return none
+}
+
+pub fn find_index[T](arr []T, pred fn (T) bool) int {
+    for i, x in arr { if pred(x) { return i } }
+    return -1
+}
+
+pub fn remove_if[T](arr []T, pred fn (T) bool) []T {
+    mut out := []T{}
+    for x in arr { if !pred(x) { out << x } }
+    return out
+}
+
+// Unique by key function
+pub fn uniq_by[T](arr []T, key fn (T) string) []T {
+    mut seen := map[string]bool{}
+    mut out := []T{}
+    for x in arr {
+        k := key(x)
+        if !seen[k] { seen[k] = true; out << x }
+    }
+    return out
+}
+
+// Sort by string key (ascending/descending) - returns new slice
+struct KeyIndexStr {
+    key string
+    i   int
+}
+
+pub fn sorted_by_str[T](arr []T, key fn (T) string, asc bool) []T {
+    mut pairs := []KeyIndexStr{}
+    for i, x in arr { pairs << KeyIndexStr{ key: key(x), i: i } }
+    pairs.sort(a.key < b.key)
+    mut out := []T{}
+    for p in pairs { out << arr[p.i] }
+    if !asc { out.reverse_in_place() }
+    return out
+}
+
+// Sort by int key (ascending/descending) - returns new slice
+struct KeyIndexInt {
+    key int
+    i   int
+}
+
+pub fn sorted_by_int[T](arr []T, key fn (T) int, asc bool) []T {
+    mut pairs := []KeyIndexInt{}
+    for i, x in arr { pairs << KeyIndexInt{ key: key(x), i: i } }
+    pairs.sort(a.key < b.key)
+    mut out := []T{}
+    for p in pairs { out << arr[p.i] }
+    if !asc { out.reverse_in_place() }
+    return out
+}
+
+// Usage
+struct PersonA { name string, age int }
+
+fn main() {
+    xs := [1,2,3,4,5]
+    println(take(xs, 2))             // [1,2]
+    println(drop(xs, 3))             // [4,5]
+    println(take_while(xs, fn (x int) bool { return x < 4 })) // [1,2,3]
+    println(find_item(xs, fn (x int) bool { return x == 3 }) or { -1 }) // 3
+
+    people := [PersonA{'Ana',30}, PersonA{'Ben',24}, PersonA{'Cara',30}]
+    println(uniq_by[PersonA](people, fn (p PersonA) string { return p.name }))
+    println(sorted_by_int[PersonA](people, fn (p PersonA) int { return p.age }, true))
+    println(sorted_by_str[PersonA](people, fn (p PersonA) string { return p.name }, true))
+}
+```
+
+### HTTP & JSON helpers (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
+// Module: json — https://modules.vlang.io/json.html
+import net.http
+import json
+
+pub fn get_json[T](url string) !T {
+    mut h := http.new_header()
+    h.add(.accept, 'application/json')
+    h.add(.user_agent, 'v-utils-demo/1.0')
+
+    resp := http.fetch(http.FetchConfig{
+        url: url
+        method: .get
+        header: h
+    }) or { return error('HTTP GET failed: ${err}') }
+    if resp.status_code < 200 || resp.status_code >= 300 {
+        return error('HTTP ${resp.status_code} ${resp.status_msg}')
+    }
+    return json.decode(T, resp.body) or { return error('JSON decode failed: ${err}') }
+}
+
+// Usage
+struct Todo {
+    user_id   int    @[json: 'userId']
+    id        int
+    title     string
+    completed bool
+}
+
+fn main() {
+    todo := get_json[Todo]('https://jsonplaceholder.typicode.com/todos/1') or { Todo{} }
+    println(todo.title) // e.g., 'delectus aut autem'
+}
+```
+
+### Path & env (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: os — https://modules.vlang.io/os.html
+import os
+
+pub fn join_path(parts ...string) string { return os.join_path(parts...) }
+pub fn dirname(path string) string { return os.dir(path) }
+pub fn basename(path string) string { return os.base(path) }
+pub fn extname(path string) string { return os.file_ext(path) }
+pub fn get_env_or(key string, def string) string { return os.getenv(key) or { def } }
+
+// Usage
+fn main() {
+    p := join_path('a','b','c.txt')
+    println(dirname(p))
+    println(basename(p))
+    println(extname(p))
+    println(get_env_or('NOT_SET', 'fallback'))
+}
+```
+
+### IDs & hashing (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: crypto.rand — https://modules.vlang.io/crypto.rand.html
+// Module: crypto.sha256 — https://modules.vlang.io/crypto.sha256.html
+// Module: crypto.md5 — https://modules.vlang.io/crypto.md5.html
+// Module: encoding.base64 — https://modules.vlang.io/encoding.base64.html
+import crypto.rand as crand
+import crypto.sha256
+import crypto.md5
+import encoding.base64
+
+// UUID v4 (random)
+pub fn uuid_v4() string {
+    mut b := crand.bytes(16) or { return '' }
+    // https://www.rfc-editor.org/rfc/rfc4122
+    b[6] = (b[6] & 0x0f) | 0x40 // version 4
+    b[8] = (b[8] & 0x3f) | 0x80 // variant 10
+    hex := b.hex()
+    return '${hex[0..8]}-${hex[8..12]}-${hex[12..16]}-${hex[16..20]}-${hex[20..32]}'
+}
+
+pub fn sha256_hex(s string) string { return sha256.sum(s.bytes()).hex() }
+pub fn md5_hex(s string) string { return md5.sum(s.bytes()).hex() }
+pub fn b64_encode(s string) string { return base64.encode(s.bytes()) }
+pub fn b64_decode(s string) string { return base64.decode_str(s) or { '' } }
+
+// Usage
+fn main() {
+    println(uuid_v4())
+    println(sha256_hex('hello'))
+    println(md5_hex('hello'))
+    enc := b64_encode('hi')
+    println(enc)
+    println(b64_decode(enc))
+}
+```
+
+### Time helpers (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
+import time
+
+pub fn human_duration(d time.Duration) string {
+    sec := d.seconds()
+    if sec < 1 { return '${int(d.ms())}ms' }
+    if sec < 60 { return '${int(sec)}s' }
+    mins := int(sec) / 60
+    if mins < 60 { return '${mins}m ${int(sec) % 60}s' }
+    hrs := mins / 60
+    return '${hrs}h ${mins % 60}m'
+}
+
+// Usage
+fn main() {
+    start := time.now()
+    time.sleep(350 * time.millisecond)
+    println(human_duration(time.now() - start)) // e.g., 350ms
+}
+```
+
+### Retry & backoff (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
+import time
+
+// Simple retry for f() ?T with fixed delay between attempts
+pub fn retry[T](attempts int, delay_ms int, f fn () ?T) ?T {
+    if attempts <= 0 { return none }
+    for i in 0 .. attempts {
+        val := f() or {
+            if i == attempts - 1 { return err }
+            time.sleep(delay_ms * time.millisecond)
+            continue
+        }
+        return val
+    }
+    return none
+}
+
+// Throttle gate: returns a function that says whether execution is allowed now
+pub fn throttle_every(ms int) fn () bool {
+    mut last := i64(0)
+    return fn [mut last, ms] () bool {
+        now := time.now().unix_time_milli()
+        if now - last >= ms {
+            last = now
+            return true
+        }
+        return false
+    }
+}
+
+// Usage
+fn sometimes_fails() ?int {
+    // Simulate occasional failure
+    return if time.now().unix % 2 == 0 { error('fail') } else { 42 }
+}
+
+fn main() {
+    v := retry[int](5, 200, sometimes_fails) or { -1 }
+    println(v)
+
+    allow := throttle_every(500)
+    for _ in 0 .. 3 {
+        if allow() { println('run') } else { println('skip') }
+        time.sleep(200 * time.millisecond)
+    }
+}
+```
+
+### HTTP POST JSON (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: net.http — https://modules.vlang.io/net.http.html
+// Module: json — https://modules.vlang.io/json.html
+import net.http
+import json
+import time
+
+pub fn post_json[T, R](url string, data T) !R {
+    body := json.encode(data)
+    mut h := http.new_header()
+    h.add(.accept, 'application/json')
+    h.add(.content_type, 'application/json; charset=utf-8')
+    h.add(.user_agent, 'v-utils-demo/1.0')
+
+    resp := http.fetch(http.FetchConfig{
+        url: url
+        method: .post
+        header: h
+        data: body
+    }) or { return error('POST failed: ${err}') }
+    if resp.status_code < 200 || resp.status_code >= 300 {
+        return error('HTTP ${resp.status_code} ${resp.status_msg}')
+    }
+    return json.decode(R, resp.body) or { return error('JSON decode failed: ${err}') }
+}
+
+// Usage
+struct Req { name string }
+struct Res { id int, name string }
+
+fn main() {
+    // Example endpoint; replace with your API
+    res := post_json[Req, Res]('https://httpbin.org/post', Req{'v'}) or { Res{} }
+    println(res.id, res.name) // server-dependent
+}
+```
+
+### Parse helpers (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: strconv — https://modules.vlang.io/strconv.html
+import strconv
+
+pub fn atoi_or(s string, def int) int {
+    return strconv.atoi(s) or { def }
+}
+
+pub fn atof_or(s string, def f64) f64 {
+    return strconv.atof64(s) or { def }
+}
+
+pub fn bool_or(s string, def bool) bool {
+    ls := s.to_lower().trim_space()
+    if ls in ['true','1','yes','y','on'] { return true }
+    if ls in ['false','0','no','n','off'] { return false }
+    return def
+}
+
+// Usage (example outputs)
+fn main() {
+    println(atoi_or('42', -1))     // 42
+    println(atoi_or('oops', -1))   // -1
+    println(atof_or('3.14', -1))   // 3.14
+    println(atof_or('oops', -1))   // -1
+    println(bool_or('YES', false)) // true
+    println(bool_or('nah', true))  // true
+}
+```
+
+### Int set utilities (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn union_ints(a []int, b []int) []int {
+    mut seen := map[int]bool{}
+    mut out := []int{}
+    for x in a { if !seen[x] { seen[x] = true; out << x } }
+    for x in b { if !seen[x] { seen[x] = true; out << x } }
+    return out
+}
+
+pub fn intersection_ints(a []int, b []int) []int {
+    mut setb := map[int]bool{}
+    for x in b { setb[x] = true }
+    mut out := []int{}
+    for x in a { if setb[x] { out << x } }
+    return out
+}
+
+pub fn difference_ints(a []int, b []int) []int {
+    mut setb := map[int]bool{}
+    for x in b { setb[x] = true }
+    mut out := []int{}
+    for x in a { if !setb[x] { out << x } }
+    return out
+}
+
+// Usage
+fn main() {
+    println(union_ints([1,2],[2,3]))       // [1,2,3]
+    println(intersection_ints([1,2],[2,3]))// [2]
+    println(difference_ints([1,2,3],[2]))  // [1,3]
+}
+```
+
+### Arrays tiny (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn head[T](arr []T) ?T { return if arr.len == 0 { none } else { arr[0] } }
+pub fn last[T](arr []T) ?T { return if arr.len == 0 { none } else { arr[arr.len-1] } }
+pub fn tail[T](arr []T) []T { return if arr.len <= 1 { []T{} } else { arr[1..] } }
+pub fn initial[T](arr []T) []T { return if arr.len <= 1 { []T{} } else { arr[..arr.len-1] } }
+
+pub fn without_strings(arr []string, items []string) []string {
+    mut skip := map[string]bool{}
+    for s in items { skip[s] = true }
+    mut out := []string{}
+    for s in arr { if !skip[s] { out << s } }
+    return out
+}
+
+pub fn xor_strings(a []string, b []string) []string {
+    // symmetric difference
+    mut seen := map[string]int{}
+    for s in a { seen[s] = seen[s] + 1 }
+    for s in b { seen[s] = seen[s] + 1 }
+    mut out := []string{}
+    for s, c in seen { if c == 1 { out << s } }
+    return out
+}
+
+// Usage
+fn main() {
+    println(head([1,2,3]) or { -1 })  // 1
+    println(last([1,2,3]) or { -1 })  // 3
+    println(tail([1,2,3]))            // [2,3]
+    println(initial([1,2,3]))         // [1,2]
+    println(without_strings(['a','b','c'], ['b'])) // ['a','c']
+    println(xor_strings(['a','b'], ['b','c']))    // ['a','c']
+}
+```
+
+### Maps extras (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn keys[T](m map[string]T) []string {
+    mut ks := []string{}
+    for k, _ in m { ks << k }
+    ks.sort()
+    return ks
+}
+
+pub fn values[T](m map[string]T) []T {
+    mut vs := []T{}
+    for _, v in m { vs << v }
+    return vs
+}
+
+pub struct Entry[T] { key string, value T }
+
+pub fn entries[T](m map[string]T) []Entry[T] {
+    mut es := []Entry[T]{}
+    for k, v in m { es << Entry[T]{ key: k, value: v } }
+    es.sort(a.key < b.key)
+    return es
+}
+
+pub fn from_pairs[T](pairs []Entry[T]) map[string]T {
+    mut m := map[string]T{}
+    for p in pairs { m[p.key] = p.value }
+    return m
+}
+
+pub fn has_key[T](m map[string]T, k string) bool { return k in m }
+
+pub fn pick_by[T](m map[string]T, pred fn (string, T) bool) map[string]T {
+    mut out := map[string]T{}
+    for k, v in m { if pred(k, v) { out[k] = v } }
+    return out
+}
+
+pub fn omit_by[T](m map[string]T, pred fn (string, T) bool) map[string]T {
+    mut out := map[string]T{}
+    for k, v in m { if !pred(k, v) { out[k] = v } }
+    return out
+}
+
+// Usage
+fn main() {
+    m := {'a':1,'b':2,'c':3}
+    println(keys(m))
+    println(values(m))
+    es := entries(m)
+    println(es)
+    println(from_pairs(es))
+    println(has_key(m, 'b'))
+    println(pick_by(m, fn (k string, v int) bool { return v % 2 == 1 }))
+}
+```
+
+### Math stats extras (utils)
+
+```v
+// Docs: https://docs.vlang.io
+
+pub fn median_int(xs []int) ?f64 {
+    if xs.len == 0 { return none }
+    mut a := xs.clone()
+    a.sort(a < b)
+    mid := a.len / 2
+    return if a.len % 2 == 1 { f64(a[mid]) } else { f64(a[mid-1] + a[mid]) / 2.0 }
+}
+
+pub fn median_f64(xs []f64) ?f64 {
+    if xs.len == 0 { return none }
+    mut a := xs.clone()
+    a.sort(a < b)
+    mid := a.len / 2
+    return if a.len % 2 == 1 { a[mid] } else { (a[mid-1] + a[mid]) / 2.0 }
+}
+
+// Usage
+fn main() {
+    println(median_int([1,3,2])!)   // 2
+    println(median_f64([1.0, 2, 9]))// 2.0
+}
+```
+
+### Function timing (utils)
+
+```v
+// Docs: https://docs.vlang.io
+// Module: time — https://modules.vlang.io/time.html
+import time
+
+// Debounce for no-arg functions: only runs after quiet period
+pub fn debounce0(wait_ms int, f fn ()) fn () {
+    mut timer := i64(0)
+    return fn [mut timer, f, wait_ms] () {
+        timer = time.now().unix_time_milli() + wait_ms
+        spawn fn [mut timer, f, wait_ms] () {
+            // Wait a bit longer than requested to ensure quiet window
+            for {
+                now := time.now().unix_time_milli()
+                if now >= timer { break }
+                time.sleep(10 * time.millisecond)
+            }
+            f()
+        }()
+    }
+}
+
+// Usage (prints only once)
+fn main() {
+    print_once := debounce0(200, fn () { println('run') })
+    print_once(); print_once(); print_once()
+    time.sleep(300 * time.millisecond)
 }
 ```
 ```
