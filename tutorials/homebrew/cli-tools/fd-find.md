@@ -1,5 +1,18 @@
 # fd - Fast File Search Tutorial
 
+## Table of Contents
+
+1. [Basic Installation](#basic-installation)
+2. [Common Usage Examples](#common-usage-examples)
+	- [Find files by name pattern](#find-files-by-name-pattern)
+	- [Search in specific directories](#search-in-specific-directories)
+	- [Filter by file type and other criteria](#filter-by-file-type-and-other-criteria)
+	- [Advanced examples with options](#advanced-examples-with-options)
+3. [Practical Examples](#practical-examples)
+	- [Finding configuration files](#finding-configuration-files)
+	- [Code file searching](#code-file-searching)
+4. [Installation Verification](#installation-verification)
+
 Here are code examples and usage patterns for `fd` installed via Homebrew:
 
 ## Basic Installation

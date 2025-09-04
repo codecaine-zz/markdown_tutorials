@@ -2,6 +2,16 @@
 
 Here are complete tutorial code examples for installing Git using Homebrew on macOS:
 
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Installing Git with Homebrew](#installing-git-with-homebrew)
+3. [Post-Installation Configuration](#post-installation-configuration)
+4. [Verification Commands](#verification-commands)
+5. [Troubleshooting Examples](#troubleshooting-examples)
+6. [Advanced Configuration Examples](#advanced-configuration-examples)
+7. [Complete Installation Script](#complete-installation-script)
+
 ## Prerequisites
 
 First, ensure you have Homebrew installed:

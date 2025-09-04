@@ -1,3 +1,15 @@
+# Docker on macOS via Homebrew
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Installing Docker via Homebrew](#installing-docker-via-homebrew)
+3. [Initial Setup and Configuration](#initial-setup-and-configuration)
+4. [Testing Your Installation](#testing-your-installation)
+5. [Manage with Homebrew](#useful-commands-for-managing-docker-with-homebrew)
+6. [Examples: Dockerfile and Compose](#sample-dockerfile-and-compose-file-examples)
+7. [Environment Setup Script](#environment-setup-script-optional)
+
 ## Prerequisites
 
 First, ensure you have Homebrew installed:

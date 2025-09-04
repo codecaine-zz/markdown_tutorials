@@ -2,18 +2,38 @@
 
 This section contains comprehensive tutorials for various tools and applications that can be installed via Homebrew on macOS.
 
+## Table of Contents
+
+1. [CLI Tools](#-cli-tools-cli-tools)
+2. [Development Tools](#-development-tools-development-tools)
+3. [Security Tools](#-security-tools-security-tools)
+4. [System Guides](#-system-guides-system-guides)
+5. [Programming Languages](#-programming-languages-programming-languages)
+6. [Installation Prerequisites](#installation-prerequisites)
+7. [Tutorial Format](#tutorial-format)
+8. [Contributing](#contributing)
+
 ## Directory Structure
 
 ### 📁 CLI Tools (`cli-tools/`)
 Command-line utilities for text processing, file operations, and general system tasks:
-- **bat.md** - Enhanced cat command with syntax highlighting
-- **curl.md** - HTTP client for API testing and web requests
-- **fd-find.md** - Fast alternative to find command
-- **gawk.md** - Advanced text processing with GNU awk
-- **grep.md** - Pattern matching and text searching
-- **jq.md** - JSON processor and query tool
-- **sed.md** - Stream editor for text transformation
-- **wget.md** - File downloading utility
+- bat.md — Enhanced cat with syntax highlighting
+- curl.md — HTTP client for API testing and web requests
+- fd-find.md — Fast alternative to find
+- gawk.md — Advanced text processing (GNU awk)
+- grep.md — Pattern matching and text searching
+- jq.md — JSON processor and query tool
+- sed.md — Stream editor for text transformation
+- wget.md — File downloading utility
+- eza.md — Modern ls replacement
+- fzf.md — Terminal fuzzy finder
+- zoxide.md — Smarter cd
+- micro.md — Friendly terminal editor
+- tmux.md — Terminal multiplexer
+- tldr.md — Example-driven help pages
+- aria2.md — High-speed downloads
+- yt-dlp.md — Video/audio downloader
+- dog.md — Modern DNS client
 
 ### 🛠️ Development Tools (`development-tools/`)
 Tools for software development, media processing, and development workflows:

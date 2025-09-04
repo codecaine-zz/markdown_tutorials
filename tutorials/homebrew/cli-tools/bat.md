@@ -1,5 +1,15 @@
 # Complete Tutorial: Installing and Using `bat` with Homebrew
 
+## Table of Contents
+
+1. [Installing `bat` using Homebrew](#1-installing-bat-using-homebrew)
+2. [Basic Usage Examples](#2-basic-usage-examples)
+3. [Advanced Configuration Examples](#3-advanced-configuration-examples)
+4. [Integration Examples](#4-integration-examples)
+5. [Complete Working Example Script](#5-complete-working-example-script)
+6. [Troubleshooting Examples](#6-troubleshooting-examples)
+7. [Complete Installation Verification Script](#7-complete-installation-verification-script)
+
 ## 1. Installing `bat` using Homebrew
 
 ```bash

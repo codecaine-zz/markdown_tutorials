@@ -1,3 +1,16 @@
+# Ollama on macOS with Homebrew
+
+## Table of Contents
+
+1. [Prerequisites](#prerequisites)
+2. [Install Ollama](#step-1-install-ollama-via-homebrew)
+3. [Start the Service](#step-2-start-ollama-service)
+4. [Basic Usage](#step-3-basic-usage-examples)
+5. [Models](#step-4-working-with-different-models)
+6. [Advanced Usage](#step-5-advanced-usage-examples)
+7. [Configuration](#step-6-configuration-and-customization)
+8. [Troubleshooting](#step-7-troubleshooting-common-issues)
+
 ## Prerequisites
 
 Before starting, ensure you have:
