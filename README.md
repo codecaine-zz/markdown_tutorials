@@ -460,6 +460,7 @@ Previously shipped:
 
 - Powered by **Highlight.js 11.9.0**
 - Supports **20+ programming languages**
+   - Includes explicit support for the V language (```v``` code fences) via Highlight.js
 - **GitHub Dark theme** for consistent appearance
 - **Automatic language detection**
 

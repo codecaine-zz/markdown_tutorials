@@ -45,6 +45,8 @@ class MarkdownTutorialApp {
             <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
             <!-- Highlight.js common bundle (includes popular languages in a single file) -->
             <script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+            <!-- Highlight.js V language support (local vendored fallback) -->
+            <script defer src="assets/js/highlight-languages/v.js"></script>
         </head>
         <body>
             <button class="mobile-menu-toggle" onclick="toggleSidebar()">
