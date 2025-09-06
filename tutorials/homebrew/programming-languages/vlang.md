@@ -72,6 +72,12 @@ v version
 Uninstall:
 
 ```bash
+brew uninstall vlang
+# If you installed the --HEAD formula or need to force removal, you can run:
+# brew uninstall --force vlang
+
+```
+
 ## Table of Contents
 
 - Start here
@@ -2462,7 +2468,8 @@ enum LogLevel {
 }
 
 fn format_log(level LogLevel, message string, context map[string]string) string {
-    timestamp := time.now().format('2006-01-02 15:04:05')
+    // Use V's time formatting helpers. format_ss() includes seconds.
+    timestamp := time.now().format_ss()
     level_str := match level {
         .debug { 'DEBUG' }
         .info { 'INFO ' }
@@ -3949,30 +3956,30 @@ import json
 import os
 
 struct User {
-    id         int    [json: 'id']
-    name       string [json: 'name']
-    email      string [json: 'email']
-    age        int    [json: 'age']
-    active     bool   [json: 'active']
-    created_at string [json: 'created_at']
+    id         int    @[json: 'id']
+    name       string @[json: 'name']
+    email      string @[json: 'email']
+    age        int    @[json: 'age']
+    active     bool   @[json: 'active']
+    created_at string @[json: 'created_at']
 }
 
 struct Product {
-    id          int      [json: 'id']
-    name        string   [json: 'name']
-    price       f64      [json: 'price']
-    category    string   [json: 'category']
-    in_stock    bool     [json: 'in_stock']
-    tags        []string [json: 'tags']
-    description string   [json: 'description']
+    id          int      @[json: 'id']
+    name        string   @[json: 'name']
+    price       f64      @[json: 'price']
+    category    string   @[json: 'category']
+    in_stock    bool     @[json: 'in_stock']
+    tags        []string @[json: 'tags']
+    description string   @[json: 'description']
 }
 
 struct UserDatabase {
-    users map[string]User [json: 'users']
+    users map[string]User @[json: 'users']
 }
 
 struct ProductCatalog {
-    products map[string]Product [json: 'products']
+    products map[string]Product @[json: 'products']
 }
 
 fn main() {
@@ -4105,10 +4112,10 @@ import json
 import os
 
 struct ServerStats {
-    cpu_usage    f64 [json: 'cpu_usage']
-    memory_usage f64 [json: 'memory_usage']
-    disk_usage   f64 [json: 'disk_usage']
-    uptime       int [json: 'uptime']
+    cpu_usage    f64 @[json: 'cpu_usage']
+    memory_usage f64 @[json: 'memory_usage']
+    disk_usage   f64 @[json: 'disk_usage']
+    uptime       int @[json: 'uptime']
 }
 
 fn main() {
@@ -4272,17 +4279,17 @@ import json
 import os
 
 struct GameScore {
-    player_name string [json: 'player_name']
-    score       int    [json: 'score']
-    level       int    [json: 'level']
-    timestamp   string [json: 'timestamp']
+    player_name string @[json: 'player_name']
+    score       int    @[json: 'score']
+    level       int    @[json: 'level']
+    timestamp   string @[json: 'timestamp']
 }
 
 struct APIEndpoint {
-    path        string   [json: 'path']
-    method      string   [json: 'method']
-    description string   [json: 'description']
-    parameters  []string [json: 'parameters']
+    path        string   @[json: 'path']
+    method      string   @[json: 'method']
+    description string   @[json: 'description']
+    parameters  []string @[json: 'parameters']
 }
 
 fn main() {
@@ -4483,26 +4490,26 @@ import os
 import time
 
 struct DatabaseConnection {
-    host     string [json: 'host']
-    port     int    [json: 'port']
-    database string [json: 'database']
-    username string [json: 'username']
-    password string [json: 'password']
-    timeout  int    [json: 'timeout']
+    host     string @[json: 'host']
+    port     int    @[json: 'port']
+    database string @[json: 'database']
+    username string @[json: 'username']
+    password string @[json: 'password']
+    timeout  int    @[json: 'timeout']
 }
 
 struct APIRate {
-    requests_per_minute int [json: 'requests_per_minute']
-    burst_limit         int [json: 'burst_limit']
+    requests_per_minute int @[json: 'requests_per_minute']
+    burst_limit         int @[json: 'burst_limit']
 }
 
 struct ServiceConfig {
-    name            string             [json: 'name']
-    version         string             [json: 'version']
-    databases       map[string]DatabaseConnection [json: 'databases']
-    api_rates       map[string]APIRate [json: 'api_rates']
-    feature_flags   map[string]bool    [json: 'feature_flags']
-    environment_vars map[string]string [json: 'environment_vars']
+    name            string             @[json: 'name']
+    version         string             @[json: 'version']
+    databases       map[string]DatabaseConnection @[json: 'databases']
+    api_rates       map[string]APIRate @[json: 'api_rates']
+    feature_flags   map[string]bool    @[json: 'feature_flags']
+    environment_vars map[string]string @[json: 'environment_vars']
 }
 
 fn create_service_config() ServiceConfig {
@@ -5992,12 +5999,12 @@ import json
 import os
 
 struct Person {
-    id       int    [json: 'id']
-    name     string [json: 'name']
-    email    string [json: 'email']
-    age      int    [json: 'age']
-    active   bool   [json: 'active']
-    salary   f64    [json: 'salary']
+    id       int    @[json: 'id']
+    name     string @[json: 'name']
+    email    string @[json: 'email']
+    age      int    @[json: 'age']
+    active   bool   @[json: 'active']
+    salary   f64    @[json: 'salary']
 }
 
 fn main() {
@@ -6058,12 +6065,12 @@ import json
 import os
 
 struct Person {
-    id       int    [json: 'id']
-    name     string [json: 'name']
-    email    string [json: 'email']
-    age      int    [json: 'age']
-    active   bool   [json: 'active']
-    salary   f64    [json: 'salary']
+    id       int    @[json: 'id']
+    name     string @[json: 'name']
+    email    string @[json: 'email']
+    age      int    @[json: 'age']
+    active   bool   @[json: 'active']
+    salary   f64    @[json: 'salary']
 }
 
 fn load_people_from_json(filename string) ?[]Person {
@@ -6123,45 +6130,45 @@ import os
 import time
 
 struct Address {
-    street   string [json: 'street']
-    city     string [json: 'city']
-    state    string [json: 'state']
-    zip_code string [json: 'zip_code']
-    country  string [json: 'country']
+    street   string @[json: 'street']
+    city     string @[json: 'city']
+    state    string @[json: 'state']
+    zip_code string @[json: 'zip_code']
+    country  string @[json: 'country']
 }
 
 struct Project {
-    id          int      [json: 'id']
-    name        string   [json: 'name']
-    description string   [json: 'description']
-    start_date  string   [json: 'start_date']
-    end_date    string   [json: 'end_date']
-    budget      f64      [json: 'budget']
-    status      string   [json: 'status']
+    id          int      @[json: 'id']
+    name        string   @[json: 'name']
+    description string   @[json: 'description']
+    start_date  string   @[json: 'start_date']
+    end_date    string   @[json: 'end_date']
+    budget      f64      @[json: 'budget']
+    status      string   @[json: 'status']
 }
 
 struct Employee {
-    id           int       [json: 'id']
-    first_name   string    [json: 'first_name']
-    last_name    string    [json: 'last_name']
-    email        string    [json: 'email']
-    phone        string    [json: 'phone']
-    department   string    [json: 'department']
-    position     string    [json: 'position']
-    hire_date    string    [json: 'hire_date']
-    salary       f64       [json: 'salary']
-    active       bool      [json: 'active']
-    address      Address   [json: 'address']
-    projects     []Project [json: 'projects']
-    skills       []string  [json: 'skills']
+    id           int       @[json: 'id']
+    first_name   string    @[json: 'first_name']
+    last_name    string    @[json: 'last_name']
+    email        string    @[json: 'email']
+    phone        string    @[json: 'phone']
+    department   string    @[json: 'department']
+    position     string    @[json: 'position']
+    hire_date    string    @[json: 'hire_date']
+    salary       f64       @[json: 'salary']
+    active       bool      @[json: 'active']
+    address      Address   @[json: 'address']
+    projects     []Project @[json: 'projects']
+    skills       []string  @[json: 'skills']
 }
 
 struct Company {
-    name         string     [json: 'name']
-    founded      string     [json: 'founded']
-    headquarters Address    [json: 'headquarters']
-    employees    []Employee [json: 'employees']
-    total_budget f64        [json: 'total_budget']
+    name         string     @[json: 'name']
+    founded      string     @[json: 'founded']
+    headquarters Address    @[json: 'headquarters']
+    employees    []Employee @[json: 'employees']
+    total_budget f64        @[json: 'total_budget']
 }
 
 fn create_sample_data() Company {
@@ -6451,22 +6458,22 @@ import json
 import os
 
 struct Product {
-    id          int      [json: 'id']
-    name        string   [json: 'name']
-    description string   [json: 'description']
-    price       f64      [json: 'price']
-    category    string   [json: 'category']
-    in_stock    bool     [json: 'in_stock']
-    tags        []string [json: 'tags']
-    created_at  string   [json: 'created_at']
-    updated_at  string   [json: 'updated_at']
+    id          int      @[json: 'id']
+    name        string   @[json: 'name']
+    description string   @[json: 'description']
+    price       f64      @[json: 'price']
+    category    string   @[json: 'category']
+    in_stock    bool     @[json: 'in_stock']
+    tags        []string @[json: 'tags']
+    created_at  string   @[json: 'created_at']
+    updated_at  string   @[json: 'updated_at']
 }
 
 struct ProductResponse {
-    success  bool      [json: 'success']
-    products []Product [json: 'products']
-    total    int       [json: 'total']
-    message  string    [json: 'message']
+    success  bool      @[json: 'success']
+    products []Product @[json: 'products']
+    total    int       @[json: 'total']
+    message  string    @[json: 'message']
 }
 
 // Load products with comprehensive error handling
@@ -6618,7 +6625,7 @@ fn process_product_data(products []Product) {
 
 fn create_sample_products() []Product {
     import time
-    now := time.now().format()
+    now := time.now().format_ss()
     
     return [
         Product{
@@ -6813,7 +6820,7 @@ fn process_response_data(data string) ?string {
     
     // Simple processing - add timestamp
     import time
-    timestamp := time.now().format()
+    timestamp := time.now().format_ss()
     return 'Processed at: ${timestamp}\n${data}'
 }
 
@@ -7068,9 +7075,9 @@ fn main() {
 import db.sqlite
 
 struct User {
-    id    int    [primary; sql: serial]
-    name  string [nonull]
-    email string [unique; nonull]
+    id    int    @[primary; sql: serial]
+    name  string @[nonull]
+    email string @[unique; nonull]
     age   int
 }
 
@@ -7370,12 +7377,12 @@ mut:
 }
 
 struct Task {
-    id          int    [json: 'id']
-    title       string [json: 'title']
-    description string [json: 'description']
-    completed   bool   [json: 'completed']
-    created_at  string [json: 'created_at']
-    updated_at  string [json: 'updated_at']
+    id          int    @[json: 'id']
+    title       string @[json: 'title']
+    description string @[json: 'description']
+    completed   bool   @[json: 'completed']
+    created_at  string @[json: 'created_at']
+    updated_at  string @[json: 'updated_at']
 }
 
 struct CreateTaskRequest {
@@ -7390,9 +7397,9 @@ struct UpdateTaskRequest {
 }
 
 struct ApiResponse[T] {
-    success bool   [json: 'success']
-    data    T      [json: 'data']
-    message string [json: 'message']
+    success bool   @[json: 'success']
+    data    T      @[json: 'data']
+    message string @[json: 'message']
 }
 
 fn main() {
@@ -7416,7 +7423,7 @@ fn main() {
 }
 
 fn (mut app App) add_sample_tasks() {
-    now := time.now().format()
+    now := time.now().format_ss()
     app.tasks = [
         Task{
             id:          1
@@ -7534,7 +7541,7 @@ pub fn (mut app App) create_task() vweb.Result {
         return app.json(response)
     }
     
-    now := time.now().format()
+    now := time.now().format_ss()
     new_task := Task{
         id:          app.next_id
         title:       request.title
@@ -7576,7 +7583,7 @@ pub fn (mut app App) update_task() vweb.Result {
             app.tasks[i].title = request.title
             app.tasks[i].description = request.description  
             app.tasks[i].completed = request.completed
-            app.tasks[i].updated_at = time.now().format()
+            app.tasks[i].updated_at = time.now().format_ss()
             
             response := ApiResponse[Task]{
                 success: true
@@ -7783,7 +7790,7 @@ fn (processor FileProcessor) process_file(job ProcessJob) ProcessResult {
     checksum := sha256.sum(content.bytes()).hex()
     
     processed_content := '// File: ${job.file_path}
-// Processed: ${time.now().format()}
+// Processed: ${time.now().format_ss()}
 // Size: ${content.len} bytes
 // SHA256: ${checksum}
 // ---
