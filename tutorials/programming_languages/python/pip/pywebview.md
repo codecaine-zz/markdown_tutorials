@@ -1,0 +1,1 @@
+Create a complete tutorial for beginners to advance easy to follow and understand and covery every section of the api of pywebveiw view this is the offical documention https://pywebview.flowrl.com/api/
