@@ -25,6 +25,22 @@ class MarkdownTutorialApp {
     return $this->renderPage($page);
     }
     
+    // Build an absolute URL that respects subdirectory hosting and optionally appends a cache-busting version.
+    private function assetUrl($relativePath, $versioned = false) {
+        $urlPath = ltrim($relativePath, '/');
+        $prefix = rtrim(dirname($_SERVER['SCRIPT_NAME'] ?? ''), '/\\');
+        if ($prefix === '/' || $prefix === '\\' || $prefix === '.' || $prefix === '') {
+            $prefix = '';
+        }
+        $url = ($prefix ? $prefix . '/' : '/') . $urlPath;
+        if ($versioned) {
+            $file = $this->baseDir . '/' . $urlPath;
+            $v = @filemtime($file) ?: time();
+            $url .= '?v=' . $v;
+        }
+        return $url;
+    }
+    
     private function renderPage($page) {
         ob_start();
         ?>
@@ -34,9 +50,13 @@ class MarkdownTutorialApp {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Markdown Tutorials</title>
-            <!-- Site favicon -->
-            <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-            <link rel="shortcut icon" type="image/svg+xml" href="/favicon.svg">
+            <!-- Site favicon (use subdir-aware URLs + multiple fallbacks) -->
+            <link rel="icon" href="<?php echo htmlspecialchars($this->assetUrl('favicon.ico', true)); ?>" sizes="any">
+            <link rel="icon" type="image/svg+xml" href="<?php echo htmlspecialchars($this->assetUrl('favicon.svg', true)); ?>">
+            <link rel="icon" type="image/png" sizes="32x32" href="<?php echo htmlspecialchars($this->assetUrl('favicon-32x32.png', true)); ?>">
+            <link rel="icon" type="image/png" sizes="16x16" href="<?php echo htmlspecialchars($this->assetUrl('favicon-16x16.png', true)); ?>">
+            <link rel="apple-touch-icon" sizes="180x180" href="<?php echo htmlspecialchars($this->assetUrl('apple-touch-icon.png', true)); ?>">
+            <link rel="shortcut icon" href="<?php echo htmlspecialchars($this->assetUrl('favicon.ico', true)); ?>">
             <meta name="theme-color" content="#0f172a">
             <!-- Highlight.js with comprehensive language support -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
