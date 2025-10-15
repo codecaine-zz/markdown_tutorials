@@ -1,72 +1,79 @@
-# SweetAlert2 — Reusable, Secure Dialogs (Copy‑paste recipes)
+**SweetAlert2 — Reusable, Secure Dialogs (Copy‑paste recipes)**  
 
-Practical patterns for SweetAlert2 with a reusable class and helpers that are:
+_Practical patterns for SweetAlert2 with a reusable class and helpers that are:_
 
-- Safe by default (no unsanitized HTML)
-- Easy to reuse across apps
-- Cover the most common dialog types (alerts, confirm, prompts, selects, file, range, date/time, image, toasts, queues/steps, loaders)
-- Optimized for a clean UX and accessible defaults
+* **Safe by default** – no unsanitized HTML is rendered unless you explicitly enable it with a sanitizer.  
+* **Easy to reuse** – one service instance (`$swal`) can be imported everywhere.  
+* **Full coverage** – alerts, confirmations, prompts, selects, sliders, file uploads, toasts, multi‑step wizards, loading states, etc.  
+* **Works with bundlers** (`import Swal from 'sweetalert2'`) **or via CDN** (`window.Swal`).  
 
-Works with bundlers (import from `sweetalert2`) or via CDN (`window.Swal`).
+All code snippets now contain direct links to the official SweetAlert2 documentation.
 
-## Table of Contents
+---  
 
-- Install
-- Security model (important)
-- Core wrapper (drop‑in module)
-- Common alerts (success/error/info/warning/question)
-- Confirmations (destructive, double confirm)
-- Prompts (text, email, password, number, url, textarea)
-- Choice inputs (select, radio, checkbox)
-- Sliders and pickers (range, color, date, time, datetime)
-- Files and images (file upload, image preview)
-- Async + loading states (preConfirm, showValidationMessage)
-- Toasts (success/error/info)
-- Queues & multi‑step wizards
-- More helper dialogs (secure patterns)
-- Theming & UX tips
-- Troubleshooting
+## Table of Contents  
 
----
+1. [Install](#install)  
+2. [Security model (important)](#security-model-important)  
+3. [Core wrapper (drop‑in module)](#core-wrapper-drop-in-module)  
+4. [Common alerts (success/error/info/warning/question)](#common-alerts)  
+5. [Confirmations (destructive, double confirm)](#confirmations)  
+6. [Prompts (text, email, password, number, url, textarea)](#prompts)  
+7. [Choice inputs (select, radio, checkbox)](#choice-inputs)  
+8. [Sliders & pickers (range, color, date, time, datetime)](#sliders)  
+9. [Files & images (upload, preview)](#files)  
+10. [Async + loading (preConfirm, validation)](#async-loading)  
+11. [Toasts (success/error/info)](#toasts)  
+12. [Queues & multi‑step wizards](#queues)  
+13. [More helper dialogs (secure patterns)](#more-helpers)  
+14. [Theming & UX tips](#theming)  
+15. [Troubleshooting](#troubleshooting)  
 
-## Install
+---  
+
+## 1. Install  
 
 ```bash
-npm i sweetalert2
-# optional, recommended if you will display custom HTML content
-npm i dompurify
+npm i sweetalert2          # core library
+npm i dompurify            # optional sanitizer for HTML content
 ```
 
-CDN (optional):
+**CDN (optional)**  
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- optional sanitizer -->
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
 ```
 
-> Security tip: When using CDNs in production, prefer Subresource Integrity (SRI) and `crossorigin="anonymous"`. Obtain the correct `integrity` hashes from the CDN and add them to your script tags.
+> **Security tip** – When using a CDN in production, add SRI and `crossorigin="anonymous"` (hashes are shown on the CDN page).  
 
-## Security model (important)
+*Docs*: **Installation** – https://sweetalert2.github.io/#download  
 
-- Prefer using `title` and `text` options instead of `html` to avoid XSS.
-- Only enable HTML when the content is controlled or sanitized.
-- If you must show HTML, sanitize it (e.g., with DOMPurify) before passing to SweetAlert2.
-- This guide’s wrapper disables `html` by default and falls back to plain text.
+---  
 
-## Core wrapper (drop‑in module)
+## 2. Security model (important)  
 
-Create a `swal.js` (or similar) module using the class below. It works with ESM bundlers and also with a global CDN `window.Swal`.
+| Guideline | Why it matters | How the wrapper enforces it |
+|-----------|----------------|----------------------------|
+| Use `title` / `text` instead of `html` | Prevents XSS | `Swal.fire` is called with `text` unless you explicitly enable HTML (`allowHtml:true` + sanitizer). |
+| Only enable HTML when the content is **controlled** or **sanitized** | Unsanitized HTML can execute scripts | The wrapper checks for a supplied `dompurify` instance; otherwise HTML is stripped (`stripTags`). |
+| Validate all user‑provided input on the client **and** server | Defense‑in‑depth | Input validators are built into each prompt (`inputValidator`). |
+| Prefer `allowOutsideClick: false` for destructive dialogs | Avoid accidental confirm | Set in the `defaultBaseConfig`. |
+
+*Docs*: **Security** – https://sweetalert2.github.io/#security  
+
+---  
+
+## 3. Core wrapper (drop‑in module)  
+
+Create **`swal.js`** (or `sweetalertService.ts`) and import it wherever you need dialogs.
 
 ```javascript
 // swal.js — SweetAlert2 reusable service (secure by default)
-// Usage: import Swal from 'sweetalert2';
-// Optional: import DOMPurify from 'dompurify';
-
+// Docs for SweetAlert2 options: https://sweetalert2.github.io/#configuration
 /** @typedef {import('sweetalert2').SweetAlertOptions} SweetAlertOptions */
 
 const defaultBaseConfig = {
-  // sensible defaults for UX and accessibility
   allowOutsideClick: false,
   allowEscapeKey: true,
   showConfirmButton: true,
@@ -81,27 +88,22 @@ function stripTags(input) {
 
 export class SweetAlertService {
   /**
-   * @param {{
-   *  Swal?: any,
-   *  defaults?: Partial<SweetAlertOptions>,
-   *  dompurify?: any,
-   *  allowHtml?: boolean,
-   * }} [opts]
+   * @param {{ Swal?: any, defaults?: Partial<SweetAlertOptions>, dompurify?: any, allowHtml?: boolean }} [opts]
    */
   constructor(opts = {}) {
     this.Swal = opts.Swal || (globalThis && globalThis.Swal);
     if (!this.Swal) throw new Error('SweetAlert2 (Swal) not found');
     this.defaults = { ...defaultBaseConfig, ...(opts.defaults || {}) };
     this.dompurify = opts.dompurify || null;
-    this.allowHtml = Boolean(opts.allowHtml) && !!this.dompurify; // only allow when sanitizer present
+    this.allowHtml = Boolean(opts.allowHtml) && !!this.dompurify;
   }
 
+  /** internal HTML sanitizer */
   _sanitizeHtml(html) {
     if (!html) return undefined;
-    if (!this.allowHtml) return undefined; // blocked unless sanitizer provided and enabled
+    if (!this.allowHtml) return undefined;
     const dp = this.dompurify;
     try {
-      // DOMPurify can be a function or have .sanitize
       const sanitize = typeof dp === 'function' ? dp : dp?.sanitize;
       return sanitize ? sanitize(String(html)) : stripTags(html);
     } catch (_) {
@@ -109,20 +111,21 @@ export class SweetAlertService {
     }
   }
 
-  /** @param {SweetAlertOptions} opts */
+  /** main fire method – respects sanitizer & defaults */
   fire(opts = {}) {
     const { html, text, ...rest } = opts;
     const config = { ...this.defaults, ...rest };
     if (html != null) {
       const safe = this._sanitizeHtml(html);
-      if (safe != null) config.html = safe; else config.text = stripTags(html);
+      if (safe != null) config.html = safe;
+      else config.text = stripTags(html);
     } else if (text != null) {
       config.text = String(text);
     }
     return this.Swal.fire(config);
   }
 
-  // ---------- Alerts ----------
+  /* ---------- Alerts ---------- */
   alert({ title = 'Notice', text = '', icon = 'info', ...rest } = {}) {
     return this.fire({ title, text, icon, ...rest });
   }
@@ -142,7 +145,7 @@ export class SweetAlertService {
     return this.alert({ title, text, icon: 'question', ...rest });
   }
 
-  // ---------- Confirmations ----------
+  /* ---------- Confirmations ---------- */
   async confirm({
     title = 'Are you sure?',
     text = 'This action cannot be undone.',
@@ -167,7 +170,7 @@ export class SweetAlertService {
     return res.isConfirmed === true;
   }
 
-  // Optional second step confirmation (type AND click)
+  // double‑confirm for destructive actions
   async confirmDestructive({
     resourceName = 'item',
     requirePhrase = 'DELETE',
@@ -185,7 +188,10 @@ export class SweetAlertService {
       title: 'Confirm deletion',
       input: 'text',
       inputPlaceholder: requirePhrase,
-      inputValidator: (v) => (String(v).trim() === requirePhrase ? undefined : `You must type ${requirePhrase}`),
+      inputValidator: (v) =>
+        String(v).trim() === requirePhrase
+          ? undefined
+          : `You must type ${requirePhrase}`,
       showCancelButton: true,
       confirmButtonText: 'Delete',
       focusCancel: true,
@@ -195,19 +201,7 @@ export class SweetAlertService {
     return res.isConfirmed === true;
   }
 
-  // ---------- Prompts (text-like) ----------
-  /** @param {{
-   *  title?: string,
-   *  input?: 'text'|'email'|'password'|'number'|'url'|'textarea',
-   *  inputLabel?: string,
-   *  inputValue?: string|number,
-   *  placeholder?: string,
-   *  required?: boolean,
-   *  minLength?: number,
-   *  maxLength?: number,
-   *  pattern?: string,
-   * }} cfg
-   */
+  /* ---------- Prompts (text‑like) ---------- */
   async prompt(cfg = {}) {
     const {
       title = 'Enter a value',
@@ -238,16 +232,18 @@ export class SweetAlertService {
       inputValidator: (v) => {
         const s = String(v ?? '');
         if (required && s.trim().length === 0) return 'This field is required';
-        if (minLength != null && s.length < minLength) return `Min length is ${minLength}`;
-        if (maxLength != null && s.length > maxLength) return `Max length is ${maxLength}`;
-        if (pattern && !(new RegExp(pattern)).test(s)) return 'Invalid format';
+        if (minLength != null && s.length < minLength)
+          return `Min length is ${minLength}`;
+        if (maxLength != null && s.length > maxLength)
+          return `Max length is ${maxLength}`;
+        if (pattern && !(new RegExp(pattern)).test(s))
+          return 'Invalid format';
         return undefined;
       },
       ...rest,
     });
     return res.isConfirmed ? res.value : undefined;
   }
-
   promptText(opts = {}) { return this.prompt({ input: 'text', ...opts }); }
   promptEmail(opts = {}) { return this.prompt({ input: 'email', ...opts }); }
   promptPassword(opts = {}) { return this.prompt({ input: 'password', ...opts }); }
@@ -255,17 +251,15 @@ export class SweetAlertService {
   promptUrl(opts = {}) { return this.prompt({ input: 'url', ...opts }); }
   promptTextarea(opts = {}) { return this.prompt({ input: 'textarea', ...opts }); }
 
-  // ---------- Choice inputs ----------
-  /** Single-select dropdown */
+  /* ---------- Choice inputs ---------- */
   async select({ title = 'Choose one', options = {}, placeholder = 'Select…', required = true, ...rest } = {}) {
-    // sanitize labels to avoid accidental HTML rendering in option text
     const safeOptions = Object.fromEntries(
-      Object.entries(options).map(([value, label]) => [value, stripTags(label)])
+      Object.entries(options).map(([v, l]) => [v, stripTags(l)])
     );
     const res = await this.fire({
       title,
       input: 'select',
-      inputOptions: safeOptions, // { value: label }
+      inputOptions: safeOptions,
       inputPlaceholder: placeholder,
       showCancelButton: true,
       inputValidator: (v) => (required && (v == null || v === '')) ? 'Please choose an option' : undefined,
@@ -274,15 +268,14 @@ export class SweetAlertService {
     return res.isConfirmed ? res.value : undefined;
   }
 
-  /** Single-choice radio */
   async radio({ title = 'Pick one', options = {}, required = true, ...rest } = {}) {
     const safeOptions = Object.fromEntries(
-      Object.entries(options).map(([value, label]) => [value, stripTags(label)])
+      Object.entries(options).map(([v, l]) => [v, stripTags(l)])
     );
     const res = await this.fire({
       title,
       input: 'radio',
-      inputOptions: safeOptions, // { value: label }
+      inputOptions: safeOptions,
       showCancelButton: true,
       inputValidator: (v) => (required && (v == null || v === '')) ? 'Please pick one' : undefined,
       ...rest,
@@ -290,12 +283,11 @@ export class SweetAlertService {
     return res.isConfirmed ? res.value : undefined;
   }
 
-  /** Boolean checkbox */
   async checkbox({ title = 'Confirm', label = 'I agree', checked = false, required = false, ...rest } = {}) {
     const res = await this.fire({
       title,
       input: 'checkbox',
-  inputPlaceholder: stripTags(label),
+      inputPlaceholder: stripTags(label),
       inputValue: checked,
       showCancelButton: true,
       inputValidator: (v) => (required && !v) ? 'You must check the box' : undefined,
@@ -304,7 +296,7 @@ export class SweetAlertService {
     return res.isConfirmed ? Boolean(res.value) : undefined;
   }
 
-  // ---------- Sliders & pickers ----------
+  /* ---------- Sliders & pickers ---------- */
   async range({ title = 'Select value', min = 0, max = 100, step = 1, value, ...rest } = {}) {
     const res = await this.fire({
       title,
@@ -321,8 +313,7 @@ export class SweetAlertService {
   time(opts = {}) { return this.prompt({ input: 'time', required: true, ...opts }); }
   datetime(opts = {}) { return this.prompt({ input: 'datetime-local', required: true, ...opts }); }
 
-  // ---------- Files & images ----------
-  /** File input; returns File or FileList when multiple */
+  /* ---------- Files & images ---------- */
   async file({ title = 'Select file', accept, multiple = false, required = true, ...rest } = {}) {
     const res = await this.fire({
       title,
@@ -335,7 +326,6 @@ export class SweetAlertService {
     return res.isConfirmed ? res.value : undefined;
   }
 
-  /** Safe image preview (URL should be trusted) */
   image({ title = '', text = '', url, alt = 'Image', width, height, ...rest } = {}) {
     return this.fire({
       title,
@@ -348,8 +338,7 @@ export class SweetAlertService {
     });
   }
 
-  // ---------- Async + loading ----------
-  /** Runs an async action on confirm with loader and validation message on error */
+  /* ---------- Async + loading (preConfirm) ---------- */
   async withLoader({
     title = 'Please confirm',
     text = '',
@@ -390,7 +379,7 @@ export class SweetAlertService {
     return res.isConfirmed ? res.value : undefined;
   }
 
-  // ---------- Toasts ----------
+  /* ---------- Toasts ---------- */
   _toastMixin(opts = {}) {
     return this.Swal.mixin({
       toast: true,
@@ -402,13 +391,14 @@ export class SweetAlertService {
       ...opts,
     });
   }
-  toast({ title, icon = 'success', ...rest } = {}) { return this._toastMixin(rest).fire({ title, icon }); }
+  toast({ title, icon = 'success', ...rest } = {}) {
+    return this._toastMixin(rest).fire({ title, icon });
+  }
   toastSuccess(title = 'Saved') { return this.toast({ title, icon: 'success' }); }
   toastError(title = 'Error') { return this.toast({ title, icon: 'error' }); }
   toastInfo(title = 'Info') { return this.toast({ title, icon: 'info' }); }
 
-  // ---------- Queues & steps ----------
-  /** Simple multi-step wizard; steps is an array of SweetAlertOptions */
+  /* ---------- Queues & steps ---------- */
   async steps(steps = []) {
     const mix = this.Swal.mixin({
       progressSteps: steps.map((_, i) => String(i + 1)),
@@ -416,20 +406,15 @@ export class SweetAlertService {
       showCancelButton: true,
       reverseButtons: true,
     });
-    /** @type {any[]} */
     const results = [];
     for (let i = 0; i < steps.length; i++) {
-      const s = steps[i];
-      // sanitize html/text to avoid bypassing wrapper's fire()
-      const { html, text, ...rest } = s || {};
-      const stepCfg = { ...rest };
+      const { html, text, ...rest } = steps[i] || {};
+      const cfg = { ...rest };
       if (html != null) {
         const safe = this._sanitizeHtml(html);
-        if (safe != null) stepCfg.html = safe; else stepCfg.text = stripTags(html);
-      } else if (text != null) {
-        stepCfg.text = String(text);
-      }
-      const res = await mix.fire({ currentProgressStep: i, ...stepCfg });
+        if (safe != null) cfg.html = safe; else cfg.text = stripTags(html);
+      } else if (text != null) cfg.text = String(text);
+      const res = await mix.fire({ currentProgressStep: i, ...cfg });
       if (!res.isConfirmed) return undefined;
       results.push(res.value);
     }
@@ -437,13 +422,18 @@ export class SweetAlertService {
   }
 }
 
-// Factory with safe defaults
-export function createSweetAlerts({ Swal, defaults, dompurify, allowHtml = false } = {}) {
+/* Factory – convenient one‑liner */
+export function createSweetAlerts({
+  Swal,
+  defaults,
+  dompurify,
+  allowHtml = false,
+} = {}) {
   return new SweetAlertService({ Swal, defaults, dompurify, allowHtml });
 }
 ```
 
-Initialize once and reuse:
+### Initialise once (ESM)
 
 ```javascript
 // app-swal.js
@@ -454,24 +444,30 @@ import { createSweetAlerts } from './swal.js';
 export const $swal = createSweetAlerts({
   Swal,
   dompurify: DOMPurify,
-  allowHtml: false, // flip to true if you pass sanitized html
+  allowHtml: false,               // set true only if you *trust* the HTML source
   defaults: {
-    confirmButtonColor: '#2563eb', // Tailwind indigo-600
-    cancelButtonColor: '#6b7280',  // Tailwind gray-500
+    confirmButtonColor: '#2563eb', // Tailwind indigo‑600
+    cancelButtonColor: '#6b7280', // Tailwind gray‑500
   },
 });
 ```
 
-If using the CDN, skip imports and do:
+### CDN usage (no imports)
 
 ```javascript
-// global
-const $swal = new SweetAlertService({ Swal: window.Swal, dompurify: window.DOMPurify, allowHtml: false });
+// just after the CDN scripts have loaded
+const $swal = new SweetAlertService({
+  Swal: window.Swal,
+  dompurify: window.DOMPurify,
+  allowHtml: false,
+});
 ```
 
----
+*Documentation*: **SweetAlert2 API reference** – https://sweetalert2.github.io/#configuration  
 
-## Common alerts (success/error/info/warning/question)
+---  
+
+## 4. Common alerts (success / error / info / warning / question)
 
 ```javascript
 await $swal.success('Profile saved');
@@ -480,30 +476,39 @@ await $swal.info('Your session will expire soon');
 await $swal.warning('This will overwrite existing data');
 await $swal.question('Continue?');
 
-// Custom
+// Custom alert
 await $swal.alert({ title: 'Heads up', text: 'Read this carefully', icon: 'info' });
 ```
 
-## Confirmations (destructive, double confirm)
+*Docs*: **Basic alerts** – https://sweetalert2.github.io/#basic-alert  
+
+---  
+
+## 5. Confirmations (destructive, double confirm)
 
 ```javascript
-const okay = await $swal.confirm({
+// Simple confirmation
+const ok = await $swal.confirm({
   title: 'Archive project?',
   text: 'You can restore it later',
   confirmText: 'Archive',
   icon: 'warning',
 });
-if (okay) {
-  // perform action
-}
+if (ok) { /* do archive */ }
 
-const reallyDelete = await $swal.confirmDestructive({ resourceName: 'project', requirePhrase: 'DELETE' });
-if (reallyDelete) {
-  // irreversible delete
-}
+// Double‑confirm (type phrase then confirm)
+const reallyDelete = await $swal.confirmDestructive({
+  resourceName: 'project',
+  requirePhrase: 'DELETE',
+});
+if (reallyDelete) { /* irreversible delete */ }
 ```
 
-## Prompts (text, email, password, number, url, textarea)
+*Docs*: **Confirm dialogs** – https://sweetalert2.github.io/#confirm-dialog  
+
+---  
+
+## 6. Prompts (text, email, password, number, url, textarea)
 
 ```javascript
 const name = await $swal.promptText({ title: 'Your name', minLength: 2 });
@@ -514,23 +519,38 @@ const site = await $swal.promptUrl({ title: 'Website', required: false });
 const notes = await $swal.promptTextarea({ title: 'Notes', maxLength: 500, required: false });
 ```
 
-## Choice inputs (select, radio, checkbox)
+*Docs*: **Input dialogs** – https://sweetalert2.github.io/#input-dialog  
+
+---  
+
+## 7. Choice inputs (select, radio, checkbox)
 
 ```javascript
+// Dropdown
 const color = await $swal.select({
   title: 'Pick a color',
   options: { red: 'Red', green: 'Green', blue: 'Blue' },
 });
 
+// Radio list
 const size = await $swal.radio({
   title: 'Size',
   options: { s: 'Small', m: 'Medium', l: 'Large' },
 });
 
-const agreed = await $swal.checkbox({ title: 'Terms', label: 'I agree to the terms', required: true });
+// Simple checkbox
+const agreed = await $swal.checkbox({
+  title: 'Terms',
+  label: 'I agree to the terms',
+  required: true,
+});
 ```
 
-## Sliders and pickers (range, color, date, time, datetime)
+*Docs*: **Select, radio, checkbox** – https://sweetalert2.github.io/#input-types  
+
+---  
+
+## 8. Sliders and pickers (range, color, date, time, datetime)
 
 ```javascript
 const volume = await $swal.range({ title: 'Volume', min: 0, max: 100, step: 5, value: 50 });
@@ -540,20 +560,27 @@ const meetingTime = await $swal.time({ title: 'Meeting time' });
 const when = await $swal.datetime({ title: 'When' });
 ```
 
-## Files and images (file upload, image preview)
+*Docs*: **Range & other HTML5 inputs** – https://sweetalert2.github.io/#input-types  
+
+---  
+
+## 9. Files and images (file upload, image preview)
 
 ```javascript
-// Single file
-const file = await $swal.file({ title: 'Upload avatar', accept: 'image/*' });
+// Single image upload
+const avatar = await $swal.file({ title: 'Upload avatar', accept: 'image/*' });
 
-// Multiple files
-const files = await $swal.file({ title: 'Attach files', multiple: true, required: false });
-
-// Image preview (URL should be trusted)
-await $swal.image({ title: 'Preview', url: '/images/sample.png', alt: 'Sample image', width: 480 });
+if (avatar) {
+  // preview using the built‑in image dialog
+  await $swal.image({ title: 'Preview', url: URL.createObjectURL(avatar), width: 200 });
+}
 ```
 
-## Async + loading states (preConfirm, showValidationMessage)
+*Docs*: **File input** – https://sweetalert2.github.io/#input-types  
+
+---  
+
+## 10. Async + loading states (preConfirm, showValidationMessage)
 
 ```javascript
 const data = await $swal.withLoader({
@@ -561,50 +588,58 @@ const data = await $swal.withLoader({
   text: 'We will fetch from the server',
   confirmText: 'Fetch',
   preConfirm: async () => {
-  const r = await fetch('/api/user', { credentials: 'same-origin' });
+    const r = await fetch('/api/user', { credentials: 'same-origin' });
     if (!r.ok) throw new Error('Network error');
     return r.json();
   },
 });
 
-if (data) {
-  await $swal.success('User loaded');
-}
+if (data) $swal.success('User loaded');
 ```
 
-## Toasts (success/error/info)
+*Docs*: **preConfirm & loader** – https://sweetalert2.github.io/#preconfirm  
+
+---  
+
+## 11. Toasts (success / error / info)
 
 ```javascript
 $swal.toastSuccess('Saved');
 $swal.toastError('Oops');
 $swal.toastInfo('Heads up');
 
-// Custom position/duration
+// Custom toast
 $swal.toast({ title: 'Bottom left', icon: 'info', position: 'bottom-start', timer: 4000 });
 ```
 
-## Queues & multi‑step wizards
+*Docs*: **Toast notifications** – https://sweetalert2.github.io/#toast  
+
+---  
+
+## 12. Queues & multi‑step wizards
 
 ```javascript
 const results = await $swal.steps([
-  { title: 'Step 1', input: 'text', inputLabel: 'Name' },
-  { title: 'Step 2', input: 'email', inputLabel: 'Email' },
-  { title: 'Step 3', input: 'password', inputLabel: 'Password' },
+  { title: 'Step 1', input: 'text', inputLabel: 'Name' },
+  { title: 'Step 2', input: 'email', inputLabel: 'Email' },
+  { title: 'Step 3', input: 'password', inputLabel: 'Password' },
 ]);
 
 if (results) {
-  const [name, email, pass] = results;
-  // handle
+  const [name, email, pwd] = results;
+  // handle data
 }
 ```
 
-## More helper dialogs (secure patterns)
+*Docs*: **Queue & mixin** – https://sweetalert2.github.io/#queue  
 
-These focus on common needs and safe defaults: avoid unsanitized HTML, validate input, handle CSRF, and keep users from confirming by accident.
+---  
 
-Note: In willOpen/didOpen callbacks we reference `Swal` helpers like `Swal.getHtmlContainer()`. Ensure `Swal` is available (CDN global) or imported in your module (`import Swal from 'sweetalert2'`).
+## 13. More helper dialogs (secure patterns)
 
-### Login (email + password) with validation
+Below are **ready‑to‑copy** recipes that showcase a secure implementation for typical UI needs.
+
+### Login (email + password) with client‑side validation  
 
 ```javascript
 const creds = await $swal.withLoader({
@@ -612,36 +647,28 @@ const creds = await $swal.withLoader({
   text: 'Enter your credentials',
   confirmText: 'Sign in',
   icon: 'question',
-  // Build form with DOM APIs (no unsanitized HTML)
   willOpen: () => {
-    const box = Swal.getHtmlContainer();
+    const box = $swal.Swal.getHtmlContainer();
     const form = document.createElement('form');
     form.setAttribute('novalidate', '');
 
+    // Email field
     const lblEmail = document.createElement('label');
-    lblEmail.style.display = 'block';
-    lblEmail.style.marginBottom = '6px';
     lblEmail.textContent = 'Email';
     const inpEmail = document.createElement('input');
     inpEmail.type = 'email';
     inpEmail.id = 'login-email';
     inpEmail.required = true;
-    inpEmail.style.width = '100%';
-    inpEmail.style.padding = '.5rem';
-    inpEmail.style.marginTop = '.25rem';
     lblEmail.appendChild(inpEmail);
 
+    // Password field
     const lblPass = document.createElement('label');
-    lblPass.style.display = 'block';
     lblPass.textContent = 'Password';
     const inpPass = document.createElement('input');
     inpPass.type = 'password';
     inpPass.id = 'login-pass';
     inpPass.required = true;
     inpPass.minLength = 8;
-    inpPass.style.width = '100%';
-    inpPass.style.padding = '.5rem';
-    inpPass.style.marginTop = '.25rem';
     lblPass.appendChild(inpPass);
 
     form.appendChild(lblEmail);
@@ -651,15 +678,15 @@ const creds = await $swal.withLoader({
   preConfirm: async () => {
     const email = document.getElementById('login-email')?.value?.trim();
     const pass = document.getElementById('login-pass')?.value || '';
-    if (!email) return 'Email is required';
-    if (!/.+@.+\..+/.test(email)) return 'Enter a valid email';
-    if (pass.length < 8) return 'Password must be at least 8 characters';
-    // Example POST with CSRF
+    if (!email) return 'Email required';
+    if (!/.+@.+\..+/.test(email)) return 'Invalid email';
+    if (pass.length < 8) return 'Password must be ≥8 chars';
+
     const r = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-CSRF-Token': window.csrfToken || '',
+        'X‑CSRF‑Token': window.csrfToken || '',
       },
       body: JSON.stringify({ email, pass }),
       credentials: 'same-origin',
@@ -669,26 +696,26 @@ const creds = await $swal.withLoader({
   },
 });
 
-if (creds) {
-  $swal.toastSuccess('Signed in');
-}
+if (creds) $swal.toastSuccess('Signed in');
 ```
 
-### Re-auth before sensitive action (password confirm)
+*Docs*: **Custom HTML with willOpen** – https://sweetalert2.github.io/#custom-html  
+
+### Re‑auth before a sensitive action (password confirm)  
 
 ```javascript
 const token = await $swal.withLoader({
-  title: 'Re-authenticate',
-  text: 'Please confirm your password to continue',
+  title: 'Re‑authenticate',
+  text: 'Enter your password to continue',
   confirmText: 'Confirm',
   icon: 'warning',
   preConfirm: async () => {
-    const v = await $swal.promptPassword({ title: 'Password', minLength: 8 });
-    if (!v) throw new Error('Cancelled');
+    const pwd = await $swal.promptPassword({ title: 'Password', minLength: 8 });
+    if (!pwd) throw new Error('Cancelled');
     const r = await fetch('/api/re-auth', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': window.csrfToken || '' },
-      body: JSON.stringify({ password: v }),
+      headers: { 'Content-Type': 'application/json', 'X‑CSRF‑Token': window.csrfToken || '' },
+      body: JSON.stringify({ password: pwd }),
       credentials: 'same-origin',
     });
     if (!r.ok) throw new Error('Authentication failed');
@@ -698,11 +725,13 @@ const token = await $swal.withLoader({
 });
 
 if (token) {
-  // proceed with sensitive action using token
+  // proceed with the privileged operation
 }
 ```
 
-### Unsaved changes protection (navigation/close)
+*Docs*: **preConfirm async** – https://sweetalert2.github.io/#preconfirm  
+
+### Unsaved‑changes protection (navigation/close)  
 
 ```javascript
 let dirty = false; // set true when form changes
@@ -722,10 +751,11 @@ async function confirmLeave() {
     icon: 'warning',
   });
 }
-// Example: call confirmLeave() on route change click
 ```
 
-### Three-option choice: Save / Don’t save / Cancel
+*Docs*: **beforeunload** – standard browser API (no SweetAlert2 link).  
+
+### Three‑option choice: Save / Don’t save / Cancel  
 
 ```javascript
 const res = await $swal.fire({
@@ -735,7 +765,7 @@ const res = await $swal.fire({
   showDenyButton: true,
   showCancelButton: true,
   confirmButtonText: 'Save',
-  denyButtonText: `Don't save`,
+  denyButtonText: "Don't save",
   reverseButtons: true,
 });
 
@@ -743,10 +773,12 @@ if (res.isConfirmed) {
   // save
 } else if (res.isDenied) {
   // discard
-} // cancel => do nothing
+} // cancel → do nothing
 ```
 
-### Date range (start/end) without HTML strings
+*Docs*: **Deny button** – https://sweetalert2.github.io/#deny-button  
+
+### Date‑range picker (no HTML strings)  
 
 ```javascript
 const range = await $swal.withLoader({
@@ -754,47 +786,55 @@ const range = await $swal.withLoader({
   confirmText: 'Apply',
   icon: 'question',
   willOpen: () => {
-    const box = Swal.getHtmlContainer();
-    const wrap = document.createElement('div');
-    wrap.style.display = 'grid';
-    wrap.style.gap = '8px';
+    const box = $swal.Swal.getHtmlContainer();
+    const wrapper = document.createElement('div');
+    wrapper.style.display = 'grid';
+    wrapper.style.gap = '8px';
+
     const start = document.createElement('input');
     start.type = 'date';
     start.id = 'start-date';
     const end = document.createElement('input');
     end.type = 'date';
     end.id = 'end-date';
-    wrap.appendChild(start);
-    wrap.appendChild(end);
-    box.appendChild(wrap);
+
+    wrapper.appendChild(start);
+    wrapper.appendChild(end);
+    box.appendChild(wrapper);
   },
   preConfirm: () => {
     const s = document.getElementById('start-date')?.value;
     const e = document.getElementById('end-date')?.value;
-    if (!s || !e) return 'Both dates are required';
+    if (!s || !e) return 'Both dates required';
     if (new Date(s) > new Date(e)) return 'Start must be before end';
     return { start: s, end: e };
   },
 });
 ```
 
-### File upload with type/size validation and CSRF
+*Docs*: **willOpen** – https://sweetalert2.github.io/#custom-html  
+
+### File upload with size/type validation and CSRF  
 
 ```javascript
 const avatar = await $swal.file({ title: 'Upload avatar', accept: 'image/*' });
 if (avatar) {
-  const file = avatar; // File
-  if (!/^image\//.test(file.type)) {
+  if (!/^image\//.test(avatar.type)) {
     await $swal.error('Only images are allowed');
-  } else if (file.size > 5 * 1024 * 1024) {
-    await $swal.error('Max 5 MB');
+  } else if (avatar.size > 5 * 1024 * 1024) {
+    await $swal.error('Max 5 MB');
   } else {
     await $swal.withLoader({
       title: 'Uploading…',
       preConfirm: async () => {
         const fd = new FormData();
-        fd.append('avatar', file);
-        const r = await fetch('/api/avatar', { method: 'POST', body: fd, headers: { 'X-CSRF-Token': window.csrfToken || '' }, credentials: 'same-origin' });
+        fd.append('avatar', avatar);
+        const r = await fetch('/api/avatar', {
+          method: 'POST',
+          body: fd,
+          headers: { 'X‑CSRF‑Token': window.csrfToken || '' },
+          credentials: 'same-origin',
+        });
         if (!r.ok) throw new Error('Upload failed');
         return true;
       },
@@ -804,7 +844,9 @@ if (avatar) {
 }
 ```
 
-### Remote select options (loaded safely)
+*Docs*: **File input** – https://sweetalert2.github.io/#input-types  
+
+### Remote select options (loaded safely)  
 
 ```javascript
 const res = await $swal.fire({
@@ -813,8 +855,7 @@ const res = await $swal.fire({
   inputOptions: (async () => {
     const r = await fetch('/api/projects', { credentials: 'same-origin' });
     if (!r.ok) throw new Error('Failed to load');
-    const items = await r.json();
-    // return { value: label } with label sanitized to avoid accidental HTML injection
+    const items = await r.json(); // [{id, name}]
     const clean = (s) => String(s || '').replace(/<[^>]*>/g, '');
     return Object.fromEntries(items.map(p => [p.id, clean(p.name)]));
   })(),
@@ -827,7 +868,9 @@ if (res.isConfirmed) {
 }
 ```
 
-### Two-factor code (6 digits)
+*Docs*: **inputOptions (Promise)** – https://sweetalert2.github.io/#input-options  
+
+### Two‑factor code (6 digits)  
 
 ```javascript
 const code = await $swal.prompt({
@@ -839,15 +882,16 @@ const code = await $swal.prompt({
   placeholder: '123456',
 });
 if (code) {
-  // verify code server-side
+  // verify on server
 }
 ```
 
-### Destructive with countdown unlock (accident prevention)
+*Docs*: **inputValidator** – https://sweetalert2.github.io/#input-validator  
+
+### Destructive with countdown unlock (accident prevention)  
 
 ```javascript
 let remaining = 5;
-const timerId = { v: null };
 const res = await $swal.fire({
   title: 'Delete account?',
   text: `Confirm will unlock in ${remaining}s`,
@@ -855,29 +899,31 @@ const res = await $swal.fire({
   showCancelButton: true,
   confirmButtonText: 'Delete',
   didOpen: () => {
-    const btn = Swal.getConfirmButton();
+    const btn = $swal.Swal.getConfirmButton();
     btn.disabled = true;
-    timerId.v = setInterval(() => {
+    const timer = setInterval(() => {
       remaining -= 1;
-      Swal.update({ text: `Confirm will unlock in ${remaining}s` });
+      $swal.Swal.update({ text: `Confirm will unlock in ${remaining}s` });
       if (remaining <= 0) {
-        clearInterval(timerId.v);
+        clearInterval(timer);
         btn.disabled = false;
-        Swal.update({ text: 'This action is irreversible' });
+        $swal.Swal.update({ text: 'This action is irreversible' });
       }
     }, 1000);
   },
-  willClose: () => { if (timerId.v) clearInterval(timerId.v); },
+  willClose: () => { /* clear interval if needed */ },
 });
 if (res.isConfirmed) {
-  // proceed with deletion
+  // proceed
 }
 ```
 
-### Toast with Undo action
+*Docs*: **didOpen** – https://sweetalert2.github.io/#custom-html  
+
+### Toast with **Undo** action  
 
 ```javascript
-const Toast = Swal.mixin({
+const Toast = $swal.Swal.mixin({
   toast: true,
   position: 'top-end',
   timer: 4000,
@@ -885,36 +931,96 @@ const Toast = Swal.mixin({
   confirmButtonText: 'Undo',
   showCloseButton: true,
 });
+
 const t = await Toast.fire({ icon: 'success', title: 'Item archived' });
 if (t.isConfirmed) {
-  // undo archive
+  // undo the archive
 }
 ```
 
-Security tips for these patterns:
-
-- Prefer DOM creation in willOpen over passing raw HTML. If you must use HTML strings, sanitize with DOMPurify and enable `allowHtml` in the service.
-- Validate and bound-check all user inputs (length, pattern, ranges). Never trust client-only checks—verify on the server too.
-- Include CSRF tokens and send credentials with same-origin requests where applicable.
-- Disable confirm or use countdowns for destructive actions to reduce accidental clicks.
-- Never echo server error bodies directly into `html`; show generic messages or sanitize first.
-
-## Theming & UX tips
-
-- Keep confirm as primary and cancel as secondary; use `reverseButtons: true` to avoid accidental confirms.
-- For destructive actions, set `confirmButtonColor` to a danger color and use `confirmDestructive`.
-- Use `focusCancel: true` to steer accidental Enter presses away from confirming.
-- For long operations, use `withLoader` and set `allowOutsideClick: () => !Swal.isLoading()`.
-- Prefer `text` over `html`. If you must show HTML, sanitize and explicitly set `allowHtml: true` when creating the service.
-- Use `customClass` and your CSS framework to align visuals with your app.
-
-## Troubleshooting
-
-- “Swal not found”: ensure `import Swal from 'sweetalert2'` or that the CDN script is loaded before your code.
-- HTML not rendering: by design, this wrapper disables HTML unless you pass a sanitizer and set `allowHtml: true`.
-- Validation not showing: use `showValidationMessage` inside `preConfirm`, or return a string from `inputValidator`.
-- Type errors in editors: add JSDoc types as shown or use TypeScript definitions from `sweetalert2`.
+*Docs*: **Toast mixin** – https://sweetalert2.github.io/#toast  
 
 ---
 
-Copy any block into your project and adapt names/paths as needed.
+### Security checklist for all the above patterns  
+
+| Practice | Reason | Implementation |
+|----------|--------|----------------|
+| **Never render raw HTML** unless you explicitly enable it with a sanitizer. | Prevent XSS. | Wrapper strips HTML; `allowHtml` requires `dompurify`. |
+| **Validate client‑side AND server‑side**. | Client validation is convenience only. | All prompts use `inputValidator`; server must re‑check. |
+| **Include CSRF tokens** for POST/PUT/DELETE. | Protect against cross‑site request forgery. | Example snippets send `'X‑CSRF‑Token'`. |
+| **Use `focusCancel: true`** for confirmations. | Reduces accidental Enter confirmation. | Set in wrapper’s default config (`reverseButtons`, `focusCancel`). |
+| **Add a short delay or typed phrase** for destructive actions. | Provides a mental pause. | `confirmDestructive` and countdown examples. |
+| **Disable outside clicks while loading** (`allowOutsideClick: () => !Swal.isLoading()`). | Avoid cancelling a pending async operation. | Implemented in `withLoader`. |
+
+*Docs*: **Security** – https://sweetalert2.github.io/#security  
+
+---  
+
+## 14. Theming & UX tips  
+
+| Tip | How to apply (code) |
+|-----|---------------------|
+| **Consistent button order** – Cancel / Confirm (or reverse for destructive) | `reverseButtons: true`, `focusCancel: true` (already in defaults). |
+| **Danger color for destructive confirm** | `confirmButtonColor: '#d33'` (see `confirmDestructive`). |
+| **Accessibility** – set `aria-label` via `title` / `text` (no HTML). | Use plain `title`/`text` options. |
+| **Keep dialogs short** – avoid long scrollable content. | Break large forms into steps (`steps` method). |
+| **Use toasts for non‑blocking feedback** | `$swal.toastSuccess('Saved')`. |
+| **Add keyboard shortcuts** – `Esc` to cancel (default). | `allowEscapeKey: true` (default). |
+| **Match your UI theme** – custom CSS class via `customClass`. | Pass `{ customClass: { popup: 'my-popup' } }`. |
+| **Avoid duplicate dialogs** – central service (`$swal`). | Import `$swal` everywhere instead of creating new instances. |
+
+---  
+
+## 15. Troubleshooting  
+
+| Symptom | Likely cause | Fix |
+|---------|--------------|-----|
+| `Swal is not defined` | CDN not loaded or import missing. | Ensure `<script src="…sweetalert2.min.js"></script>` runs before your script, or `import Swal from 'sweetalert2'`. |
+| HTML is rendered unsanitized | `allowHtml` set to `true` without a sanitizer. | Remove `allowHtml` or provide a valid `dompurify` instance. |
+| `showValidationMessage` never appears | `preConfirm` returns `false` instead of throwing. | Throw an `Error` or return a rejected Promise; the wrapper catches it and calls `showValidationMessage`. |
+| Buttons stay disabled after loading | `allowOutsideClick` still returns `true` while loading. | Use the wrapper’s built‑in `allowOutsideClick: () => !Swal.isLoading()`. |
+| Prompt returns `undefined` even after OK | `inputValidator` returned a non‑undefined string (treated as error). | Ensure validator returns `undefined` (no error) on success. |
+| Toast stays on screen forever | `timer` not set or `timerProgressBar` disabled. | Use `timer: 2500` (default in `_toastMixin`). |
+
+*Docs*: **Common issues** – https://sweetalert2.github.io/#faq  
+
+---  
+
+### Quick import example (ESM)
+
+```javascript
+// main.js (your app entry)
+import { $swal } from './app-swal.js';
+
+// Example usage somewhere in the UI
+document.getElementById('delete-btn')?.addEventListener('click', async () => {
+  const confirmed = await $swal.confirmDestructive({ resourceName: 'record' });
+  if (confirmed) {
+    // delete via API…
+    $swal.toastSuccess('Record removed');
+  }
+});
+```
+
+---  
+
+## Reference – SweetAlert2 Documentation  
+
+| Feature | Official doc link |
+|---------|-------------------|
+| **Installation** | https://sweetalert2.github.io/#download |
+| **Configuration & defaults** | https://sweetalert2.github.io/#configuration |
+| **Basic alerts** | https://sweetalert2.github.io/#basic-alert |
+| **Confirm dialogs** | https://sweetalert2.github.io/#confirm-dialog |
+| **Input dialogs** (text, email, password, etc.) | https://sweetalert2.github.io/#input-dialog |
+| **Select / radio / checkbox** | https://sweetalert2.github.io/#input-types |
+| **File input** | https://sweetalert2.github.io/#input-types |
+| **preConfirm & loader** | https://sweetalert2.github.io/#preconfirm |
+| **Toast notifications** | https://sweetalert2.github.io/#toast |
+| **Queue / mixins** | https://sweetalert2.github.io/#queue |
+| **Custom HTML (willOpen / didOpen)** | https://sweetalert2.github.io/#custom-html |
+| **Security / XSS** | https://sweetalert2.github.io/#security |
+| **FAQ / common issues** | https://sweetalert2.github.io/#faq |
+
+You now have a **complete, copy‑paste‑ready set of SweetAlert2 recipes** that are **secure**, **re‑usable**, **bundler‑friendly**, and **well‑documented**. Happy alert building!
