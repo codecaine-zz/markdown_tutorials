@@ -50,13 +50,26 @@ class MarkdownTutorialApp {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Markdown Tutorials</title>
-            <!-- Site favicon (use subdir-aware URLs + multiple fallbacks) -->
-            <link rel="icon" href="<?php echo htmlspecialchars($this->assetUrl('favicon.ico', true)); ?>" sizes="any">
-            <link rel="icon" type="image/svg+xml" href="<?php echo htmlspecialchars($this->assetUrl('favicon.svg', true)); ?>">
-            <link rel="icon" type="image/png" sizes="32x32" href="<?php echo htmlspecialchars($this->assetUrl('favicon-32x32.png', true)); ?>">
-            <link rel="icon" type="image/png" sizes="16x16" href="<?php echo htmlspecialchars($this->assetUrl('favicon-16x16.png', true)); ?>">
-            <link rel="apple-touch-icon" sizes="180x180" href="<?php echo htmlspecialchars($this->assetUrl('apple-touch-icon.png', true)); ?>">
-            <link rel="shortcut icon" href="<?php echo htmlspecialchars($this->assetUrl('favicon.ico', true)); ?>">
+            <!-- Site favicon (only include if files exist to avoid 404s) -->
+            <?php 
+            $faviconFiles = [
+                'favicon.ico' => 'sizes="any"',
+                'favicon.svg' => 'type="image/svg+xml"',
+                'favicon-32x32.png' => 'type="image/png" sizes="32x32"',
+                'favicon-16x16.png' => 'type="image/png" sizes="16x16"',
+                'apple-touch-icon.png' => 'rel="apple-touch-icon" sizes="180x180"'
+            ];
+            
+            foreach ($faviconFiles as $file => $attrs) {
+                if (file_exists($this->baseDir . '/' . $file)) {
+                    $rel = strpos($file, 'apple-touch') !== false ? 'apple-touch-icon' : 'icon';
+                    if (strpos($file, 'apple-touch') === false && $file === 'favicon.ico') {
+                        echo '<link rel="shortcut icon" href="' . htmlspecialchars($this->assetUrl($file, true)) . '">' . "\n            ";
+                    }
+                    echo '<link rel="' . $rel . '" href="' . htmlspecialchars($this->assetUrl($file, true)) . '" ' . $attrs . '>' . "\n            ";
+                }
+            }
+            ?>
             <meta name="theme-color" content="#0f172a">
             <!-- Highlight.js with comprehensive language support -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
