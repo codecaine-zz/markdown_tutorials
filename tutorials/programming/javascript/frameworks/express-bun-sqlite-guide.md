@@ -1,19 +1,19 @@
 # Express.js with Bun + SQLite — Practical Tutorial (ARM Mac optimized)
 
-Copy‑pasteable guide to build a fast, tiny REST API using Express.js on Bun and Bun’s built‑in SQLite (`bun:sqlite`). Optimized defaults for Apple Silicon (M1/M2/M3) Macs, with clean, easy‑to‑read code.
+Copy‑pasteable guide to build a fast, tiny REST API using Express.js on Bun and Bun’s built‑in SQLite (`bun:sqlite`). Optimized defaults for Apple Silicon (M1/M2/M3+) Macs, with clean, easy‑to‑read code.
 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Why Bun + SQLite](#why-bun--sqlite)
+- [Why Bun + Database Wrappers](#why-bun--database-wrappers)
 - [Prerequisites (ARM Mac)](#prerequisites-arm-mac)
 - [Project Setup](#project-setup)
 - [App Structure](#app-structure)
-- [Database (bun:sqlite)](#database-bunsqlite)
+- [Database (Using Database Wrapper)](#database-using-database-wrapper)
+- [Repository (Type-Safe Data Access)](#repository-type-safe-data-access)
 - [Express App](#express-app)
-- [CRUD Routes (Todos example)](#crud-routes-todos-example)
+- [CRUD Routes (Type-Safe Todos API)](#crud-routes-type-safe-todos-api)
 - [Run and Test](#run-and-test)
-- [Validation (optional)](#validation-optional)
 - [Error Handling](#error-handling)
 - [Performance Tips](#performance-tips)
 - [Security Basics](#security-basics)
@@ -24,21 +24,23 @@ Copy‑pasteable guide to build a fast, tiny REST API using Express.js on Bun an
 
 ## Overview
 
-We’ll build a minimal REST API for a Todo list:
+We'll build a minimal REST API for a Todo list:
 
 - Runtime: Bun (fast, single binary, Node compatible)
 - Web framework: Express.js
-- Database: Bun’s built‑in `bun:sqlite` (no extra native deps)
-- Storage: Local file `data/app.db` with WAL mode enabled
-- Features: CRUD, prepared statements, transactions, safe integers, strict bindings
+- Database: SQLite via production-ready database wrapper
+- Storage: Local file `data/app.db` with optimized configuration
+- Features: Type-safe CRUD, error handling, automatic resource management, transactions
 
 All code blocks are complete and copy‑pasteable.
 
-## Why Bun + SQLite
+## Why Bun + Database Wrappers
 
-- Bun is fast and ships a native SQLite driver with a simple, synchronous API.
-- SQLite is zero‑config, durable, and perfect for local apps/APIs and small to medium services.
-- WAL mode gives excellent concurrency (many readers, one writer), great for APIs.
+- Bun is fast and compatible with Node.js ecosystems
+- Database wrappers provide type safety, automatic resource management, and built-in security
+- SQLite is zero‑config, durable, and perfect for local apps/APIs and small to medium services
+- WAL mode gives excellent concurrency (many readers, one writer), great for APIs
+- Automatic cleanup prevents memory leaks and resource exhaustion
 
 ## Prerequisites (ARM Mac)
 
@@ -59,127 +61,119 @@ No Homebrew SQLite needed—`bun:sqlite` is built-in.
 mkdir express-bun-sqlite && cd $_
 bun init -y
 bun add express
+bun add https://github.com/codecaine-zz/bun_database_wrappers
 ```
 
-This creates `package.json` and installs Express. Bun defaults to ESM imports which work fine with Express.
+This creates `package.json`, installs Express, and adds the production-ready database wrappers. Bun defaults to ESM imports which work perfectly with both Express and the database wrappers.
 
 ## App Structure
 
 ```text
 .
 ├─ src/
-│  ├─ db.js          # SQLite connection, schema, prepared statements
-│  ├─ repo.js        # Data access helpers (todos repository)
-│  ├─ routes.js      # Express routes (wire repo to HTTP)
-│  └─ server.js      # Express app + middleware + startup
+│  ├─ db.js          # Database wrapper setup and initialization
+│  ├─ repo.js        # Type-safe data access layer (todos repository)
+│  ├─ routes.js      # Express routes with async/await support
+│  └─ server.js      # Express app + middleware + database initialization
 └─ data/
    └─ app.db        # SQLite database file (auto-created)
 ```
 
 Create files as below.
 
-## Database (`bun:sqlite`)
+## Database (Using Database Wrapper)
+
+First, install the database wrappers:
+
+```bash
+# Add the database wrappers from GitHub
+bun add https://github.com/codecaine-zz/bun_database_wrappers
+```
 
 File: `src/db.js`
 
 ```javascript
 // src/db.js
-import { Database } from "bun:sqlite";
+import { createSQLite } from "bun_database_wrappers";
 
-// One shared connection per process
-export const db = new Database("data/app.db", {
-  create: true,
-  strict: true,       // allow binding without prefixes and throw on missing params
-  safeIntegers: true, // return integers as bigint for safety
-});
+// Create database instance with automatic resource management
+export const db = createSQLite("data/app.db");
 
-// Recommended pragmas for APIs
-db.exec(`
-  PRAGMA journal_mode = WAL;        -- better concurrency
-  PRAGMA foreign_keys = ON;         -- enforce FK constraints
-  PRAGMA busy_timeout = 3000;       -- wait for 3s if the DB is busy
-`);
-
-// Schema (idempotent)
-db.exec(`
-  CREATE TABLE IF NOT EXISTS todos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    completed INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-  );
-`);
-
-// Prepared statements (cached on db)
-export const stmt = {
-  insertTodo: db.query(
-    `INSERT INTO todos (title, completed) VALUES ($title, $completed)`
-  ),
-  getTodo: db.query(
-    `SELECT id, title, completed, created_at, updated_at FROM todos WHERE id = $id`
-  ),
-  listTodos: db.query(
-    `SELECT id, title, completed, created_at, updated_at FROM todos ORDER BY id DESC`
-  ),
-  updateTodo: db.query(
-    `UPDATE todos
-     SET title = $title,
-         completed = $completed,
-         updated_at = datetime('now')
-     WHERE id = $id`
-  ),
-  deleteTodo: db.query(`DELETE FROM todos WHERE id = $id`),
-};
-
-// Batch helpers using transactions
-export const tx = {
-  insertTodos: db.transaction((rows) => {
-    for (const row of rows) stmt.insertTodo.run(row);
-    return rows.length;
-  }),
-};
+// Initialize database with schema (idempotent)
+export async function initializeDatabase() {
+  // Create todos table
+  await db.createTable("todos", {
+    id: "INTEGER PRIMARY KEY AUTOINCREMENT",
+    title: "TEXT NOT NULL",
+    completed: "INTEGER NOT NULL DEFAULT 0",
+    created_at: "TEXT NOT NULL DEFAULT (datetime('now'))",
+    updated_at: "TEXT NOT NULL DEFAULT (datetime('now'))"
+  });
+}
 ```
 
-## Repository (clean data access)
+## Repository (Type-Safe Data Access)
 
 File: `src/repo.js`
 
 ```javascript
 // src/repo.js
-import { stmt, tx } from "./db.js";
+import { db } from "./db.js";
 
-export function listTodos() {
-  return stmt.listTodos.all();
+// TypeScript-style interface for documentation (JSDoc)
+/**
+ * @typedef {Object} Todo
+ * @property {number} [id] - Auto-generated ID
+ * @property {string} title - Todo title
+ * @property {number} completed - 0 or 1 (SQLite boolean)
+ * @property {string} [created_at] - ISO timestamp
+ * @property {string} [updated_at] - ISO timestamp
+ */
+
+export async function listTodos() {
+  return await db.select("todos", "*", null, null, "id DESC");
 }
 
-export function getTodo(id) {
-  return stmt.getTodo.get({ id });
+export async function getTodo(id) {
+  return await db.get("SELECT * FROM todos WHERE id = ?", [id]);
 }
 
-export function createTodo({ title, completed = 0 }) {
-  const { lastInsertRowid } = stmt.insertTodo.run({ title, completed });
-  return getTodo(Number(lastInsertRowid));
+export async function createTodo({ title, completed = 0 }) {
+  const result = await db.insert("todos", { title, completed });
+  return await getTodo(Number(result.lastInsertRowid));
 }
 
-export function updateTodo(id, data) {
-  const current = getTodo(id);
+export async function updateTodo(id, data) {
+  const current = await getTodo(id);
   if (!current) return undefined;
-  const title = data.title ?? current.title;
-  const completed = data.completed ?? current.completed;
-  stmt.updateTodo.run({ id, title, completed });
-  return getTodo(id);
+  
+  const updateData = {
+    title: data.title ?? current.title,
+    completed: data.completed ?? current.completed,
+    updated_at: "datetime('now')"
+  };
+  
+  await db.update("todos", updateData, "id = ?", [id]);
+  return await getTodo(id);
 }
 
-export function deleteTodo(id) {
-  const before = getTodo(id);
+export async function deleteTodo(id) {
+  const before = await getTodo(id);
   if (!before) return false;
-  stmt.deleteTodo.run({ id });
+  
+  await db.delete("todos", "id = ?", [id]);
   return true;
 }
 
-export function seedTodos(rows) {
-  return tx.insertTodos(rows);
+export async function seedTodos(rows) {
+  // Use transaction for bulk inserts
+  await db.transaction(
+    rows.map(row => ({
+      sql: "INSERT INTO todos (title, completed) VALUES (?, ?)",
+      params: [row.title, row.completed ? 1 : 0]
+    }))
+  );
+  return rows.length;
 }
 ```
 
@@ -191,6 +185,7 @@ File: `src/server.js`
 // src/server.js
 import express from "express";
 import { router } from "./routes.js";
+import { initializeDatabase } from "./db.js";
 
 const app = express();
 
@@ -223,12 +218,26 @@ app.use((err, req, res, _next) => {
 });
 
 const PORT = Number(process.env.PORT || 3000);
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+
+// Initialize database and start server
+async function startServer() {
+  try {
+    await initializeDatabase();
+    console.log("Database initialized successfully");
+    
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
 ```
 
-## CRUD Routes (Todos example)
+## CRUD Routes (Type-Safe Todos API)
 
 File: `src/routes.js`
 
@@ -246,66 +255,132 @@ import {
 
 export const router = Router();
 
-// Health
+// Health check
 router.get("/health", (_req, res) => {
   res.json({ ok: true, uptime: process.uptime() });
 });
 
 // Seed (dev only)
-router.post("/seed", (req, res) => {
-  const rows = Array.isArray(req.body) ? req.body : [];
-  const count = seedTodos(
-    rows.map((t) => ({ title: String(t.title || "Untitled"), completed: t.completed ? 1 : 0 }))
-  );
-  res.json({ inserted: count });
+router.post("/seed", async (req, res) => {
+  try {
+    const rows = Array.isArray(req.body) ? req.body : [];
+    const count = await seedTodos(
+      rows.map((t) => ({ 
+        title: String(t.title || "Untitled"), 
+        completed: t.completed ? 1 : 0 
+      }))
+    );
+    res.json({ inserted: count });
+  } catch (error) {
+    console.error("Seed error:", error);
+    res.status(500).json({ error: "Failed to seed todos" });
+  }
 });
 
-// List
-router.get("/todos", (_req, res) => {
-  const items = listTodos().map((t) => ({ ...t, completed: Number(t.completed) }));
-  res.json(items);
+// List all todos
+router.get("/todos", async (_req, res) => {
+  try {
+    const items = await listTodos();
+    // Convert SQLite integers to JavaScript booleans for completed field
+    const todos = items.map((t) => ({ 
+      ...t, 
+      completed: Boolean(t.completed) 
+    }));
+    res.json(todos);
+  } catch (error) {
+    console.error("List todos error:", error);
+    res.status(500).json({ error: "Failed to fetch todos" });
+  }
 });
 
-// Get by id
-router.get("/todos/:id", (req, res) => {
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: "Invalid id" });
-  const item = getTodo(id);
-  if (!item) return res.status(404).json({ error: "Not found" });
-  item.completed = Number(item.completed);
-  res.json(item);
+// Get todo by id
+router.get("/todos/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+    
+    const item = await getTodo(id);
+    if (!item) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    
+    // Convert SQLite integer to boolean
+    item.completed = Boolean(item.completed);
+    res.json(item);
+  } catch (error) {
+    console.error("Get todo error:", error);
+    res.status(500).json({ error: "Failed to fetch todo" });
+  }
 });
 
-// Create
-router.post("/todos", (req, res) => {
-  const title = typeof req.body?.title === "string" ? req.body.title.trim() : "";
-  const completed = req.body?.completed ? 1 : 0;
-  if (title.length === 0) return res.status(400).json({ error: "title is required" });
-  const item = createTodo({ title, completed });
-  item.completed = Number(item.completed);
-  res.status(201).json(item);
+// Create new todo
+router.post("/todos", async (req, res) => {
+  try {
+    const title = typeof req.body?.title === "string" ? req.body.title.trim() : "";
+    const completed = req.body?.completed ? 1 : 0;
+    
+    if (title.length === 0) {
+      return res.status(400).json({ error: "title is required" });
+    }
+    
+    const item = await createTodo({ title, completed });
+    item.completed = Boolean(item.completed);
+    res.status(201).json(item);
+  } catch (error) {
+    console.error("Create todo error:", error);
+    res.status(500).json({ error: "Failed to create todo" });
+  }
 });
 
-// Update (partial)
-router.patch("/todos/:id", (req, res) => {
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: "Invalid id" });
-  const data = {};
-  if (typeof req.body?.title === "string") data.title = req.body.title.trim();
-  if (typeof req.body?.completed === "boolean") data.completed = req.body.completed ? 1 : 0;
-  const item = updateTodo(id, data);
-  if (!item) return res.status(404).json({ error: "Not found" });
-  item.completed = Number(item.completed);
-  res.json(item);
+// Update todo (partial)
+router.patch("/todos/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+    
+    const data = {};
+    if (typeof req.body?.title === "string") {
+      data.title = req.body.title.trim();
+    }
+    if (typeof req.body?.completed === "boolean") {
+      data.completed = req.body.completed ? 1 : 0;
+    }
+    
+    const item = await updateTodo(id, data);
+    if (!item) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    
+    item.completed = Boolean(item.completed);
+    res.json(item);
+  } catch (error) {
+    console.error("Update todo error:", error);
+    res.status(500).json({ error: "Failed to update todo" });
+  }
 });
 
-// Delete
-router.delete("/todos/:id", (req, res) => {
-  const id = Number(req.params.id);
-  if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: "Invalid id" });
-  const ok = deleteTodo(id);
-  if (!ok) return res.status(404).json({ error: "Not found" });
-  res.status(204).end();
+// Delete todo
+router.delete("/todos/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+    
+    const ok = await deleteTodo(id);
+    if (!ok) {
+      return res.status(404).json({ error: "Not found" });
+    }
+    
+    res.status(204).end();
+  } catch (error) {
+    console.error("Delete todo error:", error);
+    res.status(500).json({ error: "Failed to delete todo" });
+  }
 });
 ```
 
@@ -354,17 +429,30 @@ curl -i -X DELETE http://localhost:3000/api/todos/1
 
 Data is persisted to `data/app.db`.
 
-## Validation (optional)
-
-For stricter validation, add [Zod](https://github.com/colinhacks/zod):
-
-```bash
-bun add zod
-```
-
-Then validate inputs inside routes before calling the repo.
-
 ## Error Handling
+
+The database wrapper provides comprehensive error handling:
+
+- Built-in `DBError` class with rich context information
+- Automatic SQL injection protection through identifier validation
+- Type-safe operations prevent runtime errors
+- Proper async/await error propagation
+
+Example error handling:
+
+```javascript
+import { DBError } from "bun_database_wrappers";
+
+try {
+  await db.select("invalid_table");
+} catch (error) {
+  if (error instanceof DBError) {
+    console.log("Query:", error.context.query);
+    console.log("Params:", error.context.params);
+    console.log("Cause:", error.cause);
+  }
+}
+```
 
 - Use a single global error handler (already included).
 - Return 400 for bad input, 404 for missing resources, 500 for unexpected errors.
@@ -372,11 +460,26 @@ Then validate inputs inside routes before calling the repo.
 
 ## Performance Tips
 
-- Keep one `Database` instance per process; reuse prepared statements.
-- WAL mode + `busy_timeout` help with concurrency under load.
-- Batch inserts with `db.transaction(...)` for big imports.
-- Avoid N+1 queries in larger apps—add joins or repository methods as needed.
-- For read‑heavy endpoints, consider pagination (`LIMIT/OFFSET`).
+- Database wrapper automatically manages connections and prepared statements
+- Uses WAL mode and optimized SQLite settings for best performance
+- Built-in transaction support for atomic operations
+- Automatic resource cleanup prevents memory leaks
+- Type-safe operations reduce overhead of runtime type checking
+- For read‑heavy endpoints, consider pagination with `LIMIT/OFFSET`
+- Batch operations use transactions automatically for optimal performance
+
+Example pagination:
+
+```javascript
+// Add to repo.js
+export async function getTodosPaginated(page = 1, limit = 10) {
+  const offset = (page - 1) * limit;
+  return await db.all(
+    "SELECT * FROM todos ORDER BY id DESC LIMIT ? OFFSET ?",
+    [limit, offset]
+  );
+}
+```
 
 ## Security Basics
 
@@ -404,17 +507,23 @@ app.use(rateLimit({ windowMs: 60_000, max: 300 }));
 
 ## Troubleshooting
 
-- “Module not found: express”: run `bun add express` in the project folder.
-- DB locked under heavy writes: increase `PRAGMA busy_timeout`, ensure single process, keep transactions short.
-- Integers appear as `bigint`: set `safeIntegers: false` if you prefer JS numbers (may lose precision for big values).
-- ESM import errors: ensure you’re using Bun to run (`bun src/server.js`).
+- "Module not found: express": run `bun add express` in the project folder.
+- "Module not found: bun_database_wrappers": run `bun add https://github.com/codecaine-zz/bun_database_wrappers`.
+- "Invalid SQL identifier" error: Only alphanumeric and underscore characters allowed in table/column names (prevents SQL injection).
+- Database wrapper errors: Check `error.context.query` and `error.context.params` for debugging.
+- TypeScript errors with generics: Ensure interfaces extend `Record<string, unknown>`.
+- Async/await errors: Ensure all database operations use `await` keyword.
+- ESM import errors: ensure you're using Bun to run (`bun src/server.js`).
 
 ## Next Steps
 
-- Add pagination and search filters.
-- Split feature domains into modules (`users`, `projects`, etc.).
-- Serve a frontend (static or SSR) via Express, or use Bun’s bundler.
-- Add tests with `bun test`.
+- Add input validation with [Zod](https://github.com/colinhacks/zod) for stricter type checking
+- Implement pagination and search filters using the database wrapper's query methods
+- Split feature domains into modules (`users`, `projects`, etc.)
+- Add TypeScript for full compile-time type safety
+- Serve a frontend (static or SSR) via Express, or use Bun's bundler
+- Add tests with `bun test` using the database wrapper's test helpers
+- Explore other database wrappers (MySQL, Redis) for multi-database architectures
 
 ---
 

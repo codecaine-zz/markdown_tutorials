@@ -5,88 +5,104 @@ This directory contains comprehensive tutorials organized by category for easy n
 ## 📂 Directory Organization
 
 ### 🛠️ CLI Tools (`cli-tools/`)
+
 Command-line tools and utilities organized by function:
 
-#### **System Monitoring** (`system-monitoring/`)
-- `btop-system-monitor-guide.md` - Resource monitor (CPU, memory, processes)
-- `cava-audio-visualizer-guide.md` - Console audio visualizer
-- `duf-disk-usage-guide.md` - Disk usage utility
-- `ncdu-disk-analyzer-guide.md` - NCurses disk usage analyzer
-- `neofetch-system-info-guide.md` - System information display
+#### Databases (`databases/`)
 
-#### **File Management** (`file-management/`)
-- `eza-modern-ls-guide.md` - Modern replacement for `ls`
-- `fd-file-finder-guide.md` - Fast file finder
-- `trash-safe-delete-guide.md` - Safe file deletion
-- `tree-directory-viewer-guide.md` - Directory structure viewer
-- `zoxide-directory-jumper-guide.md` - Smart directory jumper
+- `msql-database-guide.md` — MySQL/MSQL database CLI
+- `postgres-database-guide.md` — PostgreSQL database CLI
+- `redis-database-guide.md` — In-memory data store
+- `sqlite-database-guide.md` — Embedded database
 
-#### **Text Processing** (`text-processing/`)
-- `bat-enhanced-cat-guide.md` - Cat with syntax highlighting
-- `gawk-text-processing-guide.md` - GNU AWK text processor
-- `grep-text-search-guide.md` - Pattern searching
-- `jq-json-processor-guide.md` - JSON processor
-- `ripgrep-fast-search-guide.md` - Fast recursive grep
-- `ripgrep-all-universal-search-guide.md` - Ripgrep for all file types
-- `sd-find-replace-guide.md` - Find and replace
+#### Development Tools (`development-tools/`)
 
-#### **Network Tools** (`network-tools/`)
-- `aria2-download-manager-guide.md` - Download manager
-- `curl-http-client-guide.md` - Data transfer tool
-- `dog-dns-client-guide.md` - DNS lookup tool
-- `gping-graphical-ping-guide.md` - Ping with graph
-- `httpie-api-testing-guide.md` - HTTP client
-- `wget-download-tool-guide.md` - File downloader
-- `wget2-improved-download-guide.md` - Next-generation wget
+- `docker-container-guide.md` — Container platform
+- `docker-kali-guide-arm-macos.md` — Kali containers on Apple Silicon
+- `docker-ubuntu-guide-arm-macos.md` — Ubuntu containers on Apple Silicon
+- `git-version-control-guide.md` — Version control
+- `shellcheck-script-lint-guide.md` — Shell script analyzer
 
-#### **Shells** (`shells/`)
-- `atuin-shell-history-guide.md` - Shell history sync
-- `fish-shell-guide.md` - Friendly interactive shell
-- `fizsh-shell-guide.md` - Friendly interactive zsh
-- `tmux-terminal-multiplexer-guide.md` - Terminal multiplexer
-- `zsh-shell-guide.md` - Z shell
+#### Editors (`editors/`)
 
-#### **Editors** (`editors/`)
-- `micro-editor-guide.md` - Modern terminal text editor
-- `nano-editor-guide.md` - Simple terminal text editor
-- `neovim-editor-guide.md` - Vim-based text editor
+- `micro-editor-guide.md` — Modern terminal text editor
+- `nano-editor-guide.md` — Simple terminal text editor
+- `neovim-editor-guide.md` — Vim-based text editor
 
-#### **Development Tools** (`development-tools/`)
-- `docker-container-guide.md` - Container platform
-- `git-version-control-guide.md` - Version control
-- `mac-docker-ubuntu-manager-guide.md` - Docker Ubuntu container management on Mac
-- `shellcheck-script-lint-guide.md` - Shell script analyzer
+#### File Management (`file-management/`)
 
-#### **Security Tools** (`security-tools/`)
-- `burp-suite-guide.md` - Web vulnerability scanner
-- `age-encryption-guide.md` - File encryption
-- `gobuster-directory-scanner-guide.md` - Directory/file brute-forcing
-- `metasploit-penetration-testing-guide.md` - Penetration testing framework
-- `nmap-network-scanner-guide.md` - Network scanner
-- `openssl-crypto-toolkit-guide.md` - Cryptography toolkit
+- `eza-modern-ls-guide.md` — Modern replacement for `ls`
+- `fd-file-finder-guide.md` — Fast file finder
+- `trash-safe-delete-guide.md` — Safe file deletion
+- `tree-directory-viewer-guide.md` — Directory structure viewer
+- `zoxide-directory-jumper-guide.md` — Smart directory jumper
 
-#### **Multimedia** (`multimedia/`)
-- `ffmpeg-media-converter-guide.md` - Video/audio processing
-- `ghostscript-pdf-processor-guide.md` - PostScript/PDF interpreter
-- `imagemagick-image-editor-guide.md` - Image manipulation
-- `lame-mp3-encoder-guide.md` - MP3 encoder
-- `yt-dlp-video-downloader-guide.md` - YouTube downloader
+#### Multimedia (`multimedia/`)
 
-#### **Utilities** (`utilities/`)
-- `ca-certificates-ssl-guide.md` - Certificate authority bundle
-- `fzf-fuzzy-finder-guide.md` - Fuzzy finder
-- `glow-markdown-viewer-guide.md` - Markdown renderer
-- `gum-shell-ui-guide.md` - Shell script UI components
-- `hyperfine-benchmark-guide.md` - Benchmarking tool
-- `mas-app-store-cli-guide.md` - Mac App Store CLI
-- `ollama-ai-model-guide.md` - Run LLMs locally
-- `pandoc-document-converter-guide.md` - Universal document converter
-- `tldr-command-helper-guide.md` - Simplified man pages
-- `zenity-dialog-creator-guide.md` - Display GTK dialogs
+- `ffmpeg-media-converter-guide.md` — Video/audio processing
+- `ghostscript-pdf-processor-guide.md` — PostScript/PDF interpreter
+- `imagemagick-image-editor-guide.md` — Image manipulation
+- `lame-mp3-encoder-guide.md` — MP3 encoder
+- `yt-dlp-video-downloader-guide.md` — YouTube downloader
 
-#### **Databases** (`databases/`)
-- `redis-database-guide.md` - In-memory data store
-- `sqlite-database-guide.md` - Embedded database
+#### Network Tools (`network-tools/`)
+
+- `aria2-download-manager-guide.md` — Download manager
+- `curl-http-client-guide.md` — Data transfer tool
+- `dog-dns-client-guide.md` — DNS lookup tool
+- `gping-graphical-ping-guide.md` — Ping with graph
+- `httpie-api-testing-guide.md` — HTTP client
+- `wget-download-tool-guide.md` — File downloader
+- `wget2-improved-download-guide.md` — Next-generation wget
+
+#### Security Tools (`security-tools/`)
+
+- `age-encryption-guide.md` — File encryption
+- `burp-suite guide.md` — Web vulnerability testing
+- `gobuster-directory-scanner-guide.md` — Directory/file brute-forcing
+- `hashcat guide.md` — Password recovery
+- `metasploit-penetration-testing-guide.md` — Penetration testing framework
+- `nmap-network-scanner-guide.md` — Network scanner
+- `openssl-crypto-toolkit-guide.md` — Cryptography toolkit
+
+#### Shells (`shells/`)
+
+- `atuin-shell-history-guide.md` — Shell history sync
+- `fish-shell-guide.md` — Friendly interactive shell
+- `fizsh-shell-guide.md` — Friendly interactive zsh
+- `tmux-terminal-multiplexer-guide.md` — Terminal multiplexer
+- `zsh-shell-guide.md` — Z shell
+
+#### System Monitoring (`system-monitoring/`)
+
+- `btop-system-monitor-guide.md` — Resource monitor (CPU, memory, processes)
+- `cava-audio-visualizer-guide.md` — Console audio visualizer
+- `duf-disk-usage-guide.md` — Disk usage utility
+- `ncdu-disk-analyzer-guide.md` — NCurses disk usage analyzer
+- `neofetch-system-info-guide.md` — System information display
+
+#### Text Processing (`text-processing/`)
+
+- `bat-enhanced-cat-guide.md` — Cat with syntax highlighting
+- `gawk-text-processing-guide.md` — GNU AWK text processor
+- `grep-text-search-guide.md` — Pattern searching
+- `jq-json-processor-guide.md` — JSON processor
+- `ripgrep-all-universal-search-guide.md` — Ripgrep for all file types
+- `ripgrep-fast-search-guide.md` — Fast recursive grep
+- `sd-find-replace-guide.md` — Find and replace
+
+#### Utilities (`utilities/`)
+
+- `ca-certificates-ssl-guide.md` — Certificate authority bundle
+- `fzf-fuzzy-finder-guide.md` — Fuzzy finder
+- `glow-markdown-viewer-guide.md` — Markdown renderer
+- `gum-shell-ui-guide.md` — Shell script UI components
+- `hyperfine-benchmark-guide.md` — Benchmarking tool
+- `mas-app-store-cli-guide.md` — Mac App Store CLI
+- `ollama-ai-model-guide.md` — Run LLMs locally
+- `pandoc-document-converter-guide.md` — Universal document converter
+- `tldr-command-helper-guide.md` — Simplified man pages
+- `zenity-dialog-creator-guide.md` — Display GTK dialogs
 
 ---
 
@@ -94,146 +110,338 @@ Command-line tools and utilities organized by function:
 
 Each programming language has its own directory containing the language guide and all related frameworks, packages, and tools.
 
-#### **AppleScript** (`apple-script/`)
-- `applescript-complete-guide.md` - Complete AppleScript tutorial
+#### AppleScript (`apple-script/`)
 
-#### **Automator** (`automator/`)
-- `mac-automator-complete-guide.md` - Complete Automator tutorial
+- `apple script guide.md` — AppleScript tutorial
 
-#### **C Programming** (`c-programming/`)
-- `c-arm-mac-guide.md` - C on Apple Silicon guide
+#### Automator (`automator/`)
 
-#### **C++** (`c++/`)
-- `cpp-arm-mac-guide.md` - C++ on Apple Silicon guide
+- `mac-automator-complete-guide.md` — Complete Automator tutorial
 
-#### **Nim** (`nim/`)
-- `nim-programming-guide.md` - Nim programming tutorial
+#### C++ (`c++/`)
 
-#### **Swift** (`swift/`)
-- `swift-programming-guide.md` - Swift programming tutorial
+- `cpp-arm-mac-guide.md` — C++ on Apple Silicon guide
 
-#### **Python** (`python/`)
-Complete Python ecosystem in one place:
+#### C Programming (`c-programming/`)
 
-- `python-complete-guide.md` - Complete Python tutorial
-- `standard-library/` - Python standard library modules (30+ categories)
+- `c programming/c guide on arm mac.md` — C on Apple Silicon guide
 
-**Frameworks & Tools:**
-- `web-frameworks/` - Django, Flask, FastAPI
-- `gui/` - EasyGUI, FreeSimpleGUI, Pygame, PyWebView
-- `data-science/` - NumPy, Pandas, Matplotlib, SciPy, Seaborn
-- `utilities/` - Pydantic, Cerberus, Jinja2, FFmpeg, Redis, Wand
+#### Google Apps Script (`google-apps-script/`)
 
-#### **JavaScript** (`javascript/`)
-Complete JavaScript ecosystem in one place:
-
-**Core:**
-- `runtimes/` - `bun-runtime-guide.md`
-
-**Frameworks:**
-- `bun-express-stack-guide.md` - Bun + Express + databases
-- `express-bun-redis-guide.md` - Express with Redis
-- `express-bun-sqlite-guide.md` - Express with SQLite
-- `neutralinojs-guide.md` - Lightweight desktop apps
-
-**Packages:**
-- `packages/cli/` - CLI tools (e.g., `clack-prompts-guide.md`, `cli-spinners-guide.md`)
-- `packages/templating/` - Templating (e.g., `sweetalert2-guide.md`)
-- `packages/utilities/` - Utilities (e.g., `axios-http-client-guide.md`, `es-toolkit-guide.md`)
-
-#### **PHP** (`php/`)
-- `php-complete-guide.md` - Complete PHP tutorial
-
-#### **Rust** (`rust/`)
-- `rust-complete-guide.md` - Complete Rust tutorial
-
-#### **TypeScript** (`typescript/`)
-- `typescript-complete-guide.md` - Complete TypeScript tutorial
-
-#### **V Language** (`vlang/`)
-- `vlang-complete-guide.md` - Complete V language tutorial
-
-#### **Google Apps Script** (`google-apps-script/`)
 - `gmail-automation-guide.md`
 - `google-docs-automation-guide.md`
 - `google-drive-automation-guide.md`
 - `google-sheets-automation-guide.md`
 - `youtube-api-automation-guide.md`
 
+#### HTML/CSS/JavaScript Frontend (`html-css-javascript-frontend/`)
+
+- `html_css_javascript_frontend/bootstrap 5 guide.md`
+- `html_css_javascript_frontend/html css and javascript complete guide.md`
+- `html_css_javascript_frontend/w3 css complete guide.md`
+
+#### JavaScript (`javascript/`)
+
+- **Frameworks**
+  - `bun-express-stack-guide.md`
+  - `express-bun-mysql-guide.md`
+  - `express-bun-redis-guide.md`
+  - `express-bun-sqlite-guide.md`
+  - `neutralinojs-guide.md`
+- **Packages**
+  - `cli/`
+    - `boxen.md`
+    - `chalk.md`
+    - `clack-prompts-guide.md`
+    - `cli-progress.md`
+    - `cli-spinners-guide.md`
+    - `cli-table3.md`
+    - `consola.md`
+    - `enquier.md`
+    - `inquirer.md`
+    - `nanospinner.md`
+    - `ora.md`
+    - `progress.md`
+    - `prompts.md`
+  - `templating/`
+    - `ejs.md`
+    - `sweetalert2-guide.md`
+  - `utilities/`
+    - `axios-http-client-guide.md`
+    - `es-toolkit-guide.md`
+
+#### Nim (`nim/`)
+
+- `nim-programming-guide.md` — Nim programming tutorial
+
+#### PHP (`php/`)
+
+- `php-complete-guide.md` — Complete PHP tutorial
+
+#### Python (`python/`)
+
+- `python-complete-guide.md` — Complete Python tutorial
+- **Data Science**
+  - `matplotlib.md`
+  - `numpy.md`
+  - `pandas.md`
+  - `scipy.md`
+  - `seaborn.md`
+- **GUI**
+  - `easygui.md`
+  - `freesimplegui.md`
+  - `pygame.md`
+  - `pywebview.md`
+- **Standard Library** (Too many to list)
+- **Utilities**
+  - `ceberus.md`
+  - `ffmpeg.md`
+  - `jinja2.md`
+  - `pydantic.md`
+  - `redis.md`
+  - `wand.md`
+- **Web Frameworks**
+  - `django.md`
+  - `fastapi.md`
+  - `flask.md`
+
+#### Rust (`rust/`)
+
+- `rust-complete-guide.md` — Complete Rust tutorial
+
+#### Swift (`swift/`)
+
+- `swift-programming-guide.md` — Swift programming tutorial
+
+#### TypeScript (`typescript/`)
+
+- `typescript-complete-guide.md` — Complete TypeScript tutorial
+
+#### V Language (`vlang/`)
+
+- `vlang-complete-guide.md` — Complete V language tutorial
+
 ---
 
 ### 🖥️ System (`system/`)
 
-#### **macOS** (`macos/`)
-- `mac-keyboard-shortcuts-guide.md` - macOS keyboard shortcuts
-- `macbook-pro-tips-guide.md` - MacBook tips and tricks
+#### macOS (`macos/`)
 
-#### **Terminal** (`terminal/`)
-- `terminal-basics-guide.md` - Terminal usage guide
+- `mac-docker-ubuntu-manager.md` — Manage Ubuntu in Docker on macOS
+- `mac-keyboard-shortcuts-guide.md` — macOS keyboard shortcuts
+- `macbook-pro-tips-guide.md` — MacBook tips and tricks
+
+#### Terminal (`terminal/`)
+
+- `terminal-basics-guide.md` — Terminal usage guide
 
 ---
 
 ### 🔢 Mathematics (`mathematics/`)
-- `mental-math-techniques.md` - Mental math techniques and tips
 
----
-
-## 🔍 Quick Find Guide
-
-### Looking for...
-
-**A command-line tool?** → `cli-tools/[category]/`
-- File operations → `file-management/`
-- System info → `system-monitoring/`
-- Text editing → `editors/` or `text-processing/`
-- Network tasks → `network-tools/`
-- Security/pentesting → `security-tools/`
-
-**Programming language basics?** → `programming/[language]/`
-- Python → `programming/python/python-complete-guide.md`
-- JavaScript → `programming/javascript/runtimes/`
-- PHP, Rust, TypeScript, V → `programming/[language]/[language]-complete-guide.md`
-
-**Language-specific packages/frameworks?** → `programming/[language]/[category]/`
-- JavaScript packages → `programming/javascript/packages/`
-- Python packages → `programming/python/[web-frameworks|gui|data-science|utilities]/`
-
-**System configuration?** → `system/[os]/`
+- `mental-math-techniques.md` — Mental math techniques and tips
 
 ---
 
 ## 📊 Statistics
 
-- **Total Categories**: 50+ directories
-- **Total Tutorials**: 117+ markdown files
-- **Languages Covered**: JavaScript, Python, PHP, Rust, TypeScript, V, Google Apps Script, AppleScript, C, C++, Nim, Swift, Automator
-- **CLI Tools**: 51+ tools documented
-- **Python Packages**: 20+ packages across web, GUI, data science, utilities
-- **JavaScript Packages**: 20+ packages across CLI, templating, utilities
+- Top-level categories: 4 (`cli-tools`, `programming`, `system`, `mathematics`)
+- Total tutorials: 722 markdown files
+- Languages covered: JavaScript, Python, PHP, Rust, TypeScript, V, Google Apps Script, AppleScript, C, C++, Nim, Swift, Automator, HTML/CSS/JS Frontend
+- CLI tools documented: 63
+- Python packages (web, GUI, data, utilities): 18
+- JavaScript packages (CLI, templating, utilities): 17
+
+Note: Counts are generated from the current repository and may change as new content is added.
 
 ---
 
 ## 🚀 Recent Updates
 
-**October 2025** - Complete reorganization:
+October 2025 — Reorganization and content refresh:
 
-- Moved from flat structure to organized categories
-- Renamed files for clarity (e.g., `vlang.md` → `vlang-complete-guide.md`)
-- Created logical groupings for CLI tools
-- **Consolidated each language into ONE location** with all related content
-- Each language directory now contains its guide, packages, frameworks, and tools
-- Added subcategories for better navigation
+- Fully updated the entire file structure to reflect all 722 tutorials.
+- Grouped CLI tools by category and added Docker ARM Mac guides
+- Added Postgres and MySQL/MSQL database guides
+- Mapped programming sections to actual files and added HTML/CSS/JS Frontend
+- Fixed mismatched filenames in overview (e.g., AppleScript, C on ARM Mac, Burp/Hashcat)
+- Updated statistics to reflect current repository
 
 ---
 
 ## 📝 Contributing
 
 When adding new tutorials:
+
 1. Choose the appropriate category
-2. Use descriptive filenames (lowercase, hyphenated)
+2. Use descriptive filenames (lowercase; hyphenated where possible)
 3. Include proper markdown headers and structure
-4. Update this README if adding new categories
+4. Update this overview if adding new categories
 
 ---
 
-**Last Updated**: October 15, 2025
+Last updated: October 16, 2025
+
+
+---
+
+### 💻 Programming (`programming/`)
+
+Each programming language has its own directory containing the language guide and all related frameworks, packages, and tools.
+
+#### AppleScript (`apple-script/`)
+- `apple script guide.md` — AppleScript tutorial
+
+#### Automator (`automator/`)
+- `mac-automator-complete-guide.md` — Complete Automator tutorial
+
+#### C++ (`c++/`)
+- `cpp-arm-mac-guide.md` — C++ on Apple Silicon guide
+
+#### C Programming (`c-programming/`)
+- `c programming/c guide on arm mac.md` — C on Apple Silicon guide
+
+#### Google Apps Script (`google-apps-script/`)
+- `gmail-automation-guide.md`
+- `google-docs-automation-guide.md`
+- `google-drive-automation-guide.md`
+- `google-sheets-automation-guide.md`
+- `youtube-api-automation-guide.md`
+
+#### HTML/CSS/JavaScript Frontend (`html-css-javascript-frontend/`)
+- `html_css_javascript_frontend/bootstrap 5 guide.md`
+- `html_css_javascript_frontend/html css and javascript complete guide.md`
+- `html_css_javascript_frontend/w3 css complete guide.md`
+
+#### JavaScript (`javascript/`)
+- **Frameworks**
+  - `bun-express-stack-guide.md`
+  - `express-bun-mysql-guide.md`
+  - `express-bun-redis-guide.md`
+  - `express-bun-sqlite-guide.md`
+  - `neutralinojs-guide.md`
+- **Packages**
+  - `cli/`
+    - `boxen.md`
+    - `chalk.md`
+    - `clack-prompts-guide.md`
+    - `cli-progress.md`
+    - `cli-spinners-guide.md`
+    - `cli-table3.md`
+    - `consola.md`
+    - `enquier.md`
+    - `inquirer.md`
+    - `nanospinner.md`
+    - `ora.md`
+    - `progress.md`
+    - `prompts.md`
+  - `templating/`
+    - `ejs.md`
+    - `sweetalert2-guide.md`
+  - `utilities/`
+    - `axios-http-client-guide.md`
+    - `es-toolkit-guide.md`
+
+#### Nim (`nim/`)
+- `nim-programming-guide.md` — Nim programming tutorial
+
+#### PHP (`php/`)
+- `php-complete-guide.md` — Complete PHP tutorial
+
+#### Python (`python/`)
+- `python-complete-guide.md` — Complete Python tutorial
+- **Data Science**
+  - `matplotlib.md`
+  - `numpy.md`
+  - `pandas.md`
+  - `scipy.md`
+  - `seaborn.md`
+- **GUI**
+  - `easygui.md`
+  - `freesimplegui.md`
+  - `pygame.md`
+  - `pywebview.md`
+- **Standard Library** (Too many to list)
+- **Utilities**
+  - `ceberus.md`
+  - `ffmpeg.md`
+  - `jinja2.md`
+  - `pydantic.md`
+  - `redis.md`
+  - `wand.md`
+- **Web Frameworks**
+  - `django.md`
+  - `fastapi.md`
+  - `flask.md`
+
+#### Rust (`rust/`)
+- `rust-complete-guide.md` — Complete Rust tutorial
+
+#### Swift (`swift/`)
+- `swift-programming-guide.md` — Swift programming tutorial
+
+#### TypeScript (`typescript/`)
+- `typescript-complete-guide.md` — Complete TypeScript tutorial
+
+#### V Language (`vlang/`)
+- `vlang-complete-guide.md` — Complete V language tutorial
+
+---
+
+### 🖥️ System (`system/`)
+
+#### macOS (`macos/`)
+- `mac-docker-ubuntu-manager.md` — Manage Ubuntu in Docker on macOS
+- `mac-keyboard-shortcuts-guide.md` — macOS keyboard shortcuts
+- `macbook-pro-tips-guide.md` — MacBook tips and tricks
+
+#### Terminal (`terminal/`)
+- `terminal-basics-guide.md` — Terminal usage guide
+
+---
+
+### 🔢 Mathematics (`mathematics/`)
+
+- `mental-math-techniques.md` — Mental math techniques and tips
+
+---
+
+##  Statistics
+
+- Top-level categories: 4 (`cli-tools`, `programming`, `system`, `mathematics`)
+- Total tutorials: 722 markdown files
+- Languages covered: JavaScript, Python, PHP, Rust, TypeScript, V, Google Apps Script, AppleScript, C, C++, Nim, Swift, Automator, HTML/CSS/JS Frontend
+- CLI tools documented: 63
+- Python packages (web, GUI, data, utilities): 18
+- JavaScript packages (CLI, templating, utilities): 17
+
+Note: Counts are generated from the current repository and may change as new content is added.
+
+---
+
+## 🚀 Recent Updates
+
+October 2025 — Reorganization and content refresh:
+
+- Fully updated the entire file structure to reflect all 722 tutorials.
+- Grouped CLI tools by category and added Docker ARM Mac guides
+- Added Postgres and MySQL/MSQL database guides
+- Mapped programming sections to actual files and added HTML/CSS/JS Frontend
+- Fixed mismatched filenames in overview (e.g., AppleScript, C on ARM Mac, Burp/Hashcat)
+- Updated statistics to reflect current repository
+
+---
+
+## 📝 Contributing
+
+When adding new tutorials:
+
+1. Choose the appropriate category
+2. Use descriptive filenames (lowercase; hyphenated where possible)
+3. Include proper markdown headers and structure
+4. Update this overview if adding new categories
+
+---
+
+Last updated: October 16, 2025
+

@@ -1,6 +1,62 @@
+# Bun + Express Stack Guide
+
+## 🚀 Express + Bun Guides (quick links)
+
+- Production API with views: [Express + Bun + MySQL + EJS](./express-bun-mysql-guide.md)
+- Data store quickstarts:
+  - [Express + Bun + MySQL](./express-bun-mysql-guide.md)
+  - [Express + Bun + Redis](./express-bun-redis-guide.md)
+  - [Express + Bun + SQLite](./express-bun-sqlite-guide.md)
+
+---
+
+## 🧩 Forms & AJAX Starters
+
+Two tiny patterns you’ll use everywhere—full, working examples are in the MySQL+EJS guide.
+
+Classic form (PRG):
+
+- GET a form page (`/users/new`)
+- POST form to `/users`
+- Redirect back to list (`303 -> /users`)
+
+ Minimal examples:
+
+ ```html
+ <!-- Classic form: POST then redirect -->
+ <form method="post" action="/users">
+   <input type="email" name="email" required />
+   <input type="text" name="username" required />
+   <button type="submit">Create</button>
+   <!-- server handles redirect to /users on success (see route below) -->
+ </form>
+ ```
+
+ ```ts
+ // Express route (PRG)
+ app.post('/users', async (req, res) => {
+   // ...create user...
+   res.redirect(303, '/users');
+ });
+ ```
+
+ ```html
+ <!-- Small AJAX: toggle action then reload -->
+ <button id="deactivate">Deactivate</button>
+ <script>
+ document.getElementById('deactivate').addEventListener('click', async () => {
+   const res = await fetch('/api/users/1/deactivate', { method: 'PATCH' });
+   if (res.ok) location.reload();
+ });
+ </script>
+ ```
+
+
+See: [Express + Bun + MySQL + EJS](./express-bun-mysql-guide.md) → “EJS Views (Server-Rendered UI)” section.
+
 ## 📂 PROJECT LAYOUT (copy‑paste)
 
-```
+```text
 my‑api/
 │
 ├─ src/
@@ -15,9 +71,8 @@ my‑api/
 ├─ package.json
 ├─ tsconfig.json
 └─ .env          # optional – see step 2
-```
 
----  
+---
 
 ## ✅ ONE‑TIME SET‑UP (copy‑paste)
 
@@ -52,7 +107,7 @@ EOF
 | 3️⃣  | Implement CRUD endpoints for a `users` table. |
 | 4️⃣  | Start the server on `PORT` (default 3000). |
 
-### Full source – copy‑paste
+### Full source – MySQL (copy‑paste)
 
 ```ts
 // src/server/mysqlServer.ts
@@ -113,7 +168,7 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 app.listen(PORT, () => console.log(`MySQL API listening on ${PORT}`));
 ```
 
-**Run**
+#### Run – MySQL
 
 ```bash
 bun run src/server/mysqlServer.ts
@@ -143,7 +198,7 @@ CREATE TABLE IF NOT EXISTS users (
 | 3️⃣  | JSON helper endpoints (`setJSON` / `getJSON`). |
 | 4️⃣  | Launch the server (default port 3001). |
 
-### Full source – copy‑paste
+### Full source – Redis (copy‑paste)
 
 ```ts
 // src/server/redisServer.ts
@@ -209,7 +264,7 @@ start().catch((e) => {
 });
 ```
 
-**Run**
+#### Run – Redis
 
 ```bash
 bun run src/server/redisServer.ts
@@ -226,7 +281,7 @@ bun run src/server/redisServer.ts
 | 3️⃣  | CRUD routes for notes (`GET /notes`, `POST /notes`, `PUT /notes/:id`, `DELETE /notes/:id`). |
 | 4️⃣  | Launch the server (default port 3002). |
 
-### Full source – copy‑paste
+### Full source – SQLite (copy‑paste)
 
 ```ts
 // src/server/sqliteServer.ts
@@ -290,7 +345,7 @@ const PORT = process.env.PORT ? Number(process.env.PORT) : 3002;
 app.listen(PORT, () => console.log(`SQLite API listening on ${PORT}`));
 ```
 
-**Run**
+#### Run – SQLite
 
 ```bash
 bun run src/server/sqliteServer.ts
@@ -302,23 +357,23 @@ bun run src/server/sqliteServer.ts
 const db = new SQLiteWrapper("./data.db");
 ```
 
----  
+---
 
 ## 📚 OFFICIAL REFERENCE LINKS (copy‑paste)
 
 | Topic | URL |
 |-------|-----|
-| Bun – General documentation | https://bun.com/docs/ |
-| Bun – SQL API (MySQL & SQLite) | https://bun.com/reference/bun/SQL |
-| Bun – MySQL driver (`adapter: "mysql"`) | https://bun.com/reference/bun/SQL/PostgresOrMySQLOptions#adapter |
-| Bun – SQLite driver (`adapter: "sqlite"`) | https://bun.com/reference/bun/SQL/SQLiteOptions |
-| Bun – Redis client | https://bun.com/reference/bun/RedisClient |
-| Express JS (routing, middleware) | https://expressjs.com/ |
-| Your wrapper library (source) | https://github.com/codecaine-zz/bun_database_wrappers |
+| Bun – General documentation | [https://bun.com/docs/](https://bun.com/docs/) |
+| Bun – SQL API (MySQL & SQLite) | [https://bun.com/reference/bun/SQL](https://bun.com/reference/bun/SQL) |
+| Bun – MySQL driver (`adapter: "mysql"`) | [https://bun.com/reference/bun/SQL/PostgresOrMySQLOptions#adapter](https://bun.com/reference/bun/SQL/PostgresOrMySQLOptions#adapter) |
+| Bun – SQLite driver (`adapter: "sqlite"`) | [https://bun.com/reference/bun/SQL/SQLiteOptions](https://bun.com/reference/bun/SQL/SQLiteOptions) |
+| Bun – Redis client | [https://bun.com/reference/bun/RedisClient](https://bun.com/reference/bun/RedisClient) |
+| Express JS (routing, middleware) | [https://expressjs.com/](https://expressjs.com/) |
+| Your wrapper library (source) | [https://github.com/codecaine-zz/bun_database_wrappers](https://github.com/codecaine-zz/bun_database_wrappers) |
 
----  
+---
 
-### 🎉 THAT’S IT!  
+### 🎉 THAT’S IT
 
 You now have three **copy‑and‑paste‑ready** Express servers that run on the ultra‑fast **Bun** runtime and use the `MySQLWrapper`, `RedisWrapper`, and `SQLiteWrapper` you published.  
 

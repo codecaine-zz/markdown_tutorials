@@ -1,6 +1,6 @@
 # Express.js with Bun + Redis — Practical Tutorial (ARM Mac optimized)
 
-Copy‑pasteable guide to build a fast REST API using Express.js on Bun with Redis as the backend, using Bun’s native Redis client. Optimized for Apple Silicon (M1/M2/M3) Macs with simple, readable code.
+Copy‑pasteable guide to build a fast REST API using Express.js on Bun with Redis as the backend, using Bun’s native Redis client. Optimized for Apple Silicon (M1/M2/M3+) Macs with simple, readable code.
 
 ## Table of Contents
 

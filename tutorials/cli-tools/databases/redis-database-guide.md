@@ -9,15 +9,16 @@
 1. [Prerequisites – Homebrew](#1‑prereqs)  
 2. [Install Redis (brew)](#2‑install)  
 3. [Where Homebrew puts Redis](#3‑locations)  
-4. [Start / Stop / Restart the server (brew services)](#4‑service)  
+4. [Start / Stop / Restart the server (brew services)](#4‑service)  
 5. [Interact with the server – `redis-cli`](#5‑cli)  
-6. **[Redis command cheat‑sheet – “set & get” for every native data type](#6‑cheatsheet)** ← **copy‑paste ready**  
+6. **[Redis command cheat‑sheet – "set & get" for every native data type](#6‑cheatsheet)** ← **copy‑paste ready**  
+6a. **[Production-Ready Redis with Database Wrappers (Bun)](#6a‑wrappers)** ← **NEW: Type-safe operations**  
 7. [Config file, `CONFIG REWRITE`, and runtime tweaks](#7‑config)  
 8. [Persistence (RDB, AOF) & backups](#8‑persistence)  
 9. [Security – passwords, ACLs, TLS](#9‑security)  
 10. [Maintenance – `SAVE`, `BGSAVE`, `INFO`, `MEMORY USAGE`](#10‑maintenance)  
 11. [Common mistakes & troubleshooting](#11‑mistakes)  
-12. [Uninstall / clean‑up](#12‑uninstall)  
+12. [Uninstall / clean‑up](#12‑uninstall)
 
 ---  
 
@@ -94,9 +95,368 @@ Inside the REPL you can use the same command syntax as the wire protocol (see th
 ---  
 
 <a name="6‑cheatsheet"></a>
-## 6️⃣ **Redis command cheat‑sheet – “set & get” for every native data type**  
+## 6️⃣ **Redis command cheat‑sheet – "set & get" for every native data type**  
 
 > All commands are ready‑to‑copy‑paste.  Every line links to the official Redis command reference.
+
+### 6.1️⃣ Strings  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Set** | `redis-cli SET name "Alice"`【7†L5-L13】 | <https://redis.io/commands/set> |
+| **Get** | `redis-cli GET name`【17†L4-L11】 | <https://redis.io/commands/get> |
+| **Increment (numeric)** | `redis-cli INCR visits` | <https://redis.io/commands/incr> |
+| **Append** | `redis-cli APPEND notes "more text"` | <https://redis.io/commands/append> |
+| **Set with expiry** | `redis-cli SET session:123 "xyz" EX 300` | <https://redis.io/commands/set> |
+
+### 6.2️⃣ Lists  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Push to head** | `redis-cli LPUSH mylist a b c`【18†L9-L13】 | <https://redis.io/commands/lpush> |
+| **Push to tail** | `redis-cli RPUSH mylist x y` | <https://redis.io/commands/rpush> |
+| **Pop from head** | `redis-cli LPOP mylist`【18†L9-L13】 | <https://redis.io/commands/lpop> |
+| **Pop from tail** | `redis-cli RPOP mylist` | <https://redis.io/commands/rpop> |
+| **Read range** | `redis-cli LRANGE mylist 0 -1`【18†L9-L13】 | <https://redis.io/commands/lrange> |
+| **Index lookup** | `redis-cli LINDEX mylist 2` | <https://redis.io/commands/lindex> |
+| **Trim** (keep a window) | `redis-cli LTRIM mylist 0 99` | <https://redis.io/commands/ltrim> |
+
+### 6.3️⃣ Sets  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Add members** | `redis-cli SADD colors red blue`【19†L5-L13】 | <https://redis.io/commands/sadd> |
+| **Read all members** | `redis-cli SMEMBERS colors` | <https://redis.io/commands/smembers> |
+| **Check membership** | `redis-cli SISMEMBER colors red` | <https://redis.io/commands/sismember> |
+| **Remove members** | `redis-cli SREM colors blue` | <https://redis.io/commands/srem> |
+| **Random member** | `redis-cli SRANDMEMBER colors` | <https://redis.io/commands/srandmember> |
+| **Cardinality** | `redis-cli SCARD colors` | <https://redis.io/commands/scard> |
+
+### 6.4️⃣ Sorted Sets  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Add / update scores** | `redis-cli ZADD scores 100 player1 200 player2`【20†L9-L13】 | <https://redis.io/commands/zadd> |
+| **Read by rank** | `redis-cli ZRANGE scores 0 -1 WITHSCORES` | <https://redis.io/commands/zrange> |
+| **Read by score range** | `redis-cli ZRANGEBYSCORE scores 0 150 WITHSCORES` | <https://redis.io/commands/zrangebyscore> |
+| **Get rank of a member** | `redis-cli ZRANK scores player2` | <https://redis.io/commands/zrank> |
+| **Increment score** | `redis-cli ZINCRBY scores 10 player1` | <https://redis.io/commands/zincrby> |
+| **Remove member** | `redis-cli ZREM scores player2` | <https://redis.io/commands/zrem> |
+
+### 6.5️⃣ Hashes  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Set field(s)** | `redis-cli HSET user:1 name "Bob" age 30`【7†L5-L13】 | <https://redis.io/commands/hset> |
+| **Get single field** | `redis-cli HGET user:1 name` | <https://redis.io/commands/hget> |
+| **Get all fields** | `redis-cli HGETALL user:1` | <https://redis.io/commands/hgetall> |
+| **Delete field** | `redis-cli HDEL user:1 age` | <https://redis.io/commands/hdel> |
+| **Increment numeric field** | `redis-cli HINCRBY user:1 visits 1` | <https://redis.io/commands/hincrby> |
+| **Check field existence** | `redis-cli HEXISTS user:1 name` | <https://redis.io/commands/hexists> |
+
+### 6.6️⃣ Bitmaps  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Set a bit** | `redis-cli SETBIT bits 7 1`【7†L5-L13】 | <https://redis.io/commands/setbit> |
+| **Read a bit** | `redis-cli GETBIT bits 7`【17†L4-L13】 | <https://redis.io/commands/getbit> |
+| **Count set bits** | `redis-cli BITCOUNT bits` | <https://redis.io/commands/bitcount> |
+| **Bitwise AND** | `redis-cli BITOP AND result bits1 bits2` | <https://redis.io/commands/bitop> |
+
+### 6.7️⃣ HyperLogLog  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Add elements** | `redis-cli PFADD visitors ip1 ip2 ip3`【7†L5-L13】 | <https://redis.io/commands/pfadd> |
+| **Get approximate count** | `redis-cli PFCOUNT visitors`【7†L5-L13】 | <https://redis.io/commands/pfcount> |
+| **Merge HLLs** | `redis-cli PFMERGE unique visitors1 visitors2` | <https://redis.io/commands/pfmerge> |
+
+### 6.8️⃣ Streams  
+
+| Operation | Command | Docs |
+|-----------|---------|------|
+| **Append an entry** | `redis-cli XADD mystream * event login user-id 42`【7†L5-L13】 | <https://redis.io/commands/xadd> |
+| **Read a range** | `redis-cli XRANGE mystream - +`【7†L5-L13】 | <https://redis.io/commands/xrange> |
+| **Read last N** | `redis-cli XREVRANGE mystream + - COUNT 10`【7†L5-L13】 | <https://redis.io/commands/xrevrange> |
+| **Trim stream** | `redis-cli XTRIM mystream MAXLEN 1000` | <https://redis.io/commands/xtrim> |
+| **Consumer group** | `redis-cli XGROUP CREATE mystream mygroup $ MKSTREAM` | <https://redis.io/commands/xgroup> |
+| **Read as consumer** | `redis-cli XREADGROUP GROUP mygroup consumer COUNT 10 STREAMS mystream >` | <https://redis.io/commands/xreadgroup> |
+
+---
+
+<a name="6a‑wrappers"></a>
+## 6a️⃣ **Production-Ready Redis with Database Wrappers (Bun)**
+
+> For production applications, use type-safe Redis wrappers that provide automatic resource management, error handling, and full TypeScript support.
+
+### Installation
+
+```bash
+# Install the database wrapper
+bun add https://github.com/codecaine-zz/bun_database_wrappers
+```
+
+### Basic Setup
+
+```javascript
+// redis-client.js
+import { createRedis } from "bun_database_wrappers";
+
+// Create Redis instance with automatic cleanup
+export const redis = await createRedis("redis://localhost:6379");
+
+// Or with options
+export const redis = await createRedis({
+  url: "redis://localhost:6379",
+  // Additional connection options
+});
+```
+
+### Type-Safe JSON Operations
+
+```javascript
+// User session management
+interface UserSession {
+  userId: number;
+  username: string;
+  permissions: string[];
+  expiresAt: number;
+}
+
+// Store session with automatic expiration
+await redis.setJSON<UserSession>("session:abc123", {
+  userId: 42,
+  username: "alice",
+  permissions: ["read", "write"],
+  expiresAt: Date.now() + 3600000
+}, { EX: 3600 }); // Expires in 1 hour
+
+// Retrieve session (type-safe)
+const session = await redis.getJSON<UserSession>("session:abc123");
+if (session) {
+  console.log(`User ${session.username} has permissions:`, session.permissions);
+}
+```
+
+### Caching Patterns
+
+```javascript
+// Read-through cache pattern
+async function getCachedUser(userId: number): Promise<User | null> {
+  const cacheKey = `user:${userId}`;
+  
+  // Try cache first
+  let user = await redis.getJSON<User>(cacheKey);
+  if (user) {
+    console.log("Cache hit");
+    return user;
+  }
+  
+  // Cache miss - fetch from database
+  console.log("Cache miss - fetching from DB");
+  user = await fetchUserFromDatabase(userId);
+  
+  if (user) {
+    // Store in cache for 5 minutes
+    await redis.setJSON(cacheKey, user, { EX: 300 });
+  }
+  
+  return user;
+}
+
+// Write-through cache pattern
+async function updateUser(userId: number, userData: Partial<User>): Promise<User> {
+  // Update database first
+  const updatedUser = await updateUserInDatabase(userId, userData);
+  
+  // Update cache
+  const cacheKey = `user:${userId}`;
+  await redis.setJSON(cacheKey, updatedUser, { EX: 300 });
+  
+  return updatedUser;
+}
+
+// Cache invalidation
+async function deleteUser(userId: number): Promise<void> {
+  await deleteUserFromDatabase(userId);
+  await redis.del(`user:${userId}`);
+}
+```
+
+### Rate Limiting
+
+```javascript
+// Rate limiting with automatic cleanup
+async function checkRateLimit(userId: number, maxRequests = 100, windowSeconds = 60): Promise<boolean> {
+  const key = `ratelimit:${userId}`;
+  
+  // Increment counter
+  const current = await redis.incr(key);
+  
+  // Set expiry on first request
+  if (current === 1) {
+    await redis.setTTL(key, windowSeconds);
+  }
+  
+  return current <= maxRequests;
+}
+
+// Usage in Express middleware
+app.use(async (req, res, next) => {
+  const userId = req.user?.id;
+  if (userId && !await checkRateLimit(userId)) {
+    return res.status(429).json({ error: "Rate limit exceeded" });
+  }
+  next();
+});
+```
+
+### Session Management
+
+```javascript
+// Session store implementation
+class RedisSessionStore {
+  constructor(redis) {
+    this.redis = redis;
+    this.prefix = "session:";
+  }
+  
+  async create(sessionData, ttlSeconds = 3600) {
+    const sessionId = crypto.randomUUID();
+    const key = this.prefix + sessionId;
+    
+    await this.redis.setJSON(key, {
+      ...sessionData,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + (ttlSeconds * 1000)
+    }, { EX: ttlSeconds });
+    
+    return sessionId;
+  }
+  
+  async get(sessionId) {
+    const key = this.prefix + sessionId;
+    return await this.redis.getJSON(key);
+  }
+  
+  async update(sessionId, sessionData, ttlSeconds = 3600) {
+    const key = this.prefix + sessionId;
+    const existing = await this.get(sessionId);
+    
+    if (!existing) return false;
+    
+    await this.redis.setJSON(key, {
+      ...existing,
+      ...sessionData,
+      updatedAt: Date.now()
+    }, { EX: ttlSeconds });
+    
+    return true;
+  }
+  
+  async destroy(sessionId) {
+    const key = this.prefix + sessionId;
+    return await this.redis.del(key) === 1;
+  }
+}
+
+// Usage
+const sessionStore = new RedisSessionStore(redis);
+
+// Create session
+const sessionId = await sessionStore.create({
+  userId: 42,
+  username: "alice"
+});
+
+// Get session
+const session = await sessionStore.get(sessionId);
+```
+
+### Transaction Support
+
+```javascript
+// Atomic operations with transactions
+await redis.transaction([
+  ["SET", "counter", "0"],
+  ["INCR", "counter"],
+  ["GET", "counter"],
+  ["EXPIRE", "counter", 300]
+]);
+
+// Or with the command helper
+const pipeline = redis.pipeline();
+pipeline.cmd("SET", "key1", "value1");
+pipeline.cmd("SET", "key2", "value2");
+pipeline.cmd("INCR", "counter");
+const results = await pipeline.exec();
+```
+
+### Pub/Sub Messaging
+
+```javascript
+// Publisher
+await redis.publish("notifications", JSON.stringify({
+  type: "user_login",
+  userId: 42,
+  timestamp: Date.now()
+}));
+
+// Subscriber
+await redis.subscribe("notifications", (message) => {
+  const data = JSON.parse(message);
+  console.log("Received notification:", data);
+  
+  // Handle different notification types
+  switch (data.type) {
+    case "user_login":
+      handleUserLogin(data);
+      break;
+    case "user_logout":
+      handleUserLogout(data);
+      break;
+  }
+});
+```
+
+### Error Handling
+
+```javascript
+import { DBError } from "bun_database_wrappers";
+
+try {
+  await redis.setJSON("invalid:key", data);
+} catch (error) {
+  if (error instanceof DBError) {
+    console.error("Redis operation failed:");
+    console.error("Operation:", error.context.operation);
+    console.error("Key:", error.context.key);
+    console.error("Cause:", error.cause);
+  }
+}
+```
+
+### Resource Management
+
+```javascript
+// Automatic cleanup with async using (recommended)
+{
+  await using redis = await createRedis("redis://localhost:6379");
+  
+  // Use Redis operations...
+  await redis.setJSON("key", { data: "value" });
+  
+  // Redis connection automatically closed when leaving scope
+}
+
+// Manual cleanup
+const redis = await createRedis("redis://localhost:6379");
+try {
+  // Use Redis operations...
+} finally {
+  await redis.close();
+}
+```
 
 ### 6.1️⃣ Strings  
 
