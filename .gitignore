@@ -1,3 +1,12 @@
+# Node / Bun
+node_modules/
+bun.lockb
+
+# macOS
+.DS_Store
+
+# Logs
+logs/*.log
 # macOS Finder
 .DS_Store
 .DSStore

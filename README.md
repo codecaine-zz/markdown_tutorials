@@ -1054,3 +1054,60 @@ For issues or questions:
 - Check the browser console for JavaScript errors
 - Review PHP error logs in `logs/php_errors.log`
 - Verify file permissions and server configuration
+
+## Bun-based installers for persistent Docker containers
+
+If the Bash installers give you trouble, you can use Bun scripts that perform the same steps, with a friendlier UX:
+
+- `scripts/install-kali-docker-persistent.ts` — sets up a persistent Kali container
+- `scripts/install-ubuntu-docker-persistent.ts` — sets up a persistent Ubuntu container
+
+Prerequisites:
+
+- Bun installed (see <https://bun.sh>). On macOS with Homebrew: `brew install oven-sh/bun/bun`.
+
+Run them:
+
+```bash
+# Dry-run: list external volumes and exit
+DRY_RUN=1 bun run scripts/install-kali-docker-persistent.ts
+
+# Full run: interactive selection of /Volumes mount, installs Docker if needed
+bun run scripts/install-kali-docker-persistent.ts
+
+# Ubuntu variant
+bun run scripts/install-ubuntu-docker-persistent.ts
+```
+
+You can also specify a custom base directory instead of selecting an external `/Volumes` drive:
+
+```bash
+# Use your home folder as the base (creates ~/kali-data or ~/ubuntu-data)
+bun run scripts/install-kali-docker-persistent.ts --path "$HOME"
+bun run scripts/install-ubuntu-docker-persistent.ts --path "$HOME"
+```
+
+Notes:
+
+- Both scripts detect external drives under `/Volumes`, create a `kali-data` or `ubuntu-data` folder for persistence, and bind-mount it at `/data` in the container.
+- If Docker Desktop isn't running, the scripts will automatically start it and wait for the daemon to be ready (60s timeout).
+- If a container named `kali` or `ubuntu` already exists, the script reuses it (`docker start -ai`).
+- On first run, the following languages are automatically installed:
+  - **Python 3** (latest) with pip and venv
+  - **Node.js** (latest LTS)
+  - **Bun** (latest)
+  - **V language** (latest from GitHub)
+
+### Shortcut package scripts
+
+Alternatively, use the bundled package scripts (requires Bun):
+
+```bash
+# Kali
+bun run kali:dry
+bun run kali:install
+
+# Ubuntu
+bun run ubuntu:dry
+bun run ubuntu:install
+```

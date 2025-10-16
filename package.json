@@ -1,0 +1,15 @@
+{
+  "name": "markdown_tutorials",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Markdown tutorials site with Bun-based Docker installers",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "scripts": {
+    "kali:dry": "DRY_RUN=1 bun run scripts/install-kali-docker-persistent.ts",
+    "kali:install": "bun run scripts/install-kali-docker-persistent.ts",
+    "ubuntu:dry": "DRY_RUN=1 bun run scripts/install-ubuntu-docker-persistent.ts",
+    "ubuntu:install": "bun run scripts/install-ubuntu-docker-persistent.ts"
+  }
+}
