@@ -55,6 +55,7 @@ Command-line tools and utilities organized by function:
 #### **Development Tools** (`development-tools/`)
 - `docker-container-guide.md` - Container platform
 - `git-version-control-guide.md` - Version control
+- `mac-docker-ubuntu-manager-guide.md` - Docker Ubuntu container management on Mac
 - `shellcheck-script-lint-guide.md` - Shell script analyzer
 
 #### **Security Tools** (`security-tools/`)
@@ -204,9 +205,9 @@ Complete JavaScript ecosystem in one place:
 ## 📊 Statistics
 
 - **Total Categories**: 50+ directories
-- **Total Tutorials**: 116+ markdown files
+- **Total Tutorials**: 117+ markdown files
 - **Languages Covered**: JavaScript, Python, PHP, Rust, TypeScript, V, Google Apps Script, AppleScript, C, C++, Nim, Swift, Automator
-- **CLI Tools**: 50+ tools documented
+- **CLI Tools**: 51+ tools documented
 - **Python Packages**: 20+ packages across web, GUI, data science, utilities
 - **JavaScript Packages**: 20+ packages across CLI, templating, utilities
 
