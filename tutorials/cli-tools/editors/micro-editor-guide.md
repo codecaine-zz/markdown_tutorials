@@ -1,223 +1,241 @@
-### Table of Contents
+**Micro – A Fast, Friendly Terminal‑Editor**  
+*(Updated 2025‑10‑16 – includes macOS ARM tips & full plugin workflow)*  
 
-1.  [What is `micro`?](https://www.google.com/search?q=%231-what-is-micro)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Basic Usage & The Interface](https://www.google.com/search?q=%234-basic-usage--the-interface)
-5.  [Essential Keybindings](https://www.google.com/search?q=%235-essential-keybindings)
-6.  [The Command Bar (`Ctrl+E`)](https://www.google.com/search?q=%236-the-command-bar-ctrle)
-7.  [Interactive Example: Editing a File](https://www.google.com/search?q=%237-interactive-example-editing-a-file)
-8.  [Uninstallation](https://www.google.com/search?q=%238-uninstallation)
-9.  [Make micro better on macOS (ARM): plugins, tips, and config](https://www.google.com/search?q=%239-make-micro-better-on-macos-arm-plugins-tips-and-config)
+---  
 
------
+## 1️⃣ What is **micro**?  
 
-### 1\. What is `micro`?
-
-`micro` is a modern and intuitive terminal-based text editor. It aims to be a successor to the `nano` editor and a more user-friendly alternative to complex editors like `vim` and `emacs`. Its key advantage is the use of familiar, universal keybindings (like `Ctrl+S` for save and `Ctrl+C` for copy), making it easy to pick up for anyone who has used a graphical text editor. It also includes modern features like syntax highlighting, split panes, and a robust plugin system.
-
-### 2\. Prerequisites
-
-You must have [Homebrew](https://brew.sh/) installed. You can verify your installation by running:
-
-```bash
-brew --version
-```
-
-### 3\. Installation
-
-Install `micro` using a single Homebrew command:
-
-```bash
-brew install micro
-```
-
-### 4\. Basic Usage & The Interface
-
-You can open an existing file or create a new one by providing its name as an argument.
-
-  * **Command:**
-
-    ```bash
-    # Create or open a shell script
-    micro my_script.sh
-    ```
-
-  * **The Main Interface:**
-    When you run the command, `micro` opens a clean, modern editor interface within your terminal.
-
-    **Example Interface:**
-
-    ```text
-    1 │ #!/usr/bin/env bun
-    2 │ 
-    3 │ // A simple Bun script
-    4 │ console.log("Hello from Bun!");
-    5 │ 
-    ~
-    ~
-    ~
-    "~/projects/my_script.sh" 5L, 64B [typescript]
-    Help: ctrl-g, Save: ctrl-s, Find: ctrl-f, Quit: ctrl-q, Command: ctrl-e
-    ```
-
-    The interface consists of the main editing area with line numbers and a status bar at the bottom showing the file path, line/byte count, detected file type, and a hint bar with common commands.
-
-### 5\. Essential Keybindings
-
-`micro` uses keyboard shortcuts that are common in most desktop applications.
-
-  * **File Operations:**
-
-      * `Ctrl+S`: **Save** the current file.
-      * `Ctrl+Q`: **Quit**. If there are unsaved changes, it will prompt you to save first.
-      * `Ctrl+O`: **Open** a file (will show a file prompt).
-      * `Ctrl+G`: Show the main **help** file.
-
-  * **Editing & Selection:**
-
-      * `Ctrl+C`: **Copy** the selected text.
-      * `Ctrl+X`: **Cut** the selected text.
-      * `Ctrl+V`: **Paste** the text from the clipboard.
-      * `Ctrl+Z`: **Undo** the last action.
-      * `Ctrl+Y`: **Redo** the last undone action.
-      * `Ctrl+D`: **Duplicate** the current line or selection.
-      * `Shift` + Arrow Keys: Select text.
-
-  * **Searching:**
-
-      * `Ctrl+F`: **Find**. Opens a search prompt at the bottom.
-      * `Ctrl+N`: Find the **next** occurrence.
-      * `Ctrl+P`: Find the **previous** occurrence.
-      * `Ctrl+A`: **Select all** text in the buffer.
-
-### 6\. The Command Bar (`Ctrl+E`)
-
-Pressing `Ctrl+E` opens a command bar at the bottom, similar to the command palette in VS Code or Sublime Text. Here you can type commands for more advanced actions.
-
-  * **Common Commands:**
-
-      * `vsplit <filename>`: Opens `<filename>` in a **vertical split**.
-      * `hsplit <filename>`: Opens `<filename>` in a **horizontal split**.
-      * `replace`: Opens a prompt to find and replace text.
-      * `goto <line_number>`: Jumps to a specific line number.
-      * `save <new_filename>`: Saves the current buffer to a new file.
-
-    **Example Command Bar View:** After pressing `Ctrl+E` and typing.
-
-    ```text
-    "~/projects/my_script.sh" 5L, 64B [typescript]
-    > vsplit another_script.sh_
-    ```
-
-### 7\. Interactive Example: Editing a File
-
-Let's find a setting in a configuration file, change it, and save.
-
-1.  **Open the file:**
-    ```bash
-    micro ~/.gitconfig
-    ```
-2.  **Find the relevant section:**
-      * Press `Ctrl+F`. The search prompt appears at the bottom.
-      * Type `[user]` and press `Enter`. The cursor will jump to the first match.
-3.  **Edit the text:**
-      * Use the arrow keys to move the cursor to the line with your email address.
-      * Edit the line directly, just as you would in any other editor.
-4.  **Save the file:**
-      * Press `Ctrl+S`. The status bar will flash a "Saved..." message.
-5.  **Quit the editor:**
-      * Press `Ctrl+Q` to close `micro` and return to your shell prompt.
-
-### 8\. Uninstallation
-
-If you need to remove `micro`, you can do so easily with Homebrew.
-
-```bash
-brew uninstall micro
-```
-
-### 9\. Make micro better on macOS (ARM): plugins, tips, and config
-
-The plugin command doesn’t support an “all” meta-package. Install specific plugins by name (space-separated):
-
-```bash
-# List available plugins
-micro -plugin available
-
-# Install a curated set (safe defaults that work well on macOS ARM)
-micro -plugin install \
-  filemanager fzf detectindent editorconfig quickfix snippets jump wc \
-  cheat monokai-dark palettero gotham-colors nordcolors wakatime lsp aspell bookmark joinLines
-
-# See what’s installed
-micro -plugin list
-```
-
-
-### How to Use Installed Plugins in `micro`
-
-Once plugins are installed, you can use them as follows:
-
-1. **Via the Command Bar:**
-  - Press `Ctrl+E` to open the command bar at the bottom.
-  - Type the plugin command (e.g., `filemanager`, `fzf`, `quickfix`) and press `Enter`.
-
-2. **With Keybindings:**
-  - Assign plugin commands to custom keys in `~/.config/micro/bindings.json`. Example:
-    ```json
-    {
-     "Alt-f": "command:fzf",
-     "Alt-b": "command:filemanager",
-     "Alt-q": "command:quickfix"
-    }
-    ```
-
-3. **Plugin Examples:**
-  - `filemanager`: Opens a file tree sidebar.
-  - `fzf`: Fuzzy file finder for quick file access.
-  - `quickfix`: Shows diagnostics/errors if available.
-  - `cheat`: Opens built-in cheatsheets.
-  - `snippets`: Expands common code snippets.
-
-4. **List Installed Plugins:**
-  - Run `micro -plugin list` in your terminal to see all installed plugins.
-
-5. **Get Help:**
-  - Press `Ctrl+G` in `micro` for the help menu, or check plugin documentation online for more details.
+Micro is a modern, *terminal‑based* text editor that strives for the “nano‑style” simplicity while offering features that you expect from a full‑featured IDE: syntax highlighting, split panes, multiple cursors, a Lua‑powered plugin system and **default key‑bindings that match most graphical editors** (Ctrl + S, Ctrl + C, etc.).  It is written in Go, distributed as a single static binary and works on macOS, Linux and BSD [2†L4-L7]​.
 
 ---
 
-Notes
+## 2️⃣ Prerequisites  
 
-- fzf and ripgrep are recommended for fast file and text search: `brew install fzf ripgrep`.
-- aspell needs dictionaries: `brew install aspell`.
-- wakatime needs an API key in `~/.wakatime.cfg`.
-- lsp requires language servers per language (e.g., `brew install lua-language-server gopls typescript-language-server`), then they’ll be auto-detected.
+| Platform | What you need | How to check |
+|----------|--------------|--------------|
+| macOS (Apple Silicon or Intel) | Homebrew (or the `curl` installer) | `brew --version` |
+| Linux (Debian/Ubuntu, Fedora, Arch, etc.) | `curl` or your distro’s package manager | `curl --version` |
+| BSD | `pkg` (FreeBSD) or `ports` | `pkg --version` |
 
-Optional settings (`~/.config/micro/settings.json`)
+> **Tip:** The `curl` installer works everywhere and does not require a package manager: `curl https://getmic.ro | bash` [2†L8-L10].
+
+---
+
+## 3️⃣ Installation  
+
+| Method | Command | Notes |
+|--------|---------|-------|
+| **Homebrew** (macOS) | `brew install micro` | Official formula, supports Apple‑Silicon bottles [11†L4-L8][11†L21-L27] |
+| **APT** (Ubuntu/Debian) | `sudo apt install micro` | Packages are usually a few versions behind upstream. |
+| **DNF** (Fedora) | `sudo dnf install micro` | |
+| **Pacman** (Arch) | `sudo pacman -S micro` | |
+| **Curl (any OS)** | `curl https://getmic.ro | bash` | Installs the latest release to `$HOME/.local/bin`. Add that directory to `$PATH` if needed. |
+
+After installation, verify:
+
+```bash
+micro -version   # → e.g. micro 2.0.14
+```
+
+---
+
+## 4️⃣ First‑Run – The Interface  
+
+```bash
+micro hello.go
+```
+
+You’ll see a clean pane with line numbers, a status bar and a *help hint bar*:
+
+```
+1 │ package main
+2 │
+3 │ import "fmt"
+4 │
+5 │ func main() {
+6 │     fmt.Println("Hello")
+7 │ }
+~                              
+"hello.go" 7L, 94B [go]  Help: ctrl-g  Save: ctrl-s  Find: ctrl-f  Quit: ctrl-q  Cmd: ctrl-e
+```
+
+* **Top line** – line numbers (toggle with **Ctrl + R**).  
+* **Bottom line** – file name, line/byte count, detected filetype and quick‑access hints.
+
+---
+
+## 5️⃣ Essential Key‑Bindings (the “default keys”)  
+
+| Action | Key(s) | Description |
+|--------|--------|-------------|
+| **File** | **Ctrl + S** – save | `Save` the current buffer [1†L36-L37] |
+| | **Ctrl + O** – open | Prompt for a file name [1†L34-L38] |
+| | **Ctrl + Q** – quit | Prompt if there are unsaved changes [1†L32-L33] |
+| **Navigation** | **Ctrl + R** – toggle line numbers [1†L23-L24] |
+| | **Ctrl + L** – go to line | Prompt for a line number |
+| | **Ctrl + ← / →** – word‑wise move [1†L66-L69] |
+| **Editing** | **Ctrl + C / V / X** – copy / paste / cut [1†L54-L57] |
+| | **Ctrl + Z / Y** – undo / redo [1†L58-L60] |
+| | **Ctrl + D** – duplicate line [1†L60-L61] |
+| | **Ctrl + K** – cut whole line [1†L57-L58] |
+| | **Alt + Up / Down** – move line(s) [1†L72-L74] |
+| **Search** | **Ctrl + F** – find [1†L25-L27] |
+| | **Ctrl + N / P** – next / previous match [1†L26-L27] |
+| **Splits & Tabs** | **Ctrl + \\** – vertical split [1†L41-L45] |
+| | **Ctrl + ]** – horizontal split [1†L41-L45] |
+| | **Ctrl + T** – new tab [1†L46-L51] |
+| **Command Bar** | **Ctrl + E** – open command palette [1†L10-L13] |
+
+*You can view the full printable list inside micro with **Ctrl + G** → *Keybindings*.*
+
+---
+
+## 6️⃣ The Command Bar (`Ctrl + E`)  
+
+The command bar works like VS Code’s *Command Palette*. Type a command and press **Enter**.
+
+| Command | Example | What it does |
+|--------|---------|--------------|
+| `vsplit <file>` | `vsplit notes.md` | Open *notes.md* in a **vertical split** |
+| `hsplit <file>` | `hsplit logs.txt` | Open in a **horizontal split** |
+| `replace <search> <replace>` | `replace foo bar` | Simple find‑and‑replace |
+| `goto <line>` | `goto 42` | Jump to line 42 |
+| `save <new‑name>` | `save backup.txt` | Save buffer under a new name |
+| `plugin install <name>` | `plugin install fzf` | Install a plugin (see § 9) |
+
+The bar also accepts *shell commands* prefixed with `!` (e.g. `!git status`).
+
+---
+
+## 7️⃣ Interactive Example – Editing Your `~/.gitconfig`
+
+```bash
+micro ~/.gitconfig
+```
+
+1. **Search** – `Ctrl + F`, type `[user]`, **Enter**.  
+2. **Move** – Arrow keys to the `email = …` line.  
+3. **Edit** – Simply start typing; micro works in *insert* mode by default.  
+4. **Save** – `Ctrl + S`.  
+5. **Quit** – `Ctrl + Q`.
+
+You’ve just made a change without ever leaving the terminal!
+
+---
+
+## 8️⃣ Uninstalling  
+
+| Platform | Command |
+|----------|---------|
+| Homebrew (macOS) | `brew uninstall micro` |
+| APT (Ubuntu) | `sudo apt purge micro` |
+| Snap (any) | `snap remove micro` |
+| Curl install | Delete `$HOME/.local/bin/micro` (or wherever you copied it). |
+
+---
+
+## 9️⃣ Super‑charging micro on macOS ARM (Apple Silicon)  
+
+### 9.1 Plugin Manager Basics  
+
+- List all available plugins:  
+
+  ```bash
+  micro -plugin available
+  ```
+
+- Install one or many plugins (space‑separated):  
+
+  ```bash
+  micro -plugin install filemanager fzf quickfix snippets nordcolors wakatime lsp
+  ```
+
+- Verify installation:  
+
+  ```bash
+  micro -plugin list
+  ```
+
+> There is **no** “`all`” meta‑package; trying `micro -plugin install all` yields *“unknown plugin ‘all’”* (a common source of confusion).
+
+### 9.2 Recommended macOS ARM Stack  
+
+| Tool | Why | Install |
+|------|-----|----------|
+| **fzf** | Fuzzy file picker (used by `fzf` plugin) | `brew install fzf` |
+| **ripgrep** | Fast search for `quickfix` | `brew install ripgrep` |
+| **aspell** | Spell‑checking (used by `aspell` plugin) | `brew install aspell` |
+| **Language servers** (e.g. `lua-language-server`, `gopls`, `typescript-language-server`) | Enables the `lsp` plugin’s auto‑completion/diagnostics | `brew install lua-language-server gopls typescript-language-server` |
+| **WakaTime** | Automatic coding‑time tracking | `brew install wakatime` + add API key in `~/.wakatime.cfg` |
+
+### 9.3 Persisting Settings  
+
+Create `~/.config/micro/settings.json` (micro creates the directory on first run):
 
 ```json
 {
-  "colorscheme": "monokai-dark",
+  "colorscheme": "nordcolors",
   "tabstospaces": true,
   "tabsize": 4,
   "autoindent": true,
-  "softwrap": true
+  "softwrap": true,
+  "clipboard": "external"          // use system clipboard on macOS
 }
 ```
 
-Optional keybindings (`~/.config/micro/bindings.json`)
+### 9.4 Custom Key‑Bindings  
+
+Add or override shortcuts in `~/.config/micro/bindings.json`:
 
 ```json
 {
-  "Alt-f": "command:fzf",
-  "Alt-b": "command:filemanager",
-  "Alt-q": "command:quickfix"
+  "Alt-f": "command:fzf",          // fuzzy find
+  "Alt-b": "command:filemanager",  // sidebar file tree
+  "Alt-q": "command:quickfix",    // diagnostics pane
+  "Alt-l": "command:lsp:diagnostics"
 }
 ```
 
-Troubleshooting “Unknown plugin \"all\"”
+### 9.5 Using Plugins  
 
-- There is no `all` plugin. Use `micro -plugin available` to see valid names and install the ones you want: `micro -plugin install name1 name2 ...`.
-- If a plugin fails to load, run `micro -debug` and check the log path printed at startup.
+1. Open the command bar (`Ctrl + E`).  
+2. Type the plugin name (e.g. `fzf`) and hit **Enter** – the plugin’s UI appears.  
+3. Many plugins expose extra commands that can also be bound in `bindings.json` (see the plugin’s GitHub README for full list).
+
+### 9.6 Troubleshooting  
+
+| Symptom | Fix |
+|---------|-----|
+| *“unknown plugin ‘all’”* | Install plugins individually; run `micro -plugin available` to see valid names. |
+| Plugin fails to load | Start micro with `micro -debug` – the debug log path is printed; inspect it for “cannot find …” errors. |
+| Clipboard doesn’t work | Ensure `clipboard = "external"` in `settings.json` and that `pbcopy`/`pbpaste` are in your `$PATH`. |
+| LSP shows no diagnostics | Verify the language‑server binary is installed and reachable (`which gopls`). |
+
+---
+
+## 📚 Quick‑Reference Cheat Sheet  
+
+| Action | Shortcut |
+|--------|----------|
+| **Save** | `Ctrl + S` |
+| **Quit** | `Ctrl + Q` |
+| **Open file** | `Ctrl + O` |
+| **Command palette** | `Ctrl + E` |
+| **Find / Replace** | `Ctrl + F` → `replace …` |
+| **Vertical split** | `Ctrl + \` |
+| **Horizontal split** | `Ctrl + ]` |
+| **New tab** | `Ctrl + T` |
+| **Undo / Redo** | `Ctrl + Z` / `Ctrl + Y` |
+| **Copy / Cut / Paste** | `Ctrl + C` / `Ctrl + X` / `Ctrl + V` |
+| **Duplicate line** | `Ctrl + D` |
+| **Move line up/down** | `Alt + ↑ / ↓` |
+| **Toggle line numbers** | `Ctrl + R` |
+| **Go to line** | `Ctrl + L` |
+| **Open file manager (plugin)** | `Alt + B` (after binding) |
+| **Fuzzy find (plugin)** | `Alt + F` (after binding) |
+
+---
+
+### 🎉 That’s it!
+
+You now have a **complete, cross‑platform micro workflow**, from installation to daily key‑bindings, to a robust plugin setup tuned for macOS ARM. Feel free to experiment with Lua configuration files (`init.lua`) for even deeper customisation – the editor’s docs are reachable via **Ctrl + G → *Help → *Configuration***. Happy editing!  
