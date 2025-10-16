@@ -48,7 +48,6 @@ Command-line tools and utilities organized by function:
 
 #### **Editors** (`editors/`)
 - `micro-editor-guide.md` - Modern terminal text editor
-- `micro-editor-interactive-guide.md` - Interactive micro tutorial
 - `nano-editor-guide.md` - Simple terminal text editor
 - `neovim-editor-guide.md` - Vim-based text editor
 
@@ -59,6 +58,7 @@ Command-line tools and utilities organized by function:
 - `shellcheck-script-lint-guide.md` - Shell script analyzer
 
 #### **Security Tools** (`security-tools/`)
+- `burp-suite-guide.md` - Web vulnerability scanner
 - `age-encryption-guide.md` - File encryption
 - `gobuster-directory-scanner-guide.md` - Directory/file brute-forcing
 - `metasploit-penetration-testing-guide.md` - Penetration testing framework
