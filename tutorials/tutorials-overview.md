@@ -315,6 +315,7 @@ Each programming language has its own directory containing the language guide an
 
 #### JavaScript (`javascript/`)
 - **Frameworks**
+  - `bun-javascript-guide.md`
   - `bun-express-stack-guide.md`
   - `express-bun-mysql-guide.md`
   - `express-bun-redis-guide.md`
