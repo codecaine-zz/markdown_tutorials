@@ -1,871 +1,1081 @@
-# 🐍 Complete **Python 3.14 Development Guide for Apple Silicon (ARM) Mac**  
-*(Now includes SQLite, Redis, MySQL **plus** ready‑made helpers for `requests` and Jinja2)*  
+# Python Utils Library – Complete Guide 📚
 
-> No prior programming experience required. Every action is explained, every command is ready‑to‑paste, and every code snippet is a reusable function you can drop into a real project. All links point to the official Python 3.14 documentation (or the library’s own docs) so you can dig deeper whenever you like.
+**A beginner-friendly, copy-paste-ready collection of Python helper functions**
 
----  
+This guide shows you how to use a single Python file (`utils.py`) that contains helpful tools for common programming tasks. No complicated setup required – just copy what you need!
 
-## Table of Contents
-0. [Quick‑Start Checklist](#0-quick-start-checklist)  
-1. [Why Python on an ARM Mac?](#1-why-python-on-an-arm-mac)  
-2. [What You’ll Need](#2-what-youll-need)  
-3. [Install the Tools (Xcode CLT, Homebrew, pyenv, venv, Extras + Database Clients)](#3-install-the-tools)  
-4. [Set Up Visual Studio Code (VS Code)](#4-set-up-vs-code)  
-5. [Your First Project – “Hello, Python!” (with a tiny DB demo)](#5-your-first-project)  
-6. [Build | Run | Test | Format (pip, pytest, black, ruff) – Including DB & HTTP Packages](#6-build-run-test-format)  
-7. [Debugging Inside VS Code (debugpy)](#7-debugging-with-debugpy)  
-8. [Reusable Example Gallery (Pure Python + Database Helpers + Basic‑Type Helpers + HTTP & Jinja2 Helpers)](#8-reusable-example-gallery)  
-   * 8.1 [Strings & Text Helpers](#81-strings--text-helpers)  
-   * 8.2 [Numbers, Validation & Safe Math](#82-numbers-validation--safe-math)  
-   * 8.3 [Error‑Handling Patterns (Exceptions & Result‑like Types)](#83-error‑handling-patterns)  
-   * 8.4 [Data‑Classes, Protocols & SOLID‑Friendly Design](#84-data‑classes‑protocols‑solid)  
-   * 8.5 [Collections & Iterators](#85-collections‑iterators)  
-   * 8.6 [Filesystem Helpers](#86-filesystem-helpers)  
-   * 8.7 [HTTP & JSON (`requests` + `httpx`)](#87-http‑json)  
-   * **8.8 [Requests Helper Functions]**(#88-requests-helper-functions)  
-   * **8.9 [Jinja2 Template Helpers]**(#89-jinja2-template-helpers)  
-   * 8.10 [Async I/O with `asyncio` & `httpx`](#8a-async-io-with-asyncio--httpx)  
-   * 8.11 [Command‑Line Interfaces (`argparse` + `click`)](#8b-cli)  
-   * 8.12 [Concurrency with Threads & Queues](#8c-concurrency)  
-   * 8.13 [Database Helpers (SQLite, Redis, MySQL)](#8d-database-helpers)  
-   * 8.14 [Basic‑Type Helpers (lists‑of‑dicts, dict merging, safe access, dataclass ↔ dict, etc.)](#8e-basic-type-helpers)  
-9. [SOLID Principles in Everyday Python (including DB & HTTP code)](#9‑solid‑principles)  
-10. [Best‑Practice Checklist (with DB & HTTP items)](#10‑best‑practice‑checklist)  
-11. [Common Pitfalls & Quick Fixes (DB & HTTP‑focused)](#11‑pitfalls)  
-12. [Handy Keyboard Shortcuts (macOS)](#12‑shortcuts)  
-13. [Further Learning & Official References](#13‑resources)  
-14. [macOS‑Specific Tips (Universal Binaries, Signing, Homebrew Formulae)](#14‑macos‑tips)
+---
 
----  
+## 📋 Table of Contents
 
-## 0️⃣ Quick‑Start Checklist (expanded)
+1. [Getting Started](#getting-started)
+2. [String Tools](#string-tools) – Text manipulation
+3. [Number Tools](#number-tools) – Math operations
+4. [Dictionary Tools](#dictionary-tools) – Working with data
+5. [Set Tools](#set-tools) – Unique collections
+6. [Collection Tools](#collection-tools) – Lists and groups
+7. [File Path Tools](#file-path-tools) – Managing folders and files
+8. [File Operations](#file-operations) – Reading and writing files
+9. [Database Tools](#database-tools) – SQLite database helpers
 
-| ✅ | Action | Why it matters |
-|---|--------|----------------|
-| 1 | **Install Xcode Command‑Line Tools** | Supplies `clang`, `lldb` and SDK headers needed by native wheels. |
-| 2 | **Install Homebrew** (optional) | One‑line installs for system libs (`openssl`, `sqlite`, `redis`, `mysql-client`). |
-| 3 | **Install `pyenv` + Python 3.14** | Manages multiple Python versions, guarantees an ARM‑optimized interpreter. |
-| 4 | **Create a virtual environment** (`python -m venv .venv`) | Isolates dependencies per project. |
-| 5 | **Install DB clients** (`brew install sqlite redis mysql-client`) | Gives you the server binaries and C headers required by the Python drivers. |
-| 6 | **Install VS Code + extensions** (`Python`, `Pylance`, `debugpy`, `Ruff`, `Black`) | Full IntelliSense, linting, auto‑formatting and a debugger. |
-| 7 | **Add HTTP & templating packages** to `requirements.txt` (`requests`, `jinja2`) | Provides the modern, *arm64* wheels you’ll use for REST calls and HTML rendering. |
-| 8 | **Scaffold a project** (`mkdir hello && cd hello && python -m venv .venv && code .`) | Gives you a clean directory ready for code. |
-| 9 | **Run the test‑format chain** (`pytest && black . && ruff check . --fix`) | Verifies the toolchain works and keeps code tidy. |
+---
 
-All commands are copy‑and‑paste ready – see the detailed sections below.
+## 🚀 Getting Started {#getting-started}
 
----  
+### What is this?
 
-## 1️⃣ Why Python on an ARM Mac?
+Think of this as a toolbox full of pre-made solutions for common tasks like:
+- Converting text formats (e.g., "Hello World" → "hello_world")
+- Reading/writing files (JSON, CSV, text files)
+- Working with databases
+- Managing file paths and folders
 
-| Benefit | What it means for you |
-|--------|-----------------------|
-| **Native Apple‑Silicon wheels** | CPython 3.14 ships `macos‑arm64` wheels for almost every package, including `requests` and `jinja2`. |
-| **Huge ecosystem** | `pip` gives you >300 k packages – web, data‑science, AI, macOS‑specific bindings (`pyobjc`, `metal`). |
-| **Fast prototyping** | Batteries‑included stdlib (`pathlib`, `asyncio`, `dataclasses`) let you spin up scripts in seconds. |
-| **Cross‑platform** | Same source runs on macOS, Linux, Windows, Docker and even WebAssembly (`pyodide`). |
-| **Apple‑specific bindings** | Packages like `pyobjc`, `metal` expose macOS APIs directly from Python. |
+### How to use it?
 
----  
+**Option 1: Import everything**
+```python
+import utils
 
-## 2️⃣ What You’ll Need
-
-| Item | Minimum version |
-|------|-----------------|
-| macOS 12+ (Monterey) | – |
-| Xcode Command‑Line Tools | – |
-| Homebrew (optional) | 4.x |
-| `pyenv` | 2.x |
-| **Python 3.14** | 3.14.0 |
-| VS Code | 1.90+ |
-| Internet connection | – |
-
----  
-
-## 3️⃣ Install the Tools (Xcode CLT, Homebrew, `pyenv`, venv, **Database Clients**)
-
-Open **Terminal** (`⌘ Space → “Terminal” → ⏎`) and run each block exactly as shown.
-
-### 3.1 Xcode Command‑Line Tools
-```bash
-xcode-select --install
-```
-*Docs:* <https://developer.apple.com/library/archive/technotes/tn2339/_index.html>
-
-### 3.2 Homebrew (highly recommended)
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-# Follow the on‑screen instructions (adds /opt/homebrew to your PATH)
-```
-*Docs:* <https://brew.sh/>
-
-### 3.3 Install `pyenv` and **Python 3.14**
-```bash
-brew install pyenv
-
-# Initialise pyenv for zsh (adjust for bash/fish if needed)
-echo 'eval "$(pyenv init --path)"' >> ~/.zprofile
-echo 'eval "$(pyenv init -)"'       >> ~/.zshrc
-source ~/.zshrc
-
-# Install the latest stable 3.14 release (ARM‑native)
-pyenv install 3.14.0
-pyenv global 3.14.0          # Makes it the default for this user
-```
-*Docs:* <https://github.com/pyenv/pyenv#readme>
-
-### 3.4 Verify the toolchain
-```bash
-python3 --version      # → Python 3.14.0
-pip3   --version      # → pip 24.x (or newer)
+# Use any tool with the "utils." prefix
+result = utils.StringHelper.slugify("My Blog Post")
 ```
 
-> **If you ever need an Intel‑only interpreter** (e.g., to test Rosetta‑only wheels):  
-```bash
-pyenv install 3.14.0 --arch x86_64
+**Option 2: Import only what you need** (recommended)
+```python
+from utils import StringHelper, FileHelper
+
+# Now use them directly
+result = StringHelper.slugify("My Blog Post")
+data = FileHelper.read_json("config.json")
 ```
 
-### 3.5 Install optional native libraries **including DB clients**
-```bash
-# Core dev libs
-brew install pkg-config openssl@3
+---
 
-# Database tools
-brew install sqlite       # sqlite3 CLI & headers
-brew install redis        # redis‑server & redis‑cli
-brew install mysql-client # client binaries and headers (server can be started via `brew services start mysql`)
+## 📝 String Tools {#string-tools}
 
-# Hint for OpenSSL (add to ~/.zshrc)
-export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig:$PKG_CONFIG_PATH"
+**What it does:** Helps you manipulate and transform text.
+
+### Available Tools
+
+| Tool | What it does | Example Input | Example Output |
+|------|-------------|---------------|----------------|
+| `slugify()` | Makes text URL-friendly | "Hello World!" | "hello-world" |
+| `to_snake_case()` | Converts to snake_case | "MyClassName" | "my_class_name" |
+| `snake_to_camel()` | Converts to CamelCase | "my_variable" | "MyVariable" |
+| `is_palindrome()` | Checks if text reads same backwards | "racecar" | True |
+| `truncate()` | Shortens long text | "Very long text..." | "Very long..." |
+| `remove_accents()` | Removes accents from letters | "Café" | "Cafe" |
+
+### 📖 Copy-Paste Examples
+
+#### Example 1: Create URL-friendly slugs for blog posts
+
+**Problem:** You have blog titles with spaces and special characters.  
+**Solution:** Convert them to clean URLs.
+
+```python
+from utils import StringHelper
+
+# Your blog title
+title = "10 Tips for Python Programming!"
+
+# Make it URL-friendly
+url_slug = StringHelper.slugify(title)
+
+print(f"URL: https://myblog.com/{url_slug}")
+# Output: https://myblog.com/10-tips-for-python-programming
 ```
 
-### 3.6 Create a project folder and a virtual environment
-```bash
-mkdir -p ~/python-projects
-cd ~/python-projects
-python3 -m venv .venv          # creates isolated environment
-source .venv/bin/activate      # you’ll see (venv) in the prompt
-python -m pip install --upgrade pip setuptools wheel
-```
+#### Example 2: Convert API data to Python style
 
----  
+**Problem:** API returns data with camelCase but Python uses snake_case.  
+**Solution:** Convert all keys automatically.
 
-## 4️⃣ Set Up Visual Studio Code (VS Code)
+```python
+from utils import StringHelper
 
-### 4.1 Install VS Code (if you haven’t already)
-```bash
-brew install --cask visual-studio-code
-```
-*Docs:* <https://code.visualstudio.com/docs/setup/mac>
-
-### 4.2 Install the **essential extensions** (⇧ ⌘ X → search & install)
-
-| Extension | Why you need it |
-|-----------|-----------------|
-| **Python** (Microsoft) | Language server, Jupyter, debugging, testing integration. |
-| **Pylance** | Fast type‑checking (Pyright engine). |
-| **debugpy** | Official VS Code debugger for Python (installed automatically with the Python extension). |
-| **Ruff** | Lightning‑fast linter & autofixer (`ruff check .`). |
-| **Black Formatter** | Automatic `black` formatting on save. |
-| **GitLens** (optional) | Rich Git history, blame, diff view. |
-| **Even Better TOML** (optional) | Syntax highlighting for `pyproject.toml`. |
-
-### 4.3 Recommended `settings.json` (⌘ , → click **Open Settings (JSON)**)
-
-```json
-{
-  // ---------- Python & Pylance ----------
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
-  "python.analysis.typeCheckingMode": "strict",
-  "python.analysis.autoImportCompletions": true,
-  "python.analysis.diagnosticMode": "workspace",
-  "python.testing.unittestEnabled": false,
-  "python.testing.pytestEnabled": true,
-  "python.testing.pytestArgs": ["tests"],
-
-  // ---------- Formatting & Linting ----------
-  "editor.formatOnSave": true,
-  "python.formatting.provider": "black",
-  "python.linting.enabled": true,
-  "python.linting.ruffEnabled": true,
-  "python.linting.pylintEnabled": false,
-
-  // ---------- Debugger ----------
-  "debugpy.console": "integratedTerminal",
-  "debugpy.logging": "debug",
-
-  // ---------- Terminal ----------
-  "terminal.integrated.defaultProfile.osx": "zsh"
+# Data from an API (uses camelCase)
+api_data = {
+    "userName": "john_doe",
+    "userEmail": "john@example.com",
+    "isActive": True
 }
+
+# Convert keys to snake_case
+python_data = {
+    StringHelper.to_snake_case(key): value 
+    for key, value in api_data.items()
+}
+
+print(python_data)
+# Output: {'user_name': 'john_doe', 'user_email': 'john@example.com', 'is_active': True}
 ```
 
----  
+#### Example 3: Shorten text for previews
 
-## 5️⃣ Your First Project – “Hello, Python!” (with a tiny DB demo)
-
-```bash
-mkdir hello_python
-cd hello_python
-# Re‑use the venv we created earlier (adjust the relative path if needed)
-source ../../.venv/bin/activate
-code .                     # opens the folder in VS Code
-```
-
-### 5.1 `src/main.py`
+**Problem:** You need to show a short preview of a long article.  
+**Solution:** Truncate it smartly.
 
 ```python
-#!/usr/bin/env python3
-"""Minimal “Hello, Python!” demo that runs on Apple Silicon.
+from utils import StringHelper
 
-Shows:
-* a friendly greeting
-* a tiny SQLite demo
-* a tiny Redis demo
-* a tiny MySQL demo
-* a tiny Requests demo (GET + JSON handling)
-* a tiny Jinja2 demo (template rendering)
+article = "This is a very long article about Python programming that needs to be shortened for display."
 
-All third‑party wheels are arm64 for Python 3.14.
-"""
+# Shorten to 40 characters
+preview = StringHelper.truncate(article, 40)
 
-from __future__ import annotations
-
-# ----------------------------------------------------------------------
-# Simple greeting utilities
-# ----------------------------------------------------------------------
-def greet(name: str = "friend") -> str:
-    """Return a friendly greeting."""
-    return f"👋 Hello, {name}! Welcome to Python 3.14 on your ARM Mac."
-
-
-def _ask_name() -> str:
-    """Prompt for a name – robust against EOF/KeyboardInterrupt."""
-    try:
-        return input("What is your name? ").strip() or "friend"
-    except (EOFError, KeyboardInterrupt):
-        return "friend"
-
-
-# ----------------------------------------------------------------------
-# DB demo imports
-# ----------------------------------------------------------------------
-from src import db_demo
-
-# ----------------------------------------------------------------------
-# HTTP & templating demo imports
-# ----------------------------------------------------------------------
-from src.http_helpers import get_json, post_json
-from src.jinja_helpers import render_template_string, render_template_file
-
-
-def main() -> None:
-    # ---------- Simple greeting ----------
-    print(greet())
-    print(greet(_ask_name()))
-
-    # ---------- DB demos ----------
-    print("\n--- SQLite demo ------------------------------------------------")
-    db_demo.sqlite_demo()
-
-    print("\n--- Redis demo -------------------------------------------------")
-    db_demo.redis_demo()
-
-    print("\n--- MySQL demo ------------------------------------------------")
-    db_demo.mysql_demo()
-
-    # ---------- HTTP demo ----------
-    print("\n--- Requests demo (GET) --------------------------------------")
-    joke = get_json("https://api.chucknorris.io/jokes/random")
-    print(f"Random joke: {joke['value']}")
-
-    # ---------- Jinja2 demo ----------
-    print("\n--- Jinja2 demo (string template) ---------------------------")
-    tmpl = "Hello {{ name }}, today is {{ day }}."
-    rendered = render_template_string(tmpl, {"name": "Avery", "day": "Friday"})
-    print(rendered)
-
-    # Rendering from a file (assumes a file `templates/hello.txt` exists)
-    # print("\n--- Jinja2 demo (file template) ---------------------------")
-    # rendered_file = render_template_file("templates/hello.txt", {"name": "Avery"})
-    # print(rendered_file)
-
-
-if __name__ == "__main__":
-    main()
+print(preview)
+# Output: "This is a very long article about..."
 ```
 
-### 5.2 `src/db_demo.py` – unchanged (see the **Database Helpers** section later).  
+#### Example 4: Check if a phrase is a palindrome
 
-### 5.3 `src/http_helpers.py` – **Requests Helper Functions**
+**Problem:** Verify if text reads the same forwards and backwards.  
+**Solution:** Use the palindrome checker.
 
 ```python
-#!/usr/bin/env python3
-"""Thin wrappers around the `requests` library that give you:
-* JSON‑aware GET and POST,
-* built‑in timeout & error handling,
-* optional retry logic (via `urllib3.util.retry` if you ever need it).
+from utils import StringHelper
 
-All functions raise `requests.HTTPError` for non‑2xx responses.
-"""
+phrases = [
+    "A man a plan a canal Panama",  # Famous palindrome
+    "hello world",                  # Not a palindrome
+    "racecar"                       # Simple palindrome
+]
 
-from __future__ import annotations
-
-import json
-from typing import Any, Dict, Optional
-
-import requests
-
-DEFAULT_TIMEOUT = 10  # seconds
-
-
-def _handle_response(resp: requests.Response) -> Dict[str, Any]:
-    """Raise for bad status & return JSON payload."""
-    resp.raise_for_status()
-    # Many APIs return JSON; fall back to empty dict if no content.
-    if resp.content:
-        return resp.json()
-    return {}
-
-
-def get_json(url: str, *, params: Optional[Dict[str, Any]] = None,
-             headers: Optional[Dict[str, str]] = None,
-             timeout: int = DEFAULT_TIMEOUT) -> Dict[str, Any]:
-    """
-    Perform a GET request and return the decoded JSON body.
-
-    Example:
-        data = get_json("https://api.example.com/items", params={"page": 2})
-    """
-    resp = requests.get(url, params=params, headers=headers, timeout=timeout)
-    return _handle_response(resp)
-
-
-def post_json(url: str, payload: Dict[str, Any],
-              *, headers: Optional[Dict[str, str]] = None,
-              timeout: int = DEFAULT_TIMEOUT) -> Dict[str, Any]:
-    """
-    Perform a POST request with a JSON body and return the decoded JSON response.
-
-    Example:
-        data = post_json("https://api.example.com/create", {"name": "Bob"})
-    """
-    hdrs = {"Content-Type": "application/json"}
-    if headers:
-        hdrs.update(headers)
-    resp = requests.post(url, data=json.dumps(payload), headers=hdrs, timeout=timeout)
-    return _handle_response(resp)
+for phrase in phrases:
+    if StringHelper.is_palindrome(phrase):
+        print(f"✓ '{phrase}' is a palindrome!")
+    else:
+        print(f"✗ '{phrase}' is NOT a palindrome")
 ```
 
-*Docs:* <https://docs.python-requests.org/>  
+---
 
-### 5.4 `src/jinja_helpers.py` – **Jinja2 Template Helpers**
+## 🔢 Number Tools {#number-tools}
+
+**What it does:** Helps with mathematical operations and number checks.
+
+### Available Tools
+
+| Tool | What it does | Example |
+|------|-------------|---------|
+| `is_prime()` | Checks if number is prime | `is_prime(17)` → True |
+| `is_even()` | Checks if number is even | `is_even(4)` → True |
+| `is_odd()` | Checks if number is odd | `is_odd(5)` → True |
+| `clamp()` | Keeps number within range | `clamp(150, 0, 100)` → 100 |
+| `gcd()` | Greatest common divisor | `gcd(12, 8)` → 4 |
+| `lcm()` | Least common multiple | `lcm(4, 6)` → 12 |
+| `factorial()` | Calculates factorial | `factorial(5)` → 120 |
+
+### 📖 Copy-Paste Examples
+
+#### Example 1: Validate sensor readings
+
+**Problem:** Sensors sometimes give values outside valid range.  
+**Solution:** Clamp them to acceptable limits.
 
 ```python
-#!/usr/bin/env python3
-"""Utility wrappers around Jinja2 for quick string‑or‑file rendering.
+from utils import NumberHelper
 
-* `render_template_string` – render a template provided as a Python string.
-* `render_template_file`   – render a template stored on disk (relative to the project root).
+# Raw sensor readings (some out of range)
+readings = [15.5, -5.0, 110.0, 42.0, 98.5]
 
-Both return the final string and raise `jinja2.TemplateError` on failure.
-"""
+# Keep values between 0 and 100
+valid_readings = [
+    NumberHelper.clamp(reading, 0, 100) 
+    for reading in readings
+]
 
-from __future__ import annotations
+print("Original:", readings)
+print("Clamped:", valid_readings)
+# Output:
+# Original: [15.5, -5.0, 110.0, 42.0, 98.5]
+# Clamped: [15.5, 0, 100, 42.0, 98.5]
+```
 
-import pathlib
-from typing import Any, Dict
+#### Example 2: Separate even and odd numbers
 
-from jinja2 import Environment, FileSystemLoader, TemplateError, select_autoescape
+**Problem:** Split a list of numbers into even and odd groups.  
+**Solution:** Use the even/odd checkers.
 
-# Jinja2 environment – auto‑escape HTML/XML, load templates from the `templates/` folder.
-TEMPLATE_ROOT = pathlib.Path(__file__).parent.parent / "templates"
-env = Environment(
-    loader=FileSystemLoader(str(TEMPLATE_ROOT)),
-    autoescape=select_autoescape(["html", "xml"]),
-    trim_blocks=True,
-    lstrip_blocks=True,
+```python
+from utils import NumberHelper
+
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Separate into even and odd
+evens = [n for n in numbers if NumberHelper.is_even(n)]
+odds = [n for n in numbers if NumberHelper.is_odd(n)]
+
+print("Even numbers:", evens)  # [2, 4, 6, 8, 10]
+print("Odd numbers:", odds)    # [1, 3, 5, 7, 9]
+```
+
+#### Example 3: Find when two repeating tasks coincide
+
+**Problem:** Task A repeats every 12 minutes, Task B every 15 minutes.  
+**Solution:** Find when they happen at the same time.
+
+```python
+from utils import NumberHelper
+
+task_a_interval = 12  # minutes
+task_b_interval = 15  # minutes
+
+# Find when they coincide
+coincide_time = NumberHelper.lcm(task_a_interval, task_b_interval)
+
+print(f"Tasks will coincide every {coincide_time} minutes")
+# Output: Tasks will coincide every 60 minutes
+```
+
+#### Example 4: Simplify a fraction
+
+**Problem:** Reduce a fraction to its simplest form.  
+**Solution:** Use the greatest common divisor.
+
+```python
+from utils import NumberHelper
+
+numerator = 24
+denominator = 36
+
+# Find the GCD
+common_divisor = NumberHelper.gcd(numerator, denominator)
+
+# Simplify the fraction
+simplified_num = numerator // common_divisor
+simplified_den = denominator // common_divisor
+
+print(f"{numerator}/{denominator} = {simplified_num}/{simplified_den}")
+# Output: 24/36 = 2/3
+```
+
+---
+
+## 📦 Dictionary Tools {#dictionary-tools}
+
+**What it does:** Makes working with dictionaries (key-value pairs) easier.
+
+### Available Tools
+
+| Tool | What it does | When to use |
+|------|-------------|-------------|
+| `merge()` | Combines two dictionaries | Merging settings |
+| `deep_merge()` | Combines nested dictionaries | Complex configurations |
+| `flatten()` | Flattens nested structure | Creating env variables |
+| `get_nested()` | Gets value from nested dict | Accessing deep data |
+| `filter_none()` | Removes None values | Cleaning form data |
+
+### 📖 Copy-Paste Examples
+
+#### Example 1: Merge configuration settings
+
+**Problem:** You have default settings and user preferences to combine.  
+**Solution:** Merge them (user settings win).
+
+```python
+from utils import DictHelper
+
+# Default application settings
+defaults = {
+    "theme": "light",
+    "font_size": 12,
+    "auto_save": True
+}
+
+# User preferences (override defaults)
+user_prefs = {
+    "theme": "dark",
+    "font_size": 14
+}
+
+# Merge them together
+final_settings = DictHelper.merge(defaults, user_prefs)
+
+print(final_settings)
+# Output: {'theme': 'dark', 'font_size': 14, 'auto_save': True}
+```
+
+#### Example 2: Access nested data from an API
+
+**Problem:** API returns deeply nested JSON data.  
+**Solution:** Extract values easily without lots of brackets.
+
+```python
+from utils import DictHelper
+
+# Complex API response
+response = {
+    "user": {
+        "profile": {
+            "name": "Alice",
+            "settings": {
+                "theme": "dark",
+                "notifications": True
+            }
+        }
+    }
+}
+
+# Get nested value - Method 1: Using path list
+theme = DictHelper.get_nested(response, ["user", "profile", "settings", "theme"])
+print(f"Theme: {theme}")  # Output: Theme: dark
+
+# Get nested value - Method 2: Using dot notation (easier!)
+theme = DictHelper.deep_get(response, "user.profile.settings.theme")
+print(f"Theme: {theme}")  # Output: Theme: dark
+```
+
+#### Example 3: Clean up form data
+
+**Problem:** Form has optional fields that might be None.  
+**Solution:** Remove all None values before saving.
+
+```python
+from utils import DictHelper
+
+# Form data with some empty fields
+form_data = {
+    "username": "alice",
+    "email": "alice@example.com",
+    "phone": None,           # User didn't provide
+    "address": None,         # User didn't provide
+    "age": 25
+}
+
+# Remove None values
+clean_data = DictHelper.filter_none(form_data)
+
+print(clean_data)
+# Output: {'username': 'alice', 'email': 'alice@example.com', 'age': 25}
+```
+
+#### Example 4: Flatten config for environment variables
+
+**Problem:** Need to convert nested config to flat env variables.  
+**Solution:** Flatten the structure.
+
+```python
+from utils import DictHelper
+
+# Nested configuration
+config = {
+    "app": {
+        "name": "MyApp",
+        "database": {
+            "host": "localhost",
+            "port": 5432
+        }
+    }
+}
+
+# Flatten with underscores
+flat = DictHelper.flatten(config, sep="_")
+
+# Convert to environment variable format
+env_vars = {key.upper(): str(value) for key, value in flat.items()}
+
+print(env_vars)
+# Output:
+# {
+#   'APP_NAME': 'MyApp',
+#   'APP_DATABASE_HOST': 'localhost',
+#   'APP_DATABASE_PORT': '5432'
+# }
+```
+
+---
+
+## 🗂️ Collection Tools {#collection-tools}
+
+**What it does:** Helps organize and process lists and groups of items.
+
+### Available Tools
+
+| Tool | What it does | Example Use |
+|------|-------------|-------------|
+| `chunk()` | Splits list into smaller pieces | Processing 1000 items in batches of 50 |
+| `flatten()` | Combines nested lists | Merging multiple result lists |
+| `group_by()` | Groups items by category | Organizing products by type |
+| `count_occurrences()` | Counts how many of each item | Counting page views |
+| `unique_everseen()` | Removes duplicates | Cleaning tag lists |
+
+### 📖 Copy-Paste Examples
+
+#### Example 1: Process items in batches
+
+**Problem:** You have 1000 user IDs and need to process 25 at a time.  
+**Solution:** Split them into chunks.
+
+```python
+from utils import CollectionHelper
+
+# Large list of user IDs
+user_ids = list(range(1, 101))  # 100 users for this example
+
+# Split into batches of 25
+batches = CollectionHelper.chunk(user_ids, 25)
+
+print(f"Total batches: {len(batches)}")
+
+for i, batch in enumerate(batches, 1):
+    print(f"Batch {i}: {len(batch)} users (IDs {batch[0]} to {batch[-1]})")
+    # Here you would process this batch
+    # send_emails(batch)
+```
+
+#### Example 2: Count page views
+
+**Problem:** Track which pages are most popular on your website.  
+**Solution:** Count occurrences.
+
+```python
+from utils import CollectionHelper
+
+# List of page visits (from log file)
+page_views = [
+    "home", "about", "home", "products", 
+    "home", "about", "contact", "home"
+]
+
+# Count how many times each page was viewed
+view_counts = CollectionHelper.count_occurrences(page_views)
+
+# Sort by most popular
+print("📊 Page Statistics:")
+for page, count in sorted(view_counts.items(), key=lambda x: x[1], reverse=True):
+    print(f"  {page}: {count} views")
+
+# Output:
+# 📊 Page Statistics:
+#   home: 4 views
+#   about: 2 views
+#   products: 1 views
+#   contact: 1 views
+```
+
+#### Example 3: Group products by category
+
+**Problem:** Organize products into categories for display.  
+**Solution:** Use group_by.
+
+```python
+from utils import CollectionHelper
+
+# List of products
+products = [
+    {"name": "Laptop", "category": "Electronics", "price": 1200},
+    {"name": "Mouse", "category": "Electronics", "price": 25},
+    {"name": "Desk", "category": "Furniture", "price": 300},
+    {"name": "Chair", "category": "Furniture", "price": 150},
+    {"name": "Monitor", "category": "Electronics", "price": 400},
+]
+
+# Group by category
+by_category = CollectionHelper.group_by(
+    products, 
+    lambda p: p["category"]  # Group by the "category" field
 )
 
+# Display grouped products
+for category, items in by_category.items():
+    print(f"\n{category}:")
+    for item in items:
+        print(f"  - {item['name']}: ${item['price']}")
 
-def render_template_string(tmpl: str, context: Dict[str, Any]) -> str:
-    """
-    Render a Jinja2 template supplied as a string.
-
-    Example:
-        tmpl = "Hello {{ name }}!"
-        render_template_string(tmpl, {"name": "Avery"})
-    """
-    try:
-        template = env.from_string(tmpl)
-        return template.render(**context)
-    except TemplateError as exc:
-        raise RuntimeError(f"Jinja2 rendering error: {exc}") from exc
-
-
-def render_template_file(filename: str, context: Dict[str, Any]) -> str:
-    """
-    Render a template file located in the `templates/` directory.
-
-    Example:
-        render_template_file("email/welcome.txt", {"name": "Avery"})
-    """
-    try:
-        template = env.get_template(filename)
-        return template.render(**context)
-    except TemplateError as exc:
-        raise RuntimeError(f"Jinja2 rendering error: {exc}") from exc
+# Output:
+# Electronics:
+#   - Laptop: $1200
+#   - Mouse: $25
+#   - Monitor: $400
+# Furniture:
+#   - Desk: $300
+#   - Chair: $150
 ```
 
-*Docs:* <https://jinja.palletsprojects.com/>  
+#### Example 4: Remove duplicate tags
 
----  
-
-## 6️⃣ Build | Run | Test | Format (pip, pytest, black, ruff) – **including DB & HTTP packages**
-
-### 6.1 Add all required packages to `requirements.txt`
-
-```text
-# Core libraries
-requests>=2.32
-httpx[http2]>=0.27
-jinja2>=3.1
-click>=8.1
-
-# Database drivers
-redis>=5.0
-mysql-connector-python>=9.0
-SQLAlchemy>=2.0        # optional ORM
-
-# Linting / formatting / testing
-black
-ruff
-pytest
-```
-
-Install / update:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-### 6.2 Test the new HTTP & Jinja2 helpers
-
-Create **`tests/test_http_and_template.py`**:
+**Problem:** User added duplicate tags to a blog post.  
+**Solution:** Keep unique tags in order.
 
 ```python
-import pathlib
-import pytest
-from src.http_helpers import get_json, post_json
-from src.jinja_helpers import render_template_string, render_template_file
+from utils import CollectionHelper
 
-# ----------------------------------------------------------------------
-# Requests helpers ----------------------------------------------------
-# ----------------------------------------------------------------------
-def test_get_json():
-    joke = get_json("https://api.chucknorris.io/jokes/random")
-    assert "value" in joke
+# Tags with duplicates
+tags = ["python", "web", "python", "api", "web", "database", "python"]
 
-def test_post_json(httpbin= "https://httpbin.org/post"):
-    payload = {"hello": "world"}
-    resp = post_json(httpbin, payload)
-    # httpbin returns the JSON we sent under the key "json"
-    assert resp.get("json") == payload
+# Get unique tags while preserving order
+unique_tags = list(CollectionHelper.unique_everseen(tags))
 
-
-# ----------------------------------------------------------------------
-# Jinja2 helpers ------------------------------------------------------
-# ----------------------------------------------------------------------
-def test_render_template_string():
-    tmpl = "Hi {{ name }}, you are {{ age }}."
-    out = render_template_string(tmpl, {"name": "Avery", "age": 30})
-    assert out == "Hi Avery, you are 30."
-
-def test_render_template_file(tmp_path: pathlib.Path):
-    # Create a temporary template file inside the project's `templates/` folder
-    project_root = pathlib.Path(__file__).parents[2]   # repo root
-    tmpl_dir = project_root / "templates"
-    tmpl_dir.mkdir(exist_ok=True)
-    tmpl_file = tmpl_dir / "greeting.txt"
-    tmpl_file.write_text("Hello {{ name }}!", encoding="utf-8")
-
-    out = render_template_file("greeting.txt", {"name": "Bob"})
-    assert out == "Hello Bob!"
+print("Original tags:", tags)
+print("Unique tags:", unique_tags)
+# Output:
+# Original tags: ['python', 'web', 'python', 'api', 'web', 'database', 'python']
+# Unique tags: ['python', 'web', 'api', 'database']
 ```
 
-Run tests:
+---
 
-```bash
-pytest -q
-# Should see 4 passed (or skip if httpbin is unreachable)
-```
+## 📁 File Path Tools {#file-path-tools}
 
-### 6.3 Formatting & Linting (unchanged)
+**What it does:** Helps manage folders and file paths safely across different operating systems.
 
-```bash
-black .
-ruff check . --fix
-```
+### Available Tools
 
-Both tools run automatically on **Save** thanks to the `settings.json` values.
+| Tool | What it does | Example |
+|------|-------------|---------|
+| `ensure_dir()` | Creates folder if needed | Make "data/exports" folder |
+| `exists()` | Checks if file/folder exists | Check if "config.json" exists |
+| `is_file()` | Checks if path is a file | Verify it's a file |
+| `is_dir()` | Checks if path is a folder | Verify it's a folder |
+| `list_files()` | Lists all files in folder | Find all .txt files |
 
----  
+### 📖 Copy-Paste Examples
 
-## 7️⃣ Debugging Inside VS Code (debugpy)
+#### Example 1: Set up project folders
 
-Same steps as before (Section 7). The debugger will also stop inside the newly added `http_helpers` or `jinja_helpers` modules, giving you full visibility into HTTP response handling or template rendering.
-
----  
-
-## 8️⃣ Reusable Example Gallery (Pure Python + Database Helpers + Basic‑Type Helpers + HTTP & Jinja2 Helpers)
-
-Below is the *full* `src/utils.py`‑style collection. You may keep each logical group in its own file (e.g., `basic_types.py`, `http_helpers.py`, `jinja_helpers.py`) – the imports shown in the guide demonstrate how to use them.
-
-### 8.1 Strings & Text Helpers  
+**Problem:** Your app needs specific folders to exist before running.  
+**Solution:** Create them automatically.
 
 ```python
-def compose_welcome(name: str) -> str:
-    return f"Hi {name}, Python 3.14 is ready on your ARM Mac!"
+from utils import PathHelper
 
+# Define the project structure
+project_name = "my_app"
+folders_needed = [
+    "data",           # For data files
+    "data/raw",       # For raw data
+    "data/processed", # For processed data
+    "logs",           # For log files
+    "exports",        # For exported files
+]
 
-def shout(message: str) -> str:
-    return message.upper()
+# Create all folders
+print("Setting up project folders...")
+for folder in folders_needed:
+    full_path = PathHelper.join(project_name, folder)
+    PathHelper.ensure_dir(full_path)
+    print(f"  ✓ {full_path}")
 
-
-def summarize(text: str, limit: int = 80) -> str:
-    trimmed = text[:limit]
-    return trimmed + ("…" if len(text) > limit else "")
-```
-*Docs:* <https://docs.python.org/3.14/library/stdtypes.html#str>
-
-### 8.2 Numbers, Validation & Safe Math  
-
-```python
-from decimal import Decimal, InvalidOperation
-from typing import Iterable, Optional
-
-def celsius_to_fahrenheit(c: float) -> float:
-    return (c * 9.0 / 5.0) + 32.0
-
-def average(values: Iterable[float]) -> Optional[float]:
-    vals = list(values)
-    return None if not vals else sum(vals) / len(vals)
-
-def safe_division(dividend: float, divisor: float) -> float:
-    if divisor == 0:
-        raise ValueError("Division by zero is not allowed.")
-    return dividend / divisor
-
-def add_money(a: str, b: str) -> Decimal:
-    try:
-        return Decimal(a) + Decimal(b)
-    except InvalidOperation as exc:
-        raise ValueError(f"Invalid monetary value: {exc}") from exc
-```
-*Docs:* <https://docs.python.org/3.14/library/decimal.html>
-
-### 8.3 Error‑Handling Patterns (Exceptions & Result‑like Types)
-
-```python
-from typing import Any
-
-class Result:
-    def __init__(self, ok: Any = None, err: Exception | None = None):
-        self._ok = ok
-        self._err = err
-
-    @property
-    def is_ok(self) -> bool:  return self._err is None
-    @property
-    def is_err(self) -> bool: return self._err is not None
-
-    def unwrap(self) -> Any:
-        if self.is_ok:
-            return self._ok
-        raise self._err
-
-    def unwrap_or(self, default: Any) -> Any:
-        return self._ok if self.is_ok else default
-
-
-def parse_age(text: str) -> Result:
-    try:
-        age = int(text.strip())
-        if age < 0:
-            raise ValueError("Age cannot be negative")
-        return Result(ok=age)
-    except Exception as exc:
-        return Result(err=exc)
-```
-*Docs:* <https://docs.python.org/3.14/tutorial/errors.html>
-
-### 8.4 Data‑Classes, Protocols & SOLID‑Friendly Design  
-
-```python
-from __future__ import annotations
-from dataclasses import dataclass
-from typing import Protocol
-
-class Notifier(Protocol):
-    def notify(self, message: str) -> None: ...
-
-class ConsoleNotifier:
-    def notify(self, message: str) -> None:
-        print(f"[Console] {message}")
-
-@dataclass
-class OnboardingService:
-    notifier: Notifier
-    welcome_template: str = "Welcome aboard, {name}!"
-
-    def register(self, name: str) -> None:
-        self.notifier.notify(self.welcome_template.format(name=name))
-```
-*Docs:* <https://docs.python.org/3.14/library/dataclasses.html> | <https://docs.python.org/3.14/library/typing.html#typing.Protocol>
-
-### 8.5 Collections & Iterators  
-
-```python
-from collections import Counter, defaultdict
-from typing import Iterable, List, Tuple
-
-def tally_tags(tags: Iterable[str]) -> Counter[str]:
-    return Counter(tags)
-
-def active_usernames(users: List[Tuple[str, bool]]) -> List[str]:
-    return [name for name, active in users if active]
-
-def sliding_window(seq: List[int], size: int) -> Iterable[Tuple[int, ...]]:
-    for i in range(len(seq) - size + 1):
-        yield tuple(seq[i:i + size])
-```
-*Docs:* <https://docs.python.org/3.14/library/collections.html>
-
-### 8.6 Filesystem Helpers  
-
-```python
-from pathlib import Path
-import json
-from typing import Any
-
-def save_text(path: str | Path, contents: str) -> None:
-    p = Path(path)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(contents, encoding="utf-8")
-
-def read_text(path: str | Path) -> str:
-    return Path(path).read_text(encoding="utf-8")
-
-def save_json(path: str | Path, data: Any, *, indent: int = 2) -> None:
-    p = Path(path)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(data, indent=indent, ensure_ascii=False), encoding="utf-8")
-
-def read_json(path: str | Path) -> Any:
-    return json.loads(Path(path).read_text(encoding="utf-8"))
-```
-*Docs:* <https://docs.python.org/3.14/library/pathlib.html>
-
-### 8.7 HTTP & JSON (`requests` + `httpx`)
-
-```python
-import requests
-import httpx
-from typing import TypedDict
-
-class Joke(TypedDict):
-    id: str
-    value: str
-
-def fetch_joke_sync() -> Joke:
-    resp = requests.get("https://api.chucknorris.io/jokes/random", timeout=5)
-    resp.raise_for_status()
-    return resp.json()   # type: ignore[assignment]
-
-async def fetch_joke_async() -> Joke:
-    async with httpx.AsyncClient(timeout=5) as client:
-        resp = await client.get("https://api.chucknorris.io/jokes/random")
-        resp.raise_for_status()
-        return resp.json()
-```
-*Docs:* <https://docs.python-requests.org/> | <https://www.python-httpx.org/>
-
-### **8.8 Requests Helper Functions** *(new)*
-
-```python
-# src/http_helpers.py  (see Section 5.3 for the full file)
-
-# The two public helpers are `get_json(url, ...)` and `post_json(url, payload, ...)`.
-# Both raise `requests.HTTPError` on non‑2xx responses and return a decoded JSON dict.
+print("\n✅ Project structure ready!")
 ```
 
-### **8.9 Jinja2 Template Helpers** *(new)*
+#### Example 2: Check if config file exists
+
+**Problem:** Load config if it exists, create default if not.  
+**Solution:** Check before trying to read.
 
 ```python
-# src/jinja_helpers.py  (see Section 5.4 for the full file)
+from utils import PathHelper, FileHelper
 
-# Public helpers:
-#   render_template_string(template_string, context_dict)
-#   render_template_file(filename_relative_to_templates_dir, context_dict)
+config_file = "config.json"
+
+if PathHelper.exists(config_file):
+    print("📂 Loading existing configuration...")
+    config = FileHelper.read_json(config_file)
+else:
+    print("📝 Creating default configuration...")
+    default_config = {
+        "app_name": "My App",
+        "version": "1.0.0",
+        "debug": False
+    }
+    FileHelper.write_json(config_file, default_config)
+    config = default_config
+
+print(f"Configuration: {config}")
 ```
 
-### 8.10 Async I/O with `asyncio` & `httpx`
+#### Example 3: Find all Python files in project
+
+**Problem:** List all Python files for code review.  
+**Solution:** Search recursively.
 
 ```python
-import asyncio
+from utils import PathHelper
+
+project_folder = "my_project"
+
+# Find all Python files (including in subfolders)
+python_files = PathHelper.list_files(
+    project_folder,
+    recurse=True,      # Look in subfolders too
+    pattern="*.py"     # Only Python files
+)
+
+print(f"Found {len(python_files)} Python files:")
+for file in python_files:
+    print(f"  📄 {file}")
+```
+
+---
+
+## 💾 File Operations {#file-operations}
+
+**What it does:** Read and write different file formats easily.
+
+### Supported Formats
+
+| Format | Read Function | Write Function | Common Use |
+|--------|--------------|----------------|------------|
+| Text | `read_text()` | `write_text()` | Logs, notes |
+| JSON | `read_json()` | `write_json()` | Settings, API data |
+| CSV | `read_csv()` | `write_csv()` | Spreadsheet data |
+
+### 📖 Copy-Paste Examples
+
+#### Example 1: Save and load application settings (JSON)
+
+**Problem:** Store user preferences between sessions.  
+**Solution:** Use JSON format.
+
+```python
+from utils import FileHelper, PathHelper
+
+settings_file = "user_settings.json"
+
+# Save settings
+user_settings = {
+    "username": "alice",
+    "theme": "dark",
+    "font_size": 14,
+    "notifications": True
+}
+
+FileHelper.write_json(settings_file, user_settings)
+print("✅ Settings saved!")
+
+# Load settings later
+loaded_settings = FileHelper.read_json(settings_file)
+print(f"Loaded settings: {loaded_settings}")
+```
+
+#### Example 2: Export data to CSV for Excel
+
+**Problem:** Export sales data to Excel-compatible format.  
+**Solution:** Write CSV file.
+
+```python
+from utils import FileHelper
+
+# Sales data to export
+sales_data = [
+    {"date": "2024-01-01", "product": "Laptop", "amount": 1200, "qty": 2},
+    {"date": "2024-01-02", "product": "Mouse", "amount": 25, "qty": 10},
+    {"date": "2024-01-03", "product": "Keyboard", "amount": 75, "qty": 5},
+]
+
+# Export to CSV
+FileHelper.write_csv(
+    "sales_report.csv",
+    sales_data,
+    fieldnames=["date", "product", "amount", "qty"]  # Column order
+)
+
+print("✅ Sales report exported to sales_report.csv")
+print("📊 You can now open it in Excel!")
+```
+
+#### Example 3: Keep an application log
+
+**Problem:** Track what your application does.  
+**Solution:** Append to a log file.
+
+```python
+from utils import FileHelper
 from datetime import datetime
-import httpx
 
-async def remind_in(seconds: int, message: str) -> None:
-    await asyncio.sleep(seconds)
-    print(f"[{datetime.now().isoformat()}] Reminder: {message}")
+log_file = "app.log"
 
-async def run_reminders() -> None:
-    await asyncio.gather(
-        remind_in(1, "Check your linter output"),
-        remind_in(2, "Run pytest"),
-    )
+def log_message(message):
+    """Add a timestamped message to the log."""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    log_entry = f"[{timestamp}] {message}\n"
+    FileHelper.append_text(log_file, log_entry)
 
-async def fetch_and_print_joke() -> None:
-    joke = await fetch_joke_async()
-    print(f"Joke: {joke['value']}")
+# Use it in your application
+log_message("Application started")
+log_message("User logged in: alice")
+log_message("Data processing completed")
+log_message("Application stopped")
 
-def main_async() -> None:
-    asyncio.run(asyncio.gather(run_reminders(), fetch_and_print_joke()))
+# Read the log
+print("📜 Application Log:")
+print(FileHelper.read_text(log_file))
 ```
 
-### 8.11 Command‑Line Interfaces (`argparse` + `click`)
+---
 
-*Same as before – see Sections 8.11 and 8.12 in the original guide.*
+## 🗄️ Database Tools {#database-tools}
 
-### 8.12 Concurrency with Threads & Queues  
+**What it does:** Simple SQLite database operations without writing SQL.
 
-*Same as before – see Section 8.13 in the original guide.*
+### Why SQLite?
+- **No setup needed** – works out of the box
+- **Self-contained** – database is just a file
+- **Perfect for** – small apps, prototypes, local storage
+- **Free forever** – no licensing needed
 
-### 8.13 Database Helpers (SQLite, Redis, MySQL)
+### Available Tools
 
-*Same as Section 8.11 in the original guide (the full `src/db_utils.py` file is reproduced there).*
+| Tool | What it does | Example Use |
+|------|-------------|-------------|
+| `insert()` | Add one record | Save new user |
+| `insert_many()` | Add multiple records | Import data |
+| `select()` | Get records | Load user list |
+| `update()` | Modify records | Update email |
+| `delete()` | Remove records | Delete old logs |
+| `count()` | Count records | Get total users |
 
-### 8.14 Basic‑Type Helpers (lists‑of‑dicts, dict merging, safe access, dataclass ↔ dict, etc.)
+### 📖 Copy-Paste Examples
 
-*Same as Section 8.12 in the original guide (the full `src/basic_types.py` file is reproduced there).*
+#### Example 1: Create a contact book database
 
----  
+**Problem:** Store and retrieve contacts.  
+**Solution:** Simple database with SQLite.
 
-## 9️⃣ SOLID Principles in Everyday Python (including DB & HTTP code)
+```python
+from utils import SQLiteHelper, PathHelper
 
-| Principle | Demonstration in the **HTTP & Jinja2** helpers |
-|-----------|-----------------------------------------------|
-| **Single Responsibility** | `get_json` / `post_json` only handle HTTP, JSON parsing, and error propagation. `render_template_string` / `render_template_file` only handle templating. |
-| **Open / Closed** | To add OAuth‑type authentication you create a new wrapper (e.g., `get_json_auth`) without touching the existing `get_json`. |
-| **Liskov Substitution** | In tests you can swap the real `requests` session with a mock that implements the same `get`/`post` signature. |
-| **Interface Segregation** | The public API is tiny – just two functions per concern. |
-| **Dependency Inversion** | Business code imports `get_json` from `src.http_helpers` (an abstraction) rather than `requests` directly, making the HTTP client swappable. |
+# Create database file
+db_file = "contacts.db"
 
----  
+# Step 1: Create the contacts table
+schema = """
+    CREATE TABLE IF NOT EXISTS contacts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        phone TEXT,
+        email TEXT,
+        notes TEXT
+    );
+"""
 
-## 🔟 Best‑Practice Checklist (with DB & HTTP items)
+SQLiteHelper.execute_script(db_file, schema)
+print("✅ Database created!")
 
-| ✅ | Practice | How to enforce |
-|---|----------|----------------|
-| 1 | **Version‑pin all third‑party wheels** (`pip freeze > requirements.txt`). | Guarantees identical binaries (including `requests` and `jinja2`). |
-| 2 | **Never hard‑code secrets** – load from environment (`os.getenv`) or a `.env` file (`python-dotenv`). |
-| 3 | **Run HTTP tests against a mock server** (`responses` library) or a real test endpoint (httpbin) – see `tests/test_http_and_template.py`. |
-| 4 | **Parameterise all SQL** (`?` for SQLite, `%s` for MySQL). |
-| 5 | **Close DB connections promptly** (`with sqlite_connect(...) as conn:` or explicit `.close()`). |
-| 6 | **Validate external JSON** (use `TypedDict` or `pydantic` if you need strict validation). |
-| 7 | **Use Jinja2 auto‑escaping** (the `Environment` in `jinja_helpers.py` already does this). |
-| 8 | **Run `ruff` & `black` on every commit** (`pre‑commit install`). |
-| 9 | **Upgrade Python monthly** (`pyenv install 3.x.x && pyenv global 3.x.x`). |
-|10 | **Keep helper modules under ~200 logical lines** – split into logical files (`http_helpers.py`, `jinja_helpers.py`, …). |
+# Step 2: Add contacts
+print("\n📝 Adding contacts...")
 
----  
+SQLiteHelper.insert(db_file, "contacts", {
+    "name": "Alice Smith",
+    "phone": "555-0101",
+    "email": "alice@example.com",
+    "notes": "Friend from work"
+})
 
-## 11️⃣ Common Pitfalls & Quick Fixes (DB & HTTP‑focused)
+SQLiteHelper.insert(db_file, "contacts", {
+    "name": "Bob Jones",
+    "phone": "555-0102",
+    "email": "bob@example.com",
+    "notes": "College roommate"
+})
 
-| Symptom | Likely cause | Quick fix |
-|--------|--------------|-----------|
-| `requests.exceptions.ConnectionError` when calling `get_json` | Target URL unreachable or SSL verification failure. | Verify the URL, add `verify=False` *only for debugging*, or ensure the correct proxy settings. |
-| `jinja2.exceptions.TemplateNotFound` | Template file not in the `templates/` folder or wrong relative path. | Ensure `templates/` exists at the project root and that `render_template_file` receives the path relative to that folder. |
-| `UnicodeDecodeError` when reading JSON | Server returns bytes that aren’t UTF‑8. | Pass `response.encoding = "utf-8"` before `response.json()`, or use `response.content.decode("utf-8", errors="replace")`. |
-| `ImportError: No module named 'redis'` after `pip install redis` | Installed in a different interpreter. | Activate the venv (`source .venv/bin/activate`) before installing. |
-| `mysql.connector.errors.InterfaceError: 2002 (HY000): Can't connect to MySQL server` | MySQL server not started or socket mismatch. | `brew services start mysql` or adjust `host`/`port`. |
-| **Rate‑limit errors** (`429 Too Many Requests`) from a third‑party API | Too many rapid requests. | Add simple retry/back‑off logic (`time.sleep` or `urllib3.util.retry.Retry`). |
-| **`TemplateError: unexpected end of template`** | Missing closing tags (`{% endif %}`, `{{ }}`) in a Jinja2 template. | Double‑check the template syntax or enable the Jinja2 linting extension (`Jinja` extension for VS Code). |
+print("✅ Contacts added!")
 
----  
+# Step 3: View all contacts
+print("\n📖 Contact List:")
+contacts = SQLiteHelper.select(db_file, "contacts", order_by="name ASC")
 
-## 12️⃣ Handy Keyboard Shortcuts (macOS)
+for contact in contacts:
+    print(f"\n  Name: {contact['name']}")
+    print(f"  Phone: {contact['phone']}")
+    print(f"  Email: {contact['email']}")
+    if contact['notes']:
+        print(f"  Notes: {contact['notes']}")
+```
 
-| Shortcut | Action in VS Code |
-|----------|--------------------|
-| `⌘ P` | Quick‑open any file. |
-| `⇧ ⌘ P` | Command Palette (search any command). |
-| `⌘ B` | Toggle Explorer sidebar. |
-| `⌘ ⇧ F` | Format document (`black`). |
-| `⌘ /` | Toggle line comment. |
-| `⌥ F12` | Peek definition. |
-| `F5` | Start debugging (uses `debugpy`). |
-| ``⌃ ` `` | Open integrated terminal. |
-| `⌘ Shift D` | Open Run & Debug view. |
-| `⌘ Shift B` | Run VS Code **task** (useful for `ruff check .`). |
+#### Example 2: Track expenses
 
-*Docs:* <https://code.visualstudio.com/shortcuts/keyboard-shortcuts-macos.pdf>
+**Problem:** Keep track of monthly expenses.  
+**Solution:** Store in a database and query by category.
 
----  
+```python
+from utils import SQLiteHelper
 
-## 13️⃣ Further Learning & Official References
+db_file = "expenses.db"
 
-| Topic | Resource |
-|-------|----------|
-| Python 3.14 Language Reference | <https://docs.python.org/3.14/reference/> |
-| What’s New in Python 3.14 | <https://docs.python.org/3.14/whatsnew/3.14.html> |
-| Template String Literals (PEP 750) | <https://peps.python.org/pep-0750/> |
-| Zstandard Compression (`compression.zstd`) (PEP 784) | <https://peps.python.org/pep-0784/> |
-| `sqlite3` module | <https://docs.python.org/3.14/library/sqlite3.html> |
-| `redis-py` documentation | <https://redis-py.readthedocs.io/> |
-| MySQL Connector/Python docs | <https://dev.mysql.com/doc/connector-python/en/> |
-| `requests` library | <https://docs.python-requests.org/> |
-| `jinja2` templating engine | <https://jinja.palletsprojects.com/> |
-| `ruff` – Fast linter | <https://ruff.rs/> |
-| `black` – Code formatter | <https://black.readthedocs.io/> |
-| `pytest` – Testing framework | <https://docs.pytest.org/en/stable/> |
-| `pyenv` – Manage multiple Pythons | <https://github.com/pyenv/pyenv#readme> |
-| Homebrew – macOS package manager | <https://brew.sh/> |
-| VS Code Python Extension | <https://code.visualstudio.com/docs/python/python-tutorial> |
-| `SQLAlchemy` (optional ORM) | <https://docs.sqlalchemy.org/en/20/> |
-| `python-dotenv` – .env file support | <https://github.com/theskumar/python-dotenv> |
-| `keyring` – macOS Keychain wrapper | <https://github.com/jaraco/keyring> |
-| `docker-compose` for DB‑in‑CI | <https://docs.docker.com/compose/> |
+# Setup database
+schema = """
+    CREATE TABLE IF NOT EXISTS expenses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        date TEXT NOT NULL,
+        category TEXT NOT NULL,
+        amount REAL NOT NULL,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+"""
 
----  
+SQLiteHelper.execute_script(db_file, schema)
 
-## 14️⃣ macOS‑Specific Tips (Universal Binaries, Signing, Homebrew Formulae)
+# Add some expenses
+expenses_to_add = [
+    {"date": "2024-01-15", "category": "Food", "amount": 45.50, "description": "Groceries"},
+    {"date": "2024-01-16", "category": "Transport", "amount": 12.00, "description": "Bus fare"},
+    {"date": "2024-01-17", "category": "Food", "amount": 25.00, "description": "Restaurant"},
+    {"date": "2024-01-18", "category": "Entertainment", "amount": 50.00, "description": "Movie tickets"},
+    {"date": "2024-01-19", "category": "Food", "amount": 38.75, "description": "Groceries"},
+]
 
-| Situation | Recommended approach |
-|-----------|----------------------|
-| **Distribute a command‑line tool** | Use **`shiv`** (`pip install shiv`) to bundle the interpreter: <br>`shiv -p "/usr/bin/env python3" -c src.main -o hello` |
-| **Create a universal (arm + intel) wheel** | Build two wheels and combine with `lipo`: <br>`arch -arm64 python -m build -w` <br>`arch -x86_64 python -m build -w` <br>`lipo -create dist/*-arm64.whl dist/*-x86_64.whl -output dist/universal.whl` |
-| **Code signing for Gatekeeper** | After building the executable: <br>`codesign --force --sign "Developer ID Application: Your Name (TEAMID)" path/to/executable` <br>Verify with `spctl --assess --verbose=4 path/to/executable`. |
-| **Notarization (App Store distribution)** | Upload with the new `notarytool`: <br>`xcrun notarytool submit path/to/bundle --apple-id YOURID --password @keychain:AC_PASSWORD --team-id TEAMID` |
-| **Homebrew formula for a CLI** | Write a simple Ruby formula that runs `python -m pip install .` inside a virtualenv; Homebrew will automatically pull the universal CPython binary. |
-| **Access macOS Keychain** | Install `keyring` (`pip install keyring`) – it uses the native Security framework under the hood. |
-| **GPU‑accelerated code** | Install `metal` (`pip install metal`) or the Apple‑Silicon‑optimized `torch` (`pip install torch --extra-index-url https://download.pytorch.org/whl/cpu`). |
-| **Run a script under Rosetta 2** (rare) | Open Terminal with Rosetta (`arch -x86_64 /usr/bin/env bash`) and create an x86_64 venv (`pyenv install 3.14.0 --arch x86_64`). |
+SQLiteHelper.insert_many(db_file, "expenses", expenses_to_add)
+print("✅ Expenses recorded!")
 
----  
+# Get total by category
+query = """
+    SELECT 
+        category,
+        COUNT(*) as count,
+        SUM(amount) as total
+    FROM expenses
+    GROUP BY category
+    ORDER BY total DESC
+"""
 
-# 🎉 You’re Ready!
+summary = SQLiteHelper.execute(db_file, query)
 
-You now have:
+print("\n💰 Expense Summary:")
+for row in summary:
+    print(f"  {row['category']}: ${row['total']:.2f} ({row['count']} transactions)")
 
-* A **fully‑configured ARM‑Mac Python 3.14 environment** (Xcode CLT, Homebrew, `pyenv`, virtualenv).  
-* A **“Hello, Python!”** starter project that demos **SQLite**, **Redis**, **MySQL**, **Requests** (GET + POST JSON) and **Jinja2** templating.  
-* A **complete toolbox** for debugging, testing, formatting, packaging, and linting.  
-* **Database helpers**, **basic‑type helpers**, **HTTP helpers**, **Jinja2 helpers**, plus the previously‑provided collections of generic utilities.  
-* **SOLID‑friendly design patterns**, **best‑practice checklist**, **common pitfalls**, **keyboard shortcuts**, **further resources**, and **macOS‑specific distribution tips**.
+# Output:
+# 💰 Expense Summary:
+#   Food: $109.25 (3 transactions)
+#   Entertainment: $50.00 (1 transactions)
+#   Transport: $12.00 (1 transactions)
+```
 
-Happy coding on your Apple Silicon Mac! 🐍🚀  
+#### Example 3: Simple to-do list app
 
----  
+**Problem:** Create a to-do list that saves between sessions.  
+**Solution:** Use SQLite for persistence.
 
-*All code examples are compatible with **Python 3.14.0**; earlier 3.x versions will work with minor adjustments.*  
+```python
+from utils import SQLiteHelper
+
+db_file = "todos.db"
+
+# Setup database
+schema = """
+    CREATE TABLE IF NOT EXISTS todos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        task TEXT NOT NULL,
+        completed BOOLEAN DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+"""
+
+SQLiteHelper.execute_script(db_file, schema)
+
+def add_task(task_description):
+    """Add a new task."""
+    task_id = SQLiteHelper.insert(db_file, "todos", {
+        "task": task_description,
+        "completed": 0
+    })
+    print(f"✅ Task added (ID: {task_id})")
+
+def complete_task(task_id):
+    """Mark a task as completed."""
+    count = SQLiteHelper.update(
+        db_file,
+        "todos",
+        {"completed": 1},
+        where="id = ?",
+        where_params=(task_id,)
+    )
+    if count > 0:
+        print(f"✓ Task {task_id} marked complete!")
+
+def show_tasks():
+    """Display all tasks."""
+    tasks = SQLiteHelper.select(
+        db_file,
+        "todos",
+        order_by="created_at DESC"
+    )
+    
+    print("\n📋 To-Do List:")
+    if not tasks:
+        print("  (No tasks yet)")
+        return
+    
+    for task in tasks:
+        status = "✓" if task["completed"] else "☐"
+        print(f"  {status} [{task['id']}] {task['task']}")
+
+# Use the to-do list
+add_task("Buy groceries")
+add_task("Write report")
+add_task("Call dentist")
+
+show_tasks()
+
+# Complete a task
+complete_task(1)
+
+show_tasks()
+```
+
+#### Example 4: Search and filter data
+
+**Problem:** Find specific records that match criteria.  
+**Solution:** Use the select function with WHERE conditions.
+
+```python
+from utils import SQLiteHelper
+
+db_file = "products.db"
+
+# Find all electronics under $500
+affordable_electronics = SQLiteHelper.select(
+    db_file,
+    "products",
+    columns="name, price, stock",
+    where="category = ? AND price < ?",
+    where_params=("Electronics", 500),
+    order_by="price ASC"
+)
+
+print("💻 Affordable Electronics:")
+for product in affordable_electronics:
+    print(f"  {product['name']}: ${product['price']} ({product['stock']} in stock)")
+
+# Count how many products in each category
+total_by_category = SQLiteHelper.execute(
+    db_file,
+    """
+        SELECT category, COUNT(*) as total
+        FROM products
+        GROUP BY category
+    """
+)
+
+print("\n📊 Products by Category:")
+for row in total_by_category:
+    print(f"  {row['category']}: {row['total']} products")
+```
+
+---
+
+## 🎯 Quick Reference Card
+
+**Copy this for easy lookup:**
+
+```python
+# STRING OPERATIONS
+from utils import StringHelper
+StringHelper.slugify("Hello World")        # → "hello-world"
+StringHelper.to_snake_case("MyClass")      # → "my_class"
+StringHelper.truncate("Long text...", 20)  # → "Long text..."
+
+# NUMBER OPERATIONS
+from utils import NumberHelper
+NumberHelper.is_prime(17)                  # → True
+NumberHelper.clamp(150, 0, 100)            # → 100
+NumberHelper.lcm(12, 15)                   # → 60
+
+# DICTIONARY OPERATIONS
+from utils import DictHelper
+DictHelper.merge({"a": 1}, {"b": 2})       # → {"a": 1, "b": 2}
+DictHelper.get_nested({"a": {"b": 2}}, ["a", "b"])  # → 2
+
+# COLLECTION OPERATIONS
+from utils import CollectionHelper
+CollectionHelper.chunk(range(10), 3)       # → [[0, 1, 2], [3, 4, 5], [6, 7, 8], [9]]
+CollectionHelper.count_occurrences(["a", "b", "a"])  # → {"a": 2, "b": 1}
+
+# FILE OPERATIONS
+from utils import FileHelper
+FileHelper.write_json("data.json", {"key": "value"})
+data = FileHelper.read_json("data.json")
+FileHelper.write_csv("data.csv", [{"col1": "val1"}])
+
+# PATH OPERATIONS
+from utils import PathHelper
+PathHelper.ensure_dir("data/exports")      # Creates folder
+PathHelper.exists("file.txt")              # Checks if exists
+files = PathHelper.list_files("folder")    # Lists all files
+
+# DATABASE OPERATIONS
+from utils import SQLiteHelper
+SQLiteHelper.insert(db, "users", {"name": "Alice"})
+users = SQLiteHelper.select(db, "users")
+SQLiteHelper.update(db, "users", {"name": "Bob"}, "id = ?", (1,))
+```
+
+---
+
+## 💡 Tips for Beginners
+
+1. **Start Small** – Pick one helper and try it. Don't try to learn everything at once.
+
+2. **Copy-Paste is OK** – All examples are designed to be copied and modified for your needs.
+
+3. **Read Error Messages** – If something doesn't work, Python's error messages usually tell you what's wrong.
+
+4. **Test First** – Try examples with small test data before using with real data.
+
+5. **Use Comments** – Add comments to remember what code does:
+   ```python
+   # This converts the blog title to a URL-friendly format
+   slug = StringHelper.slugify(title)
+   ```
+
+6. **One Step at a Time** – Break complex tasks into smaller steps.
+
+---
+
+## 🆘 Common Issues & Solutions
+
+### Issue: "ModuleNotFoundError: No module named 'utils'"
+
+**Problem:** Python can't find the utils.py file.  
+**Solution:** Make sure `utils.py` is in the same folder as your script.
+
+### Issue: "FileNotFoundError: [Errno 2] No such file"
+
+**Problem:** Trying to read a file that doesn't exist.  
+**Solution:** Check the file path and use `PathHelper.exists()` first:
+```python
+if PathHelper.exists("myfile.txt"):
+    content = FileHelper.read_text("myfile.txt")
+else:
+    print("File doesn't exist!")
+```
+
+### Issue: "sqlite3.OperationalError: no such table"
+
+**Problem:** Trying to use a database table that wasn't created.  
+**Solution:** Run the CREATE TABLE statement first (see database examples).
+
+### Issue: "TypeError: ... got an unexpected keyword argument"
+
+**Problem:** Wrong parameter name or extra parameter.  
+**Solution:** Check the example and make sure parameter names match exactly.
+
+---
+
+## ✅ What You Learned
+
+After reading this guide, you can:
+
+- ✓ Manipulate text (slugs, case conversion, truncation)
+- ✓ Perform number operations (validation, clamping, math)
+- ✓ Work with dictionaries (merge, access nested data)
+- ✓ Process collections (group, count, chunk)
+- ✓ Manage files and folders safely
+- ✓ Read and write JSON, CSV, and text files
+- ✓ Use a SQLite database without writing SQL
+
+---
+
+## 🚀 Next Steps
+
+1. **Try the examples** – Copy one example and run it
+2. **Modify for your needs** – Change the data to match your project
+3. **Combine multiple tools** – Use StringHelper + FileHelper together
+4. **Build something** – Create a small project using these tools
+
+**Remember:** Every expert was once a beginner. Keep practicing! 🎉
