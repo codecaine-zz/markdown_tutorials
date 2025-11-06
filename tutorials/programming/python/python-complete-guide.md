@@ -1,6 +1,6 @@
-# Complete Python Tutorial: From Basics to Standard Library
+# Complete Python Tutorial: From Basics to Standard Library (Python 3.14)
 
-This comprehensive tutorial will guide you through the entire Python language, from basic syntax to using the powerful standard library.
+This comprehensive tutorial will guide you through the entire Python language, from basic syntax to using the powerful standard library, based on the official Python 3.14 documentation.
 
 ## Table of Contents
 1. [Python Basics](#python-basics)
@@ -8,20 +8,22 @@ This comprehensive tutorial will guide you through the entire Python language, f
 3. [Control Structures](#control-structures)
 4. [Functions](#functions)
 5. [Data Structures](#data-structures)
-6. [File Operations](#file-operations)
-7. [Standard Library Overview](#standard-library-overview)
-8. [Essential Standard Library Modules](#essential-standard-library-modules)
+6. [Modules and Packages](#modules-and-packages)
+7. [File Operations](#file-operations)
+8. [Standard Library Overview](#standard-library-overview)
+9. [Essential Standard Library Modules](#essential-standard-library-modules)
+10. [Best Practices](#best-practices)
 
-## Python Basics
+## Python Basics {#python-basics}
 
 ### What is Python?
 
-Python is a high-level, interpreted programming language known for its simplicity and readability. It's widely used for web development, data science, automation, and more.
+Python is an easy-to-learn, powerful programming language. It has efficient high-level data structures and a simple but effective approach to object-oriented programming. Python's elegant syntax and dynamic typing, together with its interpreted nature, make it an ideal language for scripting and rapid application development in many areas on most platforms.
 
-### Installing Python
+### Installing Python 3.14
 
 1. Visit [python.org](https://www.python.org/)
-2. Download the latest version for your operating system
+2. Download Python 3.14 for your operating system
 3. Install with default settings (make sure to add Python to PATH)
 
 ### First Python Program
@@ -41,7 +43,7 @@ python script.py
 python
 ```
 
-## Variables and Data Types
+## Variables and Data Types {#variables-and-data-types}
 
 ### Variable Assignment
 
@@ -105,7 +107,7 @@ bool_true = bool(1)      # True
 bool_false = bool(0)     # False
 ```
 
-## Control Structures
+## Control Structures {#control-structures}
 
 ### Conditional Statements
 
@@ -179,23 +181,37 @@ for i in range(10):
     print(i)      # Prints 0, 1, 2, 4, 5, 6
 ```
 
-### List Comprehensions
+### Pattern Matching (Python 3.10+)
 
 ```python
-# Basic list comprehension
-squares = [x**2 for x in range(10)]
-print(squares)  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+# Match statements (similar to switch)
+def handle_http_status(status):
+    match status:
+        case 200:
+            return "OK"
+        case 404:
+            return "Not Found"
+        case 500:
+            return "Internal Server Error"
+        case _:  # Default case
+            return "Unknown status"
 
-# With conditions
-even_squares = [x**2 for x in range(10) if x % 2 == 0]
-print(even_squares)  # [0, 4, 16, 36, 64]
-
-# Nested comprehensions
-matrix = [[i*j for j in range(3)] for i in range(3)]
-print(matrix)  # [[0, 0, 0], [0, 1, 2], [0, 2, 4]]
+# More complex pattern matching
+def process_point(point):
+    match point:
+        case (0, 0):
+            print("Origin")
+        case (0, y):
+            print(f"Y={y}")
+        case (x, 0):
+            print(f"X={x}")
+        case (x, y):
+            print(f"X={x}, Y={y}")
+        case _:
+            raise ValueError("Not a point")
 ```
 
-## Functions
+## Functions {#functions}
 
 ### Defining Functions
 
@@ -281,7 +297,7 @@ modify_global()
 print(global_var)  # Modified globally
 ```
 
-## Data Structures
+## Data Structures {#data-structures}
 
 ### Lists
 
@@ -315,6 +331,18 @@ numbers.reverse()           # Reverse order
 shopping_list = ["milk", "bread", "eggs"]
 shopping_list.extend(["cheese", "butter"])
 print(shopping_list)  # ['milk', 'bread', 'eggs', 'cheese', 'butter']
+
+# List comprehensions
+squares = [x**2 for x in range(10)]
+print(squares)  # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+
+# With conditions
+even_squares = [x**2 for x in range(10) if x % 2 == 0]
+print(even_squares)  # [0, 4, 16, 36, 64]
+
+# Nested comprehensions
+matrix = [[i*j for j in range(3)] for i in range(3)]
+print(matrix)  # [[0, 0, 0], [0, 1, 2], [0, 2, 4]]
 ```
 
 ### Tuples
@@ -405,58 +433,129 @@ numbers.discard(10)     # Remove element (no error if not found)
 # Set operations example
 unique_chars = set("hello")
 print(unique_chars)  # {'h', 'e', 'l', 'o'}
+
+# Set comprehensions
+a = {x for x in 'abracadabra' if x not in 'abc'}
+print(a)  # {'r', 'd'}
 ```
 
-## File Operations
+## Modules and Packages {#modules-and-packages}
+
+### Creating and Using Modules
+
+```python
+# fibo.py - A custom module
+# Fibonacci numbers module
+
+def fib(n):
+    """Write Fibonacci series up to n."""
+    a, b = 0, 1
+    while a < n:
+        print(a, end=' ')
+        a, b = b, a+b
+    print()
+
+def fib2(n):
+    """Return Fibonacci series up to n."""
+    result = []
+    a, b = 0, 1
+    while a < n:
+        result.append(a)
+        a, b = b, a+b
+    return result
+```
+
+```python
+# main.py - Using the custom module
+import fibo
+
+fibo.fib(1000)
+result = fibo.fib2(100)
+print(result)
+
+# Alternative import methods
+from fibo import fib, fib2
+fib(500)
+
+from fibo import *
+fib(500)
+
+import fibo as f
+f.fib(500)
+```
+
+### Packages
+
+```python
+# Package structure example:
+# sound/                          Top-level package
+#   __init__.py                   Initialize the sound package
+#   formats/                      Subpackage for file format conversions
+#       __init__.py
+#       wavread.py
+#       wavwrite.py
+#   effects/                      Subpackage for sound effects
+#       __init__.py
+#       echo.py
+#       surround.py
+
+# Importing from packages
+import sound.effects.echo
+sound.effects.echo.echofilter(input, output, delay=0.7, atten=4)
+
+from sound.effects import echo
+echo.echofilter(input, output, delay=0.7, atten=4)
+
+from sound.effects.echo import echofilter
+echofilter(input, output, delay=0.7, atten=4)
+```
+
+## File Operations {#file-operations}
 
 ### Reading Files
 
 ```python
 # Basic file reading
 try:
-    with open("example.txt", "r") as file:
+    with open("example.txt", "r", encoding="utf-8") as file:
         content = file.read()
         print(content)
 except FileNotFoundError:
     print("File not found")
 
 # Reading line by line
-with open("example.txt", "r") as file:
+with open("example.txt", "r", encoding="utf-8") as file:
     for line in file:
         print(line.strip())  # strip() removes newline characters
 
 # Reading all lines into a list
-with open("example.txt", "r") as file:
+with open("example.txt", "r", encoding="utf-8") as file:
     lines = file.readlines()
     print(lines)
-
-# Reading with encoding
-with open("example.txt", "r", encoding="utf-8") as file:
-    content = file.read()
 ```
 
 ### Writing Files
 
 ```python
 # Writing to files
-with open("output.txt", "w") as file:
+with open("output.txt", "w", encoding="utf-8") as file:
     file.write("Hello, World!\n")
     file.write("This is a new line")
 
 # Writing multiple lines
 lines = ["Line 1\n", "Line 2\n", "Line 3\n"]
-with open("output.txt", "w") as file:
+with open("output.txt", "w", encoding="utf-8") as file:
     file.writelines(lines)
 
 # Appending to files
-with open("output.txt", "a") as file:
+with open("output.txt", "a", encoding="utf-8") as file:
     file.write("\nThis line is appended")
 
 # Writing with context manager (recommended)
 def write_data_to_file(filename, data):
     """Write data to a file safely."""
     try:
-        with open(filename, "w") as file:
+        with open(filename, "w", encoding="utf-8") as file:
             file.write(data)
         print(f"Data written to {filename}")
     except Exception as e:
@@ -498,11 +597,31 @@ print(file_path)  # data/input.txt
 # Check if path exists
 if file_path.exists():
     print("Path exists")
+
+# File methods
+with open("workfile", "w", encoding="utf-8") as f:
+    f.write("This is a test\n")
+    value = ('the answer', 42)
+    s = str(value)
+    f.write(s)
+
+# Reading with different methods
+with open("workfile", encoding="utf-8") as f:
+    # Read entire file
+    content = f.read()
+    
+    # Read line by line
+    f.seek(0)  # Go back to beginning
+    line = f.readline()
+    
+    # Read all lines
+    f.seek(0)
+    lines = f.readlines()
 ```
 
-## Standard Library Overview
+## Standard Library Overview {#standard-library-overview}
 
-Python's standard library is a collection of modules that provide extensive functionality without requiring external installations. These modules are built into Python and can be used immediately.
+Python's standard library is extensive and provides powerful functionality without requiring external installations. These modules are built into Python and can be used immediately.
 
 ### Key Modules Categories
 
@@ -514,7 +633,7 @@ Python's standard library is a collection of modules that provide extensive func
 6. **Mathematics**: Mathematical operations (math, random)
 7. **System**: System-specific interfaces (platform, subprocess)
 
-## Essential Standard Library Modules
+## Essential Standard Library Modules {#essential-standard-library-modules}
 
 ### 1. `os` Module - Operating System Interface
 
@@ -673,11 +792,11 @@ print(f"Parsed data: {parsed_data}")
 
 # Working with JSON files
 # Writing to file
-with open("data.json", "w") as file:
+with open("data.json", "w", encoding="utf-8") as file:
     json.dump(data, file, indent=2)
 
 # Reading from file
-with open("data.json", "r") as file:
+with open("data.json", "r", encoding="utf-8") as file:
     loaded_data = json.load(file)
     print(f"Loaded data: {loaded_data}")
 
@@ -1356,7 +1475,6 @@ for section in new_config_read.sections():
 Here's a complete example combining various concepts:
 
 ```python
-import requests
 import json
 import sqlite3
 from datetime import datetime
@@ -1466,7 +1584,7 @@ if __name__ == "__main__":
     main()
 ```
 
-## Best Practices and Tips
+## Best Practices and Tips {#best-practices}
 
 ### 1. Use the Standard Library First
 ```python
@@ -1491,7 +1609,7 @@ import os
 def safe_file_operation(filename):
     """Safely handle file operations with proper error handling."""
     try:
-        with open(filename, 'r') as file:
+        with open(filename, 'r', encoding='utf-8') as file:
             content = file.read()
             return content
     except FileNotFoundError:
@@ -1508,7 +1626,7 @@ def safe_file_operation(filename):
 ### 3. Use Context Managers
 ```python
 # Always use context managers for resource management
-with open("file.txt", "r") as f:
+with open("file.txt", "r", encoding="utf-8") as f:
     content = f.read()
 # File is automatically closed
 
@@ -1547,6 +1665,43 @@ def calculate_average(numbers):
         raise TypeError("All elements must be numeric")
 ```
 
+### 5. Follow PEP 8 Style Guide
+```python
+# Good naming conventions
+variable_name = "snake_case_for_variables"
+CONSTANT_VALUE = "UPPER_CASE_FOR_CONSTANTS"
+
+def function_name():  # snake_case for functions
+    pass
+
+class ClassName:  # CamelCase for classes
+    pass
+
+# Proper indentation (4 spaces)
+if True:
+    print("Proper indentation")
+    
+# Line length (maximum 79 characters)
+long_string = ("This is a very long string that should be broken "
+               "into multiple lines for readability")
+```
+
+### 6. Use Type Hints (Python 3.5+)
+```python
+from typing import List, Dict, Optional
+
+def process_data(items: List[str]) -> Dict[str, int]:
+    """Process a list of strings and return a dictionary with counts."""
+    result: Dict[str, int] = {}
+    for item in items:
+        result[item] = result.get(item, 0) + 1
+    return result
+
+def find_item(items: List[str], target: str) -> Optional[str]:
+    """Find an item in a list, return it or None if not found."""
+    return target if target in items else None
+```
+
 ## Conclusion
 
 This comprehensive tutorial covered:
@@ -1554,8 +1709,9 @@ This comprehensive tutorial covered:
 1. **Basic Python Syntax**: Variables, data types, and control structures
 2. **Advanced Data Structures**: Lists, tuples, dictionaries, and sets
 3. **Functions**: Defining, using, and advanced function features
-4. **File Operations**: Reading, writing, and path handling
-5. **Standard Library Modules**: Key modules for practical programming
+4. **Modules and Packages**: Creating and using reusable code
+5. **File Operations**: Reading, writing, and path handling
+6. **Standard Library Modules**: Key modules for practical programming
 
 The Python standard library provides extensive functionality that makes Python a powerful and productive language. By mastering these core concepts and standard library modules, you'll be well-equipped to tackle a wide variety of programming tasks.
 
