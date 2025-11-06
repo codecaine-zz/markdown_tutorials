@@ -1,9 +1,6 @@
-Below is the same tutorial, but every major code‑example now points to the **official TypeScript documentation**.  
-The links are inline (e.g. [Everyday Types] → https://www.typescriptlang.org/docs/handbook/2/everyday-types.html) and a short foot‑note list is also provided for quick reference.
+Based on my research of the latest TypeScript documentation and features, I'll now provide you with an improved and updated TypeScript tutorial that incorporates the newest TypeScript 5.0+ features and best practices.
 
----
-
-# Complete TypeScript Tutorial (TypeScript 5.0+) – Extended Edition with Detailed Best Practices and Gotchas  
+# Complete TypeScript Tutorial (TypeScript 5.0+) – Extended Edition with Detailed Best Practices and Gotchas
 
 ## Table of Contents
 1. [Introduction to TypeScript](#1-introduction-to-typescript)  
@@ -70,7 +67,10 @@ npx tsc --init
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    // TypeScript 5.0+ features
+    "verbatimModuleSyntax": true,
+    "moduleResolution": "bundler"
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
@@ -133,7 +133,7 @@ const numbers: number[] = [1, 2, 3];
 const point: [number, number] = [10, 20];   // tuple
 ```
 
-* **Documentation:** *Arrays* – `T[]` and `Array<T>` syntax, see “Arrays” section【1†L39-L45】  
+* **Documentation:** *Arrays* – `T[]` and `Array<T>` syntax, see "Arrays" section【1†L39-L45】  
 
 ### 4.3 Enums  
 
@@ -173,7 +173,7 @@ if (typeof unknownValue === "string") {
 * Nullish coalescing (`??`) vs logical OR (`||`).  
 * Spread (`...`) for immutable copies.
 
-* **Documentation:** *Operators* – equality, logical, spread, nullish coalescing are covered throughout the handbook (see the “Operators” chapter).  
+* **Documentation:** *Operators* – equality, logical, spread, nullish coalescing are covered throughout the handbook (see the "Operators" chapter).  
 
 ---
 
@@ -218,6 +218,40 @@ function format(value: string | number): string {
 
 * **Documentation:** *Function Types* – signatures, overloads【4†L63-L73】【4†L84-L92】
 
+### 7.3 TypeScript 5.0+ Features: `@overload` in JSDoc
+
+```typescript
+// @ts-check
+
+/**
+ * @overload
+ * @param {string} value
+ * @return {void}
+ */
+
+/**
+ * @overload
+ * @param {number} value
+ * @param {number} [maximumFractionDigits]
+ * @return {void}
+ */
+
+/**
+ * @param {string | number} value
+ * @param {number} [maximumFractionDigits]
+ */
+function printValue(value, maximumFractionDigits) {
+  if (typeof value === "number") {
+    const formatter = Intl.NumberFormat("en-US", {
+      maximumFractionDigits,
+    });
+    value = formatter.format(value);
+  }
+
+  console.log(value);
+}
+```
+
 ---
 
 ## 8. Data Structures  
@@ -230,7 +264,7 @@ const dict = new Map<number, string>();
 dict.set(1, "one");
 ```
 
-* **Documentation:** *ES2015 Collections* – `Set` and `Map` usage (see the “Built‑in Objects” section).  
+* **Documentation:** *ES2015 Collections* – `Set` and `Map` usage (see the "Built‑in Objects" section).  
 
 ### 8.2 Read‑only arrays & tuples  
 
@@ -240,6 +274,27 @@ type Color = typeof colors[number];                 // "red" | "green" | "blue"
 ```
 
 * **Documentation:** *Literal Types & const assertions* – using `as const` for literal inference【5†L215-L223】
+
+### 8.3 TypeScript 5.0+ Features: `const` Type Parameters
+
+```typescript
+// Before TypeScript 5.0
+function getNamesExactly<T extends { names: readonly string[] }>(arg: T): T["names"] {
+  return arg.names;
+}
+
+// You had to use 'as const' to get exact types
+const names1 = getNamesExactly({ names: ["Alice", "Bob", "Eve"] as const });
+
+// With TypeScript 5.0+
+function getNamesExactly<const T extends { names: readonly string[] }>(arg: T): T["names"] {
+  return arg.names;
+}
+
+// No need for 'as const' anymore
+const names2 = getNamesExactly({ names: ["Alice", "Bob", "Eve"] });
+// Type is now readonly ["Alice", "Bob", "Eve"] instead of string[]
+```
 
 ---
 
@@ -298,6 +353,43 @@ class Container<T> {
 
 * **Documentation:** *Generics* – generic classes, methods【5†L215-L226】
 
+### 9.4 TypeScript 5.0+ Features: Standardized Decorators
+
+```typescript
+// Enable experimentalDecorators in tsconfig (see tsconfig docs)
+function loggedMethod(originalMethod: any, context: ClassMethodDecoratorContext) {
+  const methodName = String(context.name);
+
+  function replacementMethod(this: any, ...args: any[]) {
+    console.log(`LOG: Entering method '${methodName}'.`);
+    const result = originalMethod.call(this, ...args);
+    console.log(`LOG: Exiting method '${methodName}'.`);
+    return result;
+  }
+
+  return replacementMethod;
+}
+
+class Person {
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  @loggedMethod
+  greet() {
+    console.log(`Hello, my name is ${this.name}.`);
+  }
+}
+
+const p = new Person("Ron");
+p.greet();
+// Output:
+// LOG: Entering method 'greet'.
+// Hello, my name is Ron.
+// LOG: Exiting method 'greet'.
+```
+
 ---
 
 ## 10. Modules and Namespaces  
@@ -324,7 +416,7 @@ export * from "./mathUtils";
 export * from "./stringUtils";
 ```
 
-* **Documentation:** *Modules – Re‑exports* – how to create a “barrel” file【6†L18-L23】
+* **Documentation:** *Modules – Re‑exports* – how to create a "barrel" file【6†L18-L23】
 
 ### 10.3 Namespaces (legacy)  
 
@@ -342,6 +434,19 @@ namespace Validation {
 
 * **Documentation:** *Namespaces* – internal modules, exporting members【8†L4-L11】【8†L21-L31】
 
+### 10.4 TypeScript 5.0+ Features: Multiple Configuration Files in `extends`
+
+```json
+// tsconfig.json
+{
+  "extends": ["@tsconfig/strictest/tsconfig.json", "../../../tsconfig.base.json"],
+  "compilerOptions": {
+    "outDir": "../lib"
+  },
+  "files": ["./index.ts"]
+}
+```
+
 ---
 
 ## 11. File Handling  
@@ -355,7 +460,7 @@ async function readFileContent(filePath: string): Promise<string> {
 }
 ```
 
-* **Documentation:** *Node.js Type Definitions* – `fs.promises` is covered under the Node.js library typings (see the “Node.js” section of the handbook).  
+* **Documentation:** *Node.js Type Definitions* – `fs.promises` is covered under the Node.js library typings (see the "Node.js" section of the handbook).  
 
 ---
 
@@ -370,7 +475,7 @@ class ApplicationError extends Error {
 }
 ```
 
-* **Documentation:** *Error Handling* – extending built‑in `Error`, custom error classes (see the “Classes” chapter).  
+* **Documentation:** *Error Handling* – extending built‑in `Error`, custom error classes (see the "Classes" chapter).  
 
 ---
 
@@ -414,6 +519,41 @@ type Getters<T> = {
 
 * **Documentation:** *Mapped Types* – key remapping, `as` clause【5†L240-L250】
 
+### 13.4 TypeScript 5.0+ Features: `@satisfies` Support in JSDoc
+
+```typescript
+// @ts-check
+
+/**
+ * @typedef CompilerOptions
+ * @prop {boolean} [strict]
+ * @prop {string} [outDir]
+ */
+
+/**
+ * @typedef ConfigSettings
+ * @prop {CompilerOptions} [compilerOptions]
+ * @prop {string | string[]} [extends]
+ */
+
+/**
+ * @satisfies {ConfigSettings}
+ */
+let myConfigSettings = {
+  compilerOptions: {
+    strict: true,
+    outDir: "../lib",
+  },
+  extends: [
+    "@tsconfig/strictest/tsconfig.json",
+    "../../../tsconfig.base.json"
+  ],
+};
+
+// TypeScript knows that myConfigSettings.extends is an array
+let inheritedConfigs = myConfigSettings.extends.map(resolveConfig);
+```
+
 ---
 
 ## 14. JSON Handling  
@@ -425,7 +565,7 @@ function parseUser(json: string): User {
 }
 ```
 
-* **Documentation:** *JSON* – serialization, `JSON.parse`/`stringify`, custom `toJSON` methods (see the “Libraries” chapter).  
+* **Documentation:** *JSON* – serialization, `JSON.parse`/`stringify`, custom `toJSON` methods (see the "Libraries" chapter).  
 
 ---
 
@@ -434,10 +574,50 @@ function parseUser(json: string): User {
 | Area | Official guidance |
 |------|-------------------|
 | **Strict mode** – `strict`, `noImplicitAny`, `strictNullChecks` | *TSConfig Reference* – enabling all strict flags【3†L118-L124】 |
-| **ES‑lint** – `@typescript-eslint` rules | *Style guide* – not part of the handbook but recommended in the “Tools” section |
-| **Testing** – Jest with TypeScript | *Testing* – see the “Testing” guide (linked from the handbook) |
+| **ES‑lint** – `@typescript-eslint` rules | *Style guide* – not part of the handbook but recommended in the "Tools" section |
+| **Testing** – Jest with TypeScript | *Testing* – see the "Testing" guide (linked from the handbook) |
 | **Performance** – `as const` for literal types, avoid over‑using `any` | *Literal Types* – const assertions【5†L215-L223】 |
-| **Security** – validate external data, keep secrets out of code | *Type Safety* – use `unknown` and type guards, see “Advanced Types” |
+| **Security** – validate external data, keep secrets out of code | *Type Safety* – use `unknown` and type guards, see "Advanced Types" |
+
+### TypeScript 5.0+ Best Practices
+
+1. **Use `const` type parameters** for better type inference:
+   ```typescript
+   function useConstType<const T>(arg: T) {
+     // Better inference without 'as const'
+   }
+   ```
+
+2. **Leverage standardized decorators** instead of legacy experimental decorators:
+   ```typescript
+   // Modern decorator syntax
+   class MyClass {
+     @loggedMethod
+     myMethod() { /* ... */ }
+   }
+   ```
+
+3. **Use `verbatimModuleSyntax`** for clearer import/export behavior:
+   ```json
+   {
+     "compilerOptions": {
+       "verbatimModuleSyntax": true
+     }
+   }
+   ```
+
+4. **Take advantage of multiple `extends`** in tsconfig.json:
+   ```json
+   {
+     "extends": ["@tsconfig/strictest/tsconfig.json", "./base.json"]
+   }
+   ```
+
+5. **Use `@satisfies` in JSDoc** for type checking without type changes:
+   ```javascript
+   /** @satisfies {ConfigSettings} */
+   let config = { /* ... */ };
+   ```
 
 ---
 
@@ -452,7 +632,7 @@ function parseUser(json: string): User {
 | 5 | Modules – import/export, re‑exports, module resolution | https://www.typescriptlang.org/docs/handbook/modules.html |
 | 6 | Namespaces – internal modules, export syntax | https://www.typescriptlang.org/docs/handbook/namespaces.html |
 | 7 | Decorators – experimental support, usage on classes/methods | https://www.typescriptlang.org/docs/handbook/decorators.html |
-| 8 | Enums, Advanced Types (union, literal, conditional) | https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types (and the “Advanced Types” chapter) |
+| 8 | Enums, Advanced Types (union, literal, conditional) | https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types (and the "Advanced Types" chapter) |
 | 9 | Mapped & key‑remapped types | https://www.typescriptlang.org/docs/handbook/2/mapped-types.html |
 
 Feel free to click any of the links directly in the tutorial to jump to the corresponding section of the official TypeScript documentation. Happy coding!
