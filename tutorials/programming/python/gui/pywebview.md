@@ -1,16 +1,16 @@
-# Complete pywebview Tutorial for Non-Programmers
+# Complete pywebview Tutorial
 
-pywebview is a Python library that allows you to create desktop applications using HTML, CSS, and JavaScript - just like building websites. This tutorial will guide you from the basics to advanced features in simple terms.
+pywebview is a lightweight cross-platform wrapper around web technologies that allows you to create desktop applications using HTML, CSS, and JavaScript for the frontend while leveraging Python for backend logic. This tutorial will guide you through all aspects of pywebview from basic concepts to advanced features.
 
 ## What is pywebview?
 
-Think of pywebview as a bridge between web development and desktop applications. You can build your app's interface using familiar web technologies (HTML, CSS, JavaScript) and use Python for the backend logic. It's like having a web browser built into your application without needing an internet connection.
+pywebview is a Python library that enables you to build desktop applications using web technologies. It provides a way to create native-looking applications with familiar web development tools while accessing Python's extensive ecosystem for backend functionality.
 
 ## Getting Started
 
 ### Installation
 
-First, you'll need to install pywebview. Open your command prompt or terminal and type:
+First, install pywebview using pip:
 
 ```bash
 pip install pywebview
@@ -18,7 +18,7 @@ pip install pywebview
 
 ### Basic Example - Hello World
 
-Let's start with the simplest possible application:
+Let's start with a simple application:
 
 ```python
 import webview
@@ -30,13 +30,13 @@ window = webview.create_window('Hello World', html='<h1>Hello World!</h1>')
 webview.start()
 ```
 
-This code creates a window with the title "Hello World" and displays an HTML heading saying "Hello World!".
+This code creates a window titled "Hello World" displaying an HTML heading.
 
 ## Basic Concepts
 
 ### Creating Windows
 
-Windows are the foundation of pywebview applications. Here's how to create different types of windows:
+Windows are the foundation of pywebview applications. Here are different ways to create them:
 
 #### Simple URL Window
 
@@ -72,7 +72,7 @@ webview.start()
 
 ### Window Customization
 
-You can customize your windows with various parameters:
+You can customize windows with various parameters:
 
 ```python
 import webview
@@ -84,13 +84,15 @@ window = webview.create_window(
     height=600,        # Height in pixels
     resizable=True,    # Can resize the window
     fullscreen=False,  # Start in fullscreen mode
-    frameless=False    # Remove window borders
+    frameless=False,   # Remove window borders
+    min_size=(300, 300),  # Minimum window size
+    background_color='#FFFFFF'  # Background color
 )
 
 webview.start()
 ```
 
-## Connecting Python and JavaScript
+## Communication Between Python and JavaScript
 
 One of pywebview's most powerful features is connecting Python (backend) with JavaScript (frontend).
 
@@ -418,6 +420,7 @@ if __name__ == '__main__':
 2. **Security**: Be careful when exposing Python functions to JavaScript - only expose what's necessary
 3. **Performance**: Avoid frequent DOM manipulations from Python as they can be slow
 4. **File Paths**: Use relative paths or proper path resolution for local files
+5. **Threading**: Remember that webview.start() blocks execution, so run backend logic in separate threads
 
 ## Common Use Cases
 
