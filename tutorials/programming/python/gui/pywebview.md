@@ -1,547 +1,437 @@
-Below is a **fully‑linked version of the tutorial**.  
-Every PyWebView API that appears in the code now has a short comment that points to the **exact official documentation page** – you can Ctrl‑click (or ⌘‑click) the URL to jump straight to the reference.
+# Complete pywebview Tutorial for Non-Programmers
 
----
+pywebview is a Python library that allows you to create desktop applications using HTML, CSS, and JavaScript - just like building websites. This tutorial will guide you from the basics to advanced features in simple terms.
 
-## Quick‑reference table  
+## What is pywebview?
 
-| API / concept | Official doc link |
-|---------------|-------------------|
-| `webview.create_window()` | <https://pywebview.flowrl.com/api.html#webview-create_window> |
-| `webview.start()` | <https://pywebview.flowrl.com/api.html#webview-start> |
-| JavaScript‑Python bridge (`js_api` / `window.pywebview.api`) | same page as `create_window` (see **js_api** argument) |
-| `window.evaluate_js()` | <https://pywebview.flowrl.com/api.html#window-evaluate_js> |
-| `window.expose()` (dynamic expose) | <https://pywebview.flowrl.com/api.html#window-expose> |
-| Window‑event system (`window.events.*`) | <https://pywebview.flowrl.com/api.html#window-events> |
-| `webview.screens` (multi‑monitor) | <https://pywebview.flowrl.com/api.html#webview-screens> |
-| `webview.Menu` (native menus) | <https://pywebview.flowrl.com/api.html#webview-menu> |
-| Installation notes (extra GTK/Qt deps) | <https://pywebview.flowrl.com/guide#installation> |
+Think of pywebview as a bridge between web development and desktop applications. You can build your app's interface using familiar web technologies (HTML, CSS, JavaScript) and use Python for the backend logic. It's like having a web browser built into your application without needing an internet connection.
 
----
+## Getting Started
 
-## 1️⃣ Basic window  
+### Installation
 
-```python
-# 1_basic_window.py
-import webview
-
-def main():
-    """Create a simple window that loads a remote URL."""
-    # 👉 https://pywebview.flowrl.com/api.html#webview-create_window
-    webview.create_window(
-        title="Basic Window",
-        url="https://www.example.com",
-        width=800,
-        height=600,
-        resizable=True,
-        fullscreen=False,
-    )
-    # 👉 https://pywebview.flowrl.com/api.html#webview-start
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 2️⃣ Load raw HTML (inline)  
-
-```python
-# 2_local_content.py
-import webview
-
-def main():
-    """Load HTML directly from a Python string."""
-    html_content = """
-    <!DOCTYPE html>
-    <html><head><title>Local Content</title></head>
-    <body>
-        <h1>Hello from PyWebView!</h1>
-        <p>This HTML is embedded in the Python script.</p>
-    </body></html>
-    """
-    # 👉 https://pywebview.flowrl.com/api.html#webview-create_window (html=)
-    webview.create_window("Local Content", html=html_content, width=600, height=400)
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 3️⃣ Load an HTML file  
-
-```python
-# 3_file_content.py
-import webview
-from pathlib import Path
-
-def main():
-    """Load HTML from a local file (creates one if missing)."""
-    html_file = Path(__file__).parent / "index.html"
-
-    if not html_file.exists():
-        html_file.write_text(
-            """
-            <!DOCTYPE html><html><head><title>File Content</title></head>
-            <body><h1>Content from file</h1><p>Loaded from a local HTML file.</p></body></html>
-            """
-        )
-    # 👉 https://pywebview.flowrl.com/api.html#webview-create_window (url=)
-    webview.create_window(
-        "File Content",
-        url=html_file.as_uri(),
-        width=600,
-        height=400,
-    )
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 4️⃣ JavaScript‑Python bridge (`js_api`)  
-
-```python
-# 4_js_api_example.py
-import webview
-import time
-
-class Api:
-    """Methods exposed as window.pywebview.api in JavaScript."""
-    def get_data(self, params):
-        name = params.get("name", "Anonymous")
-        return {"message": f"Hello {name}!", "timestamp": time.time()}
-
-    def process_data(self, data):
-        return f"Processed: {data}"
-
-def main():
-    api = Api()
-    html = """
-    <!DOCTYPE html><html><head><title>JS API Example</title></head>
-    <body>
-        <h1>JavaScript API Integration</h1>
-        <button onclick="getData()">Get Data from Python</button>
-        <button onclick="sendData()">Send Data to Python</button>
-        <div id="output"></div>
-
-        <script>
-        async function getData() {
-            const result = await window.pywebview.api.get_data({name: 'User'});
-            document.getElementById('output').innerText =
-                `Message: ${result.message}\\nTimestamp: ${result.timestamp}`;
-        }
-        async function sendData() {
-            const result = await window.pywebview.api.process_data("Sample data from JS");
-            document.getElementById('output').innerText = result;
-        }
-        </script>
-    </body></html>
-    """
-    # 👉 https://pywebview.flowrl.com/api.html#webview-create_window (js_api=)
-    webview.create_window(
-        "JS API Example",
-        html=html,
-        js_api=api,
-        width=600,
-        height=400,
-    )
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 5️⃣ Background work & UI updates from a thread  
-
-```python
-# 5_threading_example.py
-import webview
-import threading
-import time
-
-class BackgroundTasks:
-    """Runs a long‑running job without freezing the UI."""
-    def __init__(self, window):
-        self.window = window
-
-    def long_running_task(self):
-        # 👉 https://pywebview.flowrl.com/api.html#window-evaluate_js
-        self.window.evaluate_js('document.getElementById("status").innerText = "Processing…"')
-        time.sleep(3)                                   # simulate heavy work
-        self.window.evaluate_js('document.getElementById("status").innerText = "Task completed!"')
-
-def main():
-    html = """
-    <!DOCTYPE html><html><head><title>Threading Example</title></head>
-    <body>
-        <h1>Background Tasks</h1>
-        <button onclick="startTask()">Start Long Task</button>
-        <div id="status">Ready</div>
-        <script>
-        function startTask() {
-            window.pywebview.api.start_background_task();
-        }
-        </script>
-    </body></html>
-    """
-    window = webview.create_window(
-        "Threading Example",
-        html=html,
-        width=600,
-        height=400,
-    )
-    tasks = BackgroundTasks(window)
-
-    class Api:
-        def start_background_task(self):
-            threading.Thread(target=tasks.long_running_task, daemon=True).start()
-
-    # 👉 https://pywebview.flowrl.com/api.html#webview-start (passing js_api here)
-    webview.start(js_api=Api())
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 6️⃣ Window‑lifecycle events  
-
-```python
-# 6_window_events.py
-import webview
-
-def main():
-    html = """
-    <!DOCTYPE html><html><head><title>Window Events</title></head>
-    <body>
-        <h1>Window Events</h1>
-        <div id="events"></div>
-        <script>
-        window.addEventListener('pywebviewready', () => {
-            document.getElementById('events').innerHTML += '<p>PyWebView is ready</p>';
-        });
-        </script>
-    </body></html>
-    """
-    window = webview.create_window(
-        "Window Events",
-        html=html,
-        width=600,
-        height=400,
-    )
-
-    # 👉 https://pywebview.flowrl.com/api.html#window-events
-    def on_loaded():
-        print("✅ Page loaded")
-
-    def on_closing():
-        print("⚠️ Window is closing")
-        # return False to cancel closing, True/None to allow
-    window.events.loaded += on_loaded
-    window.events.closing += on_closing
-
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 7️⃣ Multiple windows (thread‑safe creation)  
-
-```python
-# 7_multiple_windows.py
-import webview
-import threading
-
-def main():
-    def create_secondary():
-        webview.create_window(
-            "Secondary Window",
-            html="<h1>Secondary Window</h1>",
-            width=400,
-            height=300,
-        )
-
-    html = """
-    <!DOCTYPE html><html><head><title>Main Window</title></head>
-    <body>
-        <h1>Main Window</h1>
-        <button onclick="createWindow()">Create New Window</button>
-        <script>
-        function createWindow() {
-            window.pywebview.api.create_new_window();
-        }
-        </script>
-    </body></html>
-    """
-
-    class Api:
-        def create_new_window(self):
-            # 👉 thread‑safe window creation
-            threading.Thread(target=create_secondary, daemon=True).start()
-
-    webview.create_window(
-        "Main Window",
-        html=html,
-        js_api=Api(),
-        width=600,
-        height=400,
-    )
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 8️⃣ Centralised configuration (best‑practice example)  
-
-```python
-# 8_best_practice_config.py
-import webview
-
-def main():
-    config = {
-        "title": "Best‑Practice Example",
-        "width": 800,
-        "height": 600,
-        "min_size": (400, 300),
-        "resizable": True,
-        "fullscreen": False,
-        "frameless": False,
-        "easy_drag": True,
-        "text_select": True,
-        "zoomable": True,
-    }
-
-    html = """
-    <!DOCTYPE html><html><head><title>Configuration Example</title></head>
-    <body>
-        <h1>Configuration Example</h1>
-        <p>Window configured with best practices.</p>
-    </body></html>
-    """
-
-    # 👉 all arguments accepted via **kwargs
-    window = webview.create_window(html=html, **config)
-
-    def on_shown():
-        print("✅ Window shown")
-    # 👉 window.events.shown
-    window.events.shown += on_shown
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 9️⃣ Error handling in the bridge  
-
-```python
-# 9_error_handling.py
-import webview
-import random
-
-class Api:
-    def risky_operation(self):
-        if random.choice([True, False]):
-            return "✅ Operation successful!"
-        raise RuntimeError("🚨 Simulated error occurred")
-
-def main():
-    html = """
-    <!DOCTYPE html><html><head><title>Error Handling</title></head>
-    <body>
-        <h1>Error Handling</h1>
-        <button onclick="callPython()">Call Python</button>
-        <div id="result"></div>
-
-        <script>
-        async function callPython() {
-            try {
-                const r = await window.pywebview.api.risky_operation();
-                document.getElementById('result').innerText = r;
-            } catch (e) {
-                document.getElementById('result').innerText = 'Error: ' + e.message;
-            }
-        }
-        </script>
-    </body></html>
-    """
-    webview.create_window(
-        "Error Handling",
-        html=html,
-        js_api=Api(),
-        width=600,
-        height=400,
-    )
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 🔟 Complete application (task manager)  
-
-```python
-# 10_complete_application.py
-import webview
-import threading
-import time
-
-class AppApi:
-    """All logic exposed to JavaScript."""
-    def __init__(self, window):
-        self.window = window
-        self.data = []
-
-    # ----- CRUD ---------------------------------------------------------
-    def add_item(self, item: str):
-        self.data.append({"id": len(self.data) + 1, "text": item, "ts": time.time()})
-        return {"success": True, "id": len(self.data)}
-
-    def get_items(self):
-        return self.data
-
-    def clear_items(self):
-        self.data.clear()
-        return {"success": True}
-
-    # ----- Long‑running work -------------------------------------------
-    def long_process(self):
-        def _work():
-            self.window.evaluate_js('document.getElementById("status").innerText = "Processing…"')
-            time.sleep(3)
-            self.window.evaluate_js('document.getElementById("status").innerText = "Completed!"')
-        threading.Thread(target=_work, daemon=True).start()
-        return {"started": True}
-
-def main():
-    html = """
-    <!DOCTYPE html><html><head><title>Complete Application</title></head>
-    <body>
-        <h1>Task Manager</h1>
-        <input id="itemInput" placeholder="Enter new item">
-        <button onclick="addItem()">Add</button>
-        <button onclick="loadItems()">Refresh</button>
-        <button onclick="clearItems()">Clear all</button>
-        <button onclick="startProcess()">Long process</button>
-
-        <div id="status">Ready</div>
-        <div id="items"></div>
-
-        <script>
-        async function addItem() {
-            const txt = document.getElementById('itemInput').value.trim();
-            if (!txt) return;
-            await window.pywebview.api.add_item(txt);
-            document.getElementById('itemInput').value = '';
-            loadItems();
-        }
-        async function loadItems() {
-            const items = await window.pywebview.api.get_items();
-            document.getElementById('items').innerHTML = items
-                .map(i => `<div class="item">${i.text} (ID: ${i.id})</div>`).join('');
-        }
-        async function clearItems() {
-            await window.pywebview.api.clear_items();
-            document.getElementById('items').innerHTML = '';
-        }
-        async function startProcess() {
-            await window.pywebview.api.long_process();
-        }
-        document.addEventListener('pywebviewready', loadItems);
-        </script>
-    </body></html>
-    """
-
-    window = webview.create_window(
-        "Complete Application",
-        html=html,
-        width=800,
-        height=600,
-        min_size=(600, 400),
-        resizable=True,
-    )
-    api = AppApi(window)
-
-    # 👉 window.events.loaded & closing
-    def on_loaded():
-        print("✅ UI loaded")
-    def on_closing():
-        print("⚙️ Shutting down")
-        return True            # allow close
-    window.events.loaded += on_loaded
-    window.events.closing += on_closing
-
-    webview.start(js_api=api)
-
-if __name__ == "__main__":
-    main()
-```
-
----
-
-## 11️⃣ New example – **dynamic expose** (`window.expose`)  
-
-```python
-# 11_expose_function.py
-import webview
-
-def greet(name: str = "World"):
-    """Simple function that will be callable from JS after being exposed."""
-    return f"👋 Hello, {name}!"
-
-def main():
-    # Create a minimal window – the HTML can be anything.
-    window = webview.create_window("Expose Demo", html="<h1>Check console</h1>", width=400, height=300)
-
-    # 👉 https://pywebview.flowrl.com/api.html#window-expose
-    window.expose(greet)          # becomes window.pywebview.api.greet in JS
-
-    webview.start()
-
-if __name__ == "__main__":
-    main()
-```
-
-**JavaScript side** (add to any page loaded in the window):
-
-```html
-<script>
-async function demo() {
-    const msg = await window.pywebview.api.greet("Alice");
-    console.log(msg);   // → "👋 Hello, Alice!"
-}
-demo();
-</script>
-```
-
-*Why `expose`?* – It lets you add or replace a callable **after** the GUI loop has started, which is handy for plug‑in architectures or for adding debug helpers on the fly.
-
----
-
-### How to run  
+First, you'll need to install pywebview. Open your command prompt or terminal and type:
 
 ```bash
-pip install pywebview       # on Linux you may need extra deps – see the Installation docs
-python 1_basic_window.py   # pick any file name from the list above
+pip install pywebview
 ```
 
-Every snippet now carries a **one‑click reference** to the official documentation, so you can instantly verify arguments, defaults, and platform‑specific notes. Enjoy experimenting with PyWebView! 🎉  
+### Basic Example - Hello World
+
+Let's start with the simplest possible application:
+
+```python
+import webview
+
+# Create a window with a title and HTML content
+window = webview.create_window('Hello World', html='<h1>Hello World!</h1>')
+
+# Start the application
+webview.start()
+```
+
+This code creates a window with the title "Hello World" and displays an HTML heading saying "Hello World!".
+
+## Basic Concepts
+
+### Creating Windows
+
+Windows are the foundation of pywebview applications. Here's how to create different types of windows:
+
+#### Simple URL Window
+
+```python
+import webview
+
+# Load a website in a window
+window = webview.create_window('My App', 'https://www.google.com')
+webview.start()
+```
+
+#### HTML Content Window
+
+```python
+import webview
+
+html_content = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My App</title>
+</head>
+<body>
+    <h1>Welcome to My App</h1>
+    <p>This is my first pywebview application.</p>
+</body>
+</html>
+"""
+
+window = webview.create_window('My App', html=html_content)
+webview.start()
+```
+
+### Window Customization
+
+You can customize your windows with various parameters:
+
+```python
+import webview
+
+window = webview.create_window(
+    title='Custom Window',
+    html='<h1>Customized Window</h1>',
+    width=1000,        # Width in pixels
+    height=600,        # Height in pixels
+    resizable=True,    # Can resize the window
+    fullscreen=False,  # Start in fullscreen mode
+    frameless=False    # Remove window borders
+)
+
+webview.start()
+```
+
+## Connecting Python and JavaScript
+
+One of pywebview's most powerful features is connecting Python (backend) with JavaScript (frontend).
+
+### Exposing Python Functions to JavaScript
+
+```python
+import webview
+
+class Api:
+    def hello(self, name):
+        return f'Hello {name}!'
+
+def create_app():
+    api = Api()
+    window = webview.create_window('API Example', html='<h1>API Example</h1>', js_api=api)
+    webview.start()
+
+if __name__ == '__main__':
+    create_app()
+```
+
+To call this from JavaScript:
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+    <button onclick="greet()">Greet</button>
+    <p id="result"></p>
+    
+    <script>
+        function greet() {
+            // Call Python function
+            window.pywebview.api.hello('World').then(function(result) {
+                document.getElementById('result').innerText = result;
+            });
+        }
+    </script>
+</body>
+</html>
+```
+
+## Working with Files and Dialogs
+
+### File Dialogs
+
+```python
+import webview
+
+def open_file_dialog(window):
+    # Open file dialog
+    file_types = ('Image Files (*.bmp;*.jpg;*.gif)', 'All files (*.*)')
+    result = window.create_file_dialog(webview.OPEN_DIALOG, allow_multiple=True, file_types=file_types)
+    print(result)
+
+window = webview.create_window('File Dialog Example', html='<h1>File Dialog Example</h1>')
+webview.start(open_file_dialog, window)
+```
+
+### Confirmation Dialogs
+
+```python
+import webview
+
+def show_confirmation(window):
+    result = window.create_confirmation_dialog('Confirmation', 'Are you sure?')
+    if result:
+        print('User clicked OK')
+    else:
+        print('User clicked Cancel')
+
+window = webview.create_window('Confirmation Dialog', html='<h1>Confirmation Dialog</h1>')
+webview.start(show_confirmation, window)
+```
+
+## DOM Manipulation
+
+pywebview allows you to manipulate the HTML document from Python:
+
+```python
+import webview
+
+html = """
+<!DOCTYPE html>
+<html>
+<body>
+    <div id="container">
+        <p>Original text</p>
+    </div>
+</body>
+</html>
+"""
+
+def manipulate_dom(window):
+    # Get element by ID
+    container = window.dom.get_element('#container')
+    
+    # Change text
+    container.children[0].text = 'Text changed from Python!'
+    
+    # Add new element
+    container.append('<p>New paragraph added from Python</p>')
+
+window = webview.create_window('DOM Manipulation', html=html)
+webview.start(manipulate_dom, window)
+```
+
+## Window Events
+
+You can respond to window events like loading, closing, resizing, etc.:
+
+```python
+import webview
+
+def on_loaded():
+    print('Window loaded')
+
+def on_closed():
+    print('Window closed')
+
+html = '<h1>Event Example</h1>'
+
+window = webview.create_window('Event Example', html=html)
+window.events.loaded += on_loaded
+window.events.closed += on_closed
+
+webview.start()
+```
+
+## Multiple Windows
+
+You can create multiple windows in one application:
+
+```python
+import webview
+
+def create_windows():
+    window1 = webview.create_window('Window 1', html='<h1>Window 1</h1>')
+    window2 = webview.create_window('Window 2', html='<h1>Window 2</h1>')
+    webview.start()
+
+if __name__ == '__main__':
+    create_windows()
+```
+
+## Working with Local Files
+
+You can load local HTML files:
+
+```python
+import webview
+import os
+
+# Get the directory where the script is located
+current_dir = os.path.dirname(os.path.abspath(__file__))
+html_file = os.path.join(current_dir, 'index.html')
+
+window = webview.create_window('Local File', html_file)
+webview.start()
+```
+
+## Advanced Features
+
+### Custom CSS
+
+```python
+import webview
+
+html = '<h1 id="heading">Styled Heading</h1>'
+css = '''
+    #heading {
+        color: blue;
+        font-size: 36px;
+        text-align: center;
+    }
+'''
+
+def apply_css(window):
+    window.load_css(css)
+
+window = webview.create_window('CSS Example', html=html)
+webview.start(apply_css, window)
+```
+
+### Running JavaScript
+
+```python
+import webview
+
+html = '<h1 id="heading">Original Text</h1>'
+
+def change_text(window):
+    # Execute JavaScript to change text
+    window.evaluate_js("""
+        document.getElementById('heading').innerText = 'Changed by JavaScript';
+    """)
+
+window = webview.create_window('JavaScript Example', html=html)
+webview.start(change_text, window)
+```
+
+### Window Management
+
+```python
+import webview
+
+def manage_window(window):
+    # Resize window
+    window.resize(800, 600)
+    
+    # Move window
+    window.move(100, 100)
+    
+    # Maximize window
+    window.maximize()
+    
+    # Minimize window
+    window.minimize()
+    
+    # Restore window
+    window.restore()
+    
+    # Toggle fullscreen
+    window.toggle_fullscreen()
+
+window = webview.create_window('Window Management', html='<h1>Window Management</h1>')
+webview.start(manage_window, window)
+```
+
+## Practical Example - Simple Note-Taking App
+
+Let's build a complete application:
+
+```python
+import webview
+
+class NoteApp:
+    def __init__(self):
+        self.notes = []
+    
+    def add_note(self, note):
+        self.notes.append(note)
+        return {'status': 'success', 'message': 'Note added'}
+    
+    def get_notes(self):
+        return self.notes
+    
+    def clear_notes(self):
+        self.notes = []
+        return {'status': 'success', 'message': 'Notes cleared'}
+
+def create_note_app():
+    api = NoteApp()
+    
+    html = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Simple Note App</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; }
+            textarea { width: 100%; height: 100px; margin-bottom: 10px; }
+            button { padding: 10px 20px; margin: 5px; }
+            #notes { margin-top: 20px; }
+        </style>
+    </head>
+    <body>
+        <h1>Simple Note App</h1>
+        <textarea id="noteInput" placeholder="Enter your note here..."></textarea><br>
+        <button onclick="addNote()">Add Note</button>
+        <button onclick="showNotes()">Show Notes</button>
+        <button onclick="clearNotes()">Clear All</button>
+        <div id="notes"></div>
+        
+        <script>
+            function addNote() {
+                const note = document.getElementById('noteInput').value;
+                if (note.trim() !== '') {
+                    window.pywebview.api.add_note(note).then(function(response) {
+                        alert(response.message);
+                        document.getElementById('noteInput').value = '';
+                    });
+                }
+            }
+            
+            function showNotes() {
+                window.pywebview.api.get_notes().then(function(notes) {
+                    const notesDiv = document.getElementById('notes');
+                    notesDiv.innerHTML = '<h2>Notes</h2>';
+                    if (notes.length === 0) {
+                        notesDiv.innerHTML += '<p>No notes yet.</p>';
+                    } else {
+                        const list = document.createElement('ul');
+                        notes.forEach(function(note) {
+                            const item = document.createElement('li');
+                            item.textContent = note;
+                            list.appendChild(item);
+                        });
+                        notesDiv.appendChild(list);
+                    }
+                });
+            }
+            
+            function clearNotes() {
+                window.pywebview.api.clear_notes().then(function(response) {
+                    alert(response.message);
+                    document.getElementById('notes').innerHTML = '';
+                });
+            }
+        </script>
+    </body>
+    </html>
+    """
+    
+    window = webview.create_window('Note App', html=html, js_api=api, width=600, height=500)
+    webview.start()
+
+if __name__ == '__main__':
+    create_note_app()
+```
+
+## Best Practices
+
+1. **Error Handling**: Always handle potential errors in your JavaScript-Python communication
+2. **Security**: Be careful when exposing Python functions to JavaScript - only expose what's necessary
+3. **Performance**: Avoid frequent DOM manipulations from Python as they can be slow
+4. **File Paths**: Use relative paths or proper path resolution for local files
+
+## Common Use Cases
+
+1. **Desktop Applications**: Convert web apps to desktop apps
+2. **Prototyping**: Quickly build application prototypes using web technologies
+3. **Data Visualization**: Create desktop apps with complex visualizations using libraries like D3.js
+4. **Legacy System Interfaces**: Modernize old systems with web-based interfaces
+5. **Cross-Platform Apps**: Build applications that work on Windows, macOS, and Linux with single codebase
+
+## Next Steps
+
+1. Explore the [official examples](https://pywebview.flowrl.com/examples/) for more advanced use cases
+2. Learn about [debugging pywebview applications](https://pywebview.flowrl.com/guide/debugging)
+3. Understand [security considerations](https://pywebview.flowrl.com/guide/security)
+4. Experiment with different [web engines](https://pywebview.flowrl.com/guide/web_engine)
+
+This tutorial covered the fundamentals of pywebview, from basic window creation to advanced features like DOM manipulation and JavaScript-Python communication. With this foundation, you can start building your own desktop applications using familiar web technologies.
