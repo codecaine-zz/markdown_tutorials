@@ -1,657 +1,810 @@
-# 📚 The **Ultimate AppleScript Guide for Absolute Beginners** (2025)  
-*Plain‑language explanations, copy‑paste examples, and **VS Code support** so you can write and run AppleScript no matter which editor you prefer.*
+# AppleScript Tutorial for Beginners (ARM Mac + Script Editor)
 
----
+This tutorial covers AppleScript programming from basics to advanced usage with practical examples. We'll use the built-in Script Editor on macOS.
 
-## 🎯 Who This Guide Is For  
+## Prerequisites & Setup
 
-| ✅ | Description |
-|---|-------------|
-| **Never programmed before** | No prior scripting experience is assumed. |
-| **Want to understand *why* AppleScript works** | We explain the reasoning behind each language feature. |
-| **Prefer step‑by‑step, copy‑paste code** | Every section contains a tiny, runnable snippet you can try instantly. |
-| **Will later need a production‑ready script** | The case‑study at the end shows a SOLID‑style “file‑organiser + email‑sender” script you can drop into any Mac workflow. |
-| **Like VS Code** | All examples can be edited, built, and executed from VS Code (macOS). |
-
----
-
-## 📖 How to Use This Document  
-
-1. **Read the sections in order** – each builds on the previous one.  
-2. **Copy the code into a new `.scpt` file** (or a plain `.applescript` text file).  
-3. **Run the snippet** (see “Getting Started”).  
-4. **When you see a “🔗” link, click it** – it opens Apple’s official docs.  
-5. **When you finish the fundamentals, jump to the “Case Study”** to see everything in a realistic setting.
-
----
-
-## 📦 Table of Contents  
-
-| # | Topic | Quick link |
-|---|-------|------------|
-| 1️⃣ | **Getting Started** – Script Editor, `osascript`, VS Code | [Go](#1️⃣-getting‑started) |
-| 2️⃣ | **Basic Syntax** – comments, literals, `tell` blocks | [Go](#2️⃣-basic-syntax) |
-| 3️⃣ | **Data Types** – numbers, strings, lists, records, dates, file/alias, booleans | [Go](#3️⃣-data-types) |
-| 4️⃣ | **Variables & Properties** – `set`, `global`, `property` | [Go](#4️⃣-variables‑and‑properties) |
-| 5️⃣ | **Control Flow** – `if`, `else`, `repeat`, `exit repeat`, `considering` | [Go](#5️⃣-control‑flow) |
-| 6️⃣ | **Handlers (Functions)** – parameters, returned values, `run` handler | [Go](#6️⃣-handlers‑functions) |
-| 7️⃣ | **Error Handling** – `try`/`on error` blocks | [Go](#7️⃣-error‑handling) |
-| 8️⃣ | **AppleScript Objects** – `application`, specifiers, `tell` blocks | [Go](#8️⃣-apple‑script‑objects) |
-| 9️⃣ | **UI Scripting** – controlling UI via **System Events** | [Go](#9️⃣‑ui‑scripting) |
-| 🔟 | **AppleScriptObjC** – bridging to Cocoa classes | [Go](#🔟‑applescriptobjc) |
-| 1️⃣1️⃣ | **Running AppleScript in VS Code** – tasks, debugging, extensions | [Go](#1️⃣1️⃣‑running‑applescript‑in‑vscode) |
-| 1️⃣2️⃣ | **Testing** – simple test harnesses, `do script` in Script Editor | [Go](#1️⃣2️⃣‑testing) |
-| 1️⃣3️⃣ | **Debugging & Performance** – `log`, `beep`, Script Editor debugger | [Go](#1️⃣3️⃣‑debugging‑and‑performance) |
-| 1️⃣4️⃣ | **Best‑Practice Checklist** – quick sanity‑check | [Go](#1️⃣4️⃣‑best‑practice‑checklist) |
-| 1️⃣5️⃣ | **Case Study – SOLID File‑Organizer & Mailer** | [Go](#1️⃣5️⃣‑case‑study‑solid‑file‑organizer‑mailer) |
-| 1️⃣6️⃣ | **RAD Helper Library** – ready‑to‑paste utility functions for non‑programmers | [Go](#1️⃣6️⃣‑rad‑helper‑library) |
-| 1️⃣7️⃣ | **Glossary & Further Resources** – plain‑English definitions + links | [Go](#1️⃣7️⃣‑glossary‑and‑further‑resources) |
-
----
-
-## 1️⃣ Getting Started  
-
-| Concept | What it is | How to obtain it | Quick test |
-|---------|------------|------------------|------------|
-| **Script Editor** (macOS) | Apple’s built‑in IDE for AppleScript & JavaScript for Automation. | Open **/Applications/Utilities/Script Editor**. | `display dialog "👋 AppleScript!"` → click **OK**. |
-| **`osascript` CLI** | Command‑line interpreter (`osascript -e '…'`). Works in Terminal, can be called from any language. | Comes with macOS (no install needed). | `osascript -e 'return 2+2'` → prints `4`. |
-| **VS Code** (cross‑platform) | Free editor; with the “AppleScript” extension you get syntax‑highlighting, snippets, and task integration. | 1️⃣ Download VS Code → https://code.visualstudio.com. <br>2️⃣ In the Extensions view (⇧⌘X) install **AppleScript** by *kylescott*. <br>3️⃣ (optional) install **Code Runner** to execute a script with a click. | Create `Hello.applescript` → paste `display dialog "👋 from VS Code!"`. <br>Open integrated terminal (**Ctrl+`**) → `osascript Hello.applescript`. |
-| **Script Libraries** | Re‑usable `.scpt` files you can `load script` or `script`‑import. | Save any script as `MyLib.scpt` and `load script "MyLib.scpt"` in another script. | See the “RAD Helper Library” section for a ready‑made `Utilities.scpt`. |
-
-### Running AppleScript in VS Code (quick reference)
-
-```jsonc
-// .vscode/tasks.json  – place it in your project folder
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Run AppleScript (osascript)",
-            "type": "shell",
-            "command": "osascript \"${file}\"",
-            "group": "build",
-            "presentation": { "reveal": "always" }
-        }
-    ]
-}
+AppleScript is built into macOS, so no additional installation is required. Simply open:
+```
+Applications > Utilities > Script Editor
 ```
 
-*Open **Command Palette** → **Tasks: Run Task** → pick **Run AppleScript (osascript)** while your cursor is on a `.applescript` file. Output appears in the terminal pane.*
+Configure Script Editor for better development:
+1. Enable "Show Script menu in menu bar" (Script > Show Script Menu)
+2. Preferences > General: Set default language to AppleScript
+3. Preferences > Editing: Enable "Show line numbers" and "Show invisibles"
 
-> **VS Code tip** – The AppleScript extension shows a light‑blue squiggle under syntax errors (just like Script Editor). Hover for a description.
+## 1. Basic Syntax and Structure
 
----
-
-## 2️⃣ Basic Syntax  
-
+### Hello World Script
 ```applescript
--- 1️⃣ comment (two hyphens)  
-
-display dialog "Hello, world!"   -- shows a modal dialog  
-
--- 2️⃣ a simple tell block (the core of AppleScript)
-tell application "Finder"
-    set desktopCount to count of items of desktop
-    display dialog "Desktop has " & desktopCount & " items."
-end tell
+-- This is a comment
+display dialog "Hello, World!" buttons {"OK"} default button 1
 ```
+[Documentation: display dialog](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW1)
 
-*Why `tell`?* Almost all AppleScript commands are **sent to a target application** (the *receiver*) – the `tell` block makes that explicit.
-
-**Run in VS Code** → **Ctrl+Shift+B** → “Run AppleScript (osascript)”. The dialog will pop up.
-
----
-
-## 3️⃣ Data Types  
-
-| Type | Literal example | Typical use |
-|------|----------------|-------------|
-| **Number** | `42`, `3.14` | Arithmetic, counters. |
-| **String** | `"Hello"` | Text display, file paths. |
-| **Boolean** | `true`, `false` | Conditions. |
-| **List** | `{1, 2, 3}` | Ordered collections, can contain mixed types. |
-| **Record** | `{name:"Ada", age:30}` | Named fields (similar to dictionaries). |
-| **Date** | `date "Thursday, 12 July 2025 10:00:00"` | Scheduling, timestamps. |
-| **File** | `alias "Macintosh HD:Users:alice:Desktop:"` | File‑system references (folder or file). |
-| **POSIX path** | `"~/Documents/file.txt"` (as string) | When you need a Unix‑style path for shell commands. |
-| **Application object** | `application "Finder"` | Target of a `tell` block. |
-| **Reference (specifier)** | `item 1 of listVar` | Precise location inside a container. |
-
-> **Official reference** – Apple’s *Commands Reference* lists every built‑in class and its properties: 🔗[Commands Reference](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_reference_forms.html)【12†L14-L16】.
-
----
-
-## 4️⃣ Variables & Properties  
-
+### Variables and Data Types
 ```applescript
-global gCounter          -- accessible from any handler
-property scriptName : "DemoScript"   -- persistent across runs
+-- Text (string)
+set myName to "John"
+set greeting to "Hello, " & myName
 
-set localVar to "I am local"
-set gCounter to 0          -- global assignment
-set scriptName to "My Awesome Script"
+-- Numbers
+set age to 25
+set price to 19.99
+
+-- Boolean
+set isActive to true
+set isComplete to false
+
+-- Lists
+set fruits to {"Apple", "Banana", "Orange"}
+set firstFruit to item 1 of fruits
+
+-- Records (like dictionaries)
+set person to {name:"Alice", age:30, city:"New York"}
+set personName to name of person
+
+-- Date and time
+set currentTime to current date
+set tomorrow to (current date) + (1 * days)
+
+-- Display results
+display dialog greeting & return & "Age: " & age & return & "First fruit: " & firstFruit
 ```
+[Documentation: Data types](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_data_types.html#//apple_ref/doc/uid/TP40000983-CH213-SW1)
 
-*Key points*  
+## 2. Control Flow
 
-* **`set`** assigns a value.  
-* **`global`** declares a variable that lives outside any handler.  
-* **`property`** creates a value that *remains* between script runs when the script is saved as a compiled `.scpt`.  
-
-> **AppleScript Lexical Conventions** explain the grammar for identifiers and keywords: 🔗[Lexical Conventions](https://developer.apple.com/conceptual/ASLR_lexical_conventions.html)【14†L0-L0】.
-
----
-
-## 5️⃣ Control Flow  
-
+### Conditional Statements (if/else)
 ```applescript
--- IF / ELSE
-set score to 85
-if score ≥ 90 then
-    display dialog "A+"
-else if score ≥ 80 then
-    display dialog "A"
+set userAge to 20
+
+if userAge ≥ 18 then
+    display dialog "You are an adult."
+else if userAge ≥ 13 then
+    display dialog "You are a teenager."
 else
-    display dialog "B or lower"
+    display dialog "You are a child."
 end if
 
--- REPEAT (counted)
-repeat with i from 1 to 5
-    display dialog "Round " & i
-end repeat
-
--- REPEAT UNTIL (condition)
-set tries to 0
-repeat
-    set tries to tries + 1
-    if tries ≥ 3 then exit repeat
-    display dialog "Try #" & tries
-end repeat
-
--- CONSIDERING (change how AppleScript treats data)
-considering numeric strings
-    set result to "2" + 3   -- → 5 (numeric strings are coerced)
+-- Using "considering" for text comparisons
+set userInput to "Hello"
+considering case
+    if userInput is "hello" then
+        display dialog "Case sensitive match"
+    else
+        display dialog "Case does not match"
+    end if
 end considering
 ```
+[Documentation: if statement](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_control_statements.html#//apple_ref/doc/uid/TP40000983-CH209-SW1)
 
-> **Why `considering`?** It temporarily changes type‑coercion rules – useful when you receive data from the shell as strings but need numbers【12†L34-L38】.
-
----
-
-## 6️⃣ Handlers (Functions)  
-
-```applescript
--- The special `run` handler is executed when the script starts.
-on run
-    greet("Ada")
-end run
-
--- A custom handler with parameters and a returned value
-on greet(name)
-    set greeting to "Hello, " & name & "!"
-    display dialog greeting
-    return greeting
-end greet
-
--- Handler with multiple parameters & default values (via `if` checks)
-on addNumbers(a, b)
-    return a + b
-end addNumbers
-```
-
-*Handlers are the AppleScript equivalent of functions.* They can be placed anywhere in the script; the `run` handler is optional but gives you a clear entry point.
-
-> **About Handlers** – Apple’s full reference: 🔗[About Handlers](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_reference_forms.html)【12†L39-L41】.
-
----
-
-## 7️⃣ Error Handling  
-
+### Try/Catch Error Handling
 ```applescript
 try
-    set f to alias "Macintosh HD:nonexistent:"
-    display dialog "File exists"
-on error errMsg number errNum
-    display dialog "❗️Error " & errNum & ": " & errMsg buttons {"OK"} default button 1
+    -- This will cause an error
+    set result to 10 / 0
+on error errorMessage number errorNumber
+    display dialog "Error " & errorNumber & ": " & errorMessage
+end try
+
+-- Try with specific error handling
+try
+    set fileContents to read alias "Macintosh HD:nonexistent.txt"
+on error
+    display dialog "Could not read the file"
 end try
 ```
+[Documentation: try statement](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_control_statements.html#//apple_ref/doc/uid/TP40000983-CH209-SW6)
 
-*`try … on error … end try`* catches any runtime error. The `number` parameter gives the OS error code (e.g., `-1708` for “command not understood”).
+## 3. Loops
 
-> **Error handling** – see the *Commands Reference* section on “try/on error” for the complete list of error numbers: 🔗[Commands Reference – Error Handling](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_reference_forms.html)【12†L14-L16】.
-
----
-
-## 8️⃣ AppleScript Objects  
-
+### Repeat Loops
 ```applescript
--- Targeting the Finder
-tell application "Finder"
-    set desktopFolder to folder "Desktop" of home
-    set fileCount to count of items of desktopFolder
-    display dialog "Desktop contains " & fileCount & " items."
-end tell
-
--- Specifier shortcut – “Finder” is implied inside the block
-tell application "Finder"
-    set theName to name of file 1 of desktop
-    display dialog "First desktop file: " & theName
-end tell
-```
-
-*Every scriptable app exposes a dictionary of **classes**, **properties**, and **commands**.* Use **Script Editor → File → Open Dictionary…** to explore them.
-
-> **AppleScript Fundamentals** – explains the object model in depth: 🔗[AppleScript Fundamentals](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/fundamentals/fundamentals.html)【12†L66-L68】.
-
----
-
-## 9️⃣ UI Scripting  
-
-> *UI‑Scripting lets you control any UI element (buttons, menus, windows) via the **System Events** scripting addition.*  
-
-```applescript
-tell application "System Events"
-    -- Activate Safari
-    tell process "Safari"
-        set frontmost to true
-        delay 0.5
-
-        -- Click the "File" menu → "New Window"
-        click menu item "New Window" of menu "File" of menu bar 1
-    end tell
-end tell
-```
-
-*Important*: UI scripting must be enabled in **System Settings → Privacy & Security → Accessibility**.  
-
-> **UI Scripting docs** – Apple’s “UI scripting guide” (still hosted in the archive): 🔗[UI Scripting Overview](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/UI_Scripting/ui_scripting.html).
-
----
-
-## 🔟 AppleScriptObjC  
-
-AppleScriptObjC (ASObjC) lets you **bridge to Cocoa** – you can instantiate and use any Cocoa class directly from AppleScript.
-
-```applescript
-use framework "Foundation"
-use scripting additions
-
--- Create an NSDate (current date & time)
-set now to current date
-set isoString to (now's description) as text
-display dialog "ISO: " & isoString
-```
-
-*Key syntax*  
-
-* `use framework "FrameworkName"` loads the Objective‑C runtime for that framework.  
-* You can call methods with the **dot** syntax (`object's methodName:`) or the older AppleScript messaging syntax (`methodName of object`).  
-
-> **AppleScriptObjC Guide** – Apple’s documentation: 🔗[AppleScriptObjC Release Notes](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptObjC/AppleScriptObjC.html).
-
----
-
-## 1️⃣1️⃣ Running AppleScript in VS Code  
-
-| Feature | How to enable |
-|---------|----------------|
-| **Syntax highlighting & snippets** | Install **AppleScript** extension (by *kylescott*). |
-| **Run a single script** | Add the `tasks.json` snippet shown earlier and run **Ctrl+Shift+B → Run AppleScript (osascript)**. |
-| **Debug with breakpoints** | VS Code can launch `osascript -l AppleScript -e '…'` under the **CodeLLDB** debugger – set a breakpoint with `debugger` statements: `debugger` (acts like `break` in Script Editor). |
-| **Load a library** | Place reusable `.scpt` files in a `Libraries/` folder and `load script` them from any script. |
-| **Auto‑completion** | The AppleScript extension offers completions for standard commands (e.g., `display dialog`, `set`). |
-
-**Sample `launch.json`** (debug a script with a breakpoint):
-
-```jsonc
-{
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "lldb",
-      "request": "launch",
-      "name": "Debug AppleScript",
-      "program": "/usr/bin/osascript",
-      "args": ["${file}"],
-      "stopAtEntry": false,
-      "cwd": "${workspaceFolder}"
-    }
-  ]
-}
-```
-
-Add `debugger` inside your script:
-
-```applescript
-display dialog "Before breakpoint"
-debugger   -- ← VS Code will pause here
-display dialog "After breakpoint"
-```
-
-Press **F5** to launch the debugger.
-
----
-
-## 1️⃣2️⃣ Testing  
-
-AppleScript doesn’t have a built‑in test framework, but you can use a simple **test harness** that runs a series of handlers and reports success/failure.
-
-```applescript
--- Test harness (save as TestHarness.applescript)
-property tests : {}
-
-on addTest(testName, testHandler)
-    set end of tests to {testName:testName, handler:testHandler}
-end addTest
-
-on runTests()
-    repeat with t in tests
-        try
-            my (handler of t)()
-            log "✅ " & (testName of t) & " passed"
-        on error errMsg number errNum
-            log "❌ " & (testName of t) & " failed: " & errMsg
-        end try
-    end repeat
-end runTests
-```
-
-**Usage in a script**
-
-```applescript
-load script "/path/to/TestHarness.applescript"
-
--- Define a test
-my addTest("addition works", ¬
-    (→
-        if (2 + 2) ≠ 4 then error "Math broken"
-    )
-)
-
-my runTests()
-```
-
-*If you use VS Code, the **Test Explorer** extension can discover scripts that export a `runTests()` handler and display the results in a side‑panel.*
-
----
-
-## 1️⃣3️⃣ Debugging & Performance  
-
-| Tool | What you can see |
-|------|------------------|
-| **Script Editor Debugger** | Step‑through, watch variables, set breakpoints. |
-| **`log` command** | Sends a line to the macOS Console (viewable in Console.app). |
-| **`beep`** | Auditory cue when a script reaches a point. |
-| **`debugger`** (LLDB) | Works with VS Code’s CodeLLDB integration. |
-| **`time`** (shell) | Wrap an `osascript` call: `time osascript myScript.applescript` to see execution time. |
-
-**Example – Using `log`**
-
-```applescript
-log "Starting heavy loop"
-repeat with i from 1 to 10_000
-    set _ to i * i
+-- Repeat a specific number of times
+repeat 5 times
+    display dialog "Count: " & i
 end repeat
-log "Loop finished"
+
+-- Repeat with counter
+repeat with i from 1 to 10
+    log "Number: " & i
+end repeat
+
+-- Repeat with list items
+set colors to {"Red", "Green", "Blue"}
+repeat with color in colors
+    log "Color: " & color
+end repeat
+
+-- Repeat while condition
+set counter to 1
+repeat while counter ≤ 5
+    log "Counter: " & counter
+    set counter to counter + 1
+end repeat
+
+-- Repeat until condition
+set value to 10
+repeat until value < 0
+    log "Value: " & value
+    set value to value - 2
+end repeat
 ```
+[Documentation: repeat statement](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_control_statements.html#//apple_ref/doc/uid/TP40000983-CH209-SW4)
 
-Open **Console.app**, filter by “AppleScript”, and you’ll see the two log lines.
+## 4. Working with Files and Folders
 
----
-
-## 1️⃣4️⃣ Best‑Practice Checklist  
-
-| ✅ | Checklist item | Why it matters |
-|----|----------------|----------------|
-| ✅ | **Always `tell` a specific application** (don’t use `tell application "System Events"` for everything). | Keeps scripts stable; avoids accidental UI scripting. |
-| ✅ | **Prefer `set` over `property` for transient data** | `property` persists between runs – only use when needed. |
-| ✅ | **Keep handlers small & focused** (single responsibility). | Improves readability and makes testing easier. |
-| ✅ | **Use `try/on error` for every external call** (file IO, UI actions). | Prevents script crashes and gives user‑friendly feedback. |
-| ✅ | **Enable `considering numeric strings` only when necessary** | Avoids subtle type coercion bugs. |
-| ✅ | **Store reusable code in libraries (`load script`)** | Encourages DRY (don’t repeat yourself) and easier versioning. |
-| ✅ | **Document each handler with a leading comment** | Generates readable source for future maintainers. |
-| ✅ | **Run through Script Editor’s “Check Grammar”** before distributing. | Catches syntax errors early. |
-| ✅ | **Add a `run` handler as the clear entry point** | Makes the script self‑documenting. |
-| ✅ | **If you expose UI, ask the user for permission first** | Improves security & user trust. |
-
----
-
-## 1️⃣5️⃣ Case Study – SOLID File‑Organizer & Mailer  
-
-Below is a **single‑file AppleScript** that does three things while respecting SOLID principles:
-
-1. **S** – *Single Responsibility*: each handler does one thing (scan, move, email).  
-2. **O** – *Open‑Closed*: you can add new file‑type actions without touching existing code.  
-3. **L** – *Liskov*: new folder‑handlers inherit from the generic `FolderHandler` protocol.  
-4. **I** – *Interface Segregation*: callers depend only on the methods they need (`scan`, `process`).  
-5. **D** – *Dependency Inversion*: the high‑level script depends on abstract handlers, not concrete file‑system code.
-
-### The script (save as `FileOrganizerMailer.applescript`)
-
+### File Operations
 ```applescript
--- ==============================
--- SOLID File Organizer & Mailer
--- ==============================
-use scripting additions
-use framework "Foundation"
-
--- ==== 1️⃣ ABSTRACT PROTOCOL (interface) ====
-on scanFolder(theFolder) → list
-    error "Must be overridden"
-end scanFolder
-
-on processItem(itemInfo) → boolean
-    error "Must be overridden"
-end processItem
-
--- ==== 2️⃣ CONCRETE HANDLER: Images ====
-script ImageHandler
-    property parent : me   -- inherit abstract protocol
-
-    on scanFolder(theFolder)
-        tell application "Finder"
-            set imgFiles to (files of theFolder whose name extension is "jpg" or name extension is "png")
-            return imgFiles
-        end tell
-    end scanFolder
-
-    on processItem(aFile)
-        tell application "Finder"
-            set destFolder to folder "Pictures:Sorted:" of home
-            move aFile to destFolder
-        end tell
-        return true
-    end processItem
-end script
-
--- ==== 3️⃣ CONCRETE HANDLER: PDFs ====
-script PDFHandler
-    property parent : me
-
-    on scanFolder(theFolder)
-        tell application "Finder"
-            set pdfFiles to (files of theFolder whose name extension is "pdf")
-            return pdfFiles
-        end tell
-    end scanFolder
-
-    on processItem(aFile)
-        tell application "Finder"
-            set destFolder to folder "Documents:PDFs:" of home
-            move aFile to destFolder
-        end tell
-        return true
-    end processItem
-end script
-
--- ==== 4️⃣ HIGH‑LEVEL COORDINATOR ====
-on run
-    set sourceFolder to folder "Desktop:Incoming:" of home
-    set handlers to {ImageHandler, PDFHandler}
-    repeat with h in handlers
-        my handleFolder(h, sourceFolder)
-    end repeat
-    my sendSummaryMail()
-end run
-
-on handleFolder(aHandler, srcFolder)
-    try
-        set itemsToProcess to my aHandler's scanFolder(srcFolder)
-        repeat with i in itemsToProcess
-            my aHandler's processItem(i) -- polymorphic call
-        end repeat
-    on error errMsg number errNum
-        log "❗️Handler error: " & errMsg
-    end try
-end handleFolder
-
--- ==== 5️⃣ Simple email summary (uses Mail.app) ====
-on sendSummaryMail()
-    set subjectLine to "📂 File‑organiser run completed"
-    set bodyText to "All files in ~/Desktop/Incoming have been sorted."
-    tell application "Mail"
-        set newMessage to make new outgoing message with properties {subject:subjectLine, content:bodyText & return}
-        tell newMessage
-            make new to recipient at end of to recipients with properties {address:"you@example.com"}
-            send
-        end tell
+-- Get file information
+set filePath to (path to desktop folder as string) & "example.txt"
+try
+    tell application "System Events"
+        set fileExists to exists file filePath
+        if fileExists then
+            set fileSize to size of file filePath
+            set fileDate to modification date of file filePath
+            display dialog "File exists!" & return & "Size: " & fileSize & " bytes" & return & "Modified: " & fileDate
+        else
+            display dialog "File does not exist."
+        end if
     end tell
-    display notification "Organiser finished – email sent" with title "File Organizer"
-end sendSummaryMail
+end try
+
+-- Create and write to a file
+set fileContent to "This is line 1" & return & "This is line 2" & return & "This is line 3"
+set fileHandle to open for access file filePath with write permission
+set eof of fileHandle to 0
+write fileContent to fileHandle
+close access fileHandle
+
+-- Read from a file
+set fileHandle to open for access file filePath
+set fileContents to read fileHandle
+close access fileHandle
+display dialog "File contents:" & return & fileContents
 ```
+[Documentation: File operations](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW10)
 
-#### How SOLID is expressed  
-
-| SOLID | How the script follows it |
-|------|---------------------------|
-| **S – Single Responsibility** | `ImageHandler` only handles images; `PDFHandler` only handles PDFs. |
-| **O – Open‑Closed** | To add a new file type (e.g., `DocsHandler`), create a new script object that implements `scanFolder` / `processItem`. No existing code changes. |
-| **L – Liskov Substitution** | Both handlers can replace each other in the `handlers` list – they conform to the same abstract protocol. |
-| **I – Interface Segregation** | The high‑level `handleFolder` uses only `scanFolder` + `processItem`. No extra, unused methods are forced on callers. |
-| **D – Dependency Inversion** | The coordinator (`run`) depends on the abstract `handler` objects, not on the Finder directly. |
-
-> **Run it** – Save the script, then `osascript FileOrganizerMailer.applescript` from Terminal or press **Ctrl+Shift+B** with the VS Code task defined earlier.  
-
-> **Tip** – If you want to **extend** the script without editing the main file, place each handler in its own `.scpt` file inside a `Handlers/` folder and `load script` them at runtime.
-
----
-
-## 1️⃣6️⃣ RAD Helper Library  
-
-Copy‑paste these utilities into a file called `Utilities.scpt` and `load script` it from any script. They make rapid prototyping (especially for non‑programmers) painless.
-
+### Folder Operations
 ```applescript
--- Utilities.scpt – ready‑to‑use helpers for AppleScript RAD
-use scripting additions
-use framework "Foundation"
+-- List folder contents
+tell application "System Events"
+    set folderPath to path to desktop folder
+    set folderItems to name of every item of folderPath
+end tell
 
--- 1️⃣ Prompt the user for a string (with a default)
-on promptUser(promptMessage, defaultAnswer:"")
-    display dialog promptMessage default answer defaultAnswer
-    return text returned of result
-end promptUser
+set itemList to ""
+repeat with item in folderItems
+    set itemList to itemList & item & return
+end repeat
 
--- 2️⃣ Choose a file via standard Open dialog
-on chooseFile(promptMessage:"Select a file")
-    set chosenFile to (choose file with prompt promptMessage)
-    return chosenFile
-end chooseFile
+display dialog "Desktop items:" & return & itemList
 
--- 3️⃣ Simple alert (no buttons, just OK)
-on showAlert(messageText)
-    display alert messageText buttons {"OK"} default button 1
-end showAlert
+-- Create a new folder
+set newFolderName to "AppleScript Test"
+set desktopPath to (path to desktop folder as string)
+set newFolderPath to desktopPath & newFolderName
 
--- 4️⃣ Run a shell command and get its stdout as a string
-on runShell(commandString)
-    set task to current application's NSTask's alloc()'s init()
-    task's setLaunchPath:"/bin/bash"
-    task's setArguments:{"-c", commandString}
-    set pipe to current application's NSPipe's pipe()
-    task's setStandardOutput:pipe
-    task's launch()
-    task's waitUntilExit()
-    set data to pipe's fileHandleForReading's readDataToEndOfFile()
-    set output to (current application's NSString's alloc()'s initWithData:data encoding:(current application's NSUTF8StringEncoding)) as text
-    return output
-end runShell
-
--- 5️⃣ JSON encode a record (requires macOS 10.15+)
-on jsonEncode(recordData)
-    set jsonData to current application's NSJSONSerialization's dataWithJSONObject:recordData options:0 |error|:(reference)
-    if jsonData is missing value then error "JSON encode failed"
-    set jsonString to current application's NSString'salloc()'s initWithData:jsonData encoding:(current application's NSUTF8StringEncoding)
-    return jsonString as text
-end jsonEncode
-
--- 6️⃣ Delay (seconds) – useful in UI scripts
-on delaySeconds(sec)
-    delay sec
-end delaySeconds
-
--- 7️⃣ Log to Console.app (useful for debugging without popping dialogs)
-on logMessage(msg)
-    log msg
-end logMessage
+tell application "System Events"
+    if not (exists folder newFolderPath) then
+        make new folder at desktop with properties {name:newFolderName}
+        display dialog "Created folder: " & newFolderName
+    else
+        display dialog "Folder already exists."
+    end if
+end tell
 ```
 
-**Typical usage**
+## 5. Working with Applications
 
+### Basic Application Control
 ```applescript
-load script "Utilities.scpt"
+-- Launch an application
+tell application "Safari"
+    activate
+    -- Open a URL
+    open location "https://www.apple.com"
+end tell
 
-set name to my promptUser("What is your name?", defaultAnswer:"Ada")
-my showAlert("Hello, " & name & "!")
-my logMessage("User entered: " & name)
+-- Get application information
+tell application "Finder"
+    set frontWindow to front window
+    set windowBounds to bounds of frontWindow
+    display dialog "Front Finder window bounds: " & windowBounds
+end tell
 
-set filePath to my chooseFile()
-set fileContents to read filePath
-my logMessage("Read " & (length of fileContents) & " characters")
+-- Quit an application
+tell application "TextEdit"
+    if it is running then
+        quit
+        display dialog "TextEdit has been quit."
+    else
+        display dialog "TextEdit is not running."
+    end if
+end tell
+```
+[Documentation: Application scripting](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/conceptual/ASLR_about_handlers.html#//apple_ref/doc/uid/TP40000983-CH206-SW1)
+
+### TextEdit Automation
+```applescript
+tell application "TextEdit"
+    activate
+    -- Create a new document
+    set newDoc to make new document
+    -- Set document content
+    set text of newDoc to "This is line 1" & return & "This is line 2" & return & "Date: " & (current date)
+    -- Save the document
+    set docName to "AppleScript Document"
+    set desktopPath to (path to desktop folder as string)
+    set docPath to desktopPath & docName & ".txt"
+    save newDoc in file docPath
+end tell
+
+display dialog "Document saved to desktop."
 ```
 
-These helpers reduce the boiler‑plate that usually scares non‑programmers away from scripting.
+### Safari Automation
+```applescript
+tell application "Safari"
+    activate
+    -- Get current tab information
+    tell front document
+        set currentURL to URL of current tab
+        set pageTitle to name of current tab
+    end tell
+    
+    display dialog "Current page:" & return & "Title: " & pageTitle & return & "URL: " & currentURL
+    
+    -- Open multiple tabs
+    set urlsToOpen to {"https://www.apple.com", "https://developer.apple.com", "https://support.apple.com"}
+    
+    repeat with url in urlsToOpen
+        tell front window
+            set current tab to (make new tab with properties {URL:url})
+        end tell
+    end repeat
+end tell
+```
 
----
+## 6. User Interaction
 
-## 1️⃣7️⃣ Glossary & Further Resources  
+### Dialogs and Alerts
+```applescript
+-- Simple dialog
+display dialog "Do you want to continue?" buttons {"Yes", "No"} default button 1
 
-| Term | Plain‑English definition |
-|------|--------------------------|
-| **`tell` block** | “Hey, *application X*, do these commands.” |
-| **`alias` / `file`** | References to a file or folder; `alias` uses Finder‑style colon paths, `POSIX file` uses `/` paths. |
-| **`handler`** | Function‑like block; can take parameters and return a value. |
-| **`run` handler** | The entry point that executes when the script is launched. |
-| **`considering`** | Temporary change of type‑coercion rules. |
-| **`script object`** | An object defined with `script … end script`; can have its own properties and handlers. |
-| **`UI scripting`** | Controlling the UI (buttons, menus) via the **System Events** scripting addition. |
-| **`AppleScriptObjC`** | Bridge that lets AppleScript call native Cocoa classes/methods. |
-| **`load script`** | Import another compiled/script file (`.scpt`) at runtime. |
-| **`property`** | Persistent value that survives across script runs when saved as a compiled script. |
-| **`global`** | Variable visible to any handler in the script. |
+-- Dialog with input
+set userResponse to display dialog "Enter your name:" default answer "Anonymous"
+set userName to text returned of userResponse
 
-### Official Documentation (latest)
+-- Dialog with choices
+set userChoice to choose from list {"Red", "Green", "Blue"} with prompt "Choose a color:"
+if userChoice is not false then
+    set selectedColor to item 1 of userChoice
+    display dialog "You selected: " & selectedColor
+end if
 
-| Area | Link |
-|------|------|
-| AppleScript Language Guide (AppleScript 2.0+) | 🔗[AppleScript Language Guide – Introduction](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html) |
-| Lexical Conventions | 🔗[Lexical Conventions](https://developer.apple.com/conceptual/ASLR_lexical_conventions.html) |
-| Variables & Properties | 🔗[Variables and Properties](https://developer.apple.com/conceptual/ASLR_variables.html) |
-| Handlers | 🔗[About Handlers](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_reference_forms.html) |
-| Commands Reference (full list of built‑in commands) | 🔗[Commands Reference](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_reference_forms.html) |
-| UI Scripting Overview | 🔗[UI Scripting Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/UI_Scripting/ui_scripting.html) |
-| AppleScriptObjC Guide | 🔗[AppleScriptObjC Release Notes](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptObjC/AppleScriptObjC.html) |
-| Script Editor Help (built‑in) | Open Script Editor → Help → *AppleScript Language Guide*. |
-| VS Code AppleScript Extension | 🔗[AppleScript (kylescott) on VS Marketplace](https://marketplace.visualstudio.com/items?itemName=KyleScott.appleScript) |
-| `osascript` man page | In Terminal: `man osascript` (covers command‑line usage). |
+-- File selection
+set chosenFile to choose file with prompt "Select a file:"
+display dialog "You selected: " & (POSIX path of chosenFile)
 
----
+-- Folder selection
+set chosenFolder to choose folder with prompt "Select a folder:"
+display dialog "You selected: " & (POSIX path of chosenFolder)
+```
+[Documentation: User interaction](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html#//apple_ref/doc/uid/TP40000983-CH216-SW1)
 
-## 🎉 Congratulations!  
+## 7. System Information and Control
 
-You now have:
+### Getting System Information
+```applescript
+-- System information
+tell application "System Events"
+    set sysInfo to system info
+    set osVersion to system version of sysInfo
+    set cpuName to CPU type of sysInfo
+    set ramSize to RAM size of sysInfo
+end tell
 
-* **A complete, up‑to‑date AppleScript learning path** (including VS Code workflow).  
-* **A SOLID‑style production script** you can adapt to your own automation tasks.  
-* **A “RAD Helper” library** that lets anyone—no matter their coding background—create useful scripts quickly.  
+-- Current user information
+tell application "System Events"
+    set currentUser to name of current user
+    set loginName to short user name of current user
+end tell
 
-Open Script Editor, fire up VS Code, or run from Terminal and start automating your Mac like a pro. 🚀  
+-- Display information
+display dialog "System Information:" & return & ¬
+    "OS Version: " & osVersion & return & ¬
+    "CPU: " & cpuName & return & ¬
+    "RAM: " & ramSize & " GB" & return & ¬
+    "Current User: " & currentUser
+```
+
+### System Control
+```applescript
+-- Volume control
+set volume output volume 50  -- Set volume to 50%
+
+-- Screen brightness (requires additional permissions)
+-- tell application "System Preferences"
+--     activate
+--     set current pane to pane "com.apple.preference.displays"
+-- end tell
+
+-- Sleep display
+tell application "System Events"
+    sleep
+end tell
+
+-- Get current date and time
+set now to current date
+set timeString to time string of now
+set dateString to date string of now
+
+display dialog "Current time: " & timeString & return & "Current date: " & dateString
+```
+
+## 8. Working with Lists and Records
+
+### List Operations
+```applescript
+-- Create and manipulate lists
+set fruits to {"Apple", "Banana", "Orange", "Grape"}
+set numberOfFruits to length of fruits
+
+-- Add items
+set end of fruits to "Pineapple"
+set beginning of fruits to "Strawberry"
+
+-- Access items
+set firstFruit to item 1 of fruits
+set lastFruit to item -1 of fruits
+set secondFruit to item 2 of fruits
+
+-- Remove items
+set fruits to items 2 thru -1 of fruits  -- Remove first item
+
+-- Sort list
+set sortedFruits to fruits's contents  -- This doesn't sort, just copies
+-- For actual sorting, you'd need a more complex approach
+
+-- Display results
+set listString to ""
+repeat with fruit in fruits
+    set listString to listString & fruit & ", "
+end repeat
+
+display dialog "Fruits: " & listString & return & "Count: " & numberOfFruits
+```
+
+### Record Operations
+```applescript
+-- Create records
+set person to {name:"John", age:30, city:"New York"}
+set book to {title:"AppleScript Guide", author:"Jane Smith", pages:250}
+
+-- Access record properties
+set personName to name of person
+set bookTitle to title of book
+
+-- Modify record properties
+set age of person to 31
+set pages of book to 300
+
+-- Create nested records
+set employee to {name:"Alice", department:"Engineering", contact:{email:"alice@company.com", phone:"555-1234"}}
+
+set employeeEmail to email of contact of employee
+
+-- Display information
+display dialog "Person: " & personName & ", Age: " & age of person & return & ¬
+    "Book: " & bookTitle & ", Pages: " & pages of book & return & ¬
+    "Employee: " & name of employee & ", Email: " & employeeEmail
+```
+
+## 9. Text Processing
+
+### String Manipulation
+```applescript
+set originalText to "Hello, World! This is AppleScript."
+
+-- String length
+set textLength to length of originalText
+
+-- Substrings
+set firstWord to characters 1 thru 5 of originalText as string
+set lastWord to characters -10 thru -2 of originalText as string
+
+-- Text replacement
+set modifiedText to my replaceText(originalText, "AppleScript", "Automation")
+
+-- Text case conversion
+set upperText to my toUpper(originalText)
+set lowerText to my toLower(originalText)
+
+-- Word count
+set wordCount to count of words of originalText
+
+-- Character count
+set charCount to count of characters of originalText
+
+display dialog "Original: " & originalText & return & ¬
+    "Length: " & textLength & return & ¬
+    "First word: " & firstWord & return & ¬
+    "Modified: " & modifiedText & return & ¬
+    "Uppercase: " & upperText & return & ¬
+    "Word count: " & wordCount
+
+-- Handler to replace text
+on replaceText(sourceText, searchText, replacementText)
+    set {oldDelimiters, AppleScript's text item delimiters} to {AppleScript's text item delimiters, searchText}
+    set textItems to text items of sourceText
+    set AppleScript's text item delimiters to replacementText
+    set newText to textItems as string
+    set AppleScript's text item delimiters to oldDelimiters
+    return newText
+end replaceText
+
+-- Handler to convert to uppercase
+on toUpper(sourceText)
+    set upperChars to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    set lowerChars to "abcdefghijklmnopqrstuvwxyz"
+    
+    set resultText to ""
+    repeat with i from 1 to length of sourceText
+        set char to character i of sourceText
+        set charIndex to offset of char in lowerChars
+        if charIndex > 0 then
+            set resultText to resultText & character charIndex of upperChars
+        else
+            set resultText to resultText & char
+        end if
+    end repeat
+    return resultText
+end toUpper
+
+-- Handler to convert to lowercase
+on toLower(sourceText)
+    set upperChars to "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    set lowerChars to "abcdefghijklmnopqrstuvwxyz"
+    
+    set resultText to ""
+    repeat with i from 1 to length of sourceText
+        set char to character i of sourceText
+        set charIndex to offset of char in upperChars
+        if charIndex > 0 then
+            set resultText to resultText & character charIndex of lowerChars
+        else
+            set resultText to resultText & char
+        end if
+    end repeat
+    return resultText
+end toLower
+```
+
+## 10. Date and Time Handling
+
+### Date Operations
+```applescript
+-- Current date and time
+set now to current date
+set currentTime to time string of now
+set currentDate to date string of now
+
+-- Create specific dates
+set specificDate to date "January 1, 2024"
+set futureDate to (current date) + (7 * days)  -- 7 days from now
+set pastDate to (current date) - (30 * days)   -- 30 days ago
+
+-- Date components
+set theYear to year of now
+set theMonth to month of now
+set theDay to day of now
+set theWeekday to weekday of now
+
+-- Time calculations
+set oneHour to 1 * hours
+set thirtyMinutes to 30 * minutes
+set futureTime to (current date) + oneHour + thirtyMinutes
+
+-- Format date for display
+set formattedDate to (month of now) & " " & (day of now) & ", " & (year of now)
+
+display dialog "Current time: " & currentTime & return & ¬
+    "Current date: " & currentDate & return & ¬
+    "Formatted date: " & formattedDate & return & ¬
+    "Future date: " & futureDate & return & ¬
+    "Weekday: " & theWeekday
+```
+
+## 11. Working with Clipboard
+
+### Clipboard Operations
+```applescript
+-- Get clipboard contents
+set clipboardContent to the clipboard
+
+-- Set clipboard contents
+set the clipboard to "This text is now on the clipboard"
+
+-- Clipboard with styled text (in TextEdit)
+tell application "TextEdit"
+    activate
+    set the clipboard to "Styled clipboard text"
+    tell application "System Events"
+        keystroke "v" using command down
+    end tell
+end tell
+
+-- Clipboard with file references
+set fileRef to alias "Macintosh HD:Users:Shared:"
+set the clipboard to fileRef
+
+display dialog "Clipboard content was: " & clipboardContent & return & ¬
+    "Clipboard has been updated with new text."
+```
+
+## 12. Advanced Scripting Techniques
+
+### Handlers (Functions)
+```applescript
+-- Simple handler
+on greet(name)
+    return "Hello, " & name & "!"
+end greet
+
+-- Handler with multiple parameters
+on calculateArea(length, width)
+    return length * width
+end calculateArea
+
+-- Handler that returns multiple values
+on getMinMax(numbers)
+    set minVal to item 1 of numbers
+    set maxVal to item 1 of numbers
+    
+    repeat with num in numbers
+        if num < minVal then set minVal to num
+        if num > maxVal then set maxVal to num
+    end repeat
+    
+    return {min:minVal, max:maxVal}
+end getMinMax
+
+-- Using the handlers
+set greeting to my greet("Alice")
+set area to my calculateArea(10, 5)
+
+set numberList to {3, 7, 1, 9, 4}
+set minMaxResult to my getMinMax(numberList)
+set minValue to min of minMaxResult
+set maxValue to max of minMaxResult
+
+display dialog greeting & return & ¬
+    "Area: " & area & return & ¬
+    "Min: " & minValue & ", Max: " & maxValue
+```
+
+### Properties (Global Variables)
+```applescript
+-- Properties retain their values between script runs
+property counter : 0
+property lastRunDate : missing value
+
+-- Increment counter
+set counter to counter + 1
+
+-- Update last run date
+set lastRunDate to current date
+
+display dialog "This script has run " & counter & " times." & return & ¬
+    "Last run: " & lastRunDate
+```
+
+### Script Objects
+```applescript
+-- Create a script object
+script Calculator
+    on add(a, b)
+        return a + b
+    end add
+    
+    on multiply(a, b)
+        return a * b
+    end multiply
+    
+    on power(base, exponent)
+        set result to 1
+        repeat exponent times
+            set result to result * base
+        end repeat
+        return result
+    end power
+end script
+
+-- Use the script object
+set sum to Calculator's add(5, 3)
+set product to Calculator's multiply(4, 7)
+set powerResult to Calculator's power(2, 8)
+
+display dialog "5 + 3 = " & sum & return & ¬
+    "4 × 7 = " & product & return & ¬
+    "2^8 = " & powerResult
+```
+
+## 13. Working with System Events
+
+### UI Scripting
+```applescript
+-- Note: UI scripting requires accessibility permissions
+-- System Preferences > Security & Privacy > Privacy > Accessibility
+
+tell application "System Events"
+    -- Get information about the front process
+    set frontAppName to name of first application process whose frontmost is true
+    
+    -- Get UI elements of the front application
+    tell process frontAppName
+        -- This would depend on the specific application
+        -- set windowCount to count of windows
+    end tell
+end tell
+
+-- Example: Working with the Dock
+tell application "System Events"
+    tell dock preferences
+        set magnification to true
+        set magnification size to 0.7
+        set autohide to true
+    end tell
+end tell
+
+display dialog "Front application: " & frontAppName
+```
+
+## 14. Practical Examples
+
+### File Organizer Script
+```applescript
+-- This script organizes files on the desktop by extension
+tell application "System Events"
+    set desktopItems to every item of desktop
+    set fileCount to 0
+    
+    repeat with anItem in desktopItems
+        if class of anItem is file then
+            set fileCount to fileCount + 1
+            set fileName to name of anItem
+            set fileExtension to name extension of anItem
+            
+            -- Create folder for extension if it doesn't exist
+            set folderName to fileExtension & " Files"
+            set folderPath to ((path to desktop folder) & folderName) as string
+            
+            if not (exists folder folderPath) then
+                make new folder at desktop with properties {name:folderName}
+            end if
+            
+            -- Move file to appropriate folder
+            move anItem to folder folderPath
+        end if
+    end repeat
+end tell
+
+display dialog "Organized " & fileCount & " files on the desktop."
+```
+
+### System Monitor Script
+```applescript
+-- Get system information
+tell application "System Events"
+    set sysInfo to system info
+    set cpuName to CPU type of sysInfo
+    set ramSize to RAM size of sysInfo
+    set osVersion to system version of sysInfo
+end tell
+
+-- Get current user
+tell application "System Events"
+    set currentUser to name of current user
+end tell
+
+-- Get current date and time
+set now to current date
+set timeString to time string of now
+set dateString to date string of now
+
+-- Display system information
+display dialog "System Information:" & return & ¬
+    "User: " & currentUser & return & ¬
+    "OS: " & osVersion & return & ¬
+    "CPU: " & cpuName & return & ¬
+    "RAM: " & ramSize & " GB" & return & ¬
+    "Date: " & dateString & return & ¬
+    "Time: " & timeString
+```
+
+### Text File Processor
+```applescript
+-- Choose a text file to process
+set chosenFile to choose file with prompt "Select a text file to process:"
+
+-- Read the file
+set fileHandle to open for access chosenFile
+set fileContents to read fileHandle
+close access fileHandle
+
+-- Process the text (count words, lines, characters)
+set lineCount to count of paragraphs of fileContents
+set wordCount to count of words of fileContents
+set charCount to count of characters of fileContents
+
+-- Find most frequent word
+set wordList to words of fileContents
+set wordFrequency to {}
+repeat with aWord in wordList
+    set currentWord to contents of aWord
+    set found to false
+    repeat with i from 1 to length of wordFrequency
+        if item 1 of item i of wordFrequency is currentWord then
+            set item 2 of item i of wordFrequency to (item 2 of item i of wordFrequency) + 1
+            set found to true
+            exit repeat
+        end if
+    end repeat
+    if not found then
+        set end of wordFrequency to {currentWord, 1}
+    end if
+end repeat
+
+-- Find most frequent word
+set maxCount to 0
+set mostFrequentWord to ""
+repeat with wordItem in wordFrequency
+    if item 2 of wordItem > maxCount then
+        set maxCount to item 2 of wordItem
+        set mostFrequentWord to item 1 of wordItem
+    end if
+end repeat
+
+-- Display results
+display dialog "File Analysis:" & return & ¬
+    "File: " & (name of (info for chosenFile)) & return & ¬
+    "Lines: " & lineCount & return & ¬
+    "Words: " & wordCount & return & ¬
+    "Characters: " & charCount & return & ¬
+    "Most frequent word: " & mostFrequentWord & " (" & maxCount & " times)"
+```
+
+## Running and Saving Scripts
+
+### How to Run Scripts
+1. Open Script Editor
+2. Write your script
+3. Press Cmd+R or click the "Run" button
+4. Save with Cmd+S
+
+### Saving Options
+```applescript
+-- Scripts can be saved as:
+-- 1. Script (.scpt) - editable AppleScript file
+-- 2. Application (.app) - double-clickable app
+-- 3. Text (.txt) - plain text file
+-- 4. Script Bundle (.scptd) - bundle with resources
+```
+
+### Compiling and Running from Command Line
+```bash
+# Save your script as script.scpt first
+osascript script.scpt
+
+# Or run inline scripts
+osascript -e 'display dialog "Hello from command line!"'
+```
+
+This tutorial provides a comprehensive introduction to AppleScript programming with practical examples. Each code block is designed to be copy-paste friendly for rapid development and learning. 
+
+For more detailed information, refer to the official [AppleScript Language Guide](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/introduction/ASLR_intro.html) and [AppleScript Command Reference](https://developer.apple.com/library/archive/documentation/AppleScript/Conceptual/AppleScriptLangGuide/reference/ASLR_cmds.html).

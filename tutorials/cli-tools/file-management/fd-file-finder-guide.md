@@ -1,213 +1,186 @@
-# 🗂️ **Complete Guide – Installing `fd` on an Apple‑Silicon (ARM) Mac with Homebrew**  
-*(styled like the official Docker guide you referenced)*  
+# Complete Guide to Installing and Using `fd` with Homebrew
 
-> **What’s fd?**  
-> `fd` is a simple, fast, and user‑friendly alternative to GNU `find`. It defaults to a smart‑case regular‑expression search, skips hidden files and `.gitignore` patterns, and prints colour‑coded results.  
+`fd` is a fast and user-friendly alternative to the `find` command. It simplifies searching for files and directories in your system with a more intuitive syntax and better performance. This guide will walk you through installing `fd` using Homebrew, using it with practical examples, and linking to the official documentation.
 
----  
+---
 
 ## Table of Contents
-1. [Prerequisites – Homebrew](#1‑prereqs)  
-2. [Install `fd` via Homebrew](#2‑install)  
-3. [Verify the installation & locate the binaries](#3‑verify)  
-4. [Where Homebrew puts `fd` on Apple Silicon](#4‑locations)  
-5. [Shell‑completion setup (bash, zsh, fish)](#5‑completion)  
-6. [Basic usage – copy‑paste one‑liners](#6‑cheatsheet)  
-7. [Advanced options you’ll reach for often](#7‑advanced)  
-8. [Keeping `fd` up‑to‑date](#8‑upgrade)  
-9. [Uninstall / clean‑up](#9‑uninstall)  
-10. [Common pitfalls & troubleshooting](#10‑troubleshoot)  
 
----  
+1. [What is `fd`?](#what-is-fd)
+2. [Prerequisites](#prerequisites)
+3. [Installing `fd` with Homebrew](#installing-fd-with-homebrew)
+4. [Basic Usage of `fd`](#basic-usage-of-fd)
+5. [Advanced Examples](#advanced-examples)
+6. [Comparison with `find`](#comparison-with-find)
+7. [Official Documentation](#official-documentation)
 
-<a name="1‑prereqs"></a>
-## 1️⃣  Prerequisites – Homebrew  
+---
 
-```bash
-# Verify Homebrew version (needs v4+)
-brew --version
-```
+## What is `fd`?
 
-If the command is missing, install Homebrew **once** (default prefix **/opt/homebrew** for Apple Silicon) 【14†L190-L192】:
+`fd` is a command-line tool designed to help you find files and directories quickly. It's built with usability in mind and offers:
+
+- **Speed**: Faster than traditional `find`.
+- **Simplicity**: Easier syntax.
+- **Colorized Output**: Better readability.
+- **Smart Defaults**: Ignores hidden files and VCS folders by default.
+
+For more information, visit the [official `fd` GitHub repository](https://github.com/sharkdp/fd).
+
+---
+
+## Prerequisites
+
+Before installing `fd`, you need to have **Homebrew** installed on your macOS or Linux system.
+
+### Installing Homebrew (if not already installed):
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-> Homebrew’s default prefix on M1/M2 Macs is `/opt/homebrew`; using the default guarantees you get the pre‑compiled binary “bottles” for `fd` 【14†L190-L192】.  
+Once Homebrew is installed, you're ready to proceed.
 
----  
+---
 
-<a name="2‑install"></a>
-## 2️⃣  Install `fd` via Homebrew  
+## Installing `fd` with Homebrew
 
-| What you get | Command | Result |
-|--------------|---------|--------|
-| **fd** – the executable only (no GUI) | `brew install fd` | Installs the latest stable version 10.3.0 【18†L4-L9】【18†L34-L35】 |
-| **Build from source** (fallback) | `brew install --build-from-source fd` | Compiles locally – only needed on very old macOS releases. |
-
-Homebrew supplies a **pre‑built bottle for Apple Silicon** (macOS Sequoia, Sonoma, Ventura) 【18†L20-L24】, so the install is instant.  
-
----  
-
-<a name="3‑verify"></a>
-## 3️⃣  Verify the installation & locate the binary  
+To install `fd` using Homebrew, run the following command in your terminal:
 
 ```bash
-fd --version          # → 10.3.0
-which fd              # → /opt/homebrew/bin/fd
-fd -h                 # concise help
-fd --help             # full help page
+brew install fd
 ```
 
-If you see the version and the path under **/opt/homebrew**, you’re ready to roll.  
-
----  
-
-<a name="4‑locations"></a>
-## 4️⃣  Where Homebrew puts `fd` on Apple Silicon  
-
-| Item | Path (Apple Silicon) | How to retrieve |
-|------|----------------------|-----------------|
-| **Executable** | `/opt/homebrew/opt/fd/bin/fd` (symlinked to `/opt/homebrew/bin/fd`) | `$(brew --prefix fd)/bin/fd` |
-| **Man page** | `/opt/homebrew/share/man/man1/fd.1` | `man fd` |
-| **Bash completions** | `$(brew --prefix)/etc/bash_completion.d/fd` | `brew completions` |
-| **Zsh completions** | `$(brew --prefix)/share/zsh/site-functions/_fd` | automatically loaded by `zsh` |
-| **Fish completions** | `$(brew --prefix)/share/fish/vendor_completions.d/fd.fish` | auto‑loaded by `fish` |
-| **Configuration files** | None required; optional `.fdignore` / `.gitignore` are read from the searched directory. | — |
-
-*All of the above live under the Homebrew prefix `/opt/homebrew` on Apple Silicon.*  
-
----  
-
-<a name="5‑completion"></a>
-## 5️⃣  Shell‑completion setup  
-
-Homebrew installs the completion scripts automatically. You only need to ensure the completion directories are on your `$FPATH`/`$PATH` (they are by default).
+After installation, verify that `fd` is installed correctly:
 
 ```bash
-# Bash (if you use bash-completion@2)
-[[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && . "$(brew --prefix)/etc/profile.d/bash_completion.sh"
-
-# Zsh (most macOS zsh setups already source completions)
-type _fd   # should show a function
-
-# Fish – nothing to do, Fish reads completions from the directory automatically
+fd --version
 ```
 
-If completions don’t appear, reload the shell or source the file directly:
+This command should return the installed version of `fd`.
+
+For more details, refer to the [official Homebrew installation guide](https://github.com/sharkdp/fd#on-macos-or-linux-using-homebrew).
+
+---
+
+## Basic Usage of `fd`
+
+### Searching for Files
+
+To search for files by name:
 
 ```bash
-source "$(brew --prefix)/etc/bash_completion.d/fd"
+fd example.txt
 ```
 
----  
+This command searches for files named `example.txt` in the current directory and subdirectories.
 
-<a name="6‑cheatsheet"></a>
-## 6️⃣  **Basic usage – copy‑paste one‑liners**  
+### Searching for Directories
 
-| Goal | Command | Explanation |
-|------|---------|-------------|
-| Find any file containing **foo** in the current tree | `fd foo` | Regex search (case‑insensitive by default) |
-| Search only *.txt* files | `fd -e txt` | `-e/--extension` limits to the given extension 【19†L80-L87】 |
-| Match a literal string (no regex) | `fd -F "my‑file.txt"` | `-F/--fixed-strings` treats the pattern as plain text |
-| Search with a glob pattern | `fd -g "*.md"` | `-g/--glob` uses shell‑style globs 【19†L98-L102】 |
-| Include hidden files | `fd -H secret` | `-H/--hidden` disables hidden‑file exclusion 【19†L110-L114】 |
-| Ignore .gitignore (search everything) | `fd -u "TODO"` | `-u/--unrestricted` = `-H -I` 【19†L132-L136】 |
-| Search a specific directory | `fd pattern /path/to/dir` | Provide one or more start paths |
-| Show only directories | `fd -t d src/` | `-t/--type d` (d = directory) |
-| Execute a command for each match (parallel) | `fd -x rm {} \;` | `-x/--exec` runs a command per result 【19†L152-L154】 |
-| Print full path (instead of relative) | `fd -p pattern` | `-p/--full-path` matches against the whole path 【19†L136-L142】 |
-| Show a tree view of depth 2 | `fd -d 2 . | tree -C` | Combine with `tree` for a visual hierarchy |
-| Colour‑disable for scripts | `fd --color=never pattern` | Force plain output (useful when piping) |
-| Show help | `fd -h` | Concise usage summary |
-| Show exhaustive help | `fd --help` | Full manual‑page‑style help |
-
-All commands behave identically on Intel Macs; only the binary location changes.  
-
----  
-
-<a name="7‑advanced"></a>
-## 7️⃣  **Advanced options you’ll reach for often**  
-
-| Option | Example | What it does |
-|--------|---------|--------------|
-| `-I / --no-ignore` | `fd -I Cargo.toml` | Search **ignoring** all `.gitignore` / `.fdignore` rules. |
-| `-p / --full-path` | `fd -p -g '**/test_*.rs'` | Match against the **entire path** (great with `**`). |
-| `-x / --exec` | `fd -x echo "found: {}"` | Run a command **for each match** (parallel by default). |
-| `-X / --exec-batch` | `fd -X tar -czf hits.tar.gz {}` | Run a command **once** with all matches as arguments. |
-| `-t / --type` | `fd -t f -e rs src/` | Limit to *file* (`f`), *directory* (`d`), *symlink* (`l`), *executable* (`x`). |
-| `--max-depth N` | `fd -d 2 .` | Stop recursing after **N** directory levels. |
-| `--exclude PATTERN` | `fd --exclude node_modules` | Skip any path matching the pattern. |
-| `--color=always|never|auto` | `fd --color=never` | Control colourised output (useful in scripts). |
-| `--changed` | `fd --changed` | Show only files changed since the last git commit (uses git). |
-| `--changed-within 2d` | `fd --changed-within 2d` | Files changed within the last *2 days*. |
-| `--search-path PATH` | `fd -g "*.go" --search-path $GOPATH/src` | Override the search root without changing the working directory. |
-| `--exec sh -c 'mv {} /tmp/old/'` | `fd -e log -x sh -c 'mv {} /tmp/old/'` | Complex shell pipelines for each result. |
-
-Run `fd --help` to see the entire option set.  
-
----  
-
-<a name="8‑upgrade"></a>
-## 8️⃣  Keep `fd` up‑to‑date  
+To search for directories:
 
 ```bash
-brew update               # refresh formula list
-brew upgrade fd          # upgrade just fd
-# or upgrade everything
-brew upgrade
+fd -t d my_directory
 ```
 
-Homebrew will replace the old binary in `/opt/homebrew/opt/fd` with the new one, preserving completions.  
+The `-t d` flag specifies that you're searching for directories.
 
----  
+### Case-Insensitive Search
 
-<a name="9‑uninstall"></a>
-## 9️⃣  Uninstall / clean‑up  
+To perform a case-insensitive search:
 
 ```bash
-# Remove the formula
-brew uninstall fd
-
-# (Optional) purge leftover caches & logs
-brew cleanup fd
+fd -i example
 ```
 
-If you ever need to wipe *all* Homebrew data (including other formulae) you can run the Homebrew uninstall script, but for `fd` alone the two commands above are sufficient.  
+The `-i` flag makes the search case-insensitive.
 
----  
+### Search in a Specific Directory
 
-<a name="10‑troubleshoot"></a>
-## ⚠️ 10️⃣  Common pitfalls & troubleshooting  
+To search in a specific directory:
 
-| Symptom | Likely cause | Fix |
-|---------|--------------|-----|
-| `command not found: fd` after install | `$PATH` does not include `/opt/homebrew/bin` (rare on fresh shells) | Add `export PATH="/opt/homebrew/bin:$PATH"` to `~/.zshrc` / `~/.bash_profile`. |
-| `fd: command not found` in a script run with `sudo` | `sudo` clears the environment and drops Homebrew’s prefix | Run `sudo -E` to preserve env, or avoid `sudo` (fd never needs root). |
-| Completion doesn’t work in Bash | Bash‑completion not loaded (Homebrew’s `bash_completion@2` missing) | `brew install bash-completion@2` and source `/opt/homebrew/etc/bash_completion.d/fd`. |
-| `fd` returns **no results** when files exist | Hidden files or ignored patterns may be excluded | Add `-H` to include hidden files, or `-u` to ignore `.gitignore`. |
-| “`fd` is a symbolic link to a non‑existent file” after macOS upgrade | Homebrew prefix moved (rare) | Reinstall: `brew reinstall fd`. |
-| Build fails on very old macOS | No pre‑built bottle for that version | Use `brew install --build-from-source fd`. |
+```bash
+fd example.txt /path/to/search
+```
 
-For deeper diagnostics, run `brew doctor` and check the Homebrew logs (`$HOME/Library/Logs/Homebrew/fd`).  
+This command searches for `example.txt` in the specified directory.
 
----  
+For more usage examples, visit the [official `fd` usage documentation](https://github.com/sharkdp/fd#tutorial).
 
-## 📚  Reference list (official sources)
+---
 
-| Topic | Link |
-|-------|------|
-| Homebrew formula page for `fd` | <https://formulae.brew.sh/formula/fd> 【18†L4-L9】 |
-| Apple‑Silicon bottle support (✓) | <https://formulae.brew.sh/formula/fd> 【18†L20-L24】 |
-| Homebrew default prefix on Apple Silicon | <https://docs.brew.sh/FAQ#why-does-homebrew-say-sudo-is-bad> 【14†L190-L192】 |
-| `fd` README – usage & options | <https://github.com/sharkdp/fd/blob/master/README.md> 【19†L80-L102】【19†L110-L118】【19†L132-L138】 |
-| Shell‑completion docs (Homebrew) | <https://docs.brew.sh/Shell-Completion> |
-| Updating / cleaning Homebrew | <https://docs.brew.sh/FAQ#upgrading-and-cleaning> |
-| Uninstalling a Homebrew formula | <https://docs.brew.sh/Manpage#uninstall> |
+## Advanced Examples
 
----  
+### Search with Regular Expressions
 
-### 🎉 You’re all set!  
+To use regular expressions in your search:
 
-Run `fd --help` to see the full option list, then start hunting files faster than ever on your M‑series Mac. 🚀  
+```bash
+fd '^.*\.py$'
+```
+
+This command finds all Python files (`.py` extension) in the current directory.
+
+### Exclude Specific Files or Directories
+
+To exclude certain files or directories:
+
+```bash
+fd example --exclude node_modules
+```
+
+This command searches for `example` but skips the `node_modules` directory.
+
+### Search by File Extension
+
+To search for files with a specific extension:
+
+```bash
+fd -e md
+```
+
+The `-e md` flag finds all Markdown files.
+
+### Search for Hidden Files
+
+To include hidden files in your search:
+
+```bash
+fd -H .config
+```
+
+The `-H` flag includes hidden files and directories.
+
+For more advanced usage, visit the [official `fd` advanced usage documentation](https://github.com/sharkdp/fd#advanced-examples).
+
+---
+
+## Comparison with `find`
+
+Here’s how `fd` compares to the traditional `find` command:
+
+| Task                          | `find` Command                          | `fd` Command                     |
+|-------------------------------|-----------------------------------------|----------------------------------|
+| Find a file by name           | `find . -name example.txt`              | `fd example.txt`                 |
+| Find directories              | `find . -type d -name my_directory`     | `fd -t d my_directory`           |
+| Case-insensitive search       | `find . -iname example`                 | `fd -i example`                  |
+| Search by extension           | `find . -name "*.py"`                   | `fd -e py`                       |
+
+As you can see, `fd` provides a more concise and readable syntax.
+
+---
+
+## Official Documentation
+
+For more information about `fd`, refer to the following resources:
+
+- [Official `fd` GitHub Repository](https://github.com/sharkdp/fd)
+- [Installation Guide](https://github.com/sharkdp/fd#installation)
+- [Usage Tutorial](https://github.com/sharkdp/fd#tutorial)
+- [Advanced Examples](https://github.com/sharkdp/fd#advanced-examples)
+
+These resources provide comprehensive details about `fd`'s features and capabilities.
+
+---
+
+This guide covers the installation and usage of `fd` with Homebrew, along with practical examples and comparisons to traditional tools. For further exploration, consult the official documentation linked above.
