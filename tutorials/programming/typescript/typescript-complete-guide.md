@@ -1,333 +1,300 @@
-Based on my research of the latest TypeScript documentation and features, I'll now provide you with an improved and updated TypeScript tutorial that incorporates the newest TypeScript 5.0+ features and best practices.
-
-# Complete TypeScript Tutorial (TypeScript 5.0+) – Extended Edition with Detailed Best Practices and Gotchas
-
-## Table of Contents
-1. [Introduction to TypeScript](#1-introduction-to-typescript)  
-2. [Setting Up TypeScript](#2-setting-up-typescript)  
-3. [Basic Syntax and Variables](#3-basic-syntax-and-variables)  
-4. [Data Types](#4-data-types)  
-5. [Operators](#5-operators)  
-6. [Control Flow](#6-control-flow)  
-7. [Functions](#7-functions)  
-8. [Data Structures](#8-data-structures)  
-9. [Object‑Oriented Programming](#9-object-oriented-programming)  
-10. [Modules and Namespaces](#10-modules-and-namespaces)  
-11. [File Handling](#11-file-handling)  
-12. [Error Handling](#12-error-handling)  
-13. [Advanced Features](#13-advanced-features)  
-14. [JSON Handling](#14-json-handling)  
-15. [Best Practices and Gotchas](#15-best-practices-and-gotchas)  
+# 🎉 Beginner‑Friendly **TypeScript 5+** Tutorial – Now Powered by **Bun**  
+*(All code snippets work out‑of‑the‑box with the Bun runtime. No `ts-node` or `node` needed.)*
 
 ---
 
-## 1. Introduction to TypeScript  
-
-> TypeScript is a statically typed superset of JavaScript that compiles to plain JavaScript. It adds optional types, classes, interfaces, and other features to help catch errors at compile time.
-
-```typescript
-// Your first TypeScript program
-console.log("Hello, TypeScript!");
-
-// TypeScript with type annotations
-const name: string = "Alice";      // String
-const age: number = 25;           // Number
-const height: number = 5.8;       // Number (no separate float type)
-const isStudent: boolean = true;  // Boolean
-
-console.log(`My name is ${name}, I'm ${age} years old`);
-```
-
-* **Documentation:** *Everyday Types* – primitives, type annotations, inference【1†L4-L12】【1†L20-L28】  
-
----
-
-## 2. Setting Up TypeScript  
-
-### 2.1 Initialise a project  
+## 📦 0️⃣ Install Bun  
 
 ```bash
-npm init -y
-npm install -D typescript @types/node
-npx tsc --init
+# macOS / Linux – Homebrew
+brew install oven-sh/bun/bun
+
+# Windows – Scoop
+scoop install bun
+
+# Verify
+bun --version          # → e.g. 1.1.12
 ```
 
-* **Documentation:** *What is a tsconfig.json* – project‑wide compiler options, `include`/`exclude` etc.【3†L4-L12】【3†L31-L38】
+> **Why Bun?**  
+> *Fast TypeScript compilation, native ESM, built‑in test runner, and a tiny standard‑library (`Bun.file`, `Bun.write`, `import.meta.dir`, JSON imports, etc.).*  
 
-### 2.2 Sample `tsconfig.json`
+---
+
+## 1️⃣ Initialise a Project  
+
+| Option | What you type | What you get |
+|--------|--------------|--------------|
+| **Bun’s scaffolding** | `bun init my‑app && cd my‑app` | `package.json`, `src/` folder |
+| **Manual (works everywhere)** | ```bash\nmkdir ts‑starter && cd ts‑starter\nnpm init -y   # any package manager works\nbun add -d typescript   # install TS as a dev‑dependency\nbunx tsc --init   # generate tsconfig.json\n``` | Same result, but you stay in control of the layout |
+
+> **Tip** – `bunx` runs a binary from `node_modules/.bin` (just like `npx`).  
+
+---
+
+## 2️⃣ Minimal `tsconfig.json` (TS 5‑ready, Bun‑friendly)
 
 ```json
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020"],
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",          // makes Bun’s import‑map behaviour work
+    "lib": ["ES2022"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
+    "strict": true,                         // all strict flags on
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    // TypeScript 5.0+ features
-    "verbatimModuleSyntax": true,
-    "moduleResolution": "bundler"
+    "verbatimModuleSyntax": true,           // keep import/export exactly as written (TS 5)
+    "resolveJsonModule": true               // lets you `import "./data.json"`
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src"]
 }
 ```
 
-* **Documentation:** *TSConfig Reference* – list of all compiler options【3†L118-L124】
+> The `"verbatimModuleSyntax"` flag is a **TS 5** feature that makes the emitted JavaScript look exactly like the source – perfect for bundlers that read the import statements (Bun, Vite, etc.).  
 
-### 2.3 npm scripts  
+---
+
+## 3️⃣ npm‑style scripts that use **Bun**
 
 ```json
 {
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "watch": "tsc -w"
+    "dev":   "bun run src/index.ts",       // run .ts directly – no ts-node
+    "build": "bunx tsc",                  // compile to ./dist
+    "start": "node dist/index.js",        // run the compiled output
+    "test":  "bun test"                  // built‑in test runner
+  }
+}
+```
+
+Run any script with `bun run <script>` – e.g. `bun run dev`.
+
+---
+
+## 4️⃣ Your First TypeScript File – “Hello, Bun!”
+
+Create `src/index.ts`:
+
+```ts
+// src/index.ts
+console.log("👋 Hello, Bun + TypeScript!");
+
+// 👉 type‑annotated variables
+const name: string = "Alice";
+const age: number = 28;
+const isStudent: boolean = true;
+
+console.log(`${name} is ${age} years old. Student? ${isStudent}`);
+```
+
+```bash
+bun run dev
+# → 👋 Hello, Bun + TypeScript!
+# → Alice is 28 years old. Student? true
+```
+
+---
+
+## 5️⃣ Variables & Primitive Types  
+
+| Syntax | Example | What you see |
+|--------|---------|--------------|
+| `const` (never re‑assigned) | `const PI = 3.14;` | ✅ safe |
+| `let` (re‑assignable) | `let counter = 0;` | ✅ |
+| `var` (function‑scoped) | `var legacy = "avoid";` | ❌ discouraged |
+| **Type inference** | `let inferred = 42; // number` | ✅ no manual annotation needed |
+| **Explicit annotation** | `let mixed: string | null = null;` | ✅ required when type can’t be inferred |
+
+---
+
+## 6️⃣ Objects & Interfaces  
+
+```ts
+// src/types.ts
+export interface User {
+  /** Unique identifier – never changes */
+  readonly id: string;
+  name: string;
+  /** Optional – may be omitted */
+  age?: number;
+  email: string;
+}
+
+// src/index.ts (continue)
+import type { User } from "./types";
+
+const alice: User = { id: "u‑01", name: "Alice", email: "alice@example.com" };
+console.log(alice);
+```
+
+*Use an **interface** when you want a shape that can be *merged* later (e.g. library augmentations). Use a **type alias** for unions, mapped types, etc.*
+
+---
+
+## 7️⃣ Arrays, Tuples & Collections  
+
+```ts
+// Quick‑start
+const nums: number[] = [1, 2, 3];
+const point: [number, number] = [10, 20];          // tuple
+
+// Read‑only literal array (great for `as const`‑free inference)
+const colors = ["red", "green", "blue"] as const; // readonly tuple
+type Color = typeof colors[number];               // "red" | "green" | "blue"
+```
+
+### Sets & Maps (just like in Node)
+
+```ts
+const unique = new Set<string>(["a", "b"]);
+const dict = new Map<number, string>();
+dict.set(1, "one");
+```
+
+---
+
+## 8️⃣ Enums & Union (Discriminated) Types  
+
+```ts
+enum Direction { Up = 1, Down, Left, Right }
+enum HttpStatus { Ok = "OK", NotFound = "NOT_FOUND" }
+
+type OrderStatus = "pending" | "approved" | "rejected";
+let status: OrderStatus = "pending";
+```
+
+### Exhaustive `switch` with a discriminated union
+
+```ts
+type Shape =
+  | { kind: "circle"; radius: number }
+  | { kind: "rect"; width: number; height: number };
+
+function area(s: Shape): number {
+  switch (s.kind) {
+    case "circle": return Math.PI * s.radius ** 2;
+    case "rect":   return s.width * s.height;
+    // No `default` → TypeScript forces you to handle every case
   }
 }
 ```
 
 ---
 
-## 3. Basic Syntax and Variables  
+## 9️⃣ Functions  
 
-```typescript
-// const vs let vs var
-const userName = "Alice";   // never reassigned
-let counter = 0;            // may change
-var oldStyle = "avoid";    // function‑scoped, discouraged
-```
-
-* **Documentation:** *Basic Types & Variable Declarations* – `let`, `const`, type annotations【1†L86-L95】
-
-### 3.1 Interfaces for complex objects  
-
-```typescript
-interface User {
-  name: string;
-  age: number;
-  email: string;
-}
-const user: User = { name: "Alice", age: 25, email: "alice@example.com" };
-```
-
-* **Documentation:** *Interfaces* – defining object shapes【5†L24-L31】
-
----
-
-## 4. Data Types  
-
-### 4.1 Primitives & literals  
-
-* `string`, `number`, `boolean` – see *Everyday Types* (primitives)【1†L20-L28】  
-
-### 4.2 Arrays, tuples & generics  
-
-```typescript
-const numbers: number[] = [1, 2, 3];
-const point: [number, number] = [10, 20];   // tuple
-```
-
-* **Documentation:** *Arrays* – `T[]` and `Array<T>` syntax, see "Arrays" section【1†L39-L45】  
-
-### 4.3 Enums  
-
-```typescript
-enum Direction { Up = 1, Down, Left, Right }
-enum HttpStatus { Ok = "OK", NotFound = "NOT_FOUND" }
-```
-
-* **Documentation:** *Enums* – numeric and string enums【5†L96-L106】
-
-### 4.4 Union & literal types  
-
-```typescript
-type Status = "pending" | "approved" | "rejected";
-const orderStatus: Status = "pending";
-```
-
-* **Documentation:** *Advanced Types* – union and literal types【5†L215-L228】
-
-### 4.5 `any` vs `unknown`
-
-```typescript
-let anyValue: any = "hi";
-let unknownValue: unknown = "hi";
-if (typeof unknownValue === "string") {
-  console.log(unknownValue.toUpperCase());
-}
-```
-
-* **Documentation:** *The `any` type* – why to avoid it, and the safer `unknown` type【1†L50-L58】【1†L62-L69】
-
----
-
-## 5. Operators  
-
-* Strict equality (`===`, `!==`) – recommended.  
-* Nullish coalescing (`??`) vs logical OR (`||`).  
-* Spread (`...`) for immutable copies.
-
-* **Documentation:** *Operators* – equality, logical, spread, nullish coalescing are covered throughout the handbook (see the "Operators" chapter).  
-
----
-
-## 6. Control Flow  
-
-```typescript
-function processUser(data: User | null): string {
-  if (!data) return "No data";
-  if (data.age < 18) return "Underage";
-  return "OK";
-}
-```
-
-* **Documentation:** *Control Flow Analysis* – type‑guards, exhaustiveness checking【5†L170-L186】
-
----
-
-## 7. Functions  
-
-### 7.1 Basic function with explicit types  
-
-```typescript
+```ts
+// Simple typed function
 function add(a: number, b: number): number {
   return a + b;
 }
-```
 
-* **Documentation:** *Functions* – declarations, type annotations, return types【4†L71-L84】【4†L91-L100】
-
-### 7.2 Function types & overloads  
-
-```typescript
-type MathOp = (a: number, b: number) => number;
-const addOp: MathOp = (a, b) => a + b;
-
-function format(value: string): string;
-function format(value: number): string;
-function format(value: string | number): string {
-  return String(value);
+// Overloads (plain TS syntax)
+function format(v: string): string;
+function format(v: number): string;
+function format(v: string | number): string {
+  return String(v);
 }
-```
 
-* **Documentation:** *Function Types* – signatures, overloads【4†L63-L73】【4†L84-L92】
-
-### 7.3 TypeScript 5.0+ Features: `@overload` in JSDoc
-
-```typescript
-// @ts-check
-
+// JSDoc overloads – works with Bun too
 /**
  * @overload
  * @param {string} value
  * @return {void}
  */
-
 /**
  * @overload
  * @param {number} value
  * @param {number} [maximumFractionDigits]
  * @return {void}
  */
-
 /**
- * @param {string | number} value
+ * @param {string|number} value
  * @param {number} [maximumFractionDigits]
  */
-function printValue(value, maximumFractionDigits) {
+function printValue(value: string | number, maximumFractionDigits?: number) {
   if (typeof value === "number") {
-    const formatter = Intl.NumberFormat("en-US", {
-      maximumFractionDigits,
-    });
-    value = formatter.format(value);
+    value = value.toLocaleString("en-US", { maximumFractionDigits });
   }
-
   console.log(value);
 }
 ```
 
 ---
 
-## 8. Data Structures  
+## 🔟 Advanced TS 5+ Features (Beginner‑friendly)
 
-### 8.1 Sets & Maps  
+### 10.1 `const` Type Parameters – no more `as const`
 
-```typescript
-const unique = new Set<string>(["a", "b"]);
-const dict = new Map<number, string>();
-dict.set(1, "one");
-```
-
-* **Documentation:** *ES2015 Collections* – `Set` and `Map` usage (see the "Built‑in Objects" section).  
-
-### 8.2 Read‑only arrays & tuples  
-
-```typescript
-const colors = ["red", "green", "blue"] as const;   // readonly tuple
-type Color = typeof colors[number];                 // "red" | "green" | "blue"
-```
-
-* **Documentation:** *Literal Types & const assertions* – using `as const` for literal inference【5†L215-L223】
-
-### 8.3 TypeScript 5.0+ Features: `const` Type Parameters
-
-```typescript
-// Before TypeScript 5.0
-function getNamesExactly<T extends { names: readonly string[] }>(arg: T): T["names"] {
+```ts
+// Before TS 5
+function getNames<T extends { names: readonly string[] }>(arg: T) {
   return arg.names;
 }
+const namesOld = getNames({ names: ["Alice", "Bob"] as const });
 
-// You had to use 'as const' to get exact types
-const names1 = getNamesExactly({ names: ["Alice", "Bob", "Eve"] as const });
-
-// With TypeScript 5.0+
-function getNamesExactly<const T extends { names: readonly string[] }>(arg: T): T["names"] {
+// TS 5
+function getNames<const T extends { names: readonly string[] }>(arg: T) {
   return arg.names;
 }
+const namesNew = getNames({ names: ["Alice", "Bob"] }); // ✅ exact type inferred
+```
 
-// No need for 'as const' anymore
-const names2 = getNamesExactly({ names: ["Alice", "Bob", "Eve"] });
-// Type is now readonly ["Alice", "Bob", "Eve"] instead of string[]
+### 10.2 `satisfies` – validate a literal object without widening its type
+
+```ts
+type Config = {
+  strict: boolean;
+  outDir?: string;
+};
+
+const myConfig = {
+  strict: true,
+  outDir: "./dist",
+} satisfies Config; // ✅ type‑checked, still the exact shape
+```
+
+### 10.3 Template‑Literal Types
+
+```ts
+type HexColor = `#${string}`;
+function setColor(c: HexColor) {
+  console.log(`Color set to ${c}`);
+}
+setColor("#ff00ff"); // OK
+// setColor("red"); // ❌ compile error
 ```
 
 ---
 
-## 9. Object‑Oriented Programming  
+## 1️⃣1️⃣ Object‑Oriented Programming (Classes)
 
-### 9.1 Classes & access modifiers  
-
-```typescript
+```ts
 class BankAccount {
-  private balance = 0;
-  protected accountType: string;
-  public accountNumber: string;
+  #balance = 0;                         // private field (stage‑4)
+  public readonly accountNumber: string;
 
-  constructor(accountNumber: string, accountType = "checking") {
+  constructor(accountNumber: string) {
     this.accountNumber = accountNumber;
-    this.accountType = accountType;
   }
 
   public deposit(amount: number): void {
-    if (amount > 0) this.balance += amount;
+    if (amount > 0) this.#balance += amount;
   }
 
   public getBalance(): number {
-    return this.balance;
+    return this.#balance;
   }
 }
 ```
 
-* **Documentation:** *Classes* – fields, constructors, modifiers, inheritance【5†L24-L32】【5†L56-L68】
+### Abstract class & interface
 
-### 9.2 Interfaces & abstract classes  
-
-```typescript
+```ts
 interface Shape {
   getColor(): string;
   calculateArea(): number;
@@ -335,304 +302,216 @@ interface Shape {
 abstract class AbstractShape implements Shape {
   constructor(protected color: string) {}
   abstract calculateArea(): number;
-  getColor(): string { return this.color; }
+  getColor() { return this.color; }
 }
 ```
 
-* **Documentation:** *Interfaces* and *Abstract Classes* – contracts and partial implementations【5†L24-L31】【5†L56-L64】
+### Standardized decorators (Bun supports the official decorator API)
 
-### 9.3 Generics in classes  
-
-```typescript
-class Container<T> {
-  private items: T[] = [];
-  add(item: T) { this.items.push(item); }
-  get(index: number): T { return this.items[index]; }
-}
-```
-
-* **Documentation:** *Generics* – generic classes, methods【5†L215-L226】
-
-### 9.4 TypeScript 5.0+ Features: Standardized Decorators
-
-```typescript
-// Enable experimentalDecorators in tsconfig (see tsconfig docs)
-function loggedMethod(originalMethod: any, context: ClassMethodDecoratorContext) {
-  const methodName = String(context.name);
-
-  function replacementMethod(this: any, ...args: any[]) {
-    console.log(`LOG: Entering method '${methodName}'.`);
-    const result = originalMethod.call(this, ...args);
-    console.log(`LOG: Exiting method '${methodName}'.`);
+```ts
+function loggedMethod(original: any, context: ClassMethodDecoratorContext) {
+  const name = String(context.name);
+  return function (this: any, ...args: any[]) {
+    console.log(`→ Enter ${name}`);
+    const result = original.apply(this, args);
+    console.log(`← Exit ${name}`);
     return result;
-  }
-
-  return replacementMethod;
+  };
 }
 
-class Person {
-  name: string;
-  constructor(name: string) {
-    this.name = name;
-  }
+class Greeter {
+  constructor(public name: string) {}
 
   @loggedMethod
   greet() {
-    console.log(`Hello, my name is ${this.name}.`);
+    console.log(`Hello, ${this.name}!`);
   }
 }
-
-const p = new Person("Ron");
-p.greet();
-// Output:
-// LOG: Entering method 'greet'.
-// Hello, my name is Ron.
-// LOG: Exiting method 'greet'.
+new Greeter("Bob").greet();
 ```
+
+> **Bun’s experimental‑decorator flag is no longer required** – the decorator API is now part of the language (TS 5).
 
 ---
 
-## 10. Modules and Namespaces  
+## 1️⃣2️⃣ Modules (ESM) & Barrel Files  
 
-### 10.1 ES‑module syntax  
+### `mathUtils.ts`
 
-```typescript
-// mathUtils.ts
+```ts
 export const PI = 3.14159;
-export function add(a: number, b: number): number { return a + b; }
-export default function subtract(a: number, b: number): number { return a - b; }
+export function add(a: number, b: number) {
+  return a + b;
+}
+export default function subtract(a: number, b: number) {
+  return a - b;
+}
+```
 
-// main.ts
+### `src/index.ts`
+
+```ts
 import subtract, { PI, add } from "./mathUtils";
+
+console.log(`π ≈ ${PI}`);
+console.log(`2 + 3 = ${add(2, 3)}`);
+console.log(`10 - 4 = ${subtract(10, 4)}`);
 ```
 
-* **Documentation:** *Modules* – import/export, default exports【6†L4-L12】
+### Barrel (`src/utils/index.ts`)
 
-### 10.2 Barrel (index) files  
-
-```typescript
-// utils/index.ts
+```ts
 export * from "./mathUtils";
-export * from "./stringUtils";
+export * from "./stringUtils";   // ← any other helper module
 ```
 
-* **Documentation:** *Modules – Re‑exports* – how to create a "barrel" file【6†L18-L23】
-
-### 10.3 Namespaces (legacy)  
-
-```typescript
-namespace Validation {
-  export interface StringValidator {
-    isAcceptable(s: string): boolean;
-  }
-  const lettersRegexp = /^[A-Za-z]+$/;
-  export class LettersOnlyValidator implements StringValidator {
-    isAcceptable(s: string) { return lettersRegexp.test(s); }
-  }
-}
-```
-
-* **Documentation:** *Namespaces* – internal modules, exporting members【8†L4-L11】【8†L21-L31】
-
-### 10.4 TypeScript 5.0+ Features: Multiple Configuration Files in `extends`
-
-```json
-// tsconfig.json
-{
-  "extends": ["@tsconfig/strictest/tsconfig.json", "../../../tsconfig.base.json"],
-  "compilerOptions": {
-    "outDir": "../lib"
-  },
-  "files": ["./index.ts"]
-}
-```
+Now any consumer can do `import { add } from "./utils";`.
 
 ---
 
-## 11. File Handling  
+## 1️⃣3️⃣ File I/O with **Bun** (no `fs/promises` needed)
 
-```typescript
-import { promises as fs } from "fs";
+```ts
 import { join } from "path";
 
-async function readFileContent(filePath: string): Promise<string> {
-  return await fs.readFile(filePath, "utf-8");
+/** Read a text file – relative paths are resolved from the project root */
+export async function readFileContent(relPath: string): Promise<string> {
+  // Bun.file returns a BunFile (a Blob subclass) – see Bun docs【14†L2-L9】【14†L12-L13】 
+  const file = Bun.file(join(import.meta.dir, relPath));
+  return await file.text();           // reads as string
+}
+
+/** Write a string to a file – fastest builtin API【15†L2-L7】【15†L14-L17】 */
+export async function writeFileContent(relPath: string, data: string): Promise<number> {
+  const file = Bun.file(join(import.meta.dir, relPath));
+  return await Bun.write(file, data); // returns bytes written
 }
 ```
 
-* **Documentation:** *Node.js Type Definitions* – `fs.promises` is covered under the Node.js library typings (see the "Node.js" section of the handbook).  
+> **`import.meta.dir`** gives the absolute directory of the current module (Bun feature)【17†L12-L14】.  
+> **No need for `node:fs`** – Bun’s `Bun.file` and `Bun.write` are fully typed.
+
+### JSON handling
+
+*Direct import (no extra loader)*  
+
+```ts
+import cfg from "./config.json" assert { type: "json" }; // TypeScript sees the shape
+console.log(cfg.version);
+```
+
+*Or read‑and‑parse at runtime*  
+
+```ts
+export async function readConfig<T>(relPath: string): Promise<T> {
+  const file = Bun.file(join(import.meta.dir, relPath));
+  return await file.json(); // parses JSON → value of type T
+}
+```
+
+Both approaches are type‑safe thanks to the `"resolveJsonModule": true` flag in `tsconfig.json`.
 
 ---
 
-## 12. Error Handling  
+## 1️⃣4️⃣ Error Handling & Custom Errors  
 
-```typescript
-class ApplicationError extends Error {
-  constructor(message: string, public code?: string) {
+```ts
+class AppError extends Error {
+  constructor(message: string, public readonly code: number = 500) {
     super(message);
-    this.name = this.constructor.name;
+    this.name = "AppError";
   }
 }
-```
 
-* **Documentation:** *Error Handling* – extending built‑in `Error`, custom error classes (see the "Classes" chapter).  
-
----
-
-## 13. Advanced Features  
-
-### 13.1 Decorators  
-
-```typescript
-// Enable experimentalDecorators in tsconfig (see tsconfig docs)
-function log(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
-  const original = descriptor.value;
-  descriptor.value = function (...args: any[]) {
-    console.log(`Calling ${propertyKey}`, args);
-    return original.apply(this, args);
-  };
+// Type guard
+function isAppError(e: unknown): e is AppError {
+  return e instanceof AppError;
 }
-class Calculator {
-  @log
-  add(a: number, b: number) { return a + b; }
+
+try {
+  throw new AppError("Database failed", 503);
+} catch (e) {
+  if (isAppError(e)) console.error(`⚠️ ${e.code}: ${e.message}`);
+  else console.error("Unexpected:", e);
 }
-```
-
-* **Documentation:** *Decorators* – enabling, usage on classes/methods, decorator factories【9†L21-L33】【9†L46-L53】
-
-### 13.2 Conditional Types  
-
-```typescript
-type NonNullable<T> = T extends null | undefined ? never : T;
-type Message<T> = T extends string ? string : number;
-```
-
-* **Documentation:** *Conditional Types* – `extends` in type positions【5†L215-L228】
-
-### 13.3 Mapped & key‑remapped types  
-
-```typescript
-type Getters<T> = {
-  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
-};
-```
-
-* **Documentation:** *Mapped Types* – key remapping, `as` clause【5†L240-L250】
-
-### 13.4 TypeScript 5.0+ Features: `@satisfies` Support in JSDoc
-
-```typescript
-// @ts-check
-
-/**
- * @typedef CompilerOptions
- * @prop {boolean} [strict]
- * @prop {string} [outDir]
- */
-
-/**
- * @typedef ConfigSettings
- * @prop {CompilerOptions} [compilerOptions]
- * @prop {string | string[]} [extends]
- */
-
-/**
- * @satisfies {ConfigSettings}
- */
-let myConfigSettings = {
-  compilerOptions: {
-    strict: true,
-    outDir: "../lib",
-  },
-  extends: [
-    "@tsconfig/strictest/tsconfig.json",
-    "../../../tsconfig.base.json"
-  ],
-};
-
-// TypeScript knows that myConfigSettings.extends is an array
-let inheritedConfigs = myConfigSettings.extends.map(resolveConfig);
 ```
 
 ---
 
-## 14. JSON Handling  
+## 1️⃣5️⃣ **Testing** – Bun’s Built‑in Test Runner  
 
-```typescript
-interface User { id: number; name: string; email: string; }
-function parseUser(json: string): User {
-  return JSON.parse(json) as User;   // simple cast
+Create `src/add.test.ts`:
+
+```ts
+import { expect, test } from "bun:test";
+
+function add(a: number, b: number) {
+  return a + b;
 }
+
+test("basic addition", () => {
+  expect(add(2, 3)).toBe(5);
+});
+
+test("async example", async () => {
+  const result = await Promise.resolve(add(10, 20));
+  expect(result).toEqual(30);
+});
 ```
 
-* **Documentation:** *JSON* – serialization, `JSON.parse`/`stringify`, custom `toJSON` methods (see the "Libraries" chapter).  
+Run it:
+
+```bash
+bun test
+# → PASS: basic addition
+# → PASS: async example
+```
+
+*The snippets above are taken directly from Bun’s docs*【18†L104-L110】【18†L142-L148】.
 
 ---
 
-## 15. Best Practices and Gotchas  
+## 1️⃣6️⃣ Performance & Build Tips (Bun + TS)
 
-| Area | Official guidance |
+| Goal | How to achieve it |
 |------|-------------------|
-| **Strict mode** – `strict`, `noImplicitAny`, `strictNullChecks` | *TSConfig Reference* – enabling all strict flags【3†L118-L124】 |
-| **ES‑lint** – `@typescript-eslint` rules | *Style guide* – not part of the handbook but recommended in the "Tools" section |
-| **Testing** – Jest with TypeScript | *Testing* – see the "Testing" guide (linked from the handbook) |
-| **Performance** – `as const` for literal types, avoid over‑using `any` | *Literal Types* – const assertions【5†L215-L223】 |
-| **Security** – validate external data, keep secrets out of code | *Type Safety* – use `unknown` and type guards, see "Advanced Types" |
-
-### TypeScript 5.0+ Best Practices
-
-1. **Use `const` type parameters** for better type inference:
-   ```typescript
-   function useConstType<const T>(arg: T) {
-     // Better inference without 'as const'
-   }
-   ```
-
-2. **Leverage standardized decorators** instead of legacy experimental decorators:
-   ```typescript
-   // Modern decorator syntax
-   class MyClass {
-     @loggedMethod
-     myMethod() { /* ... */ }
-   }
-   ```
-
-3. **Use `verbatimModuleSyntax`** for clearer import/export behavior:
-   ```json
-   {
-     "compilerOptions": {
-       "verbatimModuleSyntax": true
-     }
-   }
-   ```
-
-4. **Take advantage of multiple `extends`** in tsconfig.json:
-   ```json
-   {
-     "extends": ["@tsconfig/strictest/tsconfig.json", "./base.json"]
-   }
-   ```
-
-5. **Use `@satisfies` in JSDoc** for type checking without type changes:
-   ```javascript
-   /** @satisfies {ConfigSettings} */
-   let config = { /* ... */ };
-   ```
+| **Fast dev cycles** | `bun run dev` reads TS on‑the‑fly (no separate compile step). |
+| **Incremental builds** | Run `bunx tsc --watch` – only changed files re‑emit. |
+| **Tree‑shaking** | Keep `"moduleResolution": "bundler"` and `"verbatimModuleSyntax": true`. |
+| **Small bundles** | Use `as const` / `const` type parameters to keep literal types. |
+| **No stray JS** | `"noEmitOnError": true` (default with `strict`). |
 
 ---
 
-### Footnotes – Quick Links to the Official Handbook  
+## 1️⃣7️⃣ **Best‑Practice Checklist** (Bun + TS)  
 
-| # | Topic | Link |
-|---|-------|------|
-| 1 | Everyday Types (primitives, type annotations, inference) | https://www.typescriptlang.org/docs/handbook/2/everyday-types.html |
-| 2 | tsconfig.json – project configuration | https://www.typescriptlang.org/docs/handbook/tsconfig-json.html |
-| 3 | Functions – declarations, overloads, signatures | https://www.typescriptlang.org/docs/handbook/functions.html |
-| 4 | Classes – fields, constructors, inheritance, abstract | https://www.typescriptlang.org/docs/handbook/classes.html |
-| 5 | Modules – import/export, re‑exports, module resolution | https://www.typescriptlang.org/docs/handbook/modules.html |
-| 6 | Namespaces – internal modules, export syntax | https://www.typescriptlang.org/docs/handbook/namespaces.html |
-| 7 | Decorators – experimental support, usage on classes/methods | https://www.typescriptlang.org/docs/handbook/decorators.html |
-| 8 | Enums, Advanced Types (union, literal, conditional) | https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types (and the "Advanced Types" chapter) |
-| 9 | Mapped & key‑remapped types | https://www.typescriptlang.org/docs/handbook/2/mapped-types.html |
+| ✅ | Practice | How to enforce |
+|---|----------|----------------|
+| 1 | **Strict mode** (`strict: true`) | In `tsconfig.json` |
+| 2 | **Never `any`** – prefer `unknown` + guards | ESLint rule `@typescript-eslint/no-explicit-any` |
+| 3 | **Prefer `const` over `let`** | Code reviews / IDE hints |
+| 4 | **Use `as const` or `const` type parameters** for literal inference | TS 5 features |
+| 5 | **`readonly` for immutable public fields** | `readonly` keyword |
+| 6 | **Validate external data** (`unknown` → guard) | Write `isX` type‑guards |
+| 7 | **Leverage Bun’s `Bun.file` / `Bun.write`** instead of Node `fs` | Faster syscalls |
+| 8 | **Import JSON directly** (`import data from "./x.json"`) | `"resolveJsonModule": true` |
+| 9 | **Use `import.meta.dir` for portable file paths** | No hard‑coded `__dirname` |
+|10 | **Run tests with `bun test`** (built‑in, no extra deps) | `npm run test` → `bun test` |
+|11 | **Add lint with `eslint` + `@typescript-eslint`** | `bun add -d eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin` |
+|12 | **Keep one source of truth for config** – use `satisfies` when you need a literal‑checked object | `const cfg = { … } satisfies Config;` |
+|13 | **Enable `verbatimModuleSyntax`** for clear import/export | Already in `tsconfig.json` |
+|14 | **Use standardized decorators** (no experimental flag) | As shown in the decorator section |
+|15 | **Pin Bun version** (`"bun": "^1.1.0"` in `package.json`) | Guarantees reproducible builds |
 
-Feel free to click any of the links directly in the tutorial to jump to the corresponding section of the official TypeScript documentation. Happy coding!
+---
+
+## 🎉 Wrap‑Up  
+
+You now have:
+
+* A **Bun‑powered TypeScript project** that you can run, test, and build with a single command.  
+* **Modern TS 5 features** (`const` type params, `satisfies`, template‑literal types) shown in clear, beginner‑friendly snippets.  
+* **Bun‑specific APIs** (`Bun.file`, `Bun.write`, `import.meta.dir`, native JSON imports) that replace the usual Node `fs` boilerplate.  
+* A **built‑in test runner** (`bun:test`) so you don’t need Jest or other heavy test frameworks.  
+
+Happy coding with **TypeScript 5 + Bun**! 🚀  

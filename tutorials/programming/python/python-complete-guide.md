@@ -213,88 +213,696 @@ def process_point(point):
 
 ## Functions {#functions}
 
-### Defining Functions
+Functions are the building blocks of Python programs. They allow you to encapsulate code into reusable blocks, making your programs more organized, maintainable, and easier to debug.
+
+### Basic Function Definition
 
 ```python
-# Basic function
+# Simple function with no parameters
+def say_hello():
+    """A simple function that prints a greeting."""
+    print("Hello, World!")
+
+say_hello()  # Hello, World!
+
+# Function with a single parameter
 def greet(name):
+    """Greet a person by name."""
     return f"Hello, {name}!"
 
-print(greet("Alice"))  # Hello, Alice!
+message = greet("Alice")
+print(message)  # Hello, Alice!
 
 # Function with multiple parameters
 def add_numbers(a, b):
+    """Add two numbers and return the result."""
     return a + b
 
-result = add_numbers(5, 3)  # 8
-
-# Function with default parameters
-def greet_with_default(name="World"):
-    return f"Hello, {name}!"
-
-print(greet_with_default())      # Hello, World!
-print(greet_with_default("Bob")) # Hello, Bob!
-
-# Function with variable arguments
-def sum_all(*numbers):
-    return sum(numbers)
-
-print(sum_all(1, 2, 3, 4))  # 10
-
-def create_profile(**info):
-    return info
-
-profile = create_profile(name="Alice", age=25, city="New York")
-print(profile)  # {'name': 'Alice', 'age': 25, 'city': 'New York'}
+result = add_numbers(5, 3)
+print(result)  # 8
 ```
 
-### Advanced Function Features
+### Function Parameters and Arguments
 
+#### Positional Arguments
 ```python
-# Lambda functions (anonymous functions)
-square = lambda x: x**2
-print(square(5))  # 25
+def describe_person(name, age, city):
+    """Describe a person using positional arguments."""
+    return f"{name} is {age} years old and lives in {city}"
 
-# Higher-order functions
+# Arguments must be passed in order
+description = describe_person("Alice", 25, "New York")
+print(description)  # Alice is 25 years old and lives in New York
+```
+
+#### Keyword Arguments
+```python
+def create_user(name, email, age=None, active=True):
+    """Create a user with keyword arguments."""
+    user = {
+        'name': name,
+        'email': email,
+        'age': age,
+        'active': active
+    }
+    return user
+
+# Using keyword arguments (order doesn't matter)
+user1 = create_user(name="Bob", email="bob@example.com", age=30)
+user2 = create_user(email="alice@example.com", name="Alice", active=False)
+
+print(user1)  # {'name': 'Bob', 'email': 'bob@example.com', 'age': 30, 'active': True}
+print(user2)  # {'name': 'Alice', 'email': 'alice@example.com', 'age': None, 'active': False}
+```
+
+#### Default Parameters
+```python
+def greet_with_style(name, greeting="Hello", punctuation="!"):
+    """Greet with customizable style."""
+    return f"{greeting}, {name}{punctuation}"
+
+print(greet_with_style("Alice"))                           # Hello, Alice!
+print(greet_with_style("Bob", "Hi"))                       # Hi, Bob!
+print(greet_with_style("Charlie", "Hey", "?"))             # Hey, Charlie?
+print(greet_with_style("Diana", punctuation="!!!"))        # Hello, Diana!!!
+
+# IMPORTANT: Mutable default arguments (common pitfall)
+def add_item_bad(item, target_list=[]):  # DON'T DO THIS
+    """BAD: Mutable default argument."""
+    target_list.append(item)
+    return target_list
+
+# Better approach
+def add_item_good(item, target_list=None):
+    """GOOD: Use None and create new list inside function."""
+    if target_list is None:
+        target_list = []
+    target_list.append(item)
+    return target_list
+
+# Demonstrate the problem
+list1 = add_item_bad("apple")
+list2 = add_item_bad("banana")  # This will contain both apple and banana!
+print(list1)  # ['apple', 'banana']
+print(list2)  # ['apple', 'banana']
+
+# The correct way
+list3 = add_item_good("apple")
+list4 = add_item_good("banana")
+print(list3)  # ['apple']
+print(list4)  # ['banana']
+```
+
+### Variable-Length Arguments
+
+#### *args - Variable Positional Arguments
+```python
+def sum_all(*args):
+    """Sum all positional arguments."""
+    print(f"Arguments received: {args}")  # args is a tuple
+    return sum(args)
+
+print(sum_all(1, 2, 3))           # 6
+print(sum_all(1, 2, 3, 4, 5))     # 15
+print(sum_all())                  # 0
+
+def print_info(required_arg, *optional_args):
+    """Function with required and optional arguments."""
+    print(f"Required: {required_arg}")
+    print(f"Optional arguments: {optional_args}")
+
+print_info("Must have this")                    # Required: Must have this, Optional: ()
+print_info("Must have this", "extra1", "extra2")  # Required: Must have this, Optional: ('extra1', 'extra2')
+
+# Unpacking arguments with *
 numbers = [1, 2, 3, 4, 5]
-doubled = list(map(lambda x: x*2, numbers))
-print(doubled)  # [2, 4, 6, 8, 10]
+total = sum_all(*numbers)  # Unpacks the list
+print(total)  # 15
+```
 
-# Filter function
-evens = list(filter(lambda x: x % 2 == 0, numbers))
-print(evens)  # [2, 4]
+#### **kwargs - Variable Keyword Arguments
+```python
+def create_profile(**kwargs):
+    """Create a user profile from keyword arguments."""
+    print(f"Keyword arguments received: {kwargs}")  # kwargs is a dictionary
+    
+    profile = {}
+    for key, value in kwargs.items():
+        profile[key] = value
+    
+    return profile
 
-# Function with docstrings
-def calculate_area(length, width):
+# Using **kwargs
+profile1 = create_profile(name="Alice", age=25, city="New York")
+profile2 = create_profile(name="Bob", occupation="Engineer", languages=["Python", "JavaScript"])
+
+print(profile1)  # {'name': 'Alice', 'age': 25, 'city': 'New York'}
+print(profile2)  # {'name': 'Bob', 'occupation': 'Engineer', 'languages': ['Python', 'JavaScript']}
+
+# Unpacking dictionaries with **
+user_data = {"name": "Charlie", "email": "charlie@example.com", "age": 28}
+profile3 = create_profile(**user_data)
+print(profile3)  # {'name': 'Charlie', 'email': 'charlie@example.com', 'age': 28}
+```
+
+#### Combining *args and **kwargs
+```python
+def flexible_function(required, *args, **kwargs):
+    """Function that accepts all types of arguments."""
+    print(f"Required argument: {required}")
+    print(f"Positional arguments: {args}")
+    print(f"Keyword arguments: {kwargs}")
+
+flexible_function("must have", 1, 2, 3, name="Alice", age=25)
+# Required argument: must have
+# Positional arguments: (1, 2, 3)
+# Keyword arguments: {'name': 'Alice', 'age': 25}
+
+def advanced_function(a, b=10, *args, **kwargs):
+    """More complex parameter combination."""
+    print(f"a: {a}")
+    print(f"b: {b}")
+    print(f"args: {args}")
+    print(f"kwargs: {kwargs}")
+
+advanced_function(1, 2, 3, 4, 5, x=100, y=200)
+# a: 1
+# b: 2
+# args: (3, 4, 5)
+# kwargs: {'x': 100, 'y': 200}
+```
+
+### Real-World Example: Database Connection Function
+```python
+def connect_to_database(host, port=5432, *additional_hosts, **connection_options):
     """
-    Calculate the area of a rectangle.
+    Connect to a database with flexible configuration.
     
     Args:
-        length (float): The length of the rectangle
-        width (float): The width of the rectangle
+        host (str): Primary database host
+        port (int): Database port (default: 5432)
+        *additional_hosts: Additional backup hosts
+        **connection_options: Additional connection parameters
     
     Returns:
-        float: The area of the rectangle
-    
-    Example:
-        >>> calculate_area(5, 3)
-        15
+        dict: Connection configuration
     """
-    return length * width
+    config = {
+        'primary_host': host,
+        'port': port,
+        'backup_hosts': list(additional_hosts),
+        'options': connection_options
+    }
+    
+    print(f"Connecting to {host}:{port}")
+    if additional_hosts:
+        print(f"Backup hosts: {', '.join(additional_hosts)}")
+    if connection_options:
+        print(f"Additional options: {connection_options}")
+    
+    return config
 
-# Function scope
+# Usage examples
+db_config1 = connect_to_database("localhost")
+print(db_config1)
+
+db_config2 = connect_to_database(
+    "db1.example.com", 
+    3306, 
+    "db2.example.com", 
+    "db3.example.com",
+    username="admin",
+    password="secret",
+    timeout=30,
+    ssl=True
+)
+print(db_config2)
+```
+
+### Function Decorators
+
+#### Basic Decorators
+```python
+def my_decorator(func):
+    """A simple decorator that adds functionality to a function."""
+    def wrapper(*args, **kwargs):
+        print(f"Before calling {func.__name__}")
+        result = func(*args, **kwargs)
+        print(f"After calling {func.__name__}")
+        return result
+    return wrapper
+
+# Using decorator with @ syntax
+@my_decorator
+def say_hello(name):
+    print(f"Hello, {name}!")
+    return f"Greeted {name}"
+
+result = say_hello("Alice")
+# Before calling say_hello
+# Hello, Alice!
+# After calling say_hello
+print(result)  # Greeted Alice
+
+# Equivalent to: say_hello = my_decorator(say_hello)
+```
+
+#### Practical Decorator Examples
+```python
+import time
+import functools
+
+def timer(func):
+    """Decorator to measure function execution time."""
+    @functools.wraps(func)  # Preserves original function metadata
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(f"{func.__name__} took {end_time - start_time:.4f} seconds")
+        return result
+    return wrapper
+
+def validate_types(*expected_types):
+    """Decorator to validate function argument types."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            # Check positional arguments
+            for i, (arg, expected_type) in enumerate(zip(args, expected_types)):
+                if not isinstance(arg, expected_type):
+                    raise TypeError(f"Argument {i+1} must be {expected_type.__name__}, got {type(arg).__name__}")
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+def retry(max_attempts=3):
+    """Decorator to retry function execution on failure."""
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            for attempt in range(max_attempts):
+                try:
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if attempt == max_attempts - 1:
+                        raise e
+                    print(f"Attempt {attempt + 1} failed: {e}. Retrying...")
+        return wrapper
+    return decorator
+
+# Using decorators
+@timer
+@validate_types(int, int)
+def add_numbers(a, b):
+    """Add two integers."""
+    time.sleep(0.1)  # Simulate some work
+    return a + b
+
+@retry(max_attempts=3)
+def unreliable_function():
+    """Function that might fail."""
+    import random
+    if random.random() < 0.7:  # 70% chance of failure
+        raise Exception("Random failure!")
+    return "Success!"
+
+# Test the decorated functions
+try:
+    result = add_numbers(5, 3)
+    print(f"Result: {result}")
+    
+    # This will raise TypeError
+    # add_numbers("5", 3)
+    
+    success = unreliable_function()
+    print(success)
+except Exception as e:
+    print(f"Error: {e}")
+```
+
+### Lambda Functions (Anonymous Functions)
+
+```python
+# Basic lambda functions
+square = lambda x: x ** 2
+add = lambda x, y: x + y
+is_even = lambda n: n % 2 == 0
+
+print(square(5))      # 25
+print(add(3, 4))      # 7
+print(is_even(6))     # True
+
+# Lambda with conditional expression
+max_value = lambda a, b: a if a > b else b
+print(max_value(10, 5))  # 10
+
+# Using lambdas with built-in functions
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+# Map: apply function to each element
+squared = list(map(lambda x: x ** 2, numbers))
+print(squared)  # [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+# Filter: keep elements that match condition
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+print(evens)  # [2, 4, 6, 8, 10]
+
+# Sorted with custom key
+students = [
+    {'name': 'Alice', 'grade': 85},
+    {'name': 'Bob', 'grade': 90},
+    {'name': 'Charlie', 'grade': 78}
+]
+
+# Sort by grade (descending)
+sorted_students = sorted(students, key=lambda s: s['grade'], reverse=True)
+print(sorted_students)
+# [{'name': 'Bob', 'grade': 90}, {'name': 'Alice', 'grade': 85}, {'name': 'Charlie', 'grade': 78}]
+
+# Lambda with multiple arguments
+points = [(1, 2), (3, 1), (2, 4), (0, 3)]
+# Sort by distance from origin
+sorted_points = sorted(points, key=lambda p: p[0]**2 + p[1]**2)
+print(sorted_points)  # [(1, 2), (3, 1), (0, 3), (2, 4)]
+```
+
+### Higher-Order Functions
+
+```python
+def apply_operation(numbers, operation):
+    """Apply an operation to a list of numbers."""
+    return [operation(x) for x in numbers]
+
+def create_multiplier(factor):
+    """Return a function that multiplies by a given factor."""
+    return lambda x: x * factor
+
+def create_power_function(exponent):
+    """Return a function that raises to a given power."""
+    def power_func(base):
+        return base ** exponent
+    return power_func
+
+# Using higher-order functions
+numbers = [1, 2, 3, 4, 5]
+
+# Apply different operations
+doubled = apply_operation(numbers, lambda x: x * 2)
+squared = apply_operation(numbers, lambda x: x ** 2)
+print(doubled)  # [2, 4, 6, 8, 10]
+print(squared)  # [1, 4, 9, 16, 25]
+
+# Create specialized functions
+triple = create_multiplier(3)
+square_func = create_power_function(2)
+cube_func = create_power_function(3)
+
+print(triple(7))      # 21
+print(square_func(4)) # 16
+print(cube_func(3))   # 27
+
+# Function composition
+def compose(f, g):
+    """Compose two functions: (f ∘ g)(x) = f(g(x))."""
+    return lambda x: f(g(x))
+
+# Create composite function
+double_then_square = compose(lambda x: x ** 2, lambda x: x * 2)
+print(double_then_square(3))  # (3 * 2) ** 2 = 36
+```
+
+### Function Scope and Closures
+
+```python
+# Global scope
 global_var = "I'm global"
 
-def access_global():
-    print(global_var)  # Can access global variable
+def demonstrate_scope():
+    """Demonstrate different variable scopes."""
+    # Local scope
+    local_var = "I'm local"
+    
+    def inner_function():
+        # Enclosing scope
+        nonlocal local_var
+        local_var = "Modified by inner function"
+        
+        # Can access global
+        global global_var
+        global_var = "Modified globally"
+        
+        # Local to inner function
+        inner_local = "I'm inner local"
+        print(f"Inner local: {inner_local}")
+    
+    print(f"Before inner call: {local_var}")
+    inner_function()
+    print(f"After inner call: {local_var}")
 
-def modify_global():
-    global global_var
-    global_var = "Modified globally"
+demonstrate_scope()
+print(f"Global after function: {global_var}")
 
-access_global()  # I'm global
-modify_global()
-print(global_var)  # Modified globally
+# Closures - functions that capture variables from enclosing scope
+def create_counter(start=0):
+    """Create a counter function with closure."""
+    count = start
+    
+    def counter():
+        nonlocal count
+        count += 1
+        return count
+    
+    return counter
+
+# Each counter maintains its own state
+counter1 = create_counter()
+counter2 = create_counter(10)
+
+print(counter1())  # 1
+print(counter1())  # 2
+print(counter2())  # 11
+print(counter1())  # 3
+print(counter2())  # 12
+
+# Closure with configuration
+def create_validator(min_length=1, max_length=100):
+    """Create a string validator with closure."""
+    def validator(text):
+        if not isinstance(text, str):
+            return False, "Must be a string"
+        if len(text) < min_length:
+            return False, f"Must be at least {min_length} characters"
+        if len(text) > max_length:
+            return False, f"Must be no more than {max_length} characters"
+        return True, "Valid"
+    
+    return validator
+
+# Create specialized validators
+username_validator = create_validator(3, 20)
+password_validator = create_validator(8, 50)
+
+print(username_validator("ab"))        # (False, 'Must be at least 3 characters')
+print(username_validator("alice"))     # (True, 'Valid')
+print(password_validator("short"))     # (False, 'Must be at least 8 characters')
+```
+
+### Function Documentation and Type Hints
+
+```python
+from typing import List, Dict, Optional, Union, Callable, Tuple, Any
+import math
+
+def calculate_statistics(numbers: List[Union[int, float]]) -> Dict[str, float]:
+    """
+    Calculate basic statistics for a list of numbers.
+    
+    Args:
+        numbers: List of numeric values (int or float)
+    
+    Returns:
+        Dictionary containing statistical measures:
+        - mean: Arithmetic mean
+        - median: Middle value
+        - std_dev: Standard deviation
+        - min_val: Minimum value
+        - max_val: Maximum value
+    
+    Raises:
+        ValueError: If the input list is empty
+        TypeError: If the input contains non-numeric values
+    
+    Examples:
+        >>> stats = calculate_statistics([1, 2, 3, 4, 5])
+        >>> stats['mean']
+        3.0
+        >>> stats['median']
+        3.0
+    """
+    if not numbers:
+        raise ValueError("Cannot calculate statistics for empty list")
+    
+    if not all(isinstance(x, (int, float)) for x in numbers):
+        raise TypeError("All elements must be numeric")
+    
+    n = len(numbers)
+    mean = sum(numbers) / n
+    
+    # Calculate median
+    sorted_nums = sorted(numbers)
+    if n % 2 == 0:
+        median = (sorted_nums[n//2 - 1] + sorted_nums[n//2]) / 2
+    else:
+        median = sorted_nums[n//2]
+    
+    # Calculate standard deviation
+    variance = sum((x - mean) ** 2 for x in numbers) / n
+    std_dev = math.sqrt(variance)
+    
+    return {
+        'mean': mean,
+        'median': median,
+        'std_dev': std_dev,
+        'min_val': min(numbers),
+        'max_val': max(numbers)
+    }
+
+def process_data(
+    data: List[Dict[str, Any]],
+    filter_func: Optional[Callable[[Dict[str, Any]], bool]] = None,
+    transform_func: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None
+) -> Tuple[List[Dict[str, Any]], int]:
+    """
+    Process a list of data dictionaries with optional filtering and transformation.
+    
+    Args:
+        data: List of dictionaries to process
+        filter_func: Optional function to filter items (must return bool)
+        transform_func: Optional function to transform items
+    
+    Returns:
+        Tuple of (processed_data, original_count)
+    """
+    original_count = len(data)
+    processed = data.copy()
+    
+    # Apply filter if provided
+    if filter_func:
+        processed = [item for item in processed if filter_func(item)]
+    
+    # Apply transformation if provided
+    if transform_func:
+        processed = [transform_func(item) for item in processed]
+    
+    return processed, original_count
+
+# Example usage with type hints
+def create_greeting_function(prefix: str = "Hello") -> Callable[[str], str]:
+    """Create a greeting function with a custom prefix."""
+    def greet(name: str) -> str:
+        return f"{prefix}, {name}!"
+    return greet
+
+# Usage examples
+try:
+    numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    stats = calculate_statistics(numbers)
+    print(f"Statistics: {stats}")
+    
+    # Sample data processing
+    sample_data = [
+        {'name': 'Alice', 'age': 25, 'score': 85},
+        {'name': 'Bob', 'age': 30, 'score': 92},
+        {'name': 'Charlie', 'age': 22, 'score': 78}
+    ]
+    
+    # Filter high scorers and add grade
+    def high_scorer(item: Dict[str, Any]) -> bool:
+        return item['score'] >= 80
+    
+    def add_grade(item: Dict[str, Any]) -> Dict[str, Any]:
+        score = item['score']
+        if score >= 90:
+            grade = 'A'
+        elif score >= 80:
+            grade = 'B'
+        else:
+            grade = 'C'
+        
+        return {**item, 'grade': grade}
+    
+    processed, original_count = process_data(sample_data, high_scorer, add_grade)
+    print(f"Processed {len(processed)} out of {original_count} items:")
+    for item in processed:
+        print(f"  {item}")
+    
+    # Create and use greeting function
+    spanish_greet = create_greeting_function("Hola")
+    print(spanish_greet("María"))  # Hola, María!
+    
+except (ValueError, TypeError) as e:
+    print(f"Error: {e}")
+```
+
+### Advanced Function Techniques
+
+```python
+# Partial functions
+from functools import partial
+
+def multiply(x, y, z):
+    """Multiply three numbers."""
+    return x * y * z
+
+# Create partial functions
+double = partial(multiply, 2)  # Fix first argument to 2
+triple_by_two = partial(multiply, y=2)  # Fix y argument to 2
+
+print(double(3, 4))      # 2 * 3 * 4 = 24
+print(triple_by_two(5, z=3))  # 5 * 2 * 3 = 30
+
+# Function caching (memoization)
+from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def fibonacci(n):
+    """Calculate Fibonacci number with memoization."""
+    if n < 2:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# This will be much faster for large numbers due to caching
+print(fibonacci(50))
+
+# Singledispatch - function overloading
+from functools import singledispatch
+
+@singledispatch
+def process_data(arg):
+    """Generic function for processing data."""
+    print(f"Processing generic data: {arg}")
+
+@process_data.register
+def _(arg: int):
+    """Process integer data."""
+    print(f"Processing integer: {arg * 2}")
+
+@process_data.register
+def _(arg: str):
+    """Process string data."""
+    print(f"Processing string: {arg.upper()}")
+
+@process_data.register
+def _(arg: list):
+    """Process list data."""
+    print(f"Processing list with {len(arg)} items: {arg}")
+
+# Usage
+process_data(42)        # Processing integer: 84
+process_data("hello")   # Processing string: HELLO
+process_data([1,2,3])   # Processing list with 3 items: [1, 2, 3]
+process_data(3.14)      # Processing generic data: 3.14
 ```
 
 ## Data Structures {#data-structures}
