@@ -50,9 +50,9 @@ See the [notes on how to prepare a package for V](packaging_v_for_distributions.
 You can let V automatically set up the bare-bones structure of a project for you
 by using any of the following commands in a terminal:
 
-* `v init` → adds necessary files to the current folder to make it a V project
-* `v new abc` → creates a new project in the new folder `abc`, by default a "hello world" project.
-* `v new --web abcd` → creates a new project in the new folder `abcd`, using the vweb template.
+* `v init` â†’ adds necessary files to the current folder to make it a V project
+* `v new abc` â†’ creates a new project in the new folder `abc`, by default a "hello world" project.
+* `v new --web abcd` â†’ creates a new project in the new folder `abcd`, using the vweb template.
 
 ## Table of Contents
 
@@ -465,7 +465,7 @@ println('${a}, ${b}') // 1, 0
 
 In development mode the compiler will warn you that you haven't used the variable
 (you'll get an "unused variable" warning).
-In production mode (enabled by passing the `-prod` flag to v – `v -prod foo.v`)
+In production mode (enabled by passing the `-prod` flag to v â€“ `v -prod foo.v`)
 it will not compile at all (like in Go).
 ```v
 fn main() {
@@ -546,13 +546,13 @@ completely into the data range of the type on the other side.
 These are the allowed possibilities:
 
 ```v ignore
-   i8 → i16 → int → i64
-                  ↘     ↘
-                    f32 → f64
-                  ↗     ↗
-   u8 → u16 → u32 → u64 ⬎
-      ↘     ↘     ↘      ptr
-   i8 → i16 → int → i64 ⬏
+   i8 â†’ i16 â†’ int â†’ i64
+                  â†˜     â†˜
+                    f32 â†’ f64
+                  â†—     â†—
+   u8 â†’ u16 â†’ u32 â†’ u64 â¬Ž
+      â†˜     â†˜     â†˜      ptr
+   i8 â†’ i16 â†’ int â†’ i64 â¬
 ```
 
 An `int` value for example can be automatically promoted to `f64`
@@ -581,7 +581,7 @@ d := b + x     // d is of type `f64` - automatic promotion of `x`'s value
 In V, strings are encoded in UTF-8, and are immutable (read-only) by default:
 
 ```v
-s := 'hello 🌎' // the `world` emoji takes 4 bytes, and string length is reported in bytes
+s := 'hello ðŸŒŽ' // the `world` emoji takes 4 bytes, and string length is reported in bytes
 assert s.len == 10
 
 arr := s.bytes() // convert `string` to `[]u8`
@@ -614,8 +614,8 @@ assert aardvark_str2 == 'aardvark'
 
 // Unicode can be specified directly as `\u####` where # is a hex digit
 // and will be converted internally to its UTF-8 representation
-star_str := '\u2605' // ★
-assert star_str == '★'
+star_str := '\u2605' // â˜…
+assert star_str == 'â˜…'
 // UTF-8 can be specified this way too, as individual bytes.
 assert star_str == '\xe2\x98\x85'
 ```
@@ -623,7 +623,7 @@ assert star_str == '\xe2\x98\x85'
 Since strings are immutable, you cannot directly change characters in a string:
 
 ```v failcompile
-mut s := 'hello 🌎'
+mut s := 'hello ðŸŒŽ'
 s[0] = `H` // not allowed
 ```
 
@@ -645,7 +645,7 @@ there may be fewer indexes available on the `rune` array than on the bytes in th
 _are_ any non-ASCII characters.
 
 ```v
-mut s := 'hello 🌎'
+mut s := 'hello ðŸŒŽ'
 // there are 10 bytes in the string (as shown earlier), but only 7 runes, since the `world` emoji
 // only counts as one `rune` (one Unicode character)
 assert s.runes().len == 7
@@ -809,20 +809,20 @@ A `rune` represents a single UTF-32 encoded Unicode character and is an alias fo
 To denote them, use <code>`</code> (backticks) :
 
 ```v
-rocket := `🚀`
+rocket := `ðŸš€`
 ```
 
 A `rune` can be converted to a UTF-8 string by using the `.str()` method.
 
 ```v
-rocket := `🚀`
-assert rocket.str() == '🚀'
+rocket := `ðŸš€`
+assert rocket.str() == 'ðŸš€'
 ```
 
 A `rune` can be converted to UTF-8 bytes by using the `.bytes()` method.
 
 ```v
-rocket := `🚀`
+rocket := `ðŸš€`
 assert rocket.bytes() == [u8(0xf0), 0x9f, 0x9a, 0x80]
 ```
 
@@ -834,7 +834,7 @@ assert `\141` == `a`
 assert `\u0061` == `a`
 
 // multibyte literals work too
-assert `\u2605` == `★`
+assert `\u2605` == `â˜…`
 assert `\u2605`.bytes() == [u8(0xe2), 0x98, 0x85]
 assert `\xe2\x98\x85`.bytes() == [u8(0xe2), 0x98, 0x85]
 assert `\342\230\205`.bytes() == [u8(0xe2), 0x98, 0x85]
@@ -847,16 +847,16 @@ error at compile time.
 Also remember that strings are indexed as bytes, not runes, so beware:
 
 ```v
-rocket_string := '🚀'
-assert rocket_string[0] != `🚀`
+rocket_string := 'ðŸš€'
+assert rocket_string[0] != `ðŸš€`
 assert 'aloha!'[0] == `a`
 ```
 
 A string can be converted to runes by the `.runes()` method.
 
 ```v
-hello := 'Hello World 👋'
-hello_runes := hello.runes() // [`H`, `e`, `l`, `l`, `o`, ` `, `W`, `o`, `r`, `l`, `d`, ` `, `👋`]
+hello := 'Hello World ðŸ‘‹'
+hello_runes := hello.runes() // [`H`, `e`, `l`, `l`, `o`, ` `, `W`, `o`, `r`, `l`, `d`, ` `, `ðŸ‘‹`]
 assert hello_runes.string() == hello
 ```
 
@@ -3278,7 +3278,7 @@ To dereference a reference, use the `*` operator, just like in C.
 
 ```v
 const pi = 3.14
-const world = '世界'
+const world = 'ä¸–ç•Œ'
 
 println(pi)
 println(world)
@@ -8276,7 +8276,7 @@ An example `deploy.vsh`:
 
 // print command then execute it
 fn sh(cmd string) {
-	println('❯ ${cmd}')
+	println('â¯ ${cmd}')
 	print(execute_or_exit(cmd).output)
 }
 
