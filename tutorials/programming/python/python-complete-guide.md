@@ -7,24 +7,27 @@ This comprehensive tutorial will guide you through the entire Python language, f
 2. [Variables and Data Types](#variables-and-data-types)
 3. [Control Structures](#control-structures)
 4. [Functions](#functions)
-5. [Data Structures](#data-structures)
-6. [Modules and Packages](#modules-and-packages)
-7. [File Operations](#file-operations)
-8. [Standard Library Overview](#standard-library-overview)
-9. [Essential Standard Library Modules](#essential-standard-library-modules)
-10. [Best Practices](#best-practices)
+5. [Advanced Type Hints (PEP 695)](#advanced-type-hints)
+6. [Data Structures](#data-structures)
+7. [Modules and Packages](#modules-and-packages)
+8. [File Operations](#file-operations)
+9. [Standard Library Overview](#standard-library-overview)
+10. [Essential Standard Library Modules](#essential-standard-library-modules)
+11. [Best Practices](#best-practices)
+12. [Python 3.14 New Features](#python-314-new-features)
 
 ## Python Basics {#python-basics}
 
 ### What is Python?
 
-Python is an easy-to-learn, powerful programming language. It has efficient high-level data structures and a simple but effective approach to object-oriented programming. Python's elegant syntax and dynamic typing, together with its interpreted nature, make it an ideal language for scripting and rapid application development in many areas on most platforms.
+Python is an easy-to-learn, powerful programming language with efficient high-level data structures and a simple but effective approach to object-oriented programming. Python 3.14 continues to improve performance, type safety, and developer experience.
 
 ### Installing Python 3.14
 
 1. Visit [python.org](https://www.python.org/)
 2. Download Python 3.14 for your operating system
 3. Install with default settings (make sure to add Python to PATH)
+4. Verify installation: `python --version`
 
 ### First Python Program
 
@@ -41,6 +44,9 @@ python script.py
 
 # Or use the interactive interpreter
 python
+
+# Run with optimization flag (Python 3.14 improvement)
+python -O script.py
 ```
 
 ## Variables and Data Types {#variables-and-data-types}
@@ -62,6 +68,11 @@ is_student = True    # Boolean
 
 user_name = "Bob"
 age_20 = 20
+
+# Type annotations (without enforcement)
+name: str = "Alice"
+age: int = 25
+height: float = 5.7
 ```
 
 ### Data Types
@@ -72,11 +83,16 @@ integer_num = 42
 float_num = 3.14
 complex_num = 3 + 4j
 
-# Strings
+# Strings with f-strings (improved in 3.14)
 single_quote = 'Hello'
 double_quote = "World"
 multiline = """This is a
 multiline string"""
+
+# Enhanced f-string formatting (Python 3.14)
+name = "Alice"
+score = 95.5
+print(f"Student: {name}, Score: {score:.1f}%")
 
 # Booleans
 is_true = True
@@ -85,7 +101,7 @@ is_false = False
 # None type (represents absence of value)
 empty_value = None
 
-# Type checking
+# Type checking with enhanced error messages (Python 3.14)
 print(type(42))        # <class 'int'>
 print(type("hello"))   # <class 'str'>
 ```
@@ -105,6 +121,15 @@ str_number = str(number)  # "42"
 # Converting to boolean
 bool_true = bool(1)      # True
 bool_false = bool(0)     # False
+
+# Type narrowing with isinstance (improved error reporting in 3.14)
+def process_value(value):
+    if isinstance(value, int):
+        return value * 2
+    elif isinstance(value, str):
+        return value.upper()
+    else:
+        return None
 ```
 
 ## Control Structures {#control-structures}
@@ -132,7 +157,7 @@ else:
 
 print(f"Grade: {grade}")
 
-# Nested conditions
+# Nested conditions with improved error messages
 is_raining = True
 is_sunny = False
 
@@ -154,9 +179,9 @@ else:
 # For loops
 fruits = ["apple", "banana", "orange"]
 
-# Loop through list
-for fruit in fruits:
-    print(f"I like {fruit}")
+# Loop through list with enumerate
+for index, fruit in enumerate(fruits):
+    print(f"{index}: {fruit}")
 
 # Loop with range
 for i in range(5):
@@ -179,12 +204,19 @@ for i in range(10):
     if i == 7:
         break     # Exit loop
     print(i)      # Prints 0, 1, 2, 4, 5, 6
+
+# For-else statement (executes else if loop completes without break)
+for i in range(5):
+    if i == 10:
+        break
+else:
+    print("Loop completed without break")
 ```
 
-### Pattern Matching (Python 3.10+)
+### Pattern Matching (Python 3.10+, Enhanced in 3.14)
 
 ```python
-# Match statements (similar to switch)
+# Match statements with improved type narrowing
 def handle_http_status(status):
     match status:
         case 200:
@@ -193,10 +225,12 @@ def handle_http_status(status):
             return "Not Found"
         case 500:
             return "Internal Server Error"
+        case 400 | 401 | 403:  # Multiple patterns
+            return "Client Error"
         case _:  # Default case
             return "Unknown status"
 
-# More complex pattern matching
+# More complex pattern matching with guards
 def process_point(point):
     match point:
         case (0, 0):
@@ -205,10 +239,29 @@ def process_point(point):
             print(f"Y={y}")
         case (x, 0):
             print(f"X={x}")
+        case (x, y) if x == y:
+            print(f"Diagonal point: X={x}, Y={y}")
         case (x, y):
             print(f"X={x}, Y={y}")
         case _:
             raise ValueError("Not a point")
+
+# Pattern matching with custom types
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+def locate_point(pt):
+    match pt:
+        case Point(x=0, y=0):
+            print("At origin")
+        case Point(x=0, y=y):
+            print(f"On Y-axis at {y}")
+        case Point(x=x, y=0):
+            print(f"On X-axis at {x}")
+        case Point(x=x, y=y):
+            print(f"At ({x}, {y})")
 ```
 
 ## Functions {#functions}
@@ -300,12 +353,6 @@ def add_item_good(item, target_list=None):
     target_list.append(item)
     return target_list
 
-# Demonstrate the problem
-list1 = add_item_bad("apple")
-list2 = add_item_bad("banana")  # This will contain both apple and banana!
-print(list1)  # ['apple', 'banana']
-print(list2)  # ['apple', 'banana']
-
 # The correct way
 list3 = add_item_good("apple")
 list4 = add_item_good("banana")
@@ -392,53 +439,6 @@ advanced_function(1, 2, 3, 4, 5, x=100, y=200)
 # kwargs: {'x': 100, 'y': 200}
 ```
 
-### Real-World Example: Database Connection Function
-```python
-def connect_to_database(host, port=5432, *additional_hosts, **connection_options):
-    """
-    Connect to a database with flexible configuration.
-    
-    Args:
-        host (str): Primary database host
-        port (int): Database port (default: 5432)
-        *additional_hosts: Additional backup hosts
-        **connection_options: Additional connection parameters
-    
-    Returns:
-        dict: Connection configuration
-    """
-    config = {
-        'primary_host': host,
-        'port': port,
-        'backup_hosts': list(additional_hosts),
-        'options': connection_options
-    }
-    
-    print(f"Connecting to {host}:{port}")
-    if additional_hosts:
-        print(f"Backup hosts: {', '.join(additional_hosts)}")
-    if connection_options:
-        print(f"Additional options: {connection_options}")
-    
-    return config
-
-# Usage examples
-db_config1 = connect_to_database("localhost")
-print(db_config1)
-
-db_config2 = connect_to_database(
-    "db1.example.com", 
-    3306, 
-    "db2.example.com", 
-    "db3.example.com",
-    username="admin",
-    password="secret",
-    timeout=30,
-    ssl=True
-)
-print(db_config2)
-```
-
 ### Function Decorators
 
 #### Basic Decorators
@@ -463,8 +463,6 @@ result = say_hello("Alice")
 # Hello, Alice!
 # After calling say_hello
 print(result)  # Greeted Alice
-
-# Equivalent to: say_hello = my_decorator(say_hello)
 ```
 
 #### Practical Decorator Examples
@@ -476,9 +474,9 @@ def timer(func):
     """Decorator to measure function execution time."""
     @functools.wraps(func)  # Preserves original function metadata
     def wrapper(*args, **kwargs):
-        start_time = time.time()
+        start_time = time.perf_counter()  # More precise than time.time()
         result = func(*args, **kwargs)
-        end_time = time.time()
+        end_time = time.perf_counter()
         print(f"{func.__name__} took {end_time - start_time:.4f} seconds")
         return result
     return wrapper
@@ -532,9 +530,6 @@ try:
     result = add_numbers(5, 3)
     print(f"Result: {result}")
     
-    # This will raise TypeError
-    # add_numbers("5", 3)
-    
     success = unreliable_function()
     print(success)
 except Exception as e:
@@ -579,133 +574,6 @@ students = [
 sorted_students = sorted(students, key=lambda s: s['grade'], reverse=True)
 print(sorted_students)
 # [{'name': 'Bob', 'grade': 90}, {'name': 'Alice', 'grade': 85}, {'name': 'Charlie', 'grade': 78}]
-
-# Lambda with multiple arguments
-points = [(1, 2), (3, 1), (2, 4), (0, 3)]
-# Sort by distance from origin
-sorted_points = sorted(points, key=lambda p: p[0]**2 + p[1]**2)
-print(sorted_points)  # [(1, 2), (3, 1), (0, 3), (2, 4)]
-```
-
-### Higher-Order Functions
-
-```python
-def apply_operation(numbers, operation):
-    """Apply an operation to a list of numbers."""
-    return [operation(x) for x in numbers]
-
-def create_multiplier(factor):
-    """Return a function that multiplies by a given factor."""
-    return lambda x: x * factor
-
-def create_power_function(exponent):
-    """Return a function that raises to a given power."""
-    def power_func(base):
-        return base ** exponent
-    return power_func
-
-# Using higher-order functions
-numbers = [1, 2, 3, 4, 5]
-
-# Apply different operations
-doubled = apply_operation(numbers, lambda x: x * 2)
-squared = apply_operation(numbers, lambda x: x ** 2)
-print(doubled)  # [2, 4, 6, 8, 10]
-print(squared)  # [1, 4, 9, 16, 25]
-
-# Create specialized functions
-triple = create_multiplier(3)
-square_func = create_power_function(2)
-cube_func = create_power_function(3)
-
-print(triple(7))      # 21
-print(square_func(4)) # 16
-print(cube_func(3))   # 27
-
-# Function composition
-def compose(f, g):
-    """Compose two functions: (f ∘ g)(x) = f(g(x))."""
-    return lambda x: f(g(x))
-
-# Create composite function
-double_then_square = compose(lambda x: x ** 2, lambda x: x * 2)
-print(double_then_square(3))  # (3 * 2) ** 2 = 36
-```
-
-### Function Scope and Closures
-
-```python
-# Global scope
-global_var = "I'm global"
-
-def demonstrate_scope():
-    """Demonstrate different variable scopes."""
-    # Local scope
-    local_var = "I'm local"
-    
-    def inner_function():
-        # Enclosing scope
-        nonlocal local_var
-        local_var = "Modified by inner function"
-        
-        # Can access global
-        global global_var
-        global_var = "Modified globally"
-        
-        # Local to inner function
-        inner_local = "I'm inner local"
-        print(f"Inner local: {inner_local}")
-    
-    print(f"Before inner call: {local_var}")
-    inner_function()
-    print(f"After inner call: {local_var}")
-
-demonstrate_scope()
-print(f"Global after function: {global_var}")
-
-# Closures - functions that capture variables from enclosing scope
-def create_counter(start=0):
-    """Create a counter function with closure."""
-    count = start
-    
-    def counter():
-        nonlocal count
-        count += 1
-        return count
-    
-    return counter
-
-# Each counter maintains its own state
-counter1 = create_counter()
-counter2 = create_counter(10)
-
-print(counter1())  # 1
-print(counter1())  # 2
-print(counter2())  # 11
-print(counter1())  # 3
-print(counter2())  # 12
-
-# Closure with configuration
-def create_validator(min_length=1, max_length=100):
-    """Create a string validator with closure."""
-    def validator(text):
-        if not isinstance(text, str):
-            return False, "Must be a string"
-        if len(text) < min_length:
-            return False, f"Must be at least {min_length} characters"
-        if len(text) > max_length:
-            return False, f"Must be no more than {max_length} characters"
-        return True, "Valid"
-    
-    return validator
-
-# Create specialized validators
-username_validator = create_validator(3, 20)
-password_validator = create_validator(8, 50)
-
-print(username_validator("ab"))        # (False, 'Must be at least 3 characters')
-print(username_validator("alice"))     # (True, 'Valid')
-print(password_validator("short"))     # (False, 'Must be at least 8 characters')
 ```
 
 ### Function Documentation and Type Hints
@@ -768,141 +636,106 @@ def calculate_statistics(numbers: List[Union[int, float]]) -> Dict[str, float]:
         'max_val': max(numbers)
     }
 
-def process_data(
-    data: List[Dict[str, Any]],
-    filter_func: Optional[Callable[[Dict[str, Any]], bool]] = None,
-    transform_func: Optional[Callable[[Dict[str, Any]], Dict[str, Any]]] = None
-) -> Tuple[List[Dict[str, Any]], int]:
-    """
-    Process a list of data dictionaries with optional filtering and transformation.
-    
-    Args:
-        data: List of dictionaries to process
-        filter_func: Optional function to filter items (must return bool)
-        transform_func: Optional function to transform items
-    
-    Returns:
-        Tuple of (processed_data, original_count)
-    """
-    original_count = len(data)
-    processed = data.copy()
-    
-    # Apply filter if provided
-    if filter_func:
-        processed = [item for item in processed if filter_func(item)]
-    
-    # Apply transformation if provided
-    if transform_func:
-        processed = [transform_func(item) for item in processed]
-    
-    return processed, original_count
-
 # Example usage with type hints
-def create_greeting_function(prefix: str = "Hello") -> Callable[[str], str]:
-    """Create a greeting function with a custom prefix."""
-    def greet(name: str) -> str:
-        return f"{prefix}, {name}!"
-    return greet
-
-# Usage examples
 try:
     numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     stats = calculate_statistics(numbers)
     print(f"Statistics: {stats}")
     
-    # Sample data processing
-    sample_data = [
-        {'name': 'Alice', 'age': 25, 'score': 85},
-        {'name': 'Bob', 'age': 30, 'score': 92},
-        {'name': 'Charlie', 'age': 22, 'score': 78}
-    ]
-    
-    # Filter high scorers and add grade
-    def high_scorer(item: Dict[str, Any]) -> bool:
-        return item['score'] >= 80
-    
-    def add_grade(item: Dict[str, Any]) -> Dict[str, Any]:
-        score = item['score']
-        if score >= 90:
-            grade = 'A'
-        elif score >= 80:
-            grade = 'B'
-        else:
-            grade = 'C'
-        
-        return {**item, 'grade': grade}
-    
-    processed, original_count = process_data(sample_data, high_scorer, add_grade)
-    print(f"Processed {len(processed)} out of {original_count} items:")
-    for item in processed:
-        print(f"  {item}")
-    
-    # Create and use greeting function
-    spanish_greet = create_greeting_function("Hola")
-    print(spanish_greet("María"))  # Hola, María!
-    
 except (ValueError, TypeError) as e:
     print(f"Error: {e}")
 ```
 
-### Advanced Function Techniques
+## Advanced Type Hints (PEP 695) {#advanced-type-hints}
+
+Python 3.14 introduces powerful new syntax for type parameters and type aliases using the `type` statement.
+
+### Type Aliases
 
 ```python
-# Partial functions
-from functools import partial
+# Old way (still works)
+from typing import TypeAlias
+Coordinate: TypeAlias = tuple[int, int]
 
-def multiply(x, y, z):
-    """Multiply three numbers."""
-    return x * y * z
+# New way with PEP 695 (Python 3.12+, improved in 3.14)
+type Coordinate = tuple[int, int]
+type UserID = int
+type Email = str
 
-# Create partial functions
-double = partial(multiply, 2)  # Fix first argument to 2
-triple_by_two = partial(multiply, y=2)  # Fix y argument to 2
+def get_location() -> Coordinate:
+    return (10, 20)
 
-print(double(3, 4))      # 2 * 3 * 4 = 24
-print(triple_by_two(5, z=3))  # 5 * 2 * 3 = 30
+def create_user(user_id: UserID, email: Email) -> dict:
+    return {"id": user_id, "email": email}
+```
 
-# Function caching (memoization)
-from functools import lru_cache
+### Generic Type Parameters (PEP 695)
 
-@lru_cache(maxsize=128)
-def fibonacci(n):
-    """Calculate Fibonacci number with memoization."""
-    if n < 2:
-        return n
-    return fibonacci(n-1) + fibonacci(n-2)
+```python
+# Define generic types with type parameters
+type Stack[T] = list[T]
+type Pair[T, U] = tuple[T, U]
 
-# This will be much faster for large numbers due to caching
-print(fibonacci(50))
+# Generic functions with the new syntax
+def first[T](items: list[T]) -> T:
+    """Get the first item from a list."""
+    if not items:
+        raise IndexError("List is empty")
+    return items[0]
 
-# Singledispatch - function overloading
-from functools import singledispatch
+def pair_map[T, U](items: list[T], func: callable[[T], U]) -> Pair[T, U]:
+    """Create a pair of original and transformed items."""
+    return (items[0], func(items[0]))
 
-@singledispatch
-def process_data(arg):
-    """Generic function for processing data."""
-    print(f"Processing generic data: {arg}")
-
-@process_data.register
-def _(arg: int):
-    """Process integer data."""
-    print(f"Processing integer: {arg * 2}")
-
-@process_data.register
-def _(arg: str):
-    """Process string data."""
-    print(f"Processing string: {arg.upper()}")
-
-@process_data.register
-def _(arg: list):
-    """Process list data."""
-    print(f"Processing list with {len(arg)} items: {arg}")
+# Generic classes with the new syntax
+class Container[T]:
+    """A generic container for storing values."""
+    def __init__(self, value: T):
+        self.value = value
+    
+    def get(self) -> T:
+        return self.value
+    
+    def set(self, value: T) -> None:
+        self.value = value
 
 # Usage
-process_data(42)        # Processing integer: 84
-process_data("hello")   # Processing string: HELLO
-process_data([1,2,3])   # Processing list with 3 items: [1, 2, 3]
-process_data(3.14)      # Processing generic data: 3.14
+numbers = [1, 2, 3, 4, 5]
+print(first(numbers))  # 1
+
+strings = ["hello", "world"]
+print(first(strings))  # "hello"
+
+container = Container[int](42)
+print(container.get())  # 42
+
+container.set(100)
+print(container.get())  # 100
+```
+
+### Constrained Type Parameters
+
+```python
+# Type parameters with constraints (Python 3.14)
+type Numeric = int | float
+type Stringifiable = str | int | float
+
+def process_numeric[T: int | float](value: T) -> T:
+    """Process numeric values with type constraint."""
+    return value * 2
+
+# This works
+print(process_numeric(5))      # 10
+print(process_numeric(2.5))    # 5.0
+
+# Type parameters with bounds
+class Comparable[T: int | float | str]:
+    """Generic class with bounded type parameter."""
+    def __init__(self, value: T):
+        self.value = value
+    
+    def compare(self, other: T) -> bool:
+        return self.value < other
 ```
 
 ## Data Structures {#data-structures}
@@ -934,11 +767,6 @@ print("apple" in fruits)    # Check if element exists
 numbers.sort()              # Sort ascending
 numbers.sort(reverse=True)  # Sort descending
 numbers.reverse()           # Reverse order
-
-# List methods example
-shopping_list = ["milk", "bread", "eggs"]
-shopping_list.extend(["cheese", "butter"])
-print(shopping_list)  # ['milk', 'bread', 'eggs', 'cheese', 'butter']
 
 # List comprehensions
 squares = [x**2 for x in range(10)]
@@ -976,6 +804,11 @@ locations = {
     (0, 0): "origin",
     (1, 1): "point A"
 }
+
+# Tuple methods
+my_tuple = (1, 2, 3, 2, 1)
+print(my_tuple.count(2))  # 1
+print(my_tuple.index(2))  # 1
 ```
 
 ### Dictionaries
@@ -991,6 +824,7 @@ person = {
 # Accessing values
 print(person["name"])  # Alice
 print(person.get("age"))  # 25
+print(person.get("email", "not provided"))  # not provided (default)
 
 # Adding and modifying
 person["email"] = "alice@example.com"
@@ -1008,6 +842,14 @@ for key, value in person.items():
 # Dictionary comprehension
 squares_dict = {x: x**2 for x in range(5)}
 print(squares_dict)  # {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+
+# Merging dictionaries (Python 3.9+)
+dict1 = {"a": 1, "b": 2}
+dict2 = {"c": 3, "d": 4}
+merged = dict1 | dict2  # {a: 1, b: 2, c: 3, d: 4}
+
+# Update merge (Python 3.9+)
+dict1 |= {"e": 5}  # dict1 now includes e: 5
 ```
 
 ### Sets
@@ -1038,13 +880,15 @@ numbers.add(6)          # Add element
 numbers.remove(1)       # Remove element (raises KeyError if not found)
 numbers.discard(10)     # Remove element (no error if not found)
 
-# Set operations example
-unique_chars = set("hello")
-print(unique_chars)  # {'h', 'e', 'l', 'o'}
-
 # Set comprehensions
 a = {x for x in 'abracadabra' if x not in 'abc'}
 print(a)  # {'r', 'd'}
+
+# Check subset and superset
+set_a = {1, 2}
+set_b = {1, 2, 3, 4}
+print(set_a.issubset(set_b))    # True
+print(set_b.issuperset(set_a))  # True
 ```
 
 ## Modules and Packages {#modules-and-packages}
@@ -1092,38 +936,12 @@ import fibo as f
 f.fib(500)
 ```
 
-### Packages
-
-```python
-# Package structure example:
-# sound/                          Top-level package
-#   __init__.py                   Initialize the sound package
-#   formats/                      Subpackage for file format conversions
-#       __init__.py
-#       wavread.py
-#       wavwrite.py
-#   effects/                      Subpackage for sound effects
-#       __init__.py
-#       echo.py
-#       surround.py
-
-# Importing from packages
-import sound.effects.echo
-sound.effects.echo.echofilter(input, output, delay=0.7, atten=4)
-
-from sound.effects import echo
-echo.echofilter(input, output, delay=0.7, atten=4)
-
-from sound.effects.echo import echofilter
-echofilter(input, output, delay=0.7, atten=4)
-```
-
 ## File Operations {#file-operations}
 
 ### Reading Files
 
 ```python
-# Basic file reading
+# Basic file reading with context manager
 try:
     with open("example.txt", "r", encoding="utf-8") as file:
         content = file.read()
@@ -1178,23 +996,7 @@ write_data_to_file("test.txt", "Sample data")
 import os
 from pathlib import Path
 
-# Using os module for path operations
-current_dir = os.getcwd()  # Get current directory
-print(current_dir)
-
-# Join paths (cross-platform)
-file_path = os.path.join("folder", "file.txt")
-print(file_path)  # folder/file.txt (on Unix) or folder\file.txt (on Windows)
-
-# Check if file exists
-if os.path.exists("example.txt"):
-    print("File exists")
-
-# Get file information
-file_stats = os.stat("example.txt")
-print(f"File size: {file_stats.st_size} bytes")
-
-# Using pathlib (modern approach)
+# Using pathlib (modern approach - recommended)
 current_path = Path(".")
 print(current_path.resolve())  # Absolute path
 
@@ -1238,8 +1040,9 @@ Python's standard library is extensive and provides powerful functionality witho
 3. **File and I/O**: File operations (io, pathlib)
 4. **Networking**: Internet protocols (http, socket)
 5. **Database**: SQL database access (sqlite3)
-6. **Mathematics**: Mathematical operations (math, random)
+6. **Mathematics**: Mathematical operations (math, random, statistics)
 7. **System**: System-specific interfaces (platform, subprocess)
+8. **Text Processing**: String operations (re, textwrap)
 
 ## Essential Standard Library Modules {#essential-standard-library-modules}
 
@@ -1266,12 +1069,11 @@ if os.path.exists(file_path):
     print(f"File size: {os.path.getsize(file_path)} bytes")
 
 # Environment variables
-print(os.environ.get("HOME"))  # Get home directory (Unix/Mac)
-print(os.environ.get("USERPROFILE"))  # Get user profile (Windows)
+print(os.environ.get("HOME", "home_not_set"))
+print(os.environ.get("PATH"))
 
 # System information
 print(f"Operating system: {os.name}")
-print(f"System platform: {os.sys.platform}")
 ```
 
 ### 2. `sys` Module - System-specific Parameters
@@ -1281,6 +1083,7 @@ import sys
 
 # Get Python version
 print(f"Python version: {sys.version}")
+print(f"Version info: {sys.version_info}")
 
 # Get command line arguments
 print(f"Command line arguments: {sys.argv}")
@@ -1291,11 +1094,11 @@ print(f"Python executable: {sys.executable}")
 # Get system max recursion limit
 print(f"Recursion limit: {sys.getrecursionlimit()}")
 
-# Get memory usage (approximate)
+# Module count
 print(f"Module count: {len(sys.modules)}")
 
-# Exit program
-# sys.exit(0)  # Exit with success code
+# Platform information
+print(f"Platform: {sys.platform}")
 ```
 
 ### 3. `datetime` Module - Date and Time Operations
@@ -1309,7 +1112,7 @@ now = datetime.now()
 print(f"Current datetime: {now}")
 
 # Creating datetime objects
-specific_date = datetime(2023, 12, 25, 14, 30, 0)
+specific_date = datetime(2025, 12, 25, 14, 30, 0)
 print(f"Specific date: {specific_date}")
 
 # Date only
@@ -1320,12 +1123,12 @@ print(f"Today's date: {today}")
 current_time = time(14, 30, 45)
 print(f"Current time: {current_time}")
 
-# Formatting dates
+# Formatting dates (improved in Python 3.14)
 formatted = now.strftime("%Y-%m-%d %H:%M:%S")
 print(f"Formatted date: {formatted}")
 
 # Parsing dates
-date_string = "2023-12-25"
+date_string = "2025-12-25"
 parsed_date = datetime.strptime(date_string, "%Y-%m-%d")
 print(f"Parsed date: {parsed_date}")
 
@@ -1337,19 +1140,19 @@ print(f"30 days from now: {future_date}")
 print(f"2 weeks ago: {past_date}")
 
 # Calendar operations
-print(f"Days in December 2023: {calendar.monthrange(2023, 12)[1]}")
+print(f"Days in December 2025: {calendar.monthrange(2025, 12)[1]}")
 ```
 
 ### 4. `collections` Module - Advanced Data Structures
 
 ```python
-from collections import Counter, defaultdict, namedtuple, deque
+from collections import Counter, defaultdict, namedtuple, deque, OrderedDict
 
 # Counter - Count elements in iterable
 text = "hello world"
 char_count = Counter(text)
 print(f"Character count: {char_count}")
-print(f"Most common character: {char_count.most_common(1)}")
+print(f"Most common characters: {char_count.most_common(3)}")
 
 # defaultdict - Default values for missing keys
 dd = defaultdict(list)
@@ -1358,12 +1161,12 @@ dd['key2'].append('value2')
 print(f"Default dict: {dict(dd)}")
 
 # namedtuple - Create tuple-like objects with named fields
-Point = namedtuple('Point', ['x', 'y'])
-p1 = Point(1, 2)
-p2 = Point(3, 4)
+Point = namedtuple('Point', ['x', 'y', 'z'])
+p1 = Point(1, 2, 3)
+p2 = Point(3, 4, 5)
 
 print(f"Point p1: {p1}")
-print(f"Point p2 x-coordinate: {p2.x}")
+print(f"Point p1 x-coordinate: {p1.x}")
 
 # deque - Double-ended queue with efficient operations
 dq = deque([1, 2, 3])
@@ -1374,6 +1177,10 @@ print(f"Deque: {list(dq)}")
 dq.popleft()        # Remove from left
 dq.pop()            # Remove from right
 print(f"Deque after removals: {list(dq)}")
+
+# OrderedDict - Dictionary that maintains insertion order (Python 3.7+ dicts are ordered by default)
+od = OrderedDict([('first', 1), ('second', 2), ('third', 3)])
+print(f"Ordered dict: {od}")
 ```
 
 ### 5. `json` Module - JSON Data Handling
@@ -1420,10 +1227,12 @@ except json.JSONDecodeError as e:
 
 ```python
 import random
+import math
 
 # Generate random numbers
 print(f"Random float: {random.random()}")  # Between 0.0 and 1.0
 print(f"Random integer: {random.randint(1, 10)}")  # Between 1 and 10
+print(f"Random float in range: {random.uniform(1.5, 3.5)}")
 
 # Random choice from sequence
 colors = ["red", "green", "blue", "yellow"]
@@ -1440,20 +1249,9 @@ print(f"Shuffled numbers: {numbers}")
 
 # Setting seed for reproducible results
 random.seed(42)
-print(f"Random with seed: {random.random()}")
-
-# Using random with different distributions
-import math
-
-# Normal distribution (using Box-Muller transform approximation)
-def random_normal(mean=0, std_dev=1):
-    # Simple approximation using sum of uniform distributions
-    u = random.uniform(0, 1)
-    v = random.uniform(0, 1)
-    z = math.sqrt(-2 * math.log(u)) * math.cos(2 * math.pi * v)
-    return mean + std_dev * z
-
-print(f"Normal distribution sample: {random_normal()}")
+print(f"Random with seed 42: {random.random()}")
+random.seed(42)
+print(f"Same seed produces same result: {random.random()}")
 ```
 
 ### 7. `re` Module - Regular Expressions
@@ -1470,11 +1268,11 @@ emails = re.findall(email_pattern, text)
 print(f"Found emails: {emails}")
 
 # Search for pattern
-if re.search(r'\d{4}', "Year 2023"):
+if re.search(r'\d{4}', "Year 2025"):
     print("Found year pattern")
 
 # Replace text
-new_text = re.sub(r'\d{4}', 'XXXX', "The year is 2023")
+new_text = re.sub(r'\d{4}', 'XXXX', "The year is 2025")
 print(f"Replaced text: {new_text}")
 
 # Splitting with regex
@@ -1482,16 +1280,9 @@ sentence = "Hello, world! How are you?"
 words = re.split(r'[,\s!?]+', sentence)
 print(f"Split words: {words}")
 
-# More complex patterns
-# Phone number pattern
-phone_pattern = r'\b(\d{3})[-.]?(\d{3})[-.]?(\d{4})\b'
-phone_text = "Call me at 123-456-7890 or 123.456.7890"
-formatted_phones = re.sub(phone_pattern, r'(\1) \2-\3', phone_text)
-print(f"Formatted phones: {formatted_phones}")
-
 # Pattern groups
 date_pattern = r'(\d{2})/(\d{2})/(\d{4})'
-date_text = "Today is 12/25/2023"
+date_text = "Today is 12/25/2025"
 match = re.search(date_pattern, date_text)
 if match:
     print(f"Full match: {match.group(0)}")
@@ -1533,112 +1324,53 @@ print(f"Log base 10 of 100: {math.log10(100)}")
 # Constants
 print(f"Pi value: {math.pi}")
 print(f"e value: {math.e}")
+print(f"Tau (2π): {math.tau}")
 
 # Rounding functions
 print(f"Ceiling of 3.2: {math.ceil(3.2)}")
 print(f"Floor of 3.2: {math.floor(3.2)}")
-print(f"Round of 3.5: {round(3.5)}")  # Built-in function
 
 # Factorial and combinations
 print(f"Factorial of 5: {math.factorial(5)}")
 print(f"Combinations (5 choose 2): {math.comb(5, 2)}")
+print(f"Permutations (5 P 2): {math.perm(5, 2)}")
 
 # Hyperbolic functions
 print(f"Hyperbolic sine of 1: {math.sinh(1)}")
+
+# GCD and LCM
+print(f"GCD of 48 and 18: {math.gcd(48, 18)}")
+print(f"LCM of 12 and 18: {math.lcm(12, 18)}")
 ```
 
-### 9. `urllib` Module - URL Handling
+### 9. `statistics` Module - Statistical Functions (Python 3.4+)
 
 ```python
-import urllib.request
-import urllib.parse
-from urllib.error import URLError, HTTPError
+import statistics
 
-# Basic URL operations
-url = "https://httpbin.org/get"
+# Basic statistics
+data = [1, 2, 3, 4, 5, 100]
 
+# Mean (average)
+print(f"Mean: {statistics.mean(data)}")  # 19.166...
+
+# Median (middle value)
+print(f"Median: {statistics.median(data)}")  # 3.5
+
+# Mode (most frequent value)
 try:
-    # Fetching URL content
-    response = urllib.request.urlopen(url)
-    data = response.read()
-    print(f"Status code: {response.getcode()}")
-    
-    # Parse URL components
-    parsed_url = urllib.parse.urlparse(url)
-    print(f"Protocol: {parsed_url.scheme}")
-    print(f"Hostname: {parsed_url.hostname}")
-    print(f"Path: {parsed_url.path}")
-    
-    # URL encoding
-    query_params = {'name': 'John Doe', 'city': 'New York'}
-    encoded_params = urllib.parse.urlencode(query_params)
-    print(f"Encoded params: {encoded_params}")
-    
-    # Building URLs
-    base_url = "https://api.example.com"
-    endpoint = "/users"
-    full_url = urllib.parse.urljoin(base_url, endpoint)
-    print(f"Full URL: {full_url}")
-    
-except HTTPError as e:
-    print(f"HTTP Error: {e.code} - {e.reason}")
-except URLError as e:
-    print(f"URL Error: {e.reason}")
+    print(f"Mode: {statistics.mode([1, 1, 2, 3, 3, 3])}")  # 3
+except statistics.StatisticsError:
+    print("No unique mode found")
 
-# URL encoding and decoding examples
-original_text = "Hello World! How are you?"
-encoded_text = urllib.parse.quote(original_text)
-print(f"Encoded: {encoded_text}")
+# Standard deviation
+print(f"Standard deviation: {statistics.stdev(data)}")
 
-decoded_text = urllib.parse.unquote(encoded_text)
-print(f"Decoded: {decoded_text}")
+# Quantiles (Python 3.8+)
+print(f"Quantiles: {statistics.quantiles(data, n=4)}")  # quartiles
 ```
 
-### 10. `subprocess` Module - Spawning Child Processes
-
-```python
-import subprocess
-import sys
-
-# Basic subprocess execution
-try:
-    # Run command and capture output
-    result = subprocess.run(['ls', '-l'], capture_output=True, text=True, check=True)
-    print("Command output:")
-    print(result.stdout)
-    
-except subprocess.CalledProcessError as e:
-    print(f"Command failed with return code {e.returncode}")
-    print(f"Error output: {e.stderr}")
-
-# Running Python scripts
-python_script = "example.py"
-try:
-    # Run another Python script
-    result = subprocess.run([sys.executable, python_script], 
-                          capture_output=True, text=True, check=True)
-    print(f"Script output: {result.stdout}")
-except FileNotFoundError:
-    print("Script file not found")
-
-# Piping between processes
-try:
-    # Example: list files and count them
-    ls_process = subprocess.Popen(['ls'], stdout=subprocess.PIPE)
-    wc_process = subprocess.Popen(['wc', '-l'], stdin=ls_process.stdout, stdout=subprocess.PIPE)
-    ls_process.stdout.close()
-    output = wc_process.communicate()[0]
-    print(f"Line count: {output.decode().strip()}")
-except Exception as e:
-    print(f"Error in subprocess: {e}")
-
-# Running shell commands
-result = subprocess.run('echo "Hello from shell"', 
-                       shell=True, capture_output=True, text=True)
-print(f"Shell command output: {result.stdout.strip()}")
-```
-
-### 11. `sqlite3` Module - SQLite Database Access
+### 10. `sqlite3` Module - SQLite Database Access
 
 ```python
 import sqlite3
@@ -1666,8 +1398,6 @@ users_data = [
 ]
 
 cursor.executemany('INSERT INTO users (name, email) VALUES (?, ?)', users_data)
-
-# Commit changes
 conn.commit()
 
 # Query data
@@ -1692,48 +1422,9 @@ conn.commit()
 
 # Close connection
 conn.close()
-
-# Using context manager (recommended)
-def create_sample_db():
-    """Create a sample database with example data."""
-    try:
-        with sqlite3.connect('sample.db') as conn:
-            cursor = conn.cursor()
-            
-            # Create table
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS products (
-                    id INTEGER PRIMARY KEY,
-                    name TEXT NOT NULL,
-                    price REAL,
-                    category TEXT
-                )
-            ''')
-            
-            # Insert sample data
-            products = [
-                (1, 'Laptop', 999.99, 'Electronics'),
-                (2, 'Book', 19.99, 'Education'),
-                (3, 'Coffee Mug', 12.50, 'Kitchen')
-            ]
-            
-            cursor.executemany('INSERT INTO products VALUES (?, ?, ?, ?)', products)
-            
-            # Query all products
-            cursor.execute('SELECT * FROM products')
-            products_list = cursor.fetchall()
-            
-            print("Sample products:")
-            for product in products_list:
-                print(f"ID: {product[0]}, Name: {product[1]}, Price: ${product[2]}")
-                
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-
-create_sample_db()
 ```
 
-### 12. `pathlib` Module - Object-Oriented File System Paths
+### 11. `pathlib` Module - Object-Oriented File System Paths
 
 ```python
 from pathlib import Path
@@ -1777,15 +1468,6 @@ print("\nAll .txt files:")
 for txt_file in data_dir.glob("*.txt"):
     print(f"  {txt_file}")
 
-print("\nAll files recursively:")
-for file in data_dir.rglob("*"):
-    if file.is_file():
-        print(f"  {file}")
-
-# Path manipulation
-new_path = Path("data") / "backup" / "file.txt"
-print(f"New path: {new_path}")
-
 # File operations with pathlib
 test_file = Path("test.txt")
 if not test_file.exists():
@@ -1799,16 +1481,9 @@ if not test_file.exists():
     # Get file stats
     stat = test_file.stat()
     print(f"File size: {stat.st_size} bytes")
-
-# Safe file operations
-backup_path = Path("backup.txt")
-if test_file.exists():
-    # Copy file using pathlib
-    backup_path.write_text(test_file.read_text())
-    print("File backed up successfully")
 ```
 
-### 13. `logging` Module - Logging System
+### 12. `logging` Module - Logging System
 
 ```python
 import logging
@@ -1864,45 +1539,9 @@ try:
     result = 10 / 0
 except ZeroDivisionError as e:
     logger.error("Division by zero error", exc_info=True)
-
-# Advanced logging configuration
-def setup_advanced_logging():
-    """Setup advanced logging configuration."""
-    
-    # Create logger with custom name
-    log = logging.getLogger('advanced_app')
-    log.setLevel(logging.DEBUG)
-    
-    # Create formatters
-    detailed_formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s'
-    )
-    
-    simple_formatter = logging.Formatter('%(levelname)s: %(message)s')
-    
-    # Console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(simple_formatter)
-    
-    # File handler for detailed logs
-    file_handler = logging.FileHandler('detailed_app.log')
-    file_handler.setLevel(logging.DEBUG)
-    file_handler.setFormatter(detailed_formatter)
-    
-    # Add handlers
-    log.addHandler(console_handler)
-    log.addHandler(file_handler)
-    
-    return log
-
-# Use the advanced logger
-advanced_logger = setup_advanced_logging()
-advanced_logger.info("Advanced logging configured")
-advanced_logger.debug("Debug message from advanced logger")
 ```
 
-### 14. `unittest` Module - Unit Testing Framework
+### 13. `unittest` Module - Unit Testing Framework
 
 ```python
 import unittest
@@ -1942,284 +1581,230 @@ class TestMathFunctions(unittest.TestCase):
         self.assertFalse(is_prime(-1))
         self.assertTrue(is_prime(2))
 
-# More comprehensive test example
-class TestStringOperations(unittest.TestCase):
-    
-    def setUp(self):
-        """Set up test fixtures before each test method."""
-        self.test_string = "Hello, World!"
-    
-    def tearDown(self):
-        """Clean up after each test method."""
-        self.test_string = None
-    
-    def test_string_length(self):
-        """Test string length calculation."""
-        self.assertEqual(len(self.test_string), 13)
-    
-    def test_string_uppercase(self):
-        """Test string uppercase conversion."""
-        self.assertEqual(self.test_string.upper(), "HELLO, WORLD!")
-    
-    def test_string_contains(self):
-        """Test string contains operation."""
-        self.assertIn("World", self.test_string)
-    
-    def test_string_split(self):
-        """Test string splitting."""
-        parts = self.test_string.split(", ")
-        self.assertEqual(len(parts), 2)
-        self.assertEqual(parts[0], "Hello")
-        self.assertEqual(parts[1], "World!")
-
-# Test with parameterized inputs
-class TestMathOperations(unittest.TestCase):
-    
-    def test_addition(self):
-        """Test addition with various inputs."""
-        test_cases = [
-            (1, 2, 3),
-            (0, 0, 0),
-            (-1, 1, 0),
-            (10, -5, 5)
-        ]
-        
-        for a, b, expected in test_cases:
-            with self.subTest(a=a, b=b):
-                self.assertEqual(add_numbers(a, b), expected)
-
 # Running tests
 if __name__ == '__main__':
-    # Run all tests
     unittest.main(verbosity=2)
-    
-    # Or run specific test methods
-    # suite = unittest.TestSuite()
-    # suite.addTest(TestMathFunctions('test_add_numbers'))
-    # runner = unittest.TextTestRunner(verbosity=2)
-    # runner.run(suite)
 ```
 
-### 15. `configparser` Module - Configuration File Handling
+## Python 3.14 New Features {#python-314-new-features}
+
+### Per-Interpreter GIL (Global Interpreter Lock)
+
+Python 3.14 introduces per-interpreter GIL support, allowing true parallelism with multiple Python interpreters.
 
 ```python
-import configparser
-from pathlib import Path
+# This is experimental in Python 3.14
+# Per-interpreter GIL allows running multiple Python interpreters
+# without the Global Interpreter Lock blocking between them
 
-# Create a configuration file
-config_content = """
-[DEFAULT]
-server = localhost
-port = 8080
+# Note: This requires building Python with specific flags
+# Traditional threading still exists with the GIL
 
-[DATABASE]
-host = db.example.com
-port = 5432
-username = admin
-password = secret
+import threading
+import time
 
-[LOGGING]
-level = INFO
-file = app.log
-max_size = 1048576
-"""
+def worker(name):
+    for i in range(3):
+        print(f"{name}: {i}")
+        time.sleep(0.1)
 
-# Write configuration file
-config_file = Path("config.ini")
-config_file.write_text(config_content)
+# Create threads
+threads = []
+for i in range(2):
+    t = threading.Thread(target=worker, args=(f"Thread-{i}",))
+    threads.append(t)
+    t.start()
 
-# Read configuration file
-config = configparser.ConfigParser()
-config.read("config.ini")
+# Wait for all threads to complete
+for t in threads:
+    t.join()
 
-# Access configuration values
-print("DEFAULT section:")
-print(f"Server: {config['DEFAULT']['server']}")
-print(f"Port: {config['DEFAULT']['port']}")
-
-print("\nDATABASE section:")
-print(f"Host: {config['DATABASE']['host']}")
-print(f"Port: {config['DATABASE']['port']}")
-print(f"Username: {config['DATABASE']['username']}")
-
-# Access with default values
-db_port = config.get('DATABASE', 'port', fallback='3306')
-print(f"Database port (with fallback): {db_port}")
-
-# Check if section exists
-if 'LOGGING' in config:
-    print(f"Logging level: {config['LOGGING']['level']}")
-
-# Create new configuration
-new_config = configparser.ConfigParser()
-new_config['APP'] = {
-    'name': 'MyApp',
-    'version': '1.0.0',
-    'debug': 'True'
-}
-
-new_config['DATABASE'] = {
-    'host': 'localhost',
-    'port': '5432'
-}
-
-# Write new configuration to file
-with open('new_config.ini', 'w') as configfile:
-    new_config.write(configfile)
-
-# Read and parse the new configuration
-new_config_read = configparser.ConfigParser()
-new_config_read.read('new_config.ini')
-
-print("\nNew configuration:")
-for section in new_config_read.sections():
-    print(f"[{section}]")
-    for key, value in new_config_read[section].items():
-        print(f"  {key} = {value}")
+print("All threads completed")
 ```
 
-## Complete Example: Simple Web Scraper
+### Enhanced Error Messages
 
-Here's a complete example combining various concepts:
+Python 3.14 provides more detailed and helpful error messages with suggestions.
 
 ```python
-import json
-import sqlite3
-from datetime import datetime
+# Example: Improved AttributeError messages
+class Person:
+    def __init__(self, name):
+        self.name = name
+
+p = Person("Alice")
+
+# In Python 3.14, this error message is more helpful:
+try:
+    print(p.nam)  # Typo: should be p.name
+except AttributeError as e:
+    print(f"Error: {e}")
+    # Python 3.14 suggests: Did you mean 'name'?
+
+# Example: Improved TypeError messages
+def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+try:
+    greet(123)  # Type mismatch
+except TypeError as e:
+    print(f"Error: {e}")
+    # More helpful in Python 3.14
+```
+
+### Improved Performance
+
+Python 3.14 includes various performance improvements:
+
+```python
+import time
+
+# Adaptive specialization makes code faster
+def fibonacci(n):
+    """Fibonacci function - runs faster in Python 3.14."""
+    if n < 2:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)
+
+# Measure performance
+start = time.perf_counter()
+result = fibonacci(30)
+end = time.perf_counter()
+
+print(f"Result: {result}")
+print(f"Time taken: {end - start:.4f} seconds")
+print("(Runs significantly faster in Python 3.14 with adaptive specialization)")
+```
+
+### New `sys.monitoring` API
+
+Python 3.14 enhances the monitoring capabilities for profiling and debugging:
+
+```python
+import sys
+
+# Access monitoring information
+print(f"Python version: {sys.version_info}")
+print(f"Implementation: {sys.implementation}")
+
+# Check if monitoring is available
+if hasattr(sys, 'monitoring'):
+    print("Monitoring API is available")
+    # Can be used for advanced profiling
+```
+
+### Improved Type Checking with TypeVar Bounds
+
+```python
+from typing import TypeVar
+
+# TypeVar with better constraints (Python 3.14)
+T = TypeVar('T', int, float, str)  # Constrain to specific types
+
+def process[T: int | float | str](value: T) -> T:
+    """Process value constrained to numeric or string types."""
+    if isinstance(value, (int, float)):
+        return value * 2
+    else:
+        return value.upper()
+
+print(process(5))        # 10
+print(process(2.5))      # 5.0
+print(process("hello"))  # HELLO
+```
+
+### New Standard Library Enhancements
+
+Python 3.14 adds several enhancements to standard library modules:
+
+```python
+# Enhanced pathlib with more convenience methods
 from pathlib import Path
-import logging
 
-# Set up logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
+# New methods for file operations
+path = Path("example.txt")
 
-class SimpleWebScraper:
-    """A simple web scraper example."""
-    
-    def __init__(self, db_path="scraped_data.db"):
-        self.db_path = db_path
-        self.setup_database()
-    
-    def setup_database(self):
-        """Set up SQLite database."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS scraped_pages (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                url TEXT UNIQUE,
-                title TEXT,
-                content TEXT,
-                scraped_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        
-        conn.commit()
-        conn.close()
-    
-    def scrape_page(self, url):
-        """Scrape a web page and store the data."""
-        try:
-            # In real application, you would use requests here
-            # For this example, we'll simulate scraping
-            
-            # Simulated data
-            title = "Sample Page Title"
-            content = "This is sample content from the scraped page."
-            
-            # Store in database
-            conn = sqlite3.connect(self.db_path)
-            cursor = conn.cursor()
-            
-            cursor.execute('''
-                INSERT OR REPLACE INTO scraped_pages (url, title, content)
-                VALUES (?, ?, ?)
-            ''', (url, title, content))
-            
-            conn.commit()
-            conn.close()
-            
-            logging.info(f"Scraped page: {url}")
-            return True
-            
-        except Exception as e:
-            logging.error(f"Error scraping {url}: {e}")
-            return False
-    
-    def get_scraped_pages(self):
-        """Retrieve all scraped pages."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute('SELECT * FROM scraped_pages ORDER BY scraped_at DESC')
-        pages = cursor.fetchall()
-        
-        conn.close()
-        return pages
+# Check if path is relative
+print(f"Is relative: {path.is_relative_to(Path('.'))}")
 
-# Example usage
-def main():
-    """Main function demonstrating various concepts."""
-    
-    # Create scraper instance
-    scraper = SimpleWebScraper()
-    
-    # Scrape some pages (simulated)
-    urls = [
-        "https://example.com/page1",
-        "https://example.com/page2",
-        "https://example.com/page3"
-    ]
-    
-    # Scrape each page
-    for url in urls:
-        success = scraper.scrape_page(url)
-        if success:
-            print(f"Successfully scraped: {url}")
-        else:
-            print(f"Failed to scrape: {url}")
-    
-    # Retrieve and display results
-    pages = scraper.get_scraped_pages()
-    print("\nScraped pages:")
-    for page in pages:
-        print(f"ID: {page[0]}, URL: {page[1]}, Title: {page[2]}")
+# More efficient operations
+# (specific implementations available in Python 3.14)
 
-if __name__ == "__main__":
-    main()
+# Enhanced statistics module
+import statistics
+
+data = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
+
+# Better handling of multimodal data
+print(f"Data: {data}")
+try:
+    mode = statistics.mode(data)
+    print(f"Mode: {mode}")
+except statistics.StatisticsError as e:
+    print(f"Multiple modes or no mode: {e}")
 ```
 
 ## Best Practices and Tips {#best-practices}
 
-### 1. Use the Standard Library First
+### 1. Use Type Hints (PEP 484, Enhanced in 3.14)
+
 ```python
-# Instead of writing your own file operations, use the standard library
-import os
-import json
+from typing import List, Dict, Optional, Union
 
-# Use pathlib for path operations
-from pathlib import Path
+# Good: Use type hints
+def calculate_average(scores: List[float]) -> float:
+    """Calculate average of scores."""
+    if not scores:
+        return 0.0
+    return sum(scores) / len(scores)
 
-# Use datetime for date/time operations
-from datetime import datetime
+# Use PEP 695 style (Python 3.12+)
+type Score = float
+type Scores = list[Score]
 
-# Use collections for advanced data structures
-from collections import Counter, defaultdict
+def calculate_average_new(scores: Scores) -> Score:
+    """Calculate average using new type syntax."""
+    if not scores:
+        return 0.0
+    return sum(scores) / len(scores)
 ```
 
-### 2. Handle Exceptions Properly
-```python
-import os
+### 2. Use the Standard Library First
 
-def safe_file_operation(filename):
-    """Safely handle file operations with proper error handling."""
+```python
+# Instead of writing your own implementations, use the standard library
+import os
+import json
+from pathlib import Path
+from datetime import datetime
+from collections import Counter, defaultdict
+
+# Use pathlib for path operations (modern approach)
+config_path = Path.home() / ".config" / "app.conf"
+
+# Use datetime for date/time
+now = datetime.now()
+
+# Use collections for data structures
+word_counts = Counter(["apple", "banana", "apple"])
+```
+
+### 3. Handle Exceptions Properly
+
+```python
+# Bad: Too broad exception handling
+def bad_file_read(filename):
     try:
-        with open(filename, 'r', encoding='utf-8') as file:
-            content = file.read()
-            return content
+        with open(filename) as f:
+            return f.read()
+    except:  # Never do this!
+        return None
+
+# Good: Specific exception handling
+def good_file_read(filename):
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            return f.read()
     except FileNotFoundError:
         print(f"File {filename} not found")
         return None
@@ -2231,7 +1816,8 @@ def safe_file_operation(filename):
         return None
 ```
 
-### 3. Use Context Managers
+### 4. Use Context Managers
+
 ```python
 # Always use context managers for resource management
 with open("file.txt", "r", encoding="utf-8") as f:
@@ -2246,88 +1832,164 @@ with sqlite3.connect("database.db") as conn:
 # Connection is automatically closed
 ```
 
-### 4. Write Documentation
-```python
-def calculate_average(numbers):
-    """
-    Calculate the average of a list of numbers.
-    
-    Args:
-        numbers (list): List of numeric values
-        
-    Returns:
-        float: Average value, or 0 if list is empty
-        
-    Raises:
-        TypeError: If input is not a list or contains non-numeric values
-    """
-    if not isinstance(numbers, list):
-        raise TypeError("Input must be a list")
-    
-    if not numbers:
-        return 0
-    
-    try:
-        return sum(numbers) / len(numbers)
-    except TypeError:
-        raise TypeError("All elements must be numeric")
-```
-
 ### 5. Follow PEP 8 Style Guide
+
 ```python
-# Good naming conventions
+# Good: Follow PEP 8
 variable_name = "snake_case_for_variables"
 CONSTANT_VALUE = "UPPER_CASE_FOR_CONSTANTS"
 
-def function_name():  # snake_case for functions
+def function_name(arg1: str, arg2: int) -> str:
+    """Function with proper documentation."""
+    return f"{arg1}: {arg2}"
+
+class ClassName:
+    """Class with proper documentation."""
     pass
 
-class ClassName:  # CamelCase for classes
-    pass
-
-# Proper indentation (4 spaces)
+# Good: Proper indentation (4 spaces)
 if True:
     print("Proper indentation")
-    
-# Line length (maximum 79 characters)
+
+# Good: Line length (maximum 79 characters recommended)
 long_string = ("This is a very long string that should be broken "
                "into multiple lines for readability")
 ```
 
-### 6. Use Type Hints (Python 3.5+)
+### 6. Write Comprehensive Documentation
+
 ```python
-from typing import List, Dict, Optional
+def calculate_statistics(numbers: list[float]) -> dict[str, float]:
+    """
+    Calculate basic statistics for a list of numbers.
+    
+    This function computes mean, median, standard deviation,
+    minimum, and maximum values for a given list of numbers.
+    
+    Args:
+        numbers: List of numeric values (int or float)
+    
+    Returns:
+        Dictionary containing statistical measures:
+        - mean: Arithmetic mean
+        - median: Middle value
+        - std_dev: Standard deviation
+        - min_val: Minimum value
+        - max_val: Maximum value
+    
+    Raises:
+        ValueError: If the input list is empty
+        TypeError: If the input contains non-numeric values
+    
+    Examples:
+        >>> stats = calculate_statistics([1, 2, 3, 4, 5])
+        >>> stats['mean']
+        3.0
+        >>> stats['median']
+        3.0
+        >>> stats['std_dev']  # doctest: +ELLIPSIS
+        1.41...
+    """
+    if not numbers:
+        raise ValueError("Cannot calculate statistics for empty list")
+    
+    import math
+    
+    if not all(isinstance(x, (int, float)) for x in numbers):
+        raise TypeError("All elements must be numeric")
+    
+    n = len(numbers)
+    mean = sum(numbers) / n
+    
+    # Calculate median
+    sorted_nums = sorted(numbers)
+    if n % 2 == 0:
+        median = (sorted_nums[n//2 - 1] + sorted_nums[n//2]) / 2
+    else:
+        median = sorted_nums[n//2]
+    
+    # Calculate standard deviation
+    variance = sum((x - mean) ** 2 for x in numbers) / n
+    std_dev = math.sqrt(variance)
+    
+    return {
+        'mean': mean,
+        'median': median,
+        'std_dev': std_dev,
+        'min_val': min(numbers),
+        'max_val': max(numbers)
+    }
+```
 
-def process_data(items: List[str]) -> Dict[str, int]:
-    """Process a list of strings and return a dictionary with counts."""
-    result: Dict[str, int] = {}
-    for item in items:
-        result[item] = result.get(item, 0) + 1
-    return result
+### 7. Use Comprehensions for Clarity
 
-def find_item(items: List[str], target: str) -> Optional[str]:
-    """Find an item in a list, return it or None if not found."""
-    return target if target in items else None
+```python
+# List comprehension (clear and efficient)
+squares = [x**2 for x in range(10)]
+
+# Dictionary comprehension
+user_ages = {name: age for name, age in [("Alice", 25), ("Bob", 30)]}
+
+# Set comprehension
+unique_chars = {c for c in "hello"}
+
+# Generator expression (memory efficient for large data)
+sum_of_squares = sum(x**2 for x in range(1000000))
+```
+
+### 8. Leverage Python's Built-in Functions
+
+```python
+# Use built-in functions instead of loops
+data = [3, 1, 4, 1, 5, 9, 2, 6]
+
+# Good: Use built-ins
+minimum = min(data)
+maximum = max(data)
+total = sum(data)
+count = len(data)
+sorted_data = sorted(data)
+
+# Good: Use enumerate for indexed iteration
+for index, value in enumerate(data):
+    print(f"{index}: {value}")
+
+# Good: Use zip for parallel iteration
+names = ["Alice", "Bob", "Charlie"]
+ages = [25, 30, 35]
+for name, age in zip(names, ages):
+    print(f"{name} is {age} years old")
 ```
 
 ## Conclusion
 
 This comprehensive tutorial covered:
 
-1. **Basic Python Syntax**: Variables, data types, and control structures
-2. **Advanced Data Structures**: Lists, tuples, dictionaries, and sets
-3. **Functions**: Defining, using, and advanced function features
-4. **Modules and Packages**: Creating and using reusable code
-5. **File Operations**: Reading, writing, and path handling
-6. **Standard Library Modules**: Key modules for practical programming
+1. **Python Fundamentals**: Syntax, variables, data types, and control structures
+2. **Functions**: Definition, parameters, decorators, and advanced techniques
+3. **Advanced Type Hints**: PEP 695 type parameters for better code clarity
+4. **Data Structures**: Lists, tuples, dictionaries, and sets
+5. **Modules and Packages**: Creating and using reusable code
+6. **File Operations**: Reading, writing, and path handling
+7. **Standard Library**: Extensive built-in modules for practical programming
+8. **Python 3.14 Features**: Latest enhancements including per-interpreter GIL, better error messages, and performance improvements
 
-The Python standard library provides extensive functionality that makes Python a powerful and productive language. By mastering these core concepts and standard library modules, you'll be well-equipped to tackle a wide variety of programming tasks.
+### Key Takeaways
 
-Remember to:
-- Always use the standard library when available (it's more reliable and efficient)
-- Follow Python's style guide (PEP 8)
-- Use context managers for resource management
-- Handle exceptions appropriately
-- Write clear, documented code
+- **Use Type Hints**: Improve code clarity and catch errors early with PEP 695 syntax
+- **Use the Standard Library**: Most functionality you need is already available
+- **Follow PEP 8**: Maintain consistency and readability in your code
+- **Handle Exceptions Properly**: Be specific about what exceptions you catch
+- **Use Context Managers**: Always manage resources properly
+- **Write Documentation**: Clear docstrings help you and other developers
+- **Leverage Python's Built-ins**: Use built-in functions and comprehensions for clean, efficient code
+- **Stay Updated**: Python 3.14 brings performance improvements and new features to explore
 
-This foundation will serve you well as you continue to explore more advanced Python topics and frameworks.
+### Resources
+
+For official documentation and tutorials, visit:
+- [Python Official Documentation](https://docs.python.org/3.14/)
+- [PEP Index](https://www.python.org/dev/peps/)
+- [Python Enhancement Proposals](https://peps.python.org/)
+
+By mastering these concepts and best practices, you'll be well-equipped to write efficient, maintainable, and professional Python code!
