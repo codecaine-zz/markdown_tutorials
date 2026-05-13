@@ -1,433 +1,640 @@
 # argparse - Parser for command-line options, arguments and subcommands
+
+## Overview
+
+The `argparse` module provides a powerful and flexible framework for building command-line interfaces. It automatically generates help messages, usage text, and performs type conversion and validation.
+
 ## Table of Contents
 
-1. [Example 1: Basic Argument Parsing](#example-1-basic-argument-parsing)
-2. [Example 2: Argument Parsing with Subcommands](#example-2-argument-parsing-with-subcommands)
-3. [Example 3: Argument Parsing with Options](#example-3-argument-parsing-with-options)
-4. [Example 4: Argument Parsing with Custom Help Messages](#example-4-argument-parsing-with-custom-help-messages)
-5. [Example 5: Argument Parsing with Default Values](#example-5-argument-parsing-with-default-values)
-6. [Example 6: Argument Parsing with Required Arguments](#example-6-argument-parsing-with-required-arguments)
-7. [Example 7: Argument Parsing with Error Handling](#example-7-argument-parsing-with-error-handling)
-8. [Example 8: Argument Parsing with Descriptive Help Output](#example-8-argument-parsing-with-descriptive-help-output)
-9. [Example 9: Argument Parsing with Subparsers and Aliases](#example-9-argument-parsing-with-subparsers-and-aliases)
-10. [Example 10: Argument Parsing with Custom Type Conversion](#example-10-argument-parsing-with-custom-type-conversion)
+1. [Basic Argument Parsing](#basic-argument-parsing)
+2. [Optional Arguments](#optional-arguments)
+3. [Positional Arguments](#positional-arguments)
+4. [Type Conversion](#type-conversion)
+5. [Multiple Values](#multiple-values-nargs)
+6. [Subcommands](#subcommands)
+7. [Mutually Exclusive Groups](#mutually-exclusive-groups)
+8. [Help and Usage](#help-and-usage)
+9. [Advanced Features](#advanced-features)
 
+---
 
+## Basic Argument Parsing
 
-The `argparse` module in Python is a powerful tool for parsing command-line arguments and providing usage information to users. It allows you to create user-friendly interfaces that are easy to use and understand, while also enabling robust error handling and help output.
-
-Below are comprehensive code examples for various functionalities within the `argparse` module, including setting up argument parsers, defining options, handling subcommands, and displaying usage information.
-
-### Example 1: Basic Argument Parsing
+### Example 1: Simple Parser with Optional Arguments
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a basic command-line parser')
+# Create a parser object
+parser = argparse.ArgumentParser(
+    description='A simple greeting program'
+)
 
-# Add arguments to the parser
-parser.add_argument('--name', type=str, help='Your name')
-parser.add_argument('-v', '--verbose', action='store_true', help='Verbose mode (prints additional information)')
+# Add optional arguments
+parser.add_argument(
+    '--name',
+    type=str,
+    help='Name of the person to greet'
+)
 
-# Parse the command-line arguments
+parser.add_argument(
+    '-v', '--verbose',
+    action='store_true',
+    help='Enable verbose output'
+)
+
+# Parse arguments
 args = parser.parse_args()
 
-# Print the parsed arguments
-print(f'Hello {args.name}')
+# Use the parsed arguments
+if args.name:
+    print(f'Hello, {args.name}!')
+else:
+    print('Hello, World!')
+
 if args.verbose:
     print('Verbose mode is enabled.')
 ```
 
-### Example 2: Argument Parsing with Subcommands
+**Usage:**
+```bash
+python script.py --name Alice
+python script.py --name Bob --verbose
+python script.py -v
+```
+
+---
+
+## Optional Arguments
+
+### Example 2: Default Values and Required Arguments
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with subcommands')
+parser = argparse.ArgumentParser(description='File processor')
 
-# Add subparsers
-subparsers = parser.add_subparsers(dest='command', help='Sub-command help')
+# Optional with default value
+parser.add_argument(
+    '--output',
+    type=str,
+    default='output.txt',
+    help='Output file (default: output.txt)'
+)
 
-# Define the first subcommand
-parser_add = subparsers.add_parser('add', help='Add two numbers')
-parser_add.add_argument('a', type=float, help='First number to add')
-parser_add.add_argument('b', type=float, help='Second number to add')
+# Required optional argument
+parser.add_argument(
+    '--input',
+    type=str,
+    required=True,
+    help='Input file (required)'
+)
 
-# Define the second subcommand
-parser_mult = subparsers.add_parser('mult', help='Multiply two numbers')
-parser_mult.add_argument('a', type=float, help='First number to multiply')
-parser_mult.add_argument('b', type=float, help='Second number to multiply')
+# Boolean flags
+parser.add_argument(
+    '--force', '-f',
+    action='store_true',
+    help='Force overwrite existing files'
+)
 
-# Parse the command-line arguments
+parser.add_argument(
+    '--no-backup',
+    action='store_false',
+    dest='backup',
+    help='Do not create backup files'
+)
+
 args = parser.parse_args()
 
-# Handle the parsed subcommand and perform operations
-if args.command == 'add':
-    result = args.a + args.b
-    print(f'The sum is {result}')
-elif args.command == 'mult':
-    result = args.a * args.b
-    print(f'The product is {result}')
+print(f'Input: {args.input}')
+print(f'Output: {args.output}')
+print(f'Force: {args.force}')
+print(f'Backup: {args.backup}')
 ```
 
-### Example 3: Argument Parsing with Options
+**Usage:**
+```bash
+python script.py --input data.txt
+python script.py --input data.txt --output results.txt --force
+```
+
+---
+
+## Positional Arguments
+
+### Example 3: Required Positional Arguments
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with options')
+parser = argparse.ArgumentParser(description='Calculator')
 
-# Add options to the parser
-parser.add_argument('--input', type=str, required=True, help='Input file path')
-parser.add_argument('--output', type=str, default='output.txt', help='Output file path (default: output.txt)')
-parser.add_argument('-f', '--force', action='store_true', help='Force overwriting the output file if it already exists')
+# Positional arguments (required by default)
+parser.add_argument(
+    'first',
+    type=float,
+    help='First number'
+)
 
-# Parse the command-line arguments
+parser.add_argument(
+    'second',
+    type=float,
+    help='Second number'
+)
+
+parser.add_argument(
+    'operation',
+    type=str,
+    choices=['add', 'subtract', 'multiply', 'divide'],
+    help='Operation to perform'
+)
+
 args = parser.parse_args()
 
-# Process the parsed options
-print(f'Input File: {args.input}')
-print(f'Output File: {args.output}')
-if args.force:
-    print('Forcing overwrite of output file.')
+if args.operation == 'add':
+    result = args.first + args.second
+elif args.operation == 'subtract':
+    result = args.first - args.second
+elif args.operation == 'multiply':
+    result = args.first * args.second
+elif args.operation == 'divide':
+    if args.second == 0:
+        print('Error: Cannot divide by zero')
+        exit(1)
+    result = args.first / args.second
+
+print(f'{args.first} {args.operation} {args.second} = {result}')
 ```
 
-### Example 4: Argument Parsing with Custom Help Messages
+**Usage:**
+```bash
+python script.py 10 5 add           # Output: 10 add 5 = 15.0
+python script.py 20 3 multiply      # Output: 20 multiply 3 = 60.0
+```
+
+---
+
+## Type Conversion
+
+### Example 4: Custom Type Conversion
 
 ```python
 import argparse
+from pathlib import Path
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with custom help messages')
-
-# Add arguments to the parser
-parser.add_argument('--name', type=str, required=True, help='Your name (mandatory)')
-parser.add_argument('-v', '--verbose', action='store_true', help='Verbose mode (optional)')
-
-# Parse the command-line arguments
-args = parser.parse_args()
-
-# Print the parsed arguments and custom messages
-print(f'Hello {args.name}!')
-if args.verbose:
-    print('Verbose mode is enabled.')
-else:
-    print('Verbose mode is disabled.')
-```
-
-### Example 5: Argument Parsing with Default Values
-
-```python
-import argparse
-
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with default values')
-
-# Add arguments to the parser with default values
-parser.add_argument('--threshold', type=float, default=10.0, help='Threshold value (default: 10.0)')
-parser.add_argument('--debug', action='store_true', help='Enable debug mode')
-
-# Parse the command-line arguments
-args = parser.parse_args()
-
-# Print the parsed arguments and default values
-print(f'Threshold Value: {args.threshold}')
-if args.debug:
-    print('Debug mode is enabled.')
-else:
-    print('Debug mode is disabled.')
-```
-
-### Example 6: Argument Parsing with Required Arguments
-
-```python
-import argparse
-
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with required arguments')
-
-# Add arguments to the parser as required
-parser.add_argument('--username', type=str, help='Your username (required)')
-parser.add_argument('--password', type=str, help='Your password (required)')
-
-# Parse the command-line arguments
-args = parser.parse_args()
-
-# Print the parsed arguments
-print(f'Username: {args.username}')
-print(f'Password: {args.password}')
-```
-
-### Example 7: Argument Parsing with Error Handling
-
-```python
-import argparse
-
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with error handling')
-
-# Add an argument to the parser
-parser.add_argument('--count', type=int, help='Number of times to repeat (default: 1)')
-
-# Parse the command-line arguments
-args = parser.parse_args()
-
-try:
-    for _ in range(args.count):
-        print('Repeat')
-except TypeError as e:
-    parser.error(f'Invalid count value: {e}')
-```
-
-### Example 8: Argument Parsing with Descriptive Help Output
-
-```python
-import argparse
-
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with descriptive help output')
-
-# Add arguments to the parser
-parser.add_argument('--input', type=str, required=True, help='Input file path (mandatory)')
-parser.add_argument('--output', type=str, default='output.txt', help='Output file path (default: output.txt)')
-
-# Display usage information
-print(parser.format_help())
-```
-
-### Example 9: Argument Parsing with Subparsers and Aliases
-
-```python
-import argparse
-
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with subcommands and aliases')
-
-# Add subparsers with aliases
-subparsers = parser.add_subparsers(dest='command', help='Sub-command help')
-
-# Define the first subcommand with alias
-parser_add = subparsers.add_parser('add', help='Add two numbers', aliases=['sum'])
-parser_add.add_argument('a', type=float, help='First number to add')
-parser_add.add_argument('b', type=float, help='Second number to add')
-
-# Define the second subcommand with alias
-parser_mult = subparsers.add_parser('mult', help='Multiply two numbers', aliases=['product'])
-parser_mult.add_argument('a', type=float, help='First number to multiply')
-parser_mult.add_argument('b', type=float, help='Second number to multiply')
-
-# Parse the command-line arguments
-args = parser.parse_args()
-
-# Handle the parsed subcommand and perform operations
-if args.command == 'add' or args.command == 'sum':
-    result = args.a + args.b
-    print(f'The sum is {result}')
-elif args.command == 'mult' or args.command == 'product':
-    result = args.a * args.b
-    print(f'The product is {result}')
-```
-
-### Example 10: Argument Parsing with Custom Type Conversion
-
-```python
-import argparse
-
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with custom type conversion')
-
-# Define a custom function for converting string to float
-def convert_to_float(value):
+def positive_integer(value):
+    """Ensure value is a positive integer"""
     try:
-        return float(value)
+        ivalue = int(value)
+        if ivalue <= 0:
+            raise ValueError(f'{value} is not a positive integer')
+        return ivalue
     except ValueError as e:
-        raise argparse.ArgumentTypeError(f'Invalid number: {value}. Must be a valid float.')
+        raise argparse.ArgumentTypeError(f'Invalid positive integer: {e}')
 
-# Add an argument with custom type conversion
-parser.add_argument('--number', type=convert_to_float, help='Number to process')
+def file_path(value):
+    """Ensure path exists and is readable"""
+    p = Path(value)
+    if not p.exists():
+        raise argparse.ArgumentTypeError(f'File not found: {value}')
+    if not p.is_file():
+        raise argparse.ArgumentTypeError(f'Not a file: {value}')
+    return p
 
-# Parse the command-line arguments
+parser = argparse.ArgumentParser(description='Data processor')
+
+parser.add_argument(
+    'input_file',
+    type=file_path,
+    help='Input file (must exist)'
+)
+
+parser.add_argument(
+    '--threads',
+    type=positive_integer,
+    default=1,
+    help='Number of threads (must be positive)'
+)
+
 args = parser.parse_args()
 
-# Print the parsed argument after conversion
-print(f'The processed number is {args.number}')
+print(f'Processing: {args.input_file}')
+print(f'Threads: {args.threads}')
 ```
 
-### Example 11: Argument Parsing with Nested Subcommands
+**Usage:**
+```bash
+python script.py data.csv --threads 4
+```
+
+---
+
+## Multiple Values (nargs)
+
+### Example 5: Accepting Multiple Arguments
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with nested subcommands')
+parser = argparse.ArgumentParser(description='Sum calculator')
 
-# Add subparsers for the main command
-main_subparsers = parser.add_subparsers(dest='main_command', help='Main command help')
+# Accept exactly N arguments
+parser.add_argument(
+    '--coordinates',
+    type=float,
+    nargs=2,
+    help='X and Y coordinates'
+)
 
-# Define the first subcommand
-subcmd1 = main_subparsers.add_parser('cmd1', help='Sub-command 1')
-subcmd1.add_argument('--option', type=str, help='Option for sub-command 1')
+# Accept 1 or more arguments
+parser.add_argument(
+    'numbers',
+    type=float,
+    nargs='+',
+    help='Numbers to sum (at least 1)'
+)
 
-# Define the second subcommand
-subcmd2 = main_subparsers.add_parser('cmd2', help='Sub-command 2')
-subcmd2.add_argument('--arg', type=int, help='Argument for sub-command 2')
+# Accept 0 or more arguments
+parser.add_argument(
+    '--tags',
+    type=str,
+    nargs='*',
+    help='Optional tags'
+)
 
-# Parse the command-line arguments
+# Accept any number of arguments
+parser.add_argument(
+    '--values',
+    type=int,
+    nargs=argparse.REMAINDER,
+    help='Remaining values'
+)
+
 args = parser.parse_args()
 
-# Handle the parsed subcommands and their arguments
-if args.main_command == 'cmd1':
-    print(f'Option: {args.option}')
-elif args.main_command == 'cmd2':
-    print(f'Argument: {args.arg}')
+if args.numbers:
+    total = sum(args.numbers)
+    print(f'Sum of {args.numbers} = {total}')
+
+if args.coordinates:
+    print(f'Coordinates: x={args.coordinates[0]}, y={args.coordinates[1]}')
+
+if args.tags:
+    print(f'Tags: {args.tags}')
 ```
 
-### Example 12: Argument Parsing with Custom Help Formatter
+**Usage:**
+```bash
+python script.py 1 2 3 4 5                    # Sum: 15
+python script.py 10 20 --tags python coding  # With tags
+```
+
+---
+
+## Subcommands
+
+### Example 6: Basic Subcommands
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with custom help formatter')
+parser = argparse.ArgumentParser(description='Git-like tool')
 
-# Add arguments to the parser
-parser.add_argument('--input', type=str, required=True, help='Input file path (mandatory)')
-parser.add_argument('--output', type=str, default='output.txt', help='Output file path (default: output.txt)')
+# Create subparsers
+subparsers = parser.add_subparsers(
+    dest='command',
+    help='Available commands'
+)
 
-# Create a custom help formatter class
-class CustomHelpFormatter(argparse.HelpFormatter):
-    def _format_usage(self, usage, actions, groups, prefix=''):
-        lines = self._split_lines(usage)
-        # Customize the help format here
-        return '\n'.join(lines)
+# Add subcommand
+add_parser = subparsers.add_parser(
+    'add',
+    help='Add files'
+)
+add_parser.add_argument(
+    'files',
+    nargs='+',
+    help='Files to add'
+)
 
-# Set the custom help formatter
-parser.formatter_class = CustomHelpFormatter
+# Commit subcommand
+commit_parser = subparsers.add_parser(
+    'commit',
+    help='Commit changes'
+)
+commit_parser.add_argument(
+    '-m', '--message',
+    type=str,
+    required=True,
+    help='Commit message'
+)
 
-# Display usage information with custom formatting
-print(parser.format_help())
+# Push subcommand
+push_parser = subparsers.add_parser(
+    'push',
+    help='Push changes'
+)
+push_parser.add_argument(
+    'remote',
+    type=str,
+    default='origin',
+    help='Remote name'
+)
+
+args = parser.parse_args()
+
+if args.command == 'add':
+    print(f'Adding files: {args.files}')
+elif args.command == 'commit':
+    print(f'Committing with message: {args.message}')
+elif args.command == 'push':
+    print(f'Pushing to remote: {args.remote}')
+else:
+    parser.print_help()
 ```
 
-### Example 13: Argument Parsing with Default Values and Aliases
+**Usage:**
+```bash
+python script.py add file1.txt file2.txt
+python script.py commit -m "Initial commit"
+python script.py push origin
+python script.py push                    # Uses default 'origin'
+```
+
+---
+
+## Mutually Exclusive Groups
+
+### Example 7: Mutually Exclusive Options
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with default values and aliases')
+parser = argparse.ArgumentParser(description='File converter')
 
-# Add arguments to the parser with default values and aliases
-parser.add_argument('--option', type=str, help='Option with default value (default: default_value)', default='default_value')
-parser.add_argument('--alias-option', type=str, help='Alias for option', alias=['aopt'])
+# Create mutually exclusive group
+format_group = parser.add_mutually_exclusive_group(required=True)
 
-# Parse the command-line arguments
+format_group.add_argument(
+    '--to-json',
+    action='store_true',
+    help='Convert to JSON'
+)
+
+format_group.add_argument(
+    '--to-csv',
+    action='store_true',
+    help='Convert to CSV'
+)
+
+format_group.add_argument(
+    '--to-xml',
+    action='store_true',
+    help='Convert to XML'
+)
+
+# Regular argument
+parser.add_argument(
+    'input_file',
+    type=str,
+    help='Input file'
+)
+
 args = parser.parse_args()
 
-# Print the parsed arguments
-print(f'Option: {args.option}')
-print(f'Alias Option: {args.alias_option}')
+print(f'Converting {args.input_file} to: ', end='')
+if args.to_json:
+    print('JSON')
+elif args.to_csv:
+    print('CSV')
+elif args.to_xml:
+    print('XML')
 ```
 
-### Example 14: Argument Parsing with Mutually Exclusive Groups
+**Usage:**
+```bash
+python script.py data.txt --to-json        # Valid
+python script.py data.txt --to-csv         # Valid
+python script.py data.txt --to-json --to-csv  # Error: mutually exclusive
+```
+
+---
+
+## Help and Usage
+
+### Example 8: Custom Help and Descriptions
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with mutually exclusive groups')
+parser = argparse.ArgumentParser(
+    prog='data-processor',
+    description='Process data files with various options',
+    epilog='Examples:\n  %(prog)s input.txt --format json\n  %(prog)s input.txt --validate',
+    formatter_class=argparse.RawDescriptionHelpFormatter
+)
 
-# Add subparsers for the main command
-main_subparsers = parser.add_subparsers(dest='main_command', help='Main command help')
+# Create argument groups for better organization
+input_group = parser.add_argument_group('input options')
+input_group.add_argument(
+    'input_file',
+    help='Input data file'
+)
+input_group.add_argument(
+    '--encoding',
+    type=str,
+    default='utf-8',
+    help='File encoding (default: utf-8)'
+)
 
-# Define the first subcommand group
-group1 = main_subparsers.add_argument_group('Group 1')
-group1.add_argument('--flag1', action='store_true', help='Flag 1 in Group 1')
-group1.add_argument('--flag2', action='store_true', help='Flag 2 in Group 1')
+output_group = parser.add_argument_group('output options')
+output_group.add_argument(
+    '-o', '--output',
+    type=str,
+    help='Output file (default: stdout)'
+)
+output_group.add_argument(
+    '--format',
+    type=str,
+    choices=['json', 'csv', 'xml'],
+    default='json',
+    help='Output format (default: json)'
+)
 
-# Define the second subcommand group
-group2 = main_subparsers.add_argument_group('Group 2')
-group2.add_argument('--flag3', action='store_true', help='Flag 3 in Group 2')
-group2.add_argument('--flag4', action='store_true', help='Flag 4 in Group 2')
+processing_group = parser.add_argument_group('processing options')
+processing_group.add_argument(
+    '--validate',
+    action='store_true',
+    help='Validate data'
+)
+processing_group.add_argument(
+    '--compress',
+    action='store_true',
+    help='Compress output'
+)
 
-# Parse the command-line arguments
 args = parser.parse_args()
 
-# Handle the parsed flags from different groups
-if args.main_command == 'cmd1':
-    if args.flag1:
-        print('Flag 1 in Group 1 is set')
-    elif args.flag2:
-        print('Flag 2 in Group 1 is set')
-elif args.main_command == 'cmd2':
-    if args.flag3:
-        print('Flag 3 in Group 2 is set')
-    elif args.flag4:
-        print('Flag 4 in Group 2 is set')
+print(f'Input: {args.input_file}')
+print(f'Output format: {args.format}')
+print(f'Validate: {args.validate}')
+print(f'Compress: {args.compress}')
 ```
 
-### Example 15: Argument Parsing with Help Callbacks
+**Usage:**
+```bash
+python script.py --help
+```
+
+---
+
+## Advanced Features
+
+### Example 9: Nested Subcommands with Shared Arguments
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with help callbacks')
+parser = argparse.ArgumentParser(description='Database manager')
 
-# Add arguments to the parser
-parser.add_argument('--option', type=str, help='Option with callback function')
+# Global arguments available to all subcommands
+parser.add_argument(
+    '--config',
+    type=str,
+    default='config.ini',
+    help='Configuration file'
+)
 
-# Define a callback function for the help option
-def on_help(args):
-    print('This is a custom help message.')
-    parser.print_usage()
+subparsers = parser.add_subparsers(dest='command', help='Commands')
 
-# Set the help callback for the help option
-parser.set_defaults(on_help=on_help)
+# Database command with sub-subcommands
+db_parser = subparsers.add_parser('db', help='Database operations')
+db_subparsers = db_parser.add_subparsers(dest='db_command')
 
-# Parse the command-line arguments
+migrate_parser = db_subparsers.add_parser('migrate', help='Run migrations')
+migrate_parser.add_argument('version', help='Target version')
+
+backup_parser = db_subparsers.add_parser('backup', help='Create backup')
+backup_parser.add_argument('--output', help='Backup file')
+
+# Server command
+server_parser = subparsers.add_parser('server', help='Server operations')
+server_parser.add_argument('--port', type=int, default=8000)
+server_parser.add_argument('--host', default='localhost')
+
 args = parser.parse_args()
 
-# Check if the help option was used and execute the callback
-if hasattr(args, 'on_help'):
-    args.on_help()
+print(f'Config: {args.config}')
+
+if args.command == 'db':
+    if args.db_command == 'migrate':
+        print(f'Migrating to version: {args.version}')
+    elif args.db_command == 'backup':
+        print(f'Creating backup: {args.output}')
+elif args.command == 'server':
+    print(f'Starting server on {args.host}:{args.port}')
 ```
 
-### Example 16: Argument Parsing with Default Values for Mutually Exclusive Groups
+**Usage:**
+```bash
+python script.py --config prod.ini db migrate 2.0
+python script.py db backup --output db.backup
+python script.py server --port 3000
+```
+
+### Example 10: Action Classes and Custom Behavior
 
 ```python
 import argparse
 
-# Create an ArgumentParser object
-parser = argparse.ArgumentParser(description='Example of a command-line parser with default values for mutually exclusive groups')
+class ValidatePath(argparse.Action):
+    """Custom action to validate file paths"""
+    def __call__(self, parser, namespace, values, option_string=None):
+        from pathlib import Path
+        path = Path(values)
+        if not path.exists():
+            parser.error(f'Path does not exist: {values}')
+        setattr(namespace, self.dest, path)
 
-# Add subparsers for the main command
-main_subparsers = parser.add_subparsers(dest='main_command', help='Main command help')
+parser = argparse.ArgumentParser(description='File explorer')
 
-# Define the first subcommand group with default value
-group1 = main_subparsers.add_argument_group('Group 1')
-group1.add_argument('--flag1', action='store_true', help='Flag 1 in Group 1 (default)')
-group1.add_argument('--flag2', action='store_true', help='Flag 2 in Group 1')
+parser.add_argument(
+    'path',
+    action=ValidatePath,
+    help='Directory to explore'
+)
 
-# Define the second subcommand group with default value
-group2 = main_subparsers.add_argument_group('Group 2')
-group2.add_argument('--flag3', action='store_true', help='Flag 3 in Group 2 (default)')
-group2.add_argument('--flag4', action='store_true', help='Flag 4 in Group 2')
-
-# Parse the command-line arguments
 args = parser.parse_args()
 
-# Handle the parsed flags from different groups with default values
-if args.main_command == 'cmd1':
-    if args.flag1:
-        print('Flag 1 in Group 1 is set')
-    elif args.flag2:
-        print('Flag 2 in Group 1 is set')
-elif args.main_command == 'cmd2':
-    if args.flag3:
-        print('Flag 3 in Group 2 is set (default)')
-    elif args.flag4:
-        print('Flag 4 in Group 2 is set')
+print(f'Exploring: {args.path}')
+for item in args.path.iterdir():
+    print(f'  {item.name}')
 ```
+
+---
+
+## Practical Example: Complete CLI Application
+
+```python
+import argparse
+import sys
+from pathlib import Path
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog='backup',
+        description='Simple backup utility',
+        formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    subparsers = parser.add_subparsers(dest='command', required=True)
+    
+    # Backup command
+    backup_parser = subparsers.add_parser('backup', help='Create backup')
+    backup_parser.add_argument('source', type=str, help='Source directory')
+    backup_parser.add_argument('-d', '--destination', type=str, required=True)
+    backup_parser.add_argument('--compress', action='store_true')
+    
+    # Restore command
+    restore_parser = subparsers.add_parser('restore', help='Restore backup')
+    restore_parser.add_argument('backup_file', type=str)
+    restore_parser.add_argument('-d', '--destination', type=str, required=True)
+    
+    # List command
+    list_parser = subparsers.add_parser('list', help='List backups')
+    list_parser.add_argument('--location', type=str, default='.')
+    
+    args = parser.parse_args()
+    
+    if args.command == 'backup':
+        print(f'Backing up {args.source} to {args.destination}')
+        if args.compress:
+            print('Compression enabled')
+    
+    elif args.command == 'restore':
+        print(f'Restoring {args.backup_file} to {args.destination}')
+    
+    elif args.command == 'list':
+        print(f'Listing backups in {args.location}')
+
+if __name__ == '__main__':
+    main()
+```
+
+**Usage:**
+```bash
+python backup.py backup /home/user/documents -d /mnt/backup --compress
+python backup.py restore /mnt/backup/backup.tar -d /home/user/documents
+python backup.py list --location /mnt/backup
+```
+
+---
+
+## Documentation References
+
+- [Official Python argparse Documentation](https://docs.python.org/3/library/argparse.html)
+- [ArgumentParser Constructor](https://docs.python.org/3/library/argparse.html#argumentparser-objects)
+- [add_argument() Reference](https://docs.python.org/3/library/argparse.html#the-add-argument-method)
+- [Subparsers Tutorial](https://docs.python.org/3/library/argparse.html#sub-commands)
+- [Type Converters](https://docs.python.org/3/library/argparse.html#type)
+- [Argument Actions](https://docs.python.org/3/library/argparse.html#action)
