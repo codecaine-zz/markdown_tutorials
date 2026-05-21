@@ -1150,6 +1150,12 @@ print(f"Days in December 2025: {calendar.monthrange(2025, 12)[1]}")
 
 from collections import Counter, defaultdict, namedtuple, deque, OrderedDict, ChainMap, UserDict
 
+# Counter - Count elements, find most common, and perform math operations
+text = "hello world"
+char_count = Counter(text)
+print(f"Character count: {char_count}")
+print(f"Most common characters: {char_count.most_common(3)}")
+
 # Counter - Count elements and perform math operations
 text1 = "hello"
 text2 = "world"
