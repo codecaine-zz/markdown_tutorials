@@ -1427,6 +1427,8 @@ conn.close()
 ### 11. `pathlib` Module - Object-Oriented File System Paths
 
 ```python
+## 11. pathlib Module - Object-Oriented File System Paths
+
 from pathlib import Path
 import os
 
@@ -1456,6 +1458,10 @@ data_dir = Path("data")
 if not data_dir.exists():
     data_dir.mkdir(parents=True, exist_ok=True)
 
+# Creating multiple nested directories at once
+nested_dir = Path("project/src/models")
+nested_dir.mkdir(parents=True, exist_ok=True) # Creates 'project', 'src', and 'models' simultaneously
+
 # Listing directory contents
 for item in data_dir.iterdir():
     if item.is_file():
@@ -1466,21 +1472,21 @@ for item in data_dir.iterdir():
 # Glob patterns
 print("\nAll .txt files:")
 for txt_file in data_dir.glob("*.txt"):
-    print(f"  {txt_file}")
+    print(f"{txt_file}")
 
 # File operations with pathlib
 test_file = Path("test.txt")
 if not test_file.exists():
     # Create file with content
     test_file.write_text("Hello, pathlib!")
-    
-    # Read file content
-    content = test_file.read_text()
-    print(f"File content: {content}")
-    
-    # Get file stats
-    stat = test_file.stat()
-    print(f"File size: {stat.st_size} bytes")
+
+# Read file content
+content = test_file.read_text()
+print(f"File content: {content}")
+
+# Get file stats
+stat = test_file.stat()
+print(f"File size: {stat.st_size} bytes")
 ```
 
 ### 12. `logging` Module - Logging System
