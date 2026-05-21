@@ -1146,13 +1146,18 @@ print(f"Days in December 2025: {calendar.monthrange(2025, 12)[1]}")
 ### 4. `collections` Module - Advanced Data Structures
 
 ```python
-from collections import Counter, defaultdict, namedtuple, deque, OrderedDict
+## 4. collections Module - Advanced Data Structures
 
-# Counter - Count elements in iterable
-text = "hello world"
-char_count = Counter(text)
-print(f"Character count: {char_count}")
-print(f"Most common characters: {char_count.most_common(3)}")
+from collections import Counter, defaultdict, namedtuple, deque, OrderedDict, ChainMap, UserDict
+
+# Counter - Count elements and perform math operations
+text1 = "hello"
+text2 = "world"
+c1 = Counter(text1)
+c2 = Counter(text2)
+print(f"Character count for c1: {c1}")
+print(f"Combined counts (c1 + c2): {c1 + c2}")
+print(f"Difference (c1 - c2): {c1 - c2}") # Keeps only positive counts
 
 # defaultdict - Default values for missing keys
 dd = defaultdict(list)
@@ -1163,24 +1168,52 @@ print(f"Default dict: {dict(dd)}")
 # namedtuple - Create tuple-like objects with named fields
 Point = namedtuple('Point', ['x', 'y', 'z'])
 p1 = Point(1, 2, 3)
-p2 = Point(3, 4, 5)
-
 print(f"Point p1: {p1}")
 print(f"Point p1 x-coordinate: {p1.x}")
 
 # deque - Double-ended queue with efficient operations
 dq = deque([1, 2, 3])
-dq.appendleft(0)    # Add to left
-dq.append(4)        # Add to right
-print(f"Deque: {list(dq)}")
+dq.appendleft(0)  # Add to left
+dq.append(4)      # Add to right
+dq.popleft()      # Remove from left
+print(f"Deque after operations: {list(dq)}")
 
-dq.popleft()        # Remove from left
-dq.pop()            # Remove from right
-print(f"Deque after removals: {list(dq)}")
+# deque with maxlen - Great for keeping a rolling history of N items
+history = deque(maxlen=3)
+for i in range(1, 6):
+    history.append(i)
+print(f"Bounded deque (only keeps last 3): {list(history)}") # [3, 4, 5]
 
-# OrderedDict - Dictionary that maintains insertion order (Python 3.7+ dicts are ordered by default)
+# OrderedDict - Dictionary that maintains insertion order
 od = OrderedDict([('first', 1), ('second', 2), ('third', 3)])
-print(f"Ordered dict: {od}")
+od.move_to_end('first') # Moves 'first' to the end of the dictionary
+print(f"Ordered dict after move: {od}")
+
+# ChainMap - Combine multiple dictionaries into a single view
+# Excellent for configuration hierarchies (e.g., CLI args > Env vars > Defaults)
+defaults = {'theme': 'light', 'language': 'en', 'debug': False}
+user_prefs = {'language': 'fr'}
+cli_args = {'debug': True}
+
+# Lookups check cli_args first, then user_prefs, then defaults
+config = ChainMap(cli_args, user_prefs, defaults)
+print("\nChainMap Resolution:")
+print(f"Theme: {config['theme']}")       # 'light' (falls back to defaults)
+print(f"Language: {config['language']}") # 'fr' (found in user_prefs)
+print(f"Debug: {config['debug']}")       # True (found in cli_args)
+
+# UserDict - Easier dictionary subclassing
+class ValidatedDict(UserDict):
+    """A dictionary that only accepts string keys."""
+    def __setitem__(self, key, value):
+        if not isinstance(key, str):
+            raise TypeError("Keys must be strings")
+        super().__setitem__(key, value)
+
+v_dict = ValidatedDict({'initial': 1})
+v_dict['new_key'] = 2
+print(f"ValidatedDict: {v_dict}")
+# v_dict[3] = "error" # This would raise a TypeError
 ```
 
 ### 5. `json` Module - JSON Data Handling
