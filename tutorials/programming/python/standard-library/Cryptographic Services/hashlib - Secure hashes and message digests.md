@@ -157,15 +157,16 @@ import hashlib
 sha256_hash = hashlib.sha256()
 
 # Update the hash object with integers, floats, and strings
-sha256_hash.update(12345)
-sha256_hash.update(3.14)
-sha256_hash.update("Hello, World!")
+# Note: hashlib.update() requires bytes-like objects, so we must encode data to bytes
+sha256_hash.update(str(12345).encode('utf-8'))
+sha256_hash.update(str(3.14).encode('utf-8'))
+sha256_hash.update("Hello, World!".encode('utf-8'))
 
 # Get the hexadecimal representation of the hash
 hex_digest = sha256_hash.hexdigest()
 print("SHA-256 Hash with Mixed Data Types:", hex_digest)
 ```
 
-**Explanation**: This example shows how to create a SHA-256 hash object and update it with integers (12345), floats (3.14), and strings ("Hello, World!"). The hash is then finalized, and the hexadecimal representation of the mixed data types hash is printed.
+**Explanation**: This example shows how to create a SHA-256 hash object and update it with integers, floats, and strings. Since `hashlib` update methods require bytes-like objects, we must encode non-byte values (e.g., converting integers/floats to strings first and calling `.encode('utf-8')`) before updating the hash.
 
 These examples cover various aspects of using the `hashlib` module, including creating different hash objects, updating them with different inputs, and using hash objects in context managers and streams.

@@ -1,76 +1,89 @@
 # ensurepip - Bootstrapping the pip installer
+
+The `ensurepip` module provides support for bootstrapping the `pip` installer into an existing Python installation or a virtual environment. It does not access the internet; all bootstrap files are included as part of the Python installation.
+
+Here are correct and working code examples demonstrating how to use `ensurepip` programmatically:
+
 ## Table of Contents
 
-1. [Usage](#usage)
-2. [Detailed Example](#detailed-example)
-3. [Notes](#notes)
+1. [Basic Bootstrapping (Default installation)](#1-basic-bootstrapping-default-installation)
+2. [Upgrading pip during Bootstrap](#2-upgrading-pip-during-bootstrap)
+3. [Bootstrapping with Altinstall (Version-specific executable only)](#3-bootstrapping-with-altinstall-version-specific-executable-only)
+4. [Installing to a Custom Root Directory](#4-installing-to-custom-root-directory)
+5. [Verifying standard installation and Handling exceptions](#5-verifying-standard-installation-and-handling-exceptions)
 
+### 1. Basic Bootstrapping (Default installation)
 
-
-**ensurepip Module Documentation**
-
-The `ensurepip` module provides a script that can be used to bootstrap the installation of the `pip` package manager on systems where it is not already installed. This is particularly useful during system initialization or when setting up new environments.
-
-### Usage
-
-1. **Using `sys.executable`:**
-   The `ensurepip` module uses the Python executable itself to bootstrap the installation process. By default, it uses `sys.executable`, which points to the Python interpreter used by your current script.
-
-   ```python
-   import ensurepip
-   ensurepip.bootstrap()
-   ```
-
-2. **Customizing the Bootstrapping Process:**
-   You can specify a custom pip version or a specific installation directory for the `pip` package manager.
-
-   - Specifying a specific version of `pip`:
-     ```python
-     import ensurepip
-     ensurepip.bootstrap(pip_version='19.3')
-     ```
-
-   - Installing to a specific directory:
-     ```python
-     import ensurepip
-     ensurepip.bootstrap(target='/path/to/custom/directory')
-     ```
-
-3. **Using `sys.executable` with Additional Arguments:**
-   You can pass additional arguments to the `ensurepip.bootstrap()` function if needed.
-
-   ```python
-   import sys
-   import ensurepip
-   ensurepip.bootstrap(bootstrap_args=['--upgrade'])
-   ```
-
-### Detailed Example
-
-Here's a detailed example of how you might use the `ensurepip` module in a Python script:
+By default, `ensurepip.bootstrap()` installs the version of `pip` bundled with Python into the current environment.
 
 ```python
-import sys
 import ensurepip
 
-# Specify a custom version of pip and install it to a specific directory
-def bootstrap_pip():
-    # Ensure that pip is installed with a specific version and installed in a custom directory
-    ensurepip.bootstrap(pip_version='19.3', target='/path/to/custom/directory')
+# Bootstrap pip in the current Python environment
+ensurepip.bootstrap()
+print("pip bootstrapping attempt complete.")
+```
 
-# Example usage
-if __name__ == "__main__":
-    print("Booting up pip...")
-    try:
-        bootstrap_pip()
-        print("pip has been successfully bootstrapped.")
-    except ensurepip.PipError as e:
-        print(f"An error occurred: {e}")
+### 2. Upgrading pip during Bootstrap
+
+If `pip` is already installed, calling `bootstrap()` without options will not overwrite it. To upgrade pip to the bundled version, pass `upgrade=True`.
+
+```python
+import ensurepip
+
+# Upgrade the installed version of pip to the bundled version
+ensurepip.bootstrap(upgrade=True)
+print("pip upgraded to the bundled version.")
+```
+
+### 3. Bootstrapping with Altinstall (Version-specific executable only)
+
+By default, `bootstrap` installs a `pip` script and a versioned script (like `pip3.11`). If you only want the versioned script (to avoid shadowing a system `pip`), use `altinstall=True`.
+
+```python
+import ensurepip
+
+# Install version-specific executable (e.g. pip3.11) only
+ensurepip.bootstrap(altinstall=True)
+print("pip bootstrapped with altinstall.")
+```
+
+### 4. Installing to a Custom Root Directory
+
+You can specify a custom root directory using the `root` parameter. This is equivalent to using the pip `--root` option.
+
+```python
+import ensurepip
+import os
+import tempfile
+
+# Use a temporary directory as a custom installation root
+with tempfile.TemporaryDirectory() as temp_root:
+    ensurepip.bootstrap(root=temp_root)
+    print(f"pip bootstrapped relative to custom root: {temp_root}")
+    # Inspect contents
+    print("Files created in root:", os.listdir(temp_root))
+```
+
+### 5. Verifying standard installation and Handling exceptions
+
+When bootstrapping, ensurepip will raise exceptions if it encounters an invalid environment or permission errors. You can handle standard system exceptions like `PermissionError`.
+
+```python
+import ensurepip
+import sys
+
+try:
+    # Attempt bootstrapping with upgrade enabled
+    ensurepip.bootstrap(upgrade=True)
+    print("pip successfully bootstrapped!")
+except PermissionError:
+    print("Error: Insufficient permissions to install packages. Try running as administrator/sudo.")
+except Exception as e:
+    print(f"An unexpected error occurred during bootstrapping: {e}")
 ```
 
 ### Notes
 
-- Ensure that you have the necessary permissions to write to the target directory where `pip` is being installed.
-- The `ensurepip.bootstrap()` function will handle the installation of `pip`, including dependencies, if they are not already available.
-
-This example demonstrates how to use the `ensurepip` module to bootstrap the pip package manager in a Python script.
+- **Offline Operation**: `ensurepip` does not fetch files from PyPI. It bootstraps the exact version of pip that was packaged with your current Python release.
+- **Command Line Usage**: You can also run it via shell using `python -m ensurepip --upgrade`.

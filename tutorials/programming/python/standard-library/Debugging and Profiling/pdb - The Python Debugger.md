@@ -32,29 +32,35 @@ except Exception as e:
 ### Explanation:
 
 1. **Importing the `pdb` Module**:
-   ```python
-   import pdb
-   ```
+
+```python
+import pdb
+```
+
    This line imports the `pdb` module, which is used for debugging purposes.
 
 2. **Defining a Function with Debugging Point**:
-   ```python
-   def simple_function(a, b):
-       # Entering the debugger at this point
-       pdb.set_trace()
 
-       result = a + b
-       return result
-   ```
+```python
+def simple_function(a, b):
+    # Entering the debugger at this point
+    pdb.set_trace()
+
+    result = a + b
+    return result
+```
+
    - `pdb.set_trace()` is called to set a breakpoint in the function. This means execution will pause whenever the function is called.
 
 3. **Example Usage of the Function**:
-   ```python
-   try:
-       print(simple_function(2, 3))
-   except Exception as e:
-       print(f"An error occurred: {e}")
-   ```
+
+```python
+try:
+    print(simple_function(2, 3))
+except Exception as e:
+    print(f"An error occurred: {e}")
+```
+
    - The function `simple_function` is called with arguments `2` and `3`.
    - Since there's a breakpoint in the function, execution will pause at that point.
 

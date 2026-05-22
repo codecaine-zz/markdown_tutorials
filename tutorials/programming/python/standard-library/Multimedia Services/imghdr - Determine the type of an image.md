@@ -228,13 +228,13 @@ def is_xpm_file(buffer):
     print(f"Is the buffer an XPM file? {result}")
 
 # Example usage
-buffer = b'/* XPM */
+buffer = b"""/* XPM */
 static char *xpm[] = {
     "16 16 2 1",
     "      c none",
     ".     c black",
     "................"
-}
+};"""
 is_xpm_file(buffer)
 ```
 
