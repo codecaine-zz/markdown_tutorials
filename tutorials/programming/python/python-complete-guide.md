@@ -3,18 +3,82 @@
 This comprehensive tutorial will guide you through the entire Python language, from basic syntax to using the powerful standard library, based on the official Python 3.14 documentation.
 
 ## Table of Contents
-1. [Python Basics](#python-basics)
-2. [Variables and Data Types](#variables-and-data-types)
-3. [Control Structures](#control-structures)
-4. [Functions](#functions)
-5. [Advanced Type Hints (PEP 695)](#advanced-type-hints)
-6. [Data Structures](#data-structures)
-7. [Modules and Packages](#modules-and-packages)
-8. [File Operations](#file-operations)
-9. [Standard Library Overview](#standard-library-overview)
-10. [Essential Standard Library Modules](#essential-standard-library-modules)
-11. [Best Practices](#best-practices)
-12. [Python 3.14 New Features](#python-314-new-features)
+- [1. Python Basics](#python-basics)
+  - [What is Python?](#what-is-python)
+  - [Installing Python 3.14](#installing-python-314)
+  - [First Python Program](#first-python-program)
+  - [Running Python Code](#running-python-code)
+- [2. Variables and Data Types](#variables-and-data-types)
+  - [Variable Assignment](#variable-assignment)
+  - [Data Types](#data-types)
+  - [Type Conversion](#type-conversion)
+- [3. Control Structures](#control-structures)
+  - [Conditional Statements](#conditional-statements)
+  - [Loops](#loops)
+  - [Pattern Matching (Python 3.10+, Enhanced in 3.14)](#pattern-matching-python-310-enhanced-in-314)
+- [4. Functions](#functions)
+  - [Basic Function Definition](#basic-function-definition)
+  - [Function Parameters and Arguments](#function-parameters-and-arguments)
+    - [Positional Arguments](#positional-arguments)
+    - [Keyword Arguments](#keyword-arguments)
+    - [Default Parameters](#default-parameters)
+  - [Variable-Length Arguments](#variable-length-arguments)
+    - [\*args - Variable Positional Arguments](#args---variable-positional-arguments)
+    - [\*\*kwargs - Variable Keyword Arguments](#kwargs---variable-keyword-arguments)
+    - [Combining \*args and \*\*kwargs](#combining-args-and-kwargs)
+  - [Function Decorators](#function-decorators)
+    - [Basic Decorators](#basic-decorators)
+    - [Practical Decorator Examples](#practical-decorator-examples)
+  - [Lambda Functions (Anonymous Functions)](#lambda-functions-anonymous-functions)
+  - [Function Documentation and Type Hints](#function-documentation-and-type-hints)
+- [5. Advanced Type Hints (PEP 695)](#advanced-type-hints)
+  - [Type Aliases](#type-aliases)
+  - [Generic Type Parameters (PEP 695)](#generic-type-parameters-pep-695)
+  - [Constrained Type Parameters](#constrained-type-parameters)
+- [6. Data Structures](#data-structures)
+  - [Lists](#lists)
+  - [Tuples](#tuples)
+  - [Dictionaries](#dictionaries)
+  - [Sets](#sets)
+- [7. Modules and Packages](#modules-and-packages)
+  - [Creating and Using Modules](#creating-and-using-modules)
+- [8. File Operations](#file-operations)
+  - [Reading Files](#reading-files)
+  - [Writing Files](#writing-files)
+  - [Working with File Paths](#working-with-file-paths)
+- [9. Standard Library Overview](#standard-library-overview)
+  - [Key Modules Categories](#key-modules-categories)
+- [10. Essential Standard Library Modules](#essential-standard-library-modules)
+  - [1. os Module - Operating System Interface](#os-module)
+  - [2. sys Module - System-specific Parameters](#sys-module)
+  - [3. datetime Module - Date and Time Operations](#datetime-module)
+  - [4. collections Module - Advanced Data Structures](#collections-module)
+  - [5. json Module - JSON Data Handling](#json-module)
+  - [6. random Module - Random Number Generation](#random-module)
+  - [7. re Module - Regular Expressions](#re-module)
+  - [8. math Module - Mathematical Functions](#math-module)
+  - [9. statistics Module - Statistical Functions (Python 3.4+)](#statistics-module)
+  - [10. sqlite3 Module - SQLite Database Access](#sqlite3-module)
+  - [11. pathlib Module - Object-Oriented File System Paths](#pathlib-module)
+  - [12. logging Module - Logging System](#logging-module)
+  - [13. unittest Module - Unit Testing Framework](#unittest-module)
+- [11. Python 3.14 New Features](#python-314-new-features)
+  - [Per-Interpreter GIL (Global Interpreter Lock)](#per-interpreter-gil-global-interpreter-lock)
+  - [Enhanced Error Messages](#enhanced-error-messages)
+  - [Improved Performance](#improved-performance)
+  - [New sys.monitoring API](#new-sysmonitoring-api)
+  - [Improved Type Checking with TypeVar Bounds](#improved-type-checking-with-typevar-bounds)
+  - [New Standard Library Enhancements](#new-standard-library-enhancements)
+- [12. Best Practices and Tips](#best-practices)
+  - [1. Use Type Hints (PEP 484, Enhanced in 3.14)](#1-use-type-hints-pep-484-enhanced-in-314)
+  - [2. Use the Standard Library First](#2-use-the-standard-library-first)
+  - [3. Handle Exceptions Properly](#3-handle-exceptions-properly)
+  - [4. Use Context Managers](#4-use-context-managers)
+  - [5. Follow PEP 8 Style Guide](#5-follow-pep-8-style-guide)
+  - [6. Write Comprehensive Documentation](#6-write-comprehensive-documentation)
+  - [7. Use Comprehensions for Clarity](#7-use-comprehensions-for-clarity)
+  - [8. Leverage Python's Built-in Functions](#8-leverage-pythons-built-in-functions)
+- [Conclusion](#conclusion)
 
 ## Python Basics {#python-basics}
 
@@ -466,9 +530,11 @@ print(result)  # Greeted Alice
 ```
 
 #### Practical Decorator Examples
+
 ```python
 import time
 import functools
+import inspect
 
 def timer(func):
     """Decorator to measure function execution time."""
@@ -482,14 +548,28 @@ def timer(func):
     return wrapper
 
 def validate_types(*expected_types):
-    """Decorator to validate function argument types."""
+    """Decorator to validate function argument types (supports positional and keyword arguments)."""
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            # Check positional arguments
-            for i, (arg, expected_type) in enumerate(zip(args, expected_types)):
-                if not isinstance(arg, expected_type):
-                    raise TypeError(f"Argument {i+1} must be {expected_type.__name__}, got {type(arg).__name__}")
+            # Bind arguments to signature to validate both positional and keyword args
+            sig = inspect.signature(func)
+            bound = sig.bind(*args, **kwargs)
+            bound.apply_defaults()
+            
+            param_names = list(sig.parameters.keys())
+            for expected_type, param_name in zip(expected_types, param_names):
+                if param_name in bound.arguments:
+                    value = bound.arguments[param_name]
+                    if not isinstance(value, expected_type):
+                        # Format type name safely (handling UnionType and generics)
+                        type_name = (expected_type.__name__ 
+                                     if hasattr(expected_type, '__name__') and not hasattr(expected_type, '__args__') 
+                                     else str(expected_type))
+                        raise TypeError(
+                            f"Argument '{param_name}' must be {type_name}, "
+                            f"got {type(value).__name__}"
+                        )
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -579,10 +659,10 @@ print(sorted_students)
 ### Function Documentation and Type Hints
 
 ```python
-from typing import List, Dict, Optional, Union, Callable, Tuple, Any
+from typing import Callable, Any
 import math
 
-def calculate_statistics(numbers: List[Union[int, float]]) -> Dict[str, float]:
+def calculate_statistics(numbers: list[int | float]) -> dict[str, float]:
     """
     Calculate basic statistics for a list of numbers.
     
@@ -672,6 +752,8 @@ def create_user(user_id: UserID, email: Email) -> dict:
 ### Generic Type Parameters (PEP 695)
 
 ```python
+from collections.abc import Callable
+
 # Define generic types with type parameters
 type Stack[T] = list[T]
 type Pair[T, U] = tuple[T, U]
@@ -683,7 +765,7 @@ def first[T](items: list[T]) -> T:
         raise IndexError("List is empty")
     return items[0]
 
-def pair_map[T, U](items: list[T], func: callable[[T], U]) -> Pair[T, U]:
+def pair_map[T, U](items: list[T], func: Callable[[T], U]) -> Pair[T, U]:
     """Create a pair of original and transformed items."""
     return (items[0], func(items[0]))
 
@@ -1046,7 +1128,7 @@ Python's standard library is extensive and provides powerful functionality witho
 
 ## Essential Standard Library Modules {#essential-standard-library-modules}
 
-### 1. `os` Module - Operating System Interface
+### 1. `os` Module - Operating System Interface {#os-module}
 
 ```python
 import os
@@ -1076,7 +1158,7 @@ print(os.environ.get("PATH"))
 print(f"Operating system: {os.name}")
 ```
 
-### 2. `sys` Module - System-specific Parameters
+### 2. `sys` Module - System-specific Parameters {#sys-module}
 
 ```python
 import sys
@@ -1101,7 +1183,7 @@ print(f"Module count: {len(sys.modules)}")
 print(f"Platform: {sys.platform}")
 ```
 
-### 3. `datetime` Module - Date and Time Operations
+### 3. `datetime` Module - Date and Time Operations {#datetime-module}
 
 ```python
 from datetime import datetime, date, time, timedelta
@@ -1143,7 +1225,7 @@ print(f"2 weeks ago: {past_date}")
 print(f"Days in December 2025: {calendar.monthrange(2025, 12)[1]}")
 ```
 
-### 4. `collections` Module - Advanced Data Structures
+### 4. `collections` Module - Advanced Data Structures {#collections-module}
 
 ```python
 ## 4. collections Module - Advanced Data Structures
@@ -1222,7 +1304,7 @@ print(f"ValidatedDict: {v_dict}")
 # v_dict[3] = "error" # This would raise a TypeError
 ```
 
-### 5. `json` Module - JSON Data Handling
+### 5. `json` Module - JSON Data Handling {#json-module}
 
 ```python
 import json
@@ -1262,7 +1344,7 @@ except json.JSONDecodeError as e:
     print(f"JSON parsing error: {e}")
 ```
 
-### 6. `random` Module - Random Number Generation
+### 6. `random` Module - Random Number Generation {#random-module}
 
 ```python
 import random
@@ -1293,7 +1375,7 @@ random.seed(42)
 print(f"Same seed produces same result: {random.random()}")
 ```
 
-### 7. `re` Module - Regular Expressions
+### 7. `re` Module - Regular Expressions {#re-module}
 
 ```python
 import re
@@ -1336,7 +1418,7 @@ if case_insensitive:
     print("Found match ignoring case")
 ```
 
-### 8. `math` Module - Mathematical Functions
+### 8. `math` Module - Mathematical Functions {#math-module}
 
 ```python
 import math
@@ -1382,7 +1464,7 @@ print(f"GCD of 48 and 18: {math.gcd(48, 18)}")
 print(f"LCM of 12 and 18: {math.lcm(12, 18)}")
 ```
 
-### 9. `statistics` Module - Statistical Functions (Python 3.4+)
+### 9. `statistics` Module - Statistical Functions (Python 3.4+) {#statistics-module}
 
 ```python
 import statistics
@@ -1409,61 +1491,59 @@ print(f"Standard deviation: {statistics.stdev(data)}")
 print(f"Quantiles: {statistics.quantiles(data, n=4)}")  # quartiles
 ```
 
-### 10. `sqlite3` Module - SQLite Database Access
+### 10. `sqlite3` Module - SQLite Database Access {#sqlite3-module}
 
 ```python
 import sqlite3
-from datetime import datetime
+from contextlib import closing
 
-# Connect to database (creates file if it doesn't exist)
-conn = sqlite3.connect('example.db')
-cursor = conn.cursor()
+# Use contextlib.closing to guarantee the connection is closed
+with closing(sqlite3.connect('example.db')) as conn:
+    # Use 'with conn' to manage transactions (automatic commit on success, rollback on error)
+    with conn:
+        cursor = conn.cursor()
+        
+        # Create table
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT UNIQUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        
+        # Insert data
+        users_data = [
+            ('Alice Smith', 'alice@example.com'),
+            ('Bob Johnson', 'bob@example.com'),
+            ('Charlie Brown', 'charlie@example.com')
+        ]
+        
+        cursor.executemany('INSERT INTO users (name, email) VALUES (?, ?)', users_data)
+        
+        # Query data
+        cursor.execute('SELECT * FROM users')
+        all_users = cursor.fetchall()
+        print("All users:")
+        for user in all_users:
+            print(f"ID: {user[0]}, Name: {user[1]}, Email: {user[2]}")
+        
+        # Query with conditions
+        cursor.execute('SELECT name FROM users WHERE email LIKE ?', ('%example.com',))
+        filtered_users = cursor.fetchall()
+        print(f"\nUsers with example.com emails: {filtered_users}")
+        
+        # Update data
+        cursor.execute('UPDATE users SET name = ? WHERE email = ?', ('Alice Jones', 'alice@example.com'))
+        
+        # Delete data
+        cursor.execute('DELETE FROM users WHERE name = ?', ('Charlie Brown',))
 
-# Create table
-cursor.execute('''
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        email TEXT UNIQUE,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-''')
-
-# Insert data
-users_data = [
-    ('Alice Smith', 'alice@example.com'),
-    ('Bob Johnson', 'bob@example.com'),
-    ('Charlie Brown', 'charlie@example.com')
-]
-
-cursor.executemany('INSERT INTO users (name, email) VALUES (?, ?)', users_data)
-conn.commit()
-
-# Query data
-cursor.execute('SELECT * FROM users')
-all_users = cursor.fetchall()
-print("All users:")
-for user in all_users:
-    print(f"ID: {user[0]}, Name: {user[1]}, Email: {user[2]}")
-
-# Query with conditions
-cursor.execute('SELECT name FROM users WHERE email LIKE ?', ('%example.com',))
-filtered_users = cursor.fetchall()
-print(f"\nUsers with example.com emails: {filtered_users}")
-
-# Update data
-cursor.execute('UPDATE users SET name = ? WHERE email = ?', ('Alice Jones', 'alice@example.com'))
-conn.commit()
-
-# Delete data
-cursor.execute('DELETE FROM users WHERE name = ?', ('Charlie Brown',))
-conn.commit()
-
-# Close connection
-conn.close()
+# Connection is automatically closed, and transactions are committed
 ```
 
-### 11. `pathlib` Module - Object-Oriented File System Paths
+### 11. `pathlib` Module - Object-Oriented File System Paths {#pathlib-module}
 
 ```python
 ## 11. pathlib Module - Object-Oriented File System Paths
@@ -1528,7 +1608,7 @@ stat = test_file.stat()
 print(f"File size: {stat.st_size} bytes")
 ```
 
-### 12. `logging` Module - Logging System
+### 12. `logging` Module - Logging System {#logging-module}
 
 ```python
 import logging
@@ -1586,7 +1666,7 @@ except ZeroDivisionError as e:
     logger.error("Division by zero error", exc_info=True)
 ```
 
-### 13. `unittest` Module - Unit Testing Framework
+### 13. `unittest` Module - Unit Testing Framework {#unittest-module}
 
 ```python
 import unittest
@@ -1794,10 +1874,8 @@ except statistics.StatisticsError as e:
 ### 1. Use Type Hints (PEP 484, Enhanced in 3.14)
 
 ```python
-from typing import List, Dict, Optional, Union
-
-# Good: Use type hints
-def calculate_average(scores: List[float]) -> float:
+# Good: Use type hints (PEP 585 standard)
+def calculate_average(scores: list[float]) -> float:
     """Calculate average of scores."""
     if not scores:
         return 0.0
@@ -1870,11 +1948,17 @@ with open("file.txt", "r", encoding="utf-8") as f:
 # File is automatically closed
 
 # For database connections
+# NOTE: The sqlite3 connection context manager handles transactions (automatic commit/rollback),
+# but does NOT close the connection! Wrap it with contextlib.closing to ensure closure.
 import sqlite3
-with sqlite3.connect("database.db") as conn:
-    cursor = conn.cursor()
-    # Operations here
-# Connection is automatically closed
+from contextlib import closing
+
+# Correct pattern: closing ensures connection closure, and 'with conn' manages the transaction
+with closing(sqlite3.connect("database.db")) as conn:
+    with conn:  # Automatically commits on success, rolls back on exception
+        cursor = conn.cursor()
+        cursor.execute("SELECT 1")
+# Connection is now closed, and transaction is safely finalized
 ```
 
 ### 5. Follow PEP 8 Style Guide
