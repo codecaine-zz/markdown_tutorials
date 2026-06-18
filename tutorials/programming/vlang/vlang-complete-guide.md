@@ -49,6 +49,7 @@ Update your `v-analyzer` settings (typically in a `config.toml` or IDE settings)
   - [Cyclic Imports](#cyclic-imports)
   - [Importing Module](#importing-module)
   - [Init Function For Module](#init-function-for-module)
+  - [Installing External Packages and Webview](#installing-external-packages-and-webview)
   - [Member Scope In Module](#member-scope-in-module)
   - [Working With Multiple Files In Module](#working-with-multiple-files-in-module)
 - [Concurrency](#concurrency)
@@ -755,11 +756,32 @@ fn main() {
 
 ```
 
+#### Boolean Methods
+
+_File location: `primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v`_
+
+This example demonstrates the concepts of **boolean methods**.
+
+```v
+module main
+
+fn main() {
+	t := true
+	f := false
+
+	// str() returns string representation ('true' or 'false')
+	println(t.str()) // true
+	println(f.str()) // false
+}
+```
+
+```
+
 ### Numeric Types
 
 #### Shift Operators
 
-_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators.v`_
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v`_
 
 This example demonstrates the concepts of **shift operators**.
 
@@ -785,7 +807,7 @@ fn main() {
 
 #### Shift Operator On Range Of Integers
 
-_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers.v`_
+_File location: `primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v`_
 
 This example demonstrates the concepts of **shift operator on range of integers**.
 
@@ -926,25 +948,29 @@ fn main() {
 
 #### Declaring Integers
 
-_File location: `primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers.v`_
+_File location: `primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v`_
 
 This example demonstrates the concepts of **declaring integers**.
 
 ```v
-x := 1
-println(typeof(x).name)
-// int
+module main
 
-i := 1_000
-j := 1000
+fn main() {
+	x := 1
+	println(typeof(x).name)
+	// int
 
-println(i == j) // true
+	i := 1_000
+	j := 1000
 
+	println(i == j) // true
+}
+```
 ```
 
 #### Hex Binary Octa Notation Of Declaring Integers
 
-_File location: `primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation_of_declaring_integers.v`_
+_File location: `primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v`_
 
 This example demonstrates the concepts of **hex binary octa notation of declaring integers**.
 
@@ -969,11 +995,159 @@ fn main() {
 
 ```
 
+#### Integer Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v`_
+
+This example demonstrates the concepts of **integer methods**.
+
+```v
+module main
+
+fn main() {
+	x := 42
+
+	// str() returns string representation of the integer
+	println(x.str()) // "42"
+
+	// hex() returns hexadecimal representation without prefix
+	println(x.hex()) // "2a"
+
+	// hex2() returns hexadecimal representation with "0x" prefix
+	println(x.hex2()) // "0x2a"
+
+	// hex_full() returns hexadecimal representation with full width padding for the type (8 digits for 32-bit int)
+	println(x.hex_full()) // "0000002a"
+}
+```
+
+#### Float Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v`_
+
+This example demonstrates the concepts of **float methods**.
+
+```v
+module main
+
+fn main() {
+	f := 12345.6789
+
+	// str() returns string representation of the float
+	println(f.str()) // "12345.6789"
+
+	// strg() returns string representation (often identical to str())
+	println(f.strg()) // "12345.6789"
+
+	// strlong() returns a full/long string representation of the float
+	println(f.strlong()) // "12345.6789"
+
+	// strsci(precision) returns scientific notation with specified precision/decimal places
+	println(f.strsci(4)) // "1.2346e+04"
+
+	// eq_epsilon(other) performs a comparison using machine epsilon (for near-equality)
+	f2 := 12345.678900000001
+	println(f.eq_epsilon(f2)) // true
+}
+```
+
+#### u8 Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v`_
+
+This example demonstrates the concepts of **u8 methods**.
+
+```v
+module main
+
+fn main() {
+	b := u8(65) // ASCII code for 'A'
+
+	// str() returns string representation of the numeric value
+	println(b.str()) // "65"
+
+	// ascii_str() returns string of length 1 containing the character
+	println(b.ascii_str()) // "A"
+
+	// hex() returns hexadecimal representation
+	println(b.hex()) // "41"
+
+	// hex_full() returns hexadecimal representation (same as hex() for u8)
+	println(b.hex_full()) // "41"
+
+	// is_alnum() checks if the character is alphanumeric
+	println(b.is_alnum()) // true
+
+	// is_bin_digit() checks if the character is a binary digit ('0' or '1')
+	println(b.is_bin_digit()) // false
+
+	// is_capital() checks if the character is an uppercase letter
+	println(b.is_capital()) // true
+
+	// is_digit() checks if the character is a decimal digit ('0'-'9')
+	println(b.is_digit()) // false
+
+	// is_hex_digit() checks if the character is a hexadecimal digit ('0'-'9', 'a'-'f', 'A'-'F')
+	println(b.is_hex_digit()) // true
+
+	// is_letter() checks if the character is an alphabetic letter
+	println(b.is_letter()) // true
+
+	// is_oct_digit() checks if the character is an octal digit ('0'-'7')
+	println(b.is_oct_digit()) // false
+
+	// is_space() checks if the character is a whitespace character
+	println(b.is_space()) // false
+
+	// repeat(count) repeats the character count times and returns a string
+	println(b.repeat(3)) // "AAA"
+
+	// str_escaped() returns an escaped string representation of the character
+	println(b.str_escaped()) // "A"
+}
+```
+
+#### Size And Pointer Methods
+
+_File location: `primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v`_
+
+This example demonstrates the concepts of **size and pointer methods**.
+
+```v
+module main
+
+fn main() {
+	// isize and usize methods
+	sz := isize(100)
+	usz := usize(200)
+
+	// str() returns string representation
+	println(sz.str())  // "100"
+	println(usz.str()) // "200"
+
+	// voidptr methods
+	x := 42
+	p := voidptr(&x)
+
+	// str() returns the memory address as string
+	println(p.str().starts_with('0x')) // true
+
+	// hex_full() returns full-width hex representation of address
+	println(p.hex_full().len > 0) // true
+
+	// vbytes(len) returns a byte array representation of the memory pointed to (must be called in unsafe block)
+	unsafe {
+		bytes := p.vbytes(int(sizeof(int)))
+		println(bytes) // [42, 0, 0, 0]
+	}
+}
+```
+
 ### Rune Type
 
 #### Declare Rune
 
-_File location: `primitive_types/04_rune_type/01_declare_rune.v`_
+_File location: `primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v`_
 
 This example demonstrates the concepts of **declare rune**.
 
@@ -988,7 +1162,7 @@ fn main() {
 
 #### Rune Operations With Strings
 
-_File location: `primitive_types/04_rune_type/02_rune_operations_with_strings.v`_
+_File location: `primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v`_
 
 This example demonstrates the concepts of **rune operations with strings**.
 
@@ -1003,11 +1177,57 @@ fn main() {
 
 ```
 
+#### Rune Methods
+
+_File location: `primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v`_
+
+This example demonstrates the concepts of **rune methods**.
+
+```v
+module main
+
+fn main() {
+	r := `A`
+
+	// bytes() returns the byte representation (UTF-8 bytes) of the rune
+	println(r.bytes()) // [65]
+
+	// hex() returns the hexadecimal representation of the rune code point
+	println(r.hex()) // "41"
+
+	// length_in_bytes() returns the size of the rune in bytes (1 to 4)
+	println(r.length_in_bytes()) // 1
+
+	// repeat(count) returns a string with the rune repeated count times
+	println(r.repeat(3)) // "AAA"
+
+	// str() returns the string representation of the rune
+	println(r.str()) // "A"
+
+	// to_lower() returns the lowercase rune
+	println(r.to_lower().str()) // "a"
+
+	// to_upper() returns the uppercase rune
+	println(r.to_upper().str()) // "A"
+
+	// to_title() returns the titlecase rune
+	println(r.to_title().str()) // "A"
+
+	// Testing with a multi-byte UTF-8 rune (dog emoji 🐕)
+	r2 := `🐕`
+	println(r2.bytes())           // [240, 159, 144, 149]
+	println(r2.hex())             // "1f415" (Unicode code point in hex)
+	println(r2.length_in_bytes()) // 4
+	println(r2.repeat(2))         // "🐕🐕"
+	println(r2.str())             // "🐕"
+}
+```
+
 ### String Type
 
 #### Declare String
 
-_File location: `primitive_types/03_string_type/01_declare_string.v`_
+_File location: `primitive_types/03_string_type/01_declare_string/01_declare_string.v`_
 
 This example demonstrates the concepts of **declare string**.
 
@@ -1026,7 +1246,7 @@ fn main() {
 
 #### String Read Only Array Of Bytes
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v`_
 
 This example demonstrates the concepts of **string read only array of bytes**.
 
@@ -1041,11 +1261,11 @@ fn main() {
 
 ```
 
-#### Strings Immurable By Default
+#### Strings Immutable By Default
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immurable_by_default.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v`_
 
-This example demonstrates the concepts of **strings immurable by default**.
+This example demonstrates the concepts of **strings immutable by default**.
 
 ```v
 fn main() {
@@ -1059,7 +1279,7 @@ fn main() {
 
 #### Declaring Mutable Strings
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v`_
 
 This example demonstrates the concepts of **declaring mutable strings**.
 
@@ -1078,7 +1298,7 @@ fn main() {
 
 #### Cannot Mutate String Elements
 
-_File location: `primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements.v`_
+_File location: `primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v`_
 
 This example demonstrates the concepts of **cannot mutate string elements**.
 
@@ -1093,122 +1313,146 @@ fn main() {
 
 #### Escape Special Characters
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v`_
 
 This example demonstrates the concepts of **escape special characters**.
 
 ```v
-sen := "It's my Daughter's birthday!"
-println(sen)
+module main
 
+fn main() {
+	sen := "It's my Daughter's birthday!"
+	println(sen)
+}
 ```
 
 #### Declare Raw Strings
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v`_
 
 This example demonstrates the concepts of **declare raw strings**.
 
 ```v
-i := r'hi \how are you/?'
-println(i)
+module main
 
+fn main() {
+	i := r'hi \how are you/?'
+	println(i)
+}
 ```
 
 #### String Concatenation Using Plus Sign
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v`_
 
 This example demonstrates the concepts of **string concatenation using plus sign**.
 
 ```v
-a := 'con'
-b := 'cat'
-println(a + b)
-// concat
+module main
 
+fn main() {
+	a := 'con'
+	b := 'cat'
+	println(a + b)
+	// concat
+}
 ```
 
 #### String Concatenation Using Interpolation
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v`_
 
 This example demonstrates the concepts of **string concatenation using interpolation**.
 
 ```v
-i := 1
-j := 'man army'
-println('${i} ${j}')
+module main
 
+fn main() {
+	i := 1
+	j := 'man army'
+	println('${i} ${j}')
+}
 ```
 
 #### Extract Substring From String Literal
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v`_
 
 This example demonstrates the concepts of **extract substring from string literal**.
 
 ```v
-a := 'Camel'
-b := a.substr(0, 3)
-println(b)
-// Cam
+module main
 
+fn main() {
+	a := 'Camel'
+	b := a.substr(0, 3)
+	println(b)
+	// Cam
+}
 ```
 
 #### Split String
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v`_
 
 This example demonstrates the concepts of **split string**.
 
 ```v
-sp := 'The tiny tiger tied the tie tighter to its tail'
-res := sp.split(' ')
-// split by space as delimiter
-println(typeof(res).name)
-// []string
-println(res)
-// ['The', 'tiny', 'tiger', 'tied', 'the', 'tie', 'tighter', 'to', 'its', 'tail']
+module main
 
+fn main() {
+	sp := 'The tiny tiger tied the tie tighter to its tail'
+	res := sp.split(' ')
+	// split by space as delimiter
+	println(typeof(res).name)
+	// []string
+	println(res)
+	// ['The', 'tiny', 'tiger', 'tied', 'the', 'tie', 'tighter', 'to', 'its', 'tail']
+}
 ```
 
 #### String To Runes Array
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v`_
 
 This example demonstrates the concepts of **string to runes array**.
 
 ```v
-doge_moon := '🐕+🚀=🌑'
-doge_moon_runes := doge_moon.runes()
-println(doge_moon_runes)
-println(typeof(doge_moon_runes).name) // []rune
+module main
 
+fn main() {
+	doge_moon := '🐕+🚀=🌑'
+	doge_moon_runes := doge_moon.runes()
+	println(doge_moon_runes)
+	println(typeof(doge_moon_runes).name) // []rune
+}
 ```
 
 #### Count Sub String Occurences
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v`_
 
 This example demonstrates the concepts of **count sub string occurences**.
 
 ```v
-sp := 'The tiny tiger tied the tie tighter to its tail'
-println(sp.count('t'))
-// 10
-println(sp.count('T'))
-// 1
-println(sp.count('tie'))
-// 2
-println(sp.count('-'))
-// 0
+module main
 
+fn main() {
+	sp := 'The tiny tiger tied the tie tighter to its tail'
+	println(sp.count('t'))
+	// 10
+	println(sp.count('T'))
+	// 1
+	println(sp.count('tie'))
+	// 2
+	println(sp.count('-'))
+	// 0
+}
 ```
 
 #### Check String Contains Substring
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v`_
 
 This example demonstrates the concepts of **check string contains substring**.
 
@@ -1229,7 +1473,7 @@ fn main() {
 
 #### String Contains Is Case Sensitive
 
-_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive.v`_
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v`_
 
 This example demonstrates the concepts of **string contains is case sensitive**.
 
@@ -1246,6 +1490,62 @@ fn main() {
     }
 }
 
+```
+
+#### Common String Methods
+
+_File location: `primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v`_
+
+This example demonstrates the concepts of **common string methods**.
+
+```v
+module main
+
+fn main() {
+	s := '  Hello, V!  '
+
+	// to_lower() returns the lowercase version of the string
+	println(s.to_lower()) // "  hello, v!  "
+
+	// to_upper() returns the uppercase version of the string
+	println(s.to_upper()) // "  HELLO, V!  "
+
+	// trim_space() trims leading and trailing whitespaces
+	println(s.trim_space()) // "Hello, V!"
+
+	// trim(cutset) trims leading and trailing characters that match any character in the cutset
+	println(s.trim(' ')) // "Hello, V!"
+
+	// replace(old, new) replaces all occurrences of old with new
+	println(s.replace('V', 'World')) // "  Hello, World!  "
+
+	// replace_once(old, new) replaces the first occurrence of old with new
+	println(s.replace_once('l', 'x')) // "  Hexlo, V!  "
+
+	// index(sub) returns the start index of the first occurrence of sub as an optional ?int
+	idx := s.index('Hello') or { -1 }
+	println(idx) // 2
+
+	// last_index(sub) returns the start index of the last occurrence of sub as an optional ?int
+	last_idx := s.last_index('l') or { -1 }
+	println(last_idx) // 5
+
+	// starts_with(prefix) checks if the string starts with the prefix
+	println(s.starts_with('  ')) // true
+
+	// ends_with(suffix) checks if the string ends with the suffix
+	println(s.ends_with('!')) // false (ends with spaces)
+
+	// is_pure_ascii() checks if all characters in the string are pure ASCII
+	println(s.is_pure_ascii()) // true
+
+	// split_into_lines() splits a string into an array of lines
+	multiline := "line 1\nline 2"
+	println(multiline.split_into_lines()) // ["line 1", "line 2"]
+
+	// split_by_space() splits a string by space as delimiter
+	println(s.split_by_space()) // ["Hello,", "V!"]
+}
 ```
 
 #### String Interpolation
@@ -1299,7 +1599,7 @@ fn main() {
 
 #### In Operator With Array
 
-_File location: `arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array.v`_
+_File location: `arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v`_
 
 This example demonstrates the concepts of **in operator with array**.
 
@@ -1317,7 +1617,7 @@ fn main() {
 
 #### Append Array
 
-_File location: `arrays_and_maps/01_arrays/04_array_operators/02_append_array.v`_
+_File location: `arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v`_
 
 This example demonstrates the concepts of **append array**.
 
@@ -1336,7 +1636,7 @@ fn main() {
 
 #### Clone Array
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v`_
 
 This example demonstrates the concepts of **clone array**.
 
@@ -1352,7 +1652,7 @@ fn main() {
 
 #### Copy Array
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v`_
 
 This example demonstrates the concepts of **copy array**.
 
@@ -1361,13 +1661,16 @@ fn main() {
     r := [1, 2, 3, 4]
     s := unsafe { r }
     println(s)
+    unsafe {
+        r.free()
+    }
 }
 
 ```
 
 #### Map Array Items
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v`_
 
 This example demonstrates the concepts of **map array items**.
 
@@ -1382,7 +1685,7 @@ fn main() {
 
 #### Map Using Anonymous Funcs On Array
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v`_
 
 This example demonstrates the concepts of **map using anonymous funcs on array**.
 
@@ -1401,7 +1704,7 @@ fn main() {
 
 #### Filter Array
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v`_
 
 This example demonstrates the concepts of **filter array**.
 
@@ -1417,7 +1720,7 @@ fn main() {
 
 #### Filter With Anonymous Funcs On Array
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v`_
 
 This example demonstrates the concepts of **filter with anonymous funcs on array**.
 
@@ -1436,7 +1739,7 @@ fn main() {
 
 #### Sort Integer Array
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v`_
 
 This example demonstrates the concepts of **sort integer array**.
 
@@ -1455,7 +1758,7 @@ fn main() {
 
 #### Sort String Array
 
-_File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array.v`_
+_File location: `arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v`_
 
 This example demonstrates the concepts of **sort string array**.
 
@@ -1536,7 +1839,7 @@ fn main() {
 
 #### Declare And Initialize
 
-_File location: `arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize.v`_
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v`_
 
 This example demonstrates the concepts of **declare and initialize**.
 
@@ -1550,7 +1853,7 @@ fn main() {
 
 #### Declare Empty Array
 
-_File location: `arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array.v`_
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v`_
 
 This example demonstrates the concepts of **declare empty array**.
 
@@ -1569,7 +1872,7 @@ fn main() {
 
 #### Declare Array With Len
 
-_File location: `arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len.v`_
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v`_
 
 This example demonstrates the concepts of **declare array with len**.
 
@@ -1583,7 +1886,7 @@ fn main() {
 
 #### Declare Array With Init And Len
 
-_File location: `arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len.v`_
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v`_
 
 This example demonstrates the concepts of **declare array with init and len**.
 
@@ -1597,7 +1900,7 @@ fn main() {
 
 #### Declare Array With Cap
 
-_File location: `arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap.v`_
+_File location: `arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v`_
 
 This example demonstrates the concepts of **declare array with cap**.
 
@@ -1611,7 +1914,7 @@ fn main() {
 
 #### Define Fixed Size Array
 
-_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array.v`_
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v`_
 
 This example demonstrates the concepts of **define fixed size array**.
 
@@ -1626,7 +1929,7 @@ fn main() {
 
 #### Update Fixed Size Array Elements
 
-_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements.v`_
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v`_
 
 This example demonstrates the concepts of **update fixed size array elements**.
 
@@ -1642,7 +1945,7 @@ fn main() {
 
 #### Determining Type Of Fixed Array
 
-_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array.v`_
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v`_
 
 This example demonstrates the concepts of **determining type of fixed array**.
 
@@ -1656,7 +1959,7 @@ fn main() {
 
 #### Slicing Fixed Size Array Results In Ordinary Array
 
-_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array.v`_
+_File location: `arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v`_
 
 This example demonstrates the concepts of **slicing fixed size array results in ordinary array**.
 
@@ -1674,7 +1977,7 @@ fn main() {
 
 #### Declaring Multi Dimensional Arrays
 
-_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v`_
+_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v`_
 
 This example demonstrates the concepts of **declaring multi dimensional arrays**.
 
@@ -1691,7 +1994,7 @@ fn main() {
 
 #### Updating Multi Dimensional Arrays
 
-_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v`_
+_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v`_
 
 This example demonstrates the concepts of **updating multi dimensional arrays**.
 
@@ -1716,7 +2019,7 @@ fn main() {
 
 #### Updating Multi Dimensional Arrays
 
-_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v`_
+_File location: `arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v`_
 
 This example demonstrates the concepts of **updating multi dimensional arrays**.
 
@@ -1737,7 +2040,7 @@ fn main() {
 
 #### Access Array Elements Using Index
 
-_File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index.v`_
+_File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v`_
 
 This example demonstrates the concepts of **access array elements using index**.
 
@@ -1752,7 +2055,7 @@ fn main() {
 
 #### Access Array Elements Using Slices
 
-_File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices.v`_
+_File location: `arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v`_
 
 This example demonstrates the concepts of **access array elements using slices**.
 
@@ -1764,11 +2067,265 @@ fn main() {
 
 ```
 
+#### Array Methods
+
+_File location: `arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v`_
+
+This example demonstrates the concepts of **array methods**.
+
+```v
+module main
+
+// A custom comparison function for sorting.
+// It accepts references to elements (e.g. &int) and returns -1, 1, or 0.
+fn compare_ints(a &int, b &int) int {
+	val_a := *a
+	val_b := *b
+	if val_a < val_b { return -1 }
+	if val_a > val_b { return 1 }
+	return 0
+}
+
+fn main() {
+	println('--- Array Built-in Methods ---')
+
+	// 1. ensure_cap(required)
+	// Ensures that the array has at least the specified capacity.
+	mut a := [10, 20, 30]
+	a.ensure_cap(10)
+	println('ensure_cap: cap is ${a.cap >= 10}') // true
+
+	// 2. repeat(count)
+	// Repeats the array count times and returns a new array.
+	rep := a.repeat(2)
+	println('repeat: ${rep}') // [10, 20, 30, 10, 20, 30]
+
+	// 3. repeat_to_depth(count, depth) (unsafe)
+	// Recursively repeats a multi-dimensional array count times to the specified depth.
+	grid := [[1, 2], [3, 4]]
+	unsafe {
+		rep_grid := grid.repeat_to_depth(2, 1)
+		// Cast the raw array struct back to typed [][]int
+		typed_grid := *(&[][]int(&rep_grid))
+		println('repeat_to_depth: ${typed_grid}') // [[1, 2], [3, 4], [1, 2], [3, 4]]
+		rep_grid.free()
+	}
+
+	// 4. insert(index, val)
+	// Inserts a new element at the specified index.
+	a.insert(1, 15)
+	println('insert: ${a}') // [10, 15, 20, 30]
+
+	// 5. prepend(val)
+	// Prepends a new element at the beginning of the array.
+	a.prepend(5)
+	println('prepend: ${a}') // [5, 10, 15, 20, 30]
+
+	// 6. delete(index)
+	// Deletes the element at the specified index.
+	a.delete(1) // Deletes index 1 (which is 10)
+	println('delete: ${a}') // [5, 15, 20, 30]
+
+	// 7. delete_many(index, size)
+	// Deletes size elements starting from the specified index.
+	a.delete_many(1, 2) // Deletes 2 elements starting at index 1
+	println('delete_many: ${a}') // [5, 30]
+
+	// 8. clear()
+	// Sets the array length to 0, retaining capacity.
+	mut a_clear := [1, 2, 3]
+	a_clear.clear()
+	println('clear: len is ${a_clear.len}') // 0
+
+	// 9. reset() (unsafe)
+	// Sets all elements of the array to 0 / empty values without altering len or cap.
+	mut a_reset := [1, 2, 3]
+	unsafe {
+		a_reset.reset()
+	}
+	println('reset: ${a_reset}') // [0, 0, 0]
+	unsafe {
+		a_reset.free()
+	}
+
+	// 10. trim(index)
+	// Truncates the array length to index.
+	mut a_trim := [1, 2, 3, 4]
+	a_trim.trim(2)
+	println('trim: ${a_trim}') // [1, 2]
+
+	// 11. drop(num)
+	// Drops the first num elements in-place.
+	mut a_drop := [1, 2, 3, 4]
+	a_drop.drop(2)
+	println('drop: ${a_drop}') // [3, 4]
+
+	// 12. first()
+	// Returns the first element of the array.
+	println('first: ${a_drop.first()}') // 3
+
+	// 13. last()
+	// Returns the last element of the array.
+	println('last: ${a_drop.last()}') // 4
+
+	// 14. pop_left()
+	// Removes and returns the first element of the array.
+	mut a_pop := [1, 2, 3]
+	first_val := a_pop.pop_left()
+	println('pop_left: value = ${first_val}, array = ${a_pop}') // 1, [2, 3]
+
+	// 15. pop()
+	// Removes and returns the last element of the array.
+	last_val := a_pop.pop()
+	println('pop: value = ${last_val}, array = ${a_pop}') // 3, [2]
+
+	// 16. delete_last()
+	// Deletes the last element of the array.
+	mut a_del_last := [1, 2, 3]
+	a_del_last.delete_last()
+	println('delete_last: ${a_del_last}') // [1, 2]
+
+	// 17. clone()
+	// Returns a deep copy of the array.
+	a_clone := a_del_last.clone()
+	println('clone: ${a_clone}') // [1, 2]
+
+	// 18. clone_to_depth(depth) (unsafe)
+	// Recursively clones a multi-dimensional array up to the specified depth.
+	grid2 := [[1, 2], [3, 4]]
+	unsafe {
+		grid_clone := grid2.clone_to_depth(1)
+		typed_clone := *(&[][]int(&grid_clone))
+		println('clone_to_depth: ${typed_clone}') // [[1, 2], [3, 4]]
+		grid_clone.free()
+	}
+
+	// 19. push_many(val, size) (unsafe)
+	// Appends size elements starting from a raw pointer val to the array.
+	mut a_push := [1, 2]
+	vals := [3, 4]
+	unsafe {
+		a_push.push_many(vals.data, 2)
+	}
+	println('push_many: ${a_push}') // [1, 2, 3, 4]
+	unsafe {
+		a_push.free()
+		vals.free()
+	}
+
+	// 20. reverse()
+	// Returns a new reversed copy of the array.
+	a_rev := [1, 2, 3]
+	println('reverse: ${a_rev.reverse()}') // [3, 2, 1]
+
+	// 21. reverse_in_place()
+	// Reverses the array elements in-place.
+	mut a_rev_ip := [1, 2, 3]
+	a_rev_ip.reverse_in_place()
+	println('reverse_in_place: ${a_rev_ip}') // [3, 2, 1]
+
+	// 22. free() (unsafe)
+	// Deallocates the array's buffer.
+	mut a_free := [1, 2, 3]
+	unsafe {
+		a_free.free()
+	}
+	println('free: array freed')
+
+	// 23. filter(it)
+	// Filters elements that satisfy a predicate using compiler-defined `it` expression.
+	a_filt := [1, 2, 3, 4]
+	filtered := a_filt.filter(it % 2 == 0)
+	println('filter: ${filtered}') // [2, 4]
+
+	// 24. any(it)
+	// Checks if any element satisfies the predicate.
+	println('any: ${a_filt.any(it > 3)}') // true
+
+	// 25. count(it)
+	// Counts how many elements satisfy the predicate.
+	println('count: ${a_filt.count(it % 2 == 0)}') // 2
+
+	// 26. all(it)
+	// Checks if all elements satisfy the predicate.
+	println('all: ${a_filt.all(it > 0)}') // true
+
+	// 27. map(it)
+	// Maps elements to a new array using a transformation expression.
+	mapped := a_filt.map(it * 10)
+	println('map: ${mapped}') // [10, 20, 30, 40]
+
+	// 28. sort() & sort(custom)
+	// Sorts elements in-place. Uses optional boolean expression for custom order (uses magic vars a and b).
+	mut a_sort := [3, 1, 4, 2]
+	a_sort.sort()
+	println('sort (default ascending): ${a_sort}') // [1, 2, 3, 4]
+	a_sort.sort(a > b)
+	println('sort (custom descending): ${a_sort}') // [4, 3, 2, 1]
+
+	// 29. sorted() & sorted(custom)
+	// Returns a sorted copy of the array. Uses optional boolean expression for custom order (uses magic vars a and b).
+	a_sorted := [3, 1, 4, 2]
+	println('sorted (default): ${a_sorted.sorted()}') // [1, 2, 3, 4]
+	println('sorted (custom): ${a_sorted.sorted(a > b)}') // [4, 3, 2, 1]
+
+	// 30. sort_with_compare(callback)
+	// Sorts the array in-place using a custom comparison function.
+	mut a_compare := [3, 1, 4, 2]
+	a_compare.sort_with_compare(compare_ints)
+	println('sort_with_compare: ${a_compare}') // [1, 2, 3, 4]
+
+	// 31. sorted_with_compare(callback)
+	// Returns a sorted copy of the array using a custom comparison function.
+	a_sorted_comp := [3, 1, 4, 2]
+	println('sorted_with_compare: ${a_sorted_comp.sorted_with_compare(compare_ints)}') // [1, 2, 3, 4]
+
+	// 32. contains(value)
+	// Checks if the array contains value.
+	println('contains: ${a_filt.contains(3)}') // true
+
+	// 33. index(value)
+	// Returns the index of the first occurrence of value, or -1 if not found.
+	println('index: ${a_filt.index(3)}') // 2
+
+	// 34. last_index(value)
+	// Returns the index of the last occurrence of value, or -1 if not found.
+	a_dup := [1, 2, 3, 2]
+	println('last_index: ${a_dup.last_index(2)}') // 3
+
+	// 35. grow_cap(amount)
+	// Increases the array capacity by the specified amount.
+	mut a_grow := [1, 2]
+	a_grow.grow_cap(10)
+	println('grow_cap: cap is ${a_grow.cap >= 12}') // true
+
+	// 36. grow_len(amount) (unsafe)
+	// Increases the array length by the specified amount.
+	unsafe {
+		a_grow.grow_len(3)
+	}
+	println('grow_len: ${a_grow}') // [1, 2, 0, 0, 0]
+	unsafe {
+		a_grow.free()
+	}
+
+	// 37. pointers() (unsafe)
+	// Returns an array of void pointers (pointers()) pointing to each element.
+	a_ptrs := [10, 20]
+	unsafe {
+		ptrs := a_ptrs.pointers()
+		println('pointers (first element): ${*(&int(ptrs[0]))}') // 10
+		ptrs.free()
+		a_ptrs.free()
+	}
+}
+```
+
 ### Maps
 
 #### Explicit Map Initialization
 
-_File location: `arrays_and_maps/02_maps/01_explicit_map_initialization.v`_
+_File location: `arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v`_
 
 This example demonstrates the concepts of **explicit map initialization**.
 
@@ -1785,7 +2342,7 @@ fn main() {
 
 #### Short Syntax Initialization Of Map
 
-_File location: `arrays_and_maps/02_maps/02_short_syntax_initialization_of_map.v`_
+_File location: `arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v`_
 
 This example demonstrates the concepts of **short syntax initialization of map**.
 
@@ -1804,7 +2361,7 @@ fn main() {
 
 #### Count Key Value Pairs In Map
 
-_File location: `arrays_and_maps/02_maps/03_count_key_value_pairs_in_map.v`_
+_File location: `arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v`_
 
 This example demonstrates the concepts of **count key value pairs in map**.
 
@@ -1824,7 +2381,7 @@ fn main() {
 
 #### Value Given Key Of Map
 
-_File location: `arrays_and_maps/02_maps/04_value_given_key_of_map.v`_
+_File location: `arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v`_
 
 This example demonstrates the concepts of **value given key of map**.
 
@@ -1844,7 +2401,7 @@ fn main() {
 
 #### Value Given Non Existent Key Of Map
 
-_File location: `arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map.v`_
+_File location: `arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v`_
 
 This example demonstrates the concepts of **value given non existent key of map**.
 
@@ -1864,7 +2421,7 @@ fn main() {
 
 #### Handling Missing Keys In Map
 
-_File location: `arrays_and_maps/02_maps/06_handling_missing_keys_in_map.v`_
+_File location: `arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v`_
 
 This example demonstrates the concepts of **handling missing keys in map**.
 
@@ -1885,7 +2442,7 @@ fn main() {
 
 #### Update Value Given A Key In Map
 
-_File location: `arrays_and_maps/02_maps/07_update_value_given_a_key_in_map.v`_
+_File location: `arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v`_
 
 This example demonstrates the concepts of **update value given a key in map**.
 
@@ -1905,7 +2462,7 @@ fn main() {
 
 #### Delete Key Value Pair From Map
 
-_File location: `arrays_and_maps/02_maps/08_delete_key_value_pair_from_map.v`_
+_File location: `arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v`_
 
 This example demonstrates the concepts of **delete key value pair from map**.
 
@@ -1923,6 +2480,74 @@ fn main() {
     println('Key-Value pairs after deleting a key ${student_1.len}')
 }
 
+```
+
+#### Map Methods
+
+_File location: `arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v`_
+
+This example demonstrates the concepts of **map methods**.
+
+```v
+module main
+
+fn main() {
+	println('--- Map Built-in Methods ---')
+
+	mut m := {
+		'one': 1
+		'two': 2
+	}
+	println('initial map: ${m}') // {"one": 1, "two": 2}
+
+	// 1. keys()
+	// Returns an array containing all keys in the map.
+	println('keys: ${m.keys()}') // ["one", "two"]
+
+	// 2. values()
+	// Returns an array containing all values in the map.
+	println('values: ${m.values()}') // [1, 2]
+
+	// 3. clone()
+	// Returns a deep copy of the map.
+	mut m_clone := m.clone()
+	println('clone: ${m_clone}') // {"one": 1, "two": 2}
+
+	// 4. delete(key)
+	// Removes a key-value pair from the map by key.
+	m.delete('one')
+	println('delete: ${m}') // {"two": 2}
+
+	// 5. reserve(capacity)
+	// Pre-allocates space for at least capacity elements in the map.
+	m.reserve(10)
+	println('reserve: reserved capacity successfully')
+
+	// 6. clear()
+	// Removes all key-value pairs from the map without deallocating data.
+	m.clear()
+	println('clear: len is ${m.len}') // 0
+
+	// 7. move()
+	// Moves the map contents to a new map variable and clears the original map to empty.
+	mut m_move := {
+		'three': 3
+		'four': 4
+	}
+	moved := m_move.move()
+	println('move (new map): ${moved}') // {"three": 3, "four": 4}
+	println('move (original map): ${m_move}') // {}
+
+	// 8. free() (unsafe)
+	// Deallocates the map memory.
+	mut m_free := {
+		'temp': 100
+	}
+	unsafe {
+		m_free.free()
+	}
+	println('free: map freed successfully')
+}
 ```
 
 ## Control Flow
@@ -3088,7 +3713,7 @@ fn main() {
 
 #### Required Fields Example 01
 
-_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01.v`_
+_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v`_
 
 This example demonstrates the concepts of **required fields example 01**.
 
@@ -3101,17 +3726,18 @@ pub mut:
     status  bool
 }
 
-_ := Note{
-    id:     1
-    status: false
+fn main() {
+    _ := Note{
+        id:     1
+        status: false
+    }
 }
 // throws error
-
 ```
 
 #### Required Fields Example 02
 
-_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02.v`_
+_File location: `structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v`_
 
 This example demonstrates the concepts of **required fields example 02**.
 
@@ -3179,7 +3805,7 @@ fn main() {
 
 #### Defining Struct
 
-_File location: `structs/01_introducing_structs/01_defining_struct/01_defining_struct.v`_
+_File location: `structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v`_
 
 This example demonstrates the concepts of **defining struct**.
 
@@ -3196,7 +3822,7 @@ fn main() {
 
 #### Initialize Struct Example 1
 
-_File location: `structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1.v`_
+_File location: `structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v`_
 
 This example demonstrates the concepts of **initialize struct example 1**.
 
@@ -3216,7 +3842,7 @@ fn main() {
 
 #### Initialize Struct Example 2
 
-_File location: `structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2.v`_
+_File location: `structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v`_
 
 This example demonstrates the concepts of **initialize struct example 2**.
 
@@ -4038,7 +4664,2288 @@ module mod1
 fn hello2() {
     println('Hello 2 from mod1!')
 }
+```
 
+### Installing External Packages and Webview
+
+#### Installing External Packages (`vpm`)
+
+V features a built-in package manager called `vpm` (V Package Manager). You can install community-maintained external modules directly from the command line using:
+
+```bash
+v install ttytm.webview
+```
+
+V will download and place the package under the global V modules directory `~/.vmodules/` (e.g. `~/.vmodules/ttytm/webview`).
+
+#### System Dependencies
+
+Since `webview` binds to a native C++ webview library, you need the proper platform-specific C++ toolchains and WebKit libraries installed on your machine:
+* **macOS**: Install Xcode Command Line Tools (`xcode-select --install`).
+* **Linux (Debian/Ubuntu)**: Install GTK and WebKit2 development libraries:
+  ```bash
+  sudo apt install build-essential libgtk-3-dev libwebkit2gtk-4.0-dev
+  ```
+* **Windows**: Set up a GCC compiler environment (e.g., MinGW-w64 via MSYS2) and compile using `v -cc gcc run .`.
+
+#### Compiling the C++ Webview Library (Workaround for macOS Bug)
+
+After installing the V module, you normally run the build script `build.vsh` located in the module directory to compile the underlying C++ dependency (`webview.o`).
+
+However, on macOS, running the script directly or compiling it via V might result in a bus error (**Signal 10**) due to thread/spinner channel operations.
+
+To bypass this issue, you can compile the dependency manually:
+
+```bash
+# For macOS / Linux: Compile the C++ object file directly using clang++ or g++
+clang++ -c ~/.vmodules/ttytm/webview/src/webview.cc -DWEBVIEW_STATIC -o ~/.vmodules/ttytm/webview/src/webview.o -std=c++11
+```
+
+Once `webview.o` is compiled in the `.vmodules/ttytm/webview/src` directory, you can build any V application importing `ttytm.webview` without errors.
+
+#### Binding V Functions to Webview (Bidirectional Communication)
+
+Exchanging data bidirectionally between V and Javascript inside the Webview is simple:
+1. **Define the V Function**: Create a V function with a parameter of type `&webview.Event`.
+2. **Access Arguments**: Retrieve inputs passed from the JavaScript call by calling `e.get_arg[T](index)`.
+3. **Register the Binding**: Call `w.bind('js_func_name', v_func_name)` on your webview instance.
+4. **Call from JS**: In your frontend JavaScript, call the function asynchronously via `await window.js_func_name(args...)`.
+
+#### Webview Demo
+
+_File location: `modules/11_install_external_packages_and_webview/webview_demo/webview_demo.v`_
+
+This example demonstrates the concepts of **installing external packages and webview bindings**.
+
+```v
+module main
+
+import ttytm.webview
+
+const html = '
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e1e2f 0%, #111119 100%);
+            color: #f8f8f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            user-select: none;
+        }
+        .container {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.2rem;
+            color: #50fa7b;
+        }
+        input {
+            padding: 10px 15px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #6272a4;
+            background-color: #282a36;
+            color: #f8f8f2;
+            margin-right: 10px;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #282a36;
+            background-color: #50fa7b;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            background-color: #8be9fd;
+            transform: translateY(-1px);
+        }
+        #result {
+            margin-top: 25px;
+            font-size: 1.1rem;
+            min-height: 25px;
+            color: #f1fa8c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>V + Webview Binding</h1>
+        <input type="text" id="userInput" placeholder="Enter message for V..." value="Hello from JS!">
+        <button onclick="sendToV()">Send to V</button>
+        <div id="result">Waiting for action...</div>
+    </div>
+
+    <script>
+        async function sendToV() {
+            const input = document.getElementById("userInput").value;
+            const resultDiv = document.getElementById("result");
+            resultDiv.innerText = "Calling V function...";
+            try {
+                // Call the bound V function "greet_from_v" asynchronously
+                const res = await window.greet_from_v(input);
+                resultDiv.innerText = res;
+            } catch (err) {
+                resultDiv.innerText = "Error: " + err;
+            }
+        }
+    </script>
+</body>
+</html>
+'
+
+// V binding function. Must take &webview.Event and can return a type (like string).
+fn greet_from_v(e &webview.Event) string {
+    // 1. Retrieve the argument passed from JavaScript (at index 0)
+    msg := e.get_arg[string](0) or { 'No arguments passed' }
+    println('V side: Received from JS: ${msg}')
+
+    // 2. We can run custom JavaScript on the webview page from V
+    e.eval('console.log("V successfully invoked eval in JS context!");')
+
+    // 3. Return string back to the JS Promise resolver
+    return 'V responds: "Message received: ${msg}"'
+}
+
+fn main() {
+    // Initialize Webview
+    mut w := webview.create(debug: true)
+    w.set_title('V Webview Binding Demo')
+    w.set_size(600, 450, .@none)
+
+    // Bind V function "greet_from_v" to JS window.greet_from_v
+    w.bind('greet_from_v', greet_from_v)
+
+    // Load the HTML content
+    w.set_html(html)
+
+    // Run the main loop
+    w.run()
+}
+```
+
+#### Redis GUI Explorer Demo
+
+_File location: `modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v`_
+
+This example demonstrates a complete desktop GUI application that combines the `ttytm.webview` bindings with the external `xiusin.vredis` client to construct a beautiful, dark-themed Redis GUI Dashboard.
+
+It features:
+*   Bidirectional communication between JavaScript (running inside the Webview) and the V backend.
+*   Full CRUD operations: listing, filtering, viewing details, creating, modifying, and deleting keys of multiple types (Strings, Lists, Hashes, and Sets).
+*   Live connection status tracking and DB stats displaying.
+*   Resource embedding using `$embed_file` to keep the compiled executable entirely self-contained.
+
+##### HTML, CSS, and JS Layout (`index.html`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_webview_demo/index.html`_
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V + Redis GUI Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0c0d14;
+            --bg-card: #131520;
+            --bg-sidebar: #10111a;
+            --border-color: rgba(255, 255, 255, 0.08);
+            
+            --text-main: #f8f9fa;
+            --text-muted: #8a8f9f;
+            
+            --color-primary: #8b5cf6;
+            --color-primary-hover: #a78bfa;
+            --color-success: #10b981;
+            --color-danger: #ef4444;
+            --color-warning: #f59e0b;
+            --color-info: #3b82f6;
+            
+            --tag-string: #3b82f6;
+            --tag-list: #10b981;
+            --tag-hash: #8b5cf6;
+            --tag-set: #f59e0b;
+            
+            --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: 340px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-danger);
+            box-shadow: 0 0 8px var(--color-danger);
+        }
+
+        .status-dot.connected {
+            background-color: var(--color-success);
+            box-shadow: 0 0 8px var(--color-success);
+        }
+
+        .server-meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .server-meta-item {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .sidebar-actions {
+            padding: 16px 24px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 16px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, #7c3aed 100%);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-danger-outline {
+            background-color: transparent;
+            border-color: rgba(239, 68, 68, 0.3);
+            color: var(--color-danger);
+        }
+
+        .btn-danger-outline:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: var(--color-danger);
+        }
+
+        .btn-icon {
+            padding: 10px;
+        }
+
+        .search-container {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px 10px 36px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--color-primary);
+            background-color: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.25);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 36px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .keys-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .key-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .key-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .key-item.active {
+            background-color: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .key-info-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+            flex-grow: 1;
+            margin-right: 8px;
+        }
+
+        .key-name {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: var(--font-mono);
+        }
+
+        .key-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .type-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 1px 6px;
+            border-radius: 4px;
+            color: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .type-tag.string { background-color: var(--tag-string); }
+        .type-tag.list { background-color: var(--tag-list); }
+        .type-tag.hash { background-color: var(--tag-hash); }
+        .type-tag.set { background-color: var(--tag-set); }
+
+        .key-ttl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .key-ttl.expiring {
+            color: var(--color-warning);
+        }
+
+        /* Main Workspace Styling */
+        .workspace {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: var(--bg-main);
+            position: relative;
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            gap: 16px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.05);
+        }
+
+        .empty-text {
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .detail-view {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            height: 100%;
+            overflow-y: auto;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+        }
+
+        .detail-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-title-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .detail-key-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            word-break: break-all;
+        }
+
+        .detail-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .ttl-input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-text {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .input-text:focus {
+            border-color: var(--color-primary);
+        }
+
+        .input-mono {
+            font-family: var(--font-mono);
+        }
+
+        .textarea-value {
+            width: 100%;
+            height: 200px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            color: var(--text-main);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            outline: none;
+            resize: vertical;
+            transition: border-color 0.2s;
+            user-select: text;
+        }
+
+        .textarea-value:focus {
+            border-color: var(--color-primary);
+        }
+
+        /* List/Set Values Editor */
+        .list-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .list-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .list-index {
+            width: 32px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .list-item-input {
+            flex-grow: 1;
+            user-select: text;
+        }
+
+        /* Hash Values Editor */
+        .hash-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .hash-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .hash-key-input {
+            width: 30%;
+            user-select: text;
+        }
+
+        .hash-val-input {
+            flex-grow: 1;
+            user-select: text;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 500px;
+            max-width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+            transform: scale(0.95);
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.25rem;
+        }
+
+        .modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .select-input {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .select-input option {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border-left-color: var(--color-primary);
+            animation: spin 0.8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loader-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(12, 13, 20, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .loader-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand-section">
+                <div class="brand-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    Redis Explorer
+                </div>
+                <div class="status-badge">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="statusText">Connecting</span>
+                </div>
+            </div>
+            <div class="server-meta">
+                <div class="server-meta-item">
+                    <span>Host:</span>
+                    <span id="metaHost" style="font-family: var(--font-mono);">127.0.0.1:6379</span>
+                </div>
+                <div class="server-meta-item">
+                    <span>Version:</span>
+                    <span id="metaVersion">-</span>
+                </div>
+                <div class="server-meta-item">
+                    <span>Keys Total:</span>
+                    <span id="metaKeys">-</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="btn btn-secondary btn-icon" id="btnRefresh" title="Refresh Key List">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+            </button>
+            <button class="btn btn-primary" style="flex-grow: 1;" id="btnNewKey">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                New Key
+            </button>
+            <button class="btn btn-danger-outline btn-icon" id="btnFlush" title="Flush DB">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+        </div>
+
+        <div class="search-container">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" class="search-input" id="searchKeys" placeholder="Filter keys...">
+        </div>
+
+        <div class="keys-list" id="keysList">
+            <!-- Dynamic Keys go here -->
+        </div>
+    </div>
+
+    <!-- Workspace -->
+    <div class="workspace">
+        <div class="loader-overlay" id="loader">
+            <div class="spinner"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <svg class="empty-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            <div class="empty-text">Select a key to view details or create a new key</div>
+        </div>
+
+        <!-- Detail View -->
+        <div class="detail-view" id="detailView" style="display: none;">
+            <div class="detail-header">
+                <div class="detail-header-left">
+                    <div class="detail-title-row">
+                        <span class="detail-key-name" id="detailKeyName">user:info</span>
+                        <span class="type-tag string" id="detailKeyType">string</span>
+                    </div>
+                    <div class="detail-meta-row">
+                        <div class="ttl-input-group">
+                            <span>TTL (seconds):</span>
+                            <input type="number" class="input-text" id="detailKeyTTL" style="width: 80px;" value="-1">
+                            <span class="key-ttl" id="detailKeyTTLDisplay"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-actions">
+                    <button class="btn btn-secondary" id="btnSaveKey">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        Save
+                    </button>
+                    <button class="btn btn-danger-outline" id="btnDeleteKey">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                        Delete
+                    </button>
+                </div>
+            </div>
+
+            <!-- Value Editor Card -->
+            <div class="card">
+                <div class="card-title" id="valueEditorTitle">Value Editor</div>
+                
+                <!-- String Content -->
+                <div id="editorString" style="display: none;">
+                    <textarea class="textarea-value" id="stringValueInput" placeholder="String value..."></textarea>
+                </div>
+
+                <!-- List / Set Content -->
+                <div id="editorList" style="display: none;">
+                    <div class="list-editor" id="listEditorContainer">
+                        <!-- Dynamic rows of list elements -->
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 12px; width: fit-content;" id="btnAddListRow">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Item
+                    </button>
+                </div>
+
+                <!-- Hash Content -->
+                <div id="editorHash" style="display: none;">
+                    <div class="hash-editor" id="hashEditorContainer">
+                        <!-- Dynamic rows of hash field:values -->
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 12px; width: fit-content;" id="btnAddHashRow">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Add Field
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Key Modal -->
+    <div class="modal-overlay" id="newKeyModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Create New Redis Key</div>
+                <button class="modal-close" id="btnModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="newKeyName">Key Name</label>
+                    <input type="text" class="input-text input-mono" id="newKeyName" placeholder="e.g. user:session:1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="newKeyType">Key Type</label>
+                    <select class="select-input" id="newKeyType">
+                        <option value="string">String</option>
+                        <option value="list">List</option>
+                        <option value="set">Set</option>
+                        <option value="hash">Hash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="newKeyTTL">TTL (seconds, -1 for persistent)</label>
+                    <input type="number" class="input-text" id="newKeyTTL" value="-1">
+                </div>
+                <div class="form-group" id="newKeyInitialValueContainer">
+                    <label class="form-label" for="newKeyInitialValue" id="newKeyValLabel">Initial Value</label>
+                    
+                    <!-- Dynamic inputs based on type selected -->
+                    <div id="newValString">
+                        <textarea class="textarea-value" id="newKeyInitialValue" style="height: 120px;" placeholder="Enter string value..."></textarea>
+                    </div>
+                    
+                    <div id="newValList" style="display: none;">
+                        <div class="list-editor" id="newValListContainer">
+                            <div class="list-row">
+                                <span class="list-index">0</span>
+                                <input type="text" class="input-text list-item-input" value="">
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-top: 8px; font-size: 0.8rem; padding: 6px 12px;" id="btnModalAddListRow">Add Item</button>
+                    </div>
+
+                    <div id="newValHash" style="display: none;">
+                        <div class="hash-editor" id="newValHashContainer">
+                            <div class="hash-row">
+                                <input type="text" class="input-text hash-key-input" placeholder="Field" value="">
+                                <input type="text" class="input-text hash-val-input" placeholder="Value" value="">
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary" style="margin-top: 8px; font-size: 0.8rem; padding: 6px 12px;" id="btnModalAddHashRow">Add Field</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnModalCancel">Cancel</button>
+                <button class="btn btn-primary" id="btnModalCreate">Create Key</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal" style="width: 420px;">
+            <div class="modal-header">
+                <div class="modal-title" id="confirmTitle" style="color: var(--color-danger);">Confirm Action</div>
+                <button class="modal-close" id="btnConfirmClose">&times;</button>
+            </div>
+            <div class="modal-body" id="confirmMessage" style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main); user-select: text;">
+                Are you sure you want to proceed?
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="btnConfirmCancel">Cancel</button>
+                <button class="btn btn-primary" id="btnConfirmOK" style="background: linear-gradient(135deg, var(--color-danger) 0%, #dc2626 100%); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Dialog Modal -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal" style="width: 420px;">
+            <div class="modal-header">
+                <div class="modal-title" id="alertTitle" style="color: var(--color-primary);">Notice</div>
+                <button class="modal-close" id="btnAlertClose">&times;</button>
+            </div>
+            <div class="modal-body" id="alertMessage" style="font-size: 0.95rem; line-height: 1.5; color: var(--text-main); user-select: text;">
+                Message body.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="btnAlertOK">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script logic -->
+    <script>
+        // Global error tracking for webview
+        window.addEventListener('error', function(event) {
+            if (typeof showAlert === 'function') {
+                showAlert("JavaScript Error", event.message + " (" + event.filename + ":" + event.lineno + ")");
+            } else {
+                alert("JavaScript Error: " + event.message);
+            }
+        });
+        window.addEventListener('unhandledrejection', function(event) {
+            if (typeof showAlert === 'function') {
+                showAlert("Unhandled Rejection", event.reason ? event.reason.toString() : "Unknown promise rejection");
+            } else {
+                alert("Unhandled Rejection: " + event.reason);
+            }
+        });
+
+        let currentKeys = [];
+        let selectedKey = null;
+        let isConnected = false;
+
+        // UI Elements
+        const statusDot = document.getElementById("statusDot");
+        const statusText = document.getElementById("statusText");
+        const metaVersion = document.getElementById("metaVersion");
+        const metaKeys = document.getElementById("metaKeys");
+        const keysList = document.getElementById("keysList");
+        const searchInput = document.getElementById("searchKeys");
+        const emptyState = document.getElementById("emptyState");
+        const detailView = document.getElementById("detailView");
+        const loader = document.getElementById("loader");
+
+        // Detail elements
+        const detailKeyName = document.getElementById("detailKeyName");
+        const detailKeyType = document.getElementById("detailKeyType");
+        const detailKeyTTL = document.getElementById("detailKeyTTL");
+        const detailKeyTTLDisplay = document.getElementById("detailKeyTTLDisplay");
+        const valueEditorTitle = document.getElementById("valueEditorTitle");
+        const btnSaveKey = document.getElementById("btnSaveKey");
+        const btnDeleteKey = document.getElementById("btnDeleteKey");
+
+        // Detail Editors
+        const editorString = document.getElementById("editorString");
+        const stringValueInput = document.getElementById("stringValueInput");
+        
+        const editorList = document.getElementById("editorList");
+        const listEditorContainer = document.getElementById("listEditorContainer");
+        const btnAddListRow = document.getElementById("btnAddListRow");
+
+        const editorHash = document.getElementById("editorHash");
+        const hashEditorContainer = document.getElementById("hashEditorContainer");
+        const btnAddHashRow = document.getElementById("btnAddHashRow");
+
+        // Modal Elements
+        const newKeyModal = document.getElementById("newKeyModal");
+        const btnNewKey = document.getElementById("btnNewKey");
+        const btnModalClose = document.getElementById("btnModalClose");
+        const btnModalCancel = document.getElementById("btnModalCancel");
+        const btnModalCreate = document.getElementById("btnModalCreate");
+        const selectNewKeyType = document.getElementById("newKeyType");
+        
+        const newValString = document.getElementById("newValString");
+        const newValList = document.getElementById("newValList");
+        const newValListContainer = document.getElementById("newValListContainer");
+        const newValHash = document.getElementById("newValHash");
+        const newValHashContainer = document.getElementById("newValHashContainer");
+
+        // Set Loading State
+        function setLoading(loading) {
+            if (loading) {
+                loader.classList.add("active");
+            } else {
+                loader.classList.remove("active");
+            }
+        }
+
+        // Custom Alert Modal
+        function showAlert(title, message) {
+            document.getElementById("alertTitle").innerText = title;
+            document.getElementById("alertMessage").innerText = message;
+            document.getElementById("alertModal").classList.add("active");
+        }
+
+        function closeAlert() {
+            document.getElementById("alertModal").classList.remove("active");
+        }
+
+        document.getElementById("btnAlertClose").onclick = closeAlert;
+        document.getElementById("btnAlertOK").onclick = closeAlert;
+
+        // Custom Confirm Modal
+        let confirmCallback = null;
+
+        function showConfirm(title, message, onConfirm) {
+            document.getElementById("confirmTitle").innerText = title;
+            document.getElementById("confirmMessage").innerText = message;
+            confirmCallback = onConfirm;
+            document.getElementById("confirmModal").classList.add("active");
+        }
+
+        function closeConfirm() {
+            document.getElementById("confirmModal").classList.remove("active");
+            confirmCallback = null;
+        }
+
+        document.getElementById("btnConfirmClose").onclick = closeConfirm;
+        document.getElementById("btnConfirmCancel").onclick = closeConfirm;
+        document.getElementById("btnConfirmOK").onclick = () => {
+            if (confirmCallback) confirmCallback();
+            closeConfirm();
+        };
+
+        // Initialize Status Connection
+        async function checkStatus() {
+            try {
+                const infoStr = await window.redis_connect_status();
+                const info = JSON.parse(infoStr);
+                
+                if (info.status === "connected") {
+                    isConnected = true;
+                    statusDot.className = "status-dot connected";
+                    statusText.innerText = "Online";
+                    metaVersion.innerText = info.version;
+                    metaKeys.innerText = info.keys_count;
+                } else {
+                    isConnected = false;
+                    statusDot.className = "status-dot";
+                    statusText.innerText = "Offline";
+                    metaVersion.innerText = "-";
+                    metaKeys.innerText = "-";
+                }
+            } catch (err) {
+                console.error("Failed to check status", err);
+                statusDot.className = "status-dot";
+                statusText.innerText = "Error";
+            }
+        }
+
+        // Load keys and render list
+        async function fetchAndRenderKeys() {
+            setLoading(true);
+            await checkStatus();
+            if (!isConnected) {
+                keysList.innerHTML = `<div style="text-align: center; color: var(--color-danger); padding: 20px 0; font-size: 0.9rem;">Redis server offline.<br>Ensure Redis is running on port 6379.</div>`;
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const keysStr = await window.redis_get_keys();
+                currentKeys = JSON.parse(keysStr);
+                renderKeys(currentKeys);
+            } catch (err) {
+                console.error("Failed to fetch keys", err);
+                keysList.innerHTML = `<div style="color: var(--color-danger); padding: 10px;">Error fetching keys: ${err}</div>`;
+            }
+            setLoading(false);
+        }
+
+        function renderKeys(keys) {
+            keysList.innerHTML = "";
+            if (keys.length === 0) {
+                keysList.innerHTML = `<div style="color: var(--text-muted); font-size: 0.85rem; text-align: center; padding: 20px 0;">No keys found</div>`;
+                return;
+            }
+
+            keys.forEach(k => {
+                const item = document.createElement("div");
+                item.className = `key-item ${selectedKey && selectedKey.name === k.name ? "active" : ""}`;
+                item.onclick = () => selectKey(k.name);
+
+                const left = document.createElement("div");
+                left.className = "key-info-left";
+
+                const name = document.createElement("div");
+                name.className = "key-name";
+                name.innerText = k.name;
+
+                const meta = document.createElement("div");
+                meta.className = "key-meta-row";
+
+                const type = document.createElement("span");
+                type.className = `type-tag ${k.type}`;
+                type.innerText = k.type;
+
+                meta.appendChild(type);
+
+                if (k.ttl > 0) {
+                    const ttl = document.createElement("span");
+                    ttl.className = "key-ttl" + (k.ttl < 30 ? " expiring" : "");
+                    ttl.innerText = `TTL: ${k.ttl}s`;
+                    meta.appendChild(ttl);
+                }
+
+                left.appendChild(name);
+                left.appendChild(meta);
+
+                const deleteBtn = document.createElement("div");
+                deleteBtn.style.color = "var(--text-muted)";
+                deleteBtn.style.cursor = "pointer";
+                deleteBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+                deleteBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    deleteKeyConfirm(k.name);
+                };
+
+                item.appendChild(left);
+                item.appendChild(deleteBtn);
+                keysList.appendChild(item);
+            });
+        }
+
+        // Search filter
+        searchInput.oninput = () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = currentKeys.filter(k => k.name.toLowerCase().includes(query));
+            renderKeys(filtered);
+        };
+
+        // Select and display key details
+        async function selectKey(name) {
+            setLoading(true);
+            try {
+                const detailStr = await window.redis_get_key_detail(name);
+                selectedKey = JSON.parse(detailStr);
+                
+                // Show detail pane
+                emptyState.style.display = "none";
+                detailView.style.display = "flex";
+
+                // Setup header
+                detailKeyName.innerText = selectedKey.name;
+                detailKeyType.className = `type-tag ${selectedKey.type}`;
+                detailKeyType.innerText = selectedKey.type;
+                detailKeyTTL.value = selectedKey.ttl;
+                
+                if (selectedKey.ttl === -1) {
+                    detailKeyTTLDisplay.innerText = "(Persistent)";
+                } else {
+                    detailKeyTTLDisplay.innerText = "(" + selectedKey.ttl + "s remaining)";
+                }
+
+                // Hide all editors first
+                editorString.style.display = "none";
+                editorList.style.display = "none";
+                editorHash.style.display = "none";
+
+                // Setup active keys selection highlighting
+                document.querySelectorAll(".key-item").forEach(item => {
+                    if (item.querySelector(".key-name").innerText === name) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+                });
+
+                // Configure editor based on type
+                if (selectedKey.type === "string") {
+                    editorString.style.display = "block";
+                    stringValueInput.value = selectedKey.value;
+                    valueEditorTitle.innerText = "Edit String Value";
+                } else if (selectedKey.type === "list" || selectedKey.type === "set") {
+                    editorList.style.display = "block";
+                    valueEditorTitle.innerText = `Edit ${selectedKey.type === 'list' ? 'List' : 'Set'} Elements`;
+                    renderListEditor(selectedKey.list_val);
+                } else if (selectedKey.type === "hash") {
+                    editorHash.style.display = "block";
+                    valueEditorTitle.innerText = "Edit Hash Fields";
+                    renderHashEditor(selectedKey.hash_val);
+                }
+
+            } catch (err) {
+                console.error("Failed to load key detail", err);
+                showAlert("Error Loading Key", "Failed to load key detail: " + err);
+            }
+            setLoading(false);
+        }
+
+        // Render List Elements
+        function renderListEditor(elements) {
+            listEditorContainer.innerHTML = "";
+            if (!elements || elements.length === 0) {
+                addListRow("");
+                return;
+            }
+            elements.forEach((val, idx) => {
+                addListRow(val, idx);
+            });
+        }
+
+        function addListRow(val = "", idx = null) {
+            const rowIdx = idx !== null ? idx : listEditorContainer.children.length;
+            const row = document.createElement("div");
+            row.className = "list-row";
+            
+            // Build elements explicitly to avoid quotes and backtick issues
+            const idxSpan = document.createElement("span");
+            idxSpan.className = "list-index";
+            idxSpan.innerText = rowIdx;
+            
+            const itemInput = document.createElement("input");
+            itemInput.type = "text";
+            itemInput.className = "input-text list-item-input";
+            itemInput.value = val;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "8px";
+            delBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+                reindexListRows();
+            };
+            
+            row.appendChild(idxSpan);
+            row.appendChild(itemInput);
+            row.appendChild(delBtn);
+            
+            listEditorContainer.appendChild(row);
+        }
+
+        function reindexListRows() {
+            document.querySelectorAll("#listEditorContainer .list-row").forEach((row, i) => {
+                row.querySelector(".list-index").innerText = i;
+            });
+        }
+
+        btnAddListRow.onclick = () => addListRow("");
+
+        // Render Hash Editor
+        function renderHashEditor(hashData) {
+            hashEditorContainer.innerHTML = "";
+            const keys = Object.keys(hashData);
+            if (keys.length === 0) {
+                addHashRow("", "");
+                return;
+            }
+            keys.forEach(k => {
+                addHashRow(k, hashData[k]);
+            });
+        }
+
+        function addHashRow(field = "", value = "") {
+            const row = document.createElement("div");
+            row.className = "hash-row";
+            
+            const fieldInput = document.createElement("input");
+            fieldInput.type = "text";
+            fieldInput.className = "input-text hash-key-input";
+            fieldInput.placeholder = "Field";
+            fieldInput.value = field;
+            
+            const valInput = document.createElement("input");
+            valInput.type = "text";
+            valInput.className = "input-text hash-val-input";
+            valInput.placeholder = "Value";
+            valInput.value = value;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "8px";
+            delBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(fieldInput);
+            row.appendChild(valInput);
+            row.appendChild(delBtn);
+            
+            hashEditorContainer.appendChild(row);
+        }
+
+        btnAddHashRow.onclick = () => addHashRow("", "");
+
+        // Save active key edits
+        async function saveKey() {
+            if (!selectedKey) return;
+            setLoading(true);
+            const name = selectedKey.name;
+            const type = selectedKey.type;
+            const ttl = parseInt(detailKeyTTL.value) || -1;
+
+            try {
+                if (type === "string") {
+                    const val = stringValueInput.value;
+                    await window.redis_set_string(name, val, ttl);
+                } else if (type === "list") {
+                    const vals = Array.from(document.querySelectorAll("#listEditorContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_list(name, JSON.stringify(vals), ttl);
+                } else if (type === "set") {
+                    const vals = Array.from(document.querySelectorAll("#listEditorContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_set(name, JSON.stringify(vals), ttl);
+                } else if (type === "hash") {
+                    const fvs = {};
+                    document.querySelectorAll("#hashEditorContainer .hash-row").forEach(row => {
+                        const f = row.querySelector(".hash-key-input").value.trim();
+                        const v = row.querySelector(".hash-val-input").value;
+                        if (f) {
+                            fvs[f] = v;
+                        }
+                    });
+                    await window.redis_set_hash(name, JSON.stringify(fvs), ttl);
+                }
+
+                // Reload and re-select
+                await fetchAndRenderKeys();
+                await selectKey(name);
+            } catch (err) {
+                console.error("Failed to save key", err);
+                showAlert("Error Saving Key", "Failed to save key: " + err);
+            }
+            setLoading(false);
+        }
+
+        // Delete active key
+        async function deleteKeyConfirm(name) {
+            showConfirm("Delete Key", "Are you sure you want to delete key \"" + name + "\"?", async () => {
+                setLoading(true);
+                try {
+                    await window.redis_del_key(name);
+                    selectedKey = null;
+                    detailView.style.display = "none";
+                    emptyState.style.display = "flex";
+                    await fetchAndRenderKeys();
+                } catch (err) {
+                    showAlert("Error Deleting Key", "Failed to delete key: " + err);
+                }
+                setLoading(false);
+            });
+        }
+
+        btnDeleteKey.onclick = () => {
+            if (selectedKey) deleteKeyConfirm(selectedKey.name);
+        };
+        btnSaveKey.onclick = saveKey;
+
+        // Modal functionality
+        btnNewKey.onclick = () => {
+            // reset fields
+            document.getElementById("newKeyName").value = "";
+            document.getElementById("newKeyTTL").value = "-1";
+            document.getElementById("newKeyInitialValue").value = "";
+            newValListContainer.innerHTML = "";
+            addModalListRow("");
+            newValHashContainer.innerHTML = "";
+            addModalHashRow("", "");
+            
+            newKeyModal.classList.add("active");
+        };
+
+        function closeModal() {
+            newKeyModal.classList.remove("active");
+        }
+
+        btnModalClose.onclick = closeModal;
+        btnModalCancel.onclick = closeModal;
+
+        // Modal type change view switcher
+        selectNewKeyType.onchange = () => {
+            const type = selectNewKeyType.value;
+            newValString.style.display = "none";
+            newValList.style.display = "none";
+            newValHash.style.display = "none";
+
+            if (type === "string") {
+                newValString.style.display = "block";
+            } else if (type === "list" || type === "set") {
+                newValList.style.display = "block";
+            } else if (type === "hash") {
+                newValHash.style.display = "block";
+            }
+        };
+
+        // Modal dynamic list / hash rows adders
+        function addModalListRow(val = "") {
+            const idx = newValListContainer.children.length;
+            const row = document.createElement("div");
+            row.className = "list-row";
+            
+            const idxSpan = document.createElement("span");
+            idxSpan.className = "list-index";
+            idxSpan.innerText = idx;
+            
+            const itemInput = document.createElement("input");
+            itemInput.type = "text";
+            itemInput.className = "input-text list-item-input";
+            itemInput.value = val;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "6px";
+            delBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+                reindexModalListRows();
+            };
+            
+            row.appendChild(idxSpan);
+            row.appendChild(itemInput);
+            row.appendChild(delBtn);
+            
+            newValListContainer.appendChild(row);
+        }
+
+        function reindexModalListRows() {
+            document.querySelectorAll("#newValListContainer .list-row").forEach((row, i) => {
+                row.querySelector(".list-index").innerText = i;
+            });
+        }
+
+        document.getElementById("btnModalAddListRow").onclick = () => addModalListRow("");
+
+        function addModalHashRow(field = "", val = "") {
+            const row = document.createElement("div");
+            row.className = "hash-row";
+            
+            const fieldInput = document.createElement("input");
+            fieldInput.type = "text";
+            fieldInput.className = "input-text hash-key-input";
+            fieldInput.placeholder = "Field";
+            fieldInput.value = field;
+            
+            const valInput = document.createElement("input");
+            valInput.type = "text";
+            valInput.className = "input-text hash-val-input";
+            valInput.placeholder = "Value";
+            valInput.value = val;
+            
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn btn-secondary btn-icon";
+            delBtn.style.padding = "6px";
+            delBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>';
+            delBtn.onclick = () => {
+                row.remove();
+            };
+            
+            row.appendChild(fieldInput);
+            row.appendChild(valInput);
+            row.appendChild(delBtn);
+            
+            newValHashContainer.appendChild(row);
+        }
+
+        document.getElementById("btnModalAddHashRow").onclick = () => addModalHashRow("", "");
+
+        btnModalCreate.onclick = async () => {
+            const name = document.getElementById("newKeyName").value.trim();
+            if (!name) {
+                showAlert("Validation Error", "Key name is required!");
+                return;
+            }
+
+            const type = selectNewKeyType.value;
+            const ttl = parseInt(document.getElementById("newKeyTTL").value) || -1;
+            setLoading(true);
+
+            try {
+                if (type === "string") {
+                    const val = document.getElementById("newKeyInitialValue").value;
+                    await window.redis_set_string(name, val, ttl);
+                } else if (type === "list") {
+                    const vals = Array.from(document.querySelectorAll("#newValListContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_list(name, JSON.stringify(vals), ttl);
+                } else if (type === "set") {
+                    const vals = Array.from(document.querySelectorAll("#newValListContainer .list-item-input")).map(i => i.value);
+                    await window.redis_set_set(name, JSON.stringify(vals), ttl);
+                } else if (type === "hash") {
+                    const fvs = {};
+                    document.querySelectorAll("#newValHashContainer .hash-row").forEach(row => {
+                        const f = row.querySelector(".hash-key-input").value.trim();
+                        const v = row.querySelector(".hash-val-input").value;
+                        if (f) fvs[f] = v;
+                    });
+                    await window.redis_set_hash(name, JSON.stringify(fvs), ttl);
+                }
+
+                closeModal();
+                await fetchAndRenderKeys();
+                await selectKey(name);
+            } catch (err) {
+                showAlert("Error Creating Key", "Failed to create key: " + err);
+            }
+            setLoading(false);
+        };
+
+        // Refresh Button
+        document.getElementById("btnRefresh").onclick = fetchAndRenderKeys;
+
+        // Flush Database
+        document.getElementById("btnFlush").onclick = async () => {
+            const warning = "WARNING: Are you absolutely sure you want to delete ALL keys in the current database?";
+            showConfirm("Flush Database", warning, async () => {
+                setLoading(true);
+                try {
+                    await window.redis_flush_db();
+                    selectedKey = null;
+                    detailView.style.display = "none";
+                    emptyState.style.display = "flex";
+                    await fetchAndRenderKeys();
+                } catch (err) {
+                    showAlert("Error Flushing DB", "Failed to flush DB: " + err);
+                }
+                setLoading(false);
+            });
+        };
+
+        // Initial Load
+        window.addEventListener("DOMContentLoaded", () => {
+            setTimeout(fetchAndRenderKeys, 100);
+        });
+    </script>
+</body>
+</html>
+```
+
+##### V Entrypoint (`redis_webview_demo.v`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v`_
+
+```v
+module main
+
+import json
+import ttytm.webview
+import xiusin.vredis
+
+struct KeyInfo {
+	name  string
+	@type string
+	ttl   int
+}
+
+struct KeyDetail {
+mut:
+	name     string
+	@type    string
+	ttl      int
+	value    string
+	list_val []string
+	hash_val map[string]string
+}
+
+struct ConnectStatus {
+	status     string
+	host       string
+	port       int
+	version    string
+	keys_count int
+}
+
+// Embed the HTML, CSS, and JS file directly into the binary
+const html_file = $embed_file('index.html')
+const html = html_file.to_string()
+
+fn connect_redis() !&vredis.Redis {
+	return vredis.new_client(host: '127.0.0.1', port: 6379)
+}
+
+fn redis_connect_status(e &webview.Event) !string {
+	mut client := connect_redis() or {
+		status_info := ConnectStatus{
+			status: 'disconnected'
+			host: '127.0.0.1'
+			port: 6379
+			version: ''
+			keys_count: 0
+		}
+		return json.encode(status_info)
+	}
+	defer {
+		client.close() or {}
+	}
+	
+	mut version := 'Unknown'
+	info := client.send('INFO', 'server') or {
+		count := client.dbsize() or { 0 }
+		status_info := ConnectStatus{
+			status: 'connected'
+			host: '127.0.0.1'
+			port: 6379
+			version: 'Unknown'
+			keys_count: count
+		}
+		return json.encode(status_info)
+	}
+	if info.bytestr().len > 0 {
+		lines := info.bytestr().split('\n')
+		for line in lines {
+			if line.starts_with('redis_version:') {
+				version = line.split(':')[1].trim_space()
+				break
+			}
+		}
+	}
+	
+	count := client.dbsize() or { 0 }
+	
+	status_info := ConnectStatus{
+		status: 'connected'
+		host: '127.0.0.1'
+		port: 6379
+		version: version
+		keys_count: count
+	}
+	return json.encode(status_info)
+}
+
+fn redis_get_keys(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	keys := client.keys('*') or { []string{} }
+	mut items := []KeyInfo{}
+	for key in keys {
+		t := client.@type(key) or { 'unknown' }
+		ttl := client.ttl(key) or { -1 }
+		items << KeyInfo{
+			name: key
+			@type: t
+			ttl: ttl
+		}
+	}
+	return json.encode(items)
+}
+
+fn redis_get_key_detail(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	t := client.@type(key)!
+	ttl := client.ttl(key)!
+	
+	mut detail := KeyDetail{
+		name: key
+		@type: t
+		ttl: ttl
+		value: ''
+		list_val: []string{}
+		hash_val: map[string]string{}
+	}
+	
+	match t {
+		'string' {
+			detail.value = client.get(key) or { '' }
+		}
+		'list' {
+			detail.list_val = client.lrange(key, 0, -1) or { []string{} }
+		}
+		'set' {
+			detail.list_val = client.smembers(key) or { []string{} }
+		}
+		'hash' {
+			detail.hash_val = client.hgetall(key) or { map[string]string{} }
+		}
+		else {}
+	}
+	return json.encode(detail)
+}
+
+fn redis_set_string(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	val := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	client.set(key, val)!
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_set_list(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	vals_json := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	vals := json.decode([]string, vals_json)!
+	client.del(key) or {}
+	for val in vals {
+		client.rpush(key, val)!
+	}
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_set_hash(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	hash_json := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	fvs := json.decode(map[string]string, hash_json)!
+	client.del(key) or {}
+	for field, val in fvs {
+		client.hset(key, field, val)!
+	}
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_set_set(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	vals_json := e.get_arg[string](1)!
+	ttl := e.get_arg[int](2)!
+	
+	vals := json.decode([]string, vals_json)!
+	client.del(key) or {}
+	for val in vals {
+		client.sadd(key, val)!
+	}
+	if ttl > 0 {
+		client.expire(key, ttl)!
+	} else if ttl == -1 {
+		client.persist(key) or {}
+	}
+	return 'ok'
+}
+
+fn redis_del_key(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	key := e.get_arg[string](0)!
+	client.del(key)!
+	return 'ok'
+}
+
+fn redis_flush_db(e &webview.Event) !string {
+	mut client := connect_redis()!
+	defer {
+		client.close() or {}
+	}
+	
+	client.flushdb()!
+	return 'ok'
+}
+
+fn main() {
+	mut w := webview.create(debug: true)
+	defer {
+		w.destroy()
+	}
+	w.set_title('V + Redis GUI Dashboard')
+	w.set_size(1080, 720, .@none)
+
+	// Bindings
+	w.bind_opt[string]('redis_connect_status', redis_connect_status)
+	w.bind_opt[string]('redis_get_keys', redis_get_keys)
+	w.bind_opt[string]('redis_get_key_detail', redis_get_key_detail)
+	w.bind_opt[string]('redis_set_string', redis_set_string)
+	w.bind_opt[string]('redis_set_list', redis_set_list)
+	w.bind_opt[string]('redis_set_hash', redis_set_hash)
+	w.bind_opt[string]('redis_set_set', redis_set_set)
+	w.bind_opt[string]('redis_del_key', redis_del_key)
+	w.bind_opt[string]('redis_flush_db', redis_flush_db)
+
+	w.set_html(html)
+	w.run()
+}
+```
+
+##### Redis Helper Utility (`redis_helper.v`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v`_
+
+This helper provides a namespaced wrapper struct `NamespacedRedis` that automatically prefixes all Redis keys with a given namespace (e.g. `namespace:key`). This is a great pattern for keeping keys organized and avoiding collisions between multiple apps/environments.
+
+```v
+module main
+
+import xiusin.vredis
+
+// NamespacedRedis wraps a standard vredis.Redis client and prefixes all keys with a namespace.
+struct NamespacedRedis {
+mut:
+	client &vredis.Redis
+pub:
+	namespace string
+}
+
+fn new_namespaced_redis(client &vredis.Redis, namespace string) NamespacedRedis {
+	return NamespacedRedis{
+		client: client
+		namespace: namespace
+	}
+}
+
+fn (nr NamespacedRedis) key(name string) string {
+	if nr.namespace == '' {
+		return name
+	}
+	return '${nr.namespace}:${name}'
+}
+
+fn (mut nr NamespacedRedis) close() ! {
+	nr.client.close()!
+}
+
+fn (mut nr NamespacedRedis) set(key string, val string) ! {
+	nr.client.set(nr.key(key), val)!
+}
+
+fn (mut nr NamespacedRedis) get(key string) !string {
+	return nr.client.get(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) incr(key string) ! {
+	nr.client.incr(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) expire(key string, seconds int) ! {
+	nr.client.expire(nr.key(key), seconds)!
+}
+
+fn (mut nr NamespacedRedis) ttl(key string) !int {
+	return nr.client.ttl(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) del(key string) ! {
+	nr.client.del(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) rpush(key string, val string) ! {
+	nr.client.rpush(nr.key(key), val)!
+}
+
+fn (mut nr NamespacedRedis) lrange(key string, start int, stop int) ![]string {
+	return nr.client.lrange(nr.key(key), start, stop)!
+}
+
+fn (mut nr NamespacedRedis) lpop(key string) !string {
+	return nr.client.lpop(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) llen(key string) !int {
+	return nr.client.llen(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) hset(key string, field string, val string) ! {
+	nr.client.hset(nr.key(key), field, val)!
+}
+
+fn (mut nr NamespacedRedis) hget(key string, field string) !string {
+	return nr.client.hget(nr.key(key), field)!
+}
+
+fn (mut nr NamespacedRedis) hgetall(key string) !map[string]string {
+	return nr.client.hgetall(nr.key(key))!
+}
+
+fn (mut nr NamespacedRedis) sadd(key string, member string) ! {
+	nr.client.sadd(nr.key(key), member)!
+}
+
+fn (mut nr NamespacedRedis) sismember(key string, member string) !bool {
+	return nr.client.sismember(nr.key(key), member)!
+}
+
+fn (mut nr NamespacedRedis) smembers(key string) ![]string {
+	return nr.client.smembers(nr.key(key))!
+}
+```
+
+##### Redis Console Demo (`redis_console_demo.v`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v`_
+
+This example demonstrates how to use the external `xiusin.vredis` client package in a console application and demonstrates key namespacing with the custom `NamespacedRedis` helper. It covers:
+*   Establishing a connection and handling errors gracefully.
+*   Basic String operations (`set`, `get`, `incr`, `expire`, `ttl`, `del`).
+*   List operations (`rpush`, `llen`, `lrange`, `lpop`).
+*   Hash operations (`hset`, `hget`, `hgetall`).
+*   Set operations (`sadd`, `sismember`, `smembers`).
+*   Namespaced Redis helper operations using `NamespacedRedis`.
+*   Cleaning up created keys on application exit.
+
+```v
+module main
+
+import xiusin.vredis
+
+fn main() {
+	println('==================================================')
+	println('       V + Redis Console API Learning Demo        ')
+	println('==================================================')
+
+	println('Connecting to local Redis at 127.0.0.1:6379...')
+	mut r := vredis.new_client(host: '127.0.0.1', port: 6379) or {
+		eprintln('\n[ERROR] Failed to connect to Redis server: ${err}')
+		eprintln('Please make sure Redis is running locally on port 6379.')
+		return
+	}
+	defer {
+		r.close() or {}
+		println('\n==================================================')
+		println('Demo completed. Redis connection closed.')
+		println('==================================================')
+	}
+
+	println('Connected successfully!\n')
+
+	// Clean up any old test keys first
+	r.del('demo:string') or {}
+	r.del('demo:counter') or {}
+	r.del('demo:list') or {}
+	r.del('demo:hash') or {}
+	r.del('demo:set') or {}
+
+	// --- 1. String Operations ---
+	println('--- 1. String Operations ---')
+	println('Setting "demo:string" to "Hello V + Redis!"...')
+	r.set('demo:string', 'Hello V + Redis!') or { panic(err) }
+
+	val := r.get('demo:string') or { panic(err) }
+	println('GET "demo:string" -> "${val}"')
+
+	// Increment demo
+	r.incr('demo:counter') or { panic(err) }
+	r.incr('demo:counter') or { panic(err) }
+	counter_val := r.get('demo:counter') or { panic(err) }
+	println('Counter INCR twice -> "${counter_val}"')
+
+	// TTL Demo
+	println('Setting expiry of 5 seconds on "demo:string"...')
+	r.expire('demo:string', 5) or { panic(err) }
+	ttl_val := r.ttl('demo:string') or { panic(err) }
+	println('TTL remaining: ${ttl_val} seconds\n')
+
+	// --- 2. List Operations ---
+	println('--- 2. List Operations ---')
+	println('Pushing items to "demo:list" (item_a, item_b, item_c)...')
+	r.rpush('demo:list', 'item_a') or { panic(err) }
+	r.rpush('demo:list', 'item_b') or { panic(err) }
+	r.rpush('demo:list', 'item_c') or { panic(err) }
+
+	list_len := r.llen('demo:list') or { panic(err) }
+	println('List length: ${list_len}')
+
+	list_items := r.lrange('demo:list', 0, -1) or { panic(err) }
+	println('List elements: ${list_items}')
+
+	popped := r.lpop('demo:list') or { panic(err) }
+	println('Popped from left (LPOP): "${popped}"')
+
+	list_items_after := r.lrange('demo:list', 0, -1) or { panic(err) }
+	println('List elements after LPOP: ${list_items_after}\n')
+
+	// --- 3. Hash Operations ---
+	println('--- 3. Hash Operations ---')
+	println('Setting fields in "demo:hash"...')
+	r.hset('demo:hash', 'name', 'V Programming Language') or { panic(err) }
+	r.hset('demo:hash', 'year', '2019') or { panic(err) }
+	r.hset('demo:hash', 'creator', 'Alex Medvednikov') or { panic(err) }
+
+	name_field := r.hget('demo:hash', 'name') or { panic(err) }
+	println('HGET "demo:hash" "name" -> "${name_field}"')
+
+	hash_all := r.hgetall('demo:hash') or { panic(err) }
+	println('HGETALL "demo:hash" fields & values:')
+	for k, v in hash_all {
+		println('  - ${k}: ${v}')
+	}
+	println('')
+
+	// --- 4. Set Operations ---
+	println('--- 4. Set Operations ---')
+	println('Adding members to "demo:set"...')
+	r.sadd('demo:set', 'apple') or { panic(err) }
+	r.sadd('demo:set', 'banana') or { panic(err) }
+	r.sadd('demo:set', 'apple') or { panic(err) } // Duplicate (should be ignored)
+
+	is_banana := r.sismember('demo:set', 'banana') or { panic(err) }
+	is_cherry := r.sismember('demo:set', 'cherry') or { panic(err) }
+	println('SISMEMBER "demo:set" "banana": ${is_banana}')
+	println('SISMEMBER "demo:set" "cherry": ${is_cherry}')
+
+	set_members := r.smembers('demo:set') or { panic(err) }
+	println('SMEMBERS "demo:set": ${set_members}\n')
+
+	// --- 5. Namespaced Helper Demo ---
+	println('--- 5. Namespaced Helper Demo ---')
+	println('Creating a namespaced helper with namespace "app_v1"...')
+	mut nr := new_namespaced_redis(r, 'app_v1')
+
+	println('Setting namespaced key "user_token" (resolved key will be "app_v1:user_token")...')
+	nr.set('user_token', 'token_abc123') or { panic(err) }
+
+	token := nr.get('user_token') or { panic(err) }
+	println('GET "user_token" via helper -> "${token}"')
+
+	// Verify the actual key in Redis (without namespace helper) has the prefix
+	actual_key := 'app_v1:user_token'
+	actual_val := r.get(actual_key) or { panic(err) }
+	println('GET raw "${actual_key}" directly from client -> "${actual_val}"')
+
+	// Cleanup namespaced keys
+	println('Cleaning up namespaced keys...')
+	nr.del('user_token') or {}
+
+	// Clean up test keys
+	println('\nCleaning up created keys...')
+	r.del('demo:string') or {}
+	r.del('demo:counter') or {}
+	r.del('demo:list') or {}
+	r.del('demo:hash') or {}
+	r.del('demo:set') or {}
+	println('Cleanup done.')
+}
+```
+
+##### Redis Namespaced Demo (`redis_namespaced_demo.v`)
+
+_File location: `modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v`_
+
+This example provides an easy, dedicated demo showing how to use the `NamespacedRedis` helper wrapper to manage multiple independent namespaces (like `cache` and `session`) over a single underlying Redis connection without key collisions.
+
+```v
+module main
+
+import xiusin.vredis
+
+fn main() {
+	println('==================================================')
+	println('     V + Redis Namespaced Helper Easy Demo        ')
+	println('==================================================')
+
+	println('Connecting to local Redis at 127.0.0.1:6379...')
+	mut client := vredis.new_client(host: '127.0.0.1', port: 6379) or {
+		eprintln('\n[ERROR] Failed to connect to Redis server: ${err}')
+		eprintln('Please make sure Redis is running locally on port 6379.')
+		return
+	}
+	defer {
+		client.close() or {}
+		println('\n==================================================')
+		println('Demo completed. Redis connection closed.')
+		println('==================================================')
+	}
+
+	println('Connected successfully!\n')
+
+	// Create a namespaced client wrapper for "cache"
+	println('Initializing "cache" namespace wrapper...')
+	mut cache := new_namespaced_redis(client, 'cache')
+
+	// Create another namespaced client wrapper for "session"
+	println('Initializing "session" namespace wrapper...\n')
+	mut session := new_namespaced_redis(client, 'session')
+
+	// 1. Store value in cache namespace (key will be "cache:user_123")
+	println('1. Storing data in "cache" namespace (key: "user_123")...')
+	cache.set('user_123', '{"name": "Alice", "role": "Admin"}') or { panic(err) }
+
+	// 2. Store value in session namespace (key will be "session:user_123")
+	println('2. Storing data in "session" namespace (key: "user_123")...')
+	session.set('user_123', 'active_session_token_xyz987') or { panic(err) }
+
+	println('\n--- Retrieval ---')
+
+	// 3. Retrieve values using the namespace helpers
+	cache_val := cache.get('user_123') or { panic(err) }
+	session_val := session.get('user_123') or { panic(err) }
+
+	println('Retrieved from cache:   "${cache_val}"')
+	println('Retrieved from session: "${session_val}"')
+
+	println('\n--- Verification (Direct Raw Lookups) ---')
+
+	// 4. Retrieve values using the raw client directly to show the actual keys stored
+	raw_cache := client.get('cache:user_123') or { panic(err) }
+	raw_session := client.get('session:user_123') or { panic(err) }
+	println('Raw key "cache:user_123" directly:   "${raw_cache}"')
+	println('Raw key "session:user_123" directly: "${raw_session}"')
+
+	// Cleanup
+	println('\nCleaning up keys...')
+	cache.del('user_123') or {}
+	session.del('user_123') or {}
+	println('Cleanup done.')
+}
 ```
 
 ## Concurrency
@@ -5264,6 +8171,268 @@ fn main() {
 
 ```
 
+#### JSON To/From File
+
+_File location: `json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v`_
+
+This example demonstrates how to encode an object to JSON, write it to a file, read it back, and decode it into a V struct.
+
+```v
+module main
+
+import json
+import os
+
+struct Book {
+	title  string
+	author string
+	year   int
+}
+
+fn main() {
+	file_path := 'book.json'
+
+	// Create an object instance
+	book := Book{
+		title: 'The V Programming Language'
+		author: 'Alex Medvednikov'
+		year: 2019
+	}
+
+	// 1. Encode object to JSON string
+	println('Encoding object to JSON...')
+	json_str := json.encode(book)
+	println('JSON string: ${json_str}')
+
+	// 2. Write JSON string to file
+	println('Writing JSON to file "${file_path}"...')
+	os.write_file(file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	// 3. Read JSON string from file
+	println('Reading JSON from file "${file_path}"...')
+	content := os.read_file(file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	// 4. Decode JSON string back to Book object
+	println('Decoding JSON back to object...')
+	decoded_book := json.decode(Book, content) or {
+		eprintln('Failed to decode JSON: ${err}')
+		return
+	}
+
+	println('Decoded book: Title: "${decoded_book.title}", Author: "${decoded_book.author}", Year: ${decoded_book.year}')
+
+	// Clean up created file
+	os.rm(file_path) or {}
+}
+```
+
+#### JSON Array of Objects
+
+_File location: `json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v`_
+
+This example demonstrates how to serialize and deserialize an array of objects (structs) to and from JSON, and how to write/read them using the filesystem.
+
+```v
+module main
+
+import json
+import os
+
+struct Task {
+	id    int
+	title string
+	done  bool
+}
+
+fn main() {
+	file_path := 'tasks.json'
+
+	// Create an array of objects
+	tasks := [
+		Task{
+			id: 1
+			title: 'Read V Guide'
+			done: false
+		},
+		Task{
+			id: 2
+			title: 'Write JSON helper examples'
+			done: true
+		},
+	]
+
+	// 1. Encode array of objects to JSON string
+	println('Encoding array of objects to JSON...')
+	json_str := json.encode(tasks)
+	println('JSON string:\n${json_str}')
+
+	// 2. Write JSON string to file
+	println('\nWriting JSON array to file "${file_path}"...')
+	os.write_file(file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	// 3. Read JSON string from file
+	println('Reading JSON from file "${file_path}"...')
+	content := os.read_file(file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	// 4. Decode JSON string back to an array of Task objects
+	println('Decoding JSON back to array of objects...')
+	decoded_tasks := json.decode([]Task, content) or {
+		eprintln('Failed to decode JSON: ${err}')
+		return
+	}
+
+	println('Decoded array of tasks successfully!')
+	for task in decoded_tasks {
+		println('  - Task #${task.id}: "${task.title}" [Done: ${task.done}]')
+	}
+
+	// Clean up created file
+	os.rm(file_path) or {}
+}
+```
+
+#### JSON Map To/From File
+
+_File location: `json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v`_
+
+This example demonstrates how to serialize a map structure (`map[string]int`) into a JSON string, write it to a file, read it back, and deserialize it back into a map in V.
+
+```v
+module main
+
+import json
+import os
+
+fn main() {
+	file_path := 'scores.json'
+
+	// Create a map[string]int
+	scores := {
+		'Alice': 95
+		'Bob': 88
+		'Charlie': 92
+	}
+
+	// 1. Encode map to JSON string
+	println('Encoding map to JSON...')
+	json_str := json.encode(scores)
+	println('JSON string: ${json_str}')
+
+	// 2. Write JSON string to file
+	println('Writing map JSON to file "${file_path}"...')
+	os.write_file(file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	// 3. Read JSON string from file
+	println('Reading from file "${file_path}"...')
+	content := os.read_file(file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	// 4. Decode JSON string back to map[string]int
+	println('Decoding JSON back to map...')
+	decoded_scores := json.decode(map[string]int, content) or {
+		eprintln('Failed to decode map JSON: ${err}')
+		return
+	}
+
+	println('Decoded map successfully:')
+	for k, v in decoded_scores {
+		println('  - ${k}: ${v}')
+	}
+
+	// Clean up created file
+	os.rm(file_path) or {}
+}
+```
+
+#### JSON and Raw Array To/From File
+
+_File location: `json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v`_
+
+This example demonstrates two different methods for reading and writing arrays to/from files in V:
+1. **JSON Serialization**: Best for primitive numeric/boolean arrays (e.g. `[]int`).
+2. **Raw Line-by-Line (Plain Text)**: Best for string lists (e.g. `[]string`), joining with newlines on write and using V's standard `os.read_lines()` on read.
+
+```v
+module main
+
+import json
+import os
+
+fn main() {
+	// We will show two ways of writing/reading arrays to/from files:
+	// Method 1: Using JSON serialization (great for numeric or structured arrays)
+	// Method 2: Using raw text line-by-line reading/writing (great for string lists)
+
+	// --- Method 1: JSON Serialization ---
+	println('=== Method 1: JSON Serialization ===')
+	json_file_path := 'numbers.json'
+	numbers := [10, 20, 30, 40, 50]
+
+	println('Encoding array to JSON...')
+	json_str := json.encode(numbers)
+	println('JSON string: ${json_str}')
+
+	println('Writing JSON to file "${json_file_path}"...')
+	os.write_file(json_file_path, json_str) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	json_content := os.read_file(json_file_path) or {
+		eprintln('Failed to read file: ${err}')
+		return
+	}
+
+	decoded_numbers := json.decode([]int, json_content) or {
+		eprintln('Failed to decode array JSON: ${err}')
+		return
+	}
+	println('Decoded array: ${decoded_numbers}')
+	os.rm(json_file_path) or {}
+
+	// --- Method 2: Raw Line-by-Line (Plain Text) ---
+	println('\n=== Method 2: Raw Line-by-Line ===')
+	text_file_path := 'fruits.txt'
+	fruits := ['Apple', 'Banana', 'Cherry', 'Date']
+
+	println('Writing array elements to text file "${text_file_path}"...')
+	// Join the string array with newlines to write line-by-line
+	fruits_content := fruits.join('\n')
+	os.write_file(text_file_path, fruits_content) or {
+		eprintln('Failed to write file: ${err}')
+		return
+	}
+
+	println('Reading lines from file "${text_file_path}" using os.read_lines()...')
+	// os.read_lines reads a file directly into a []string (line by line)
+	read_fruits := os.read_lines(text_file_path) or {
+		eprintln('Failed to read lines: ${err}')
+		return
+	}
+	println('Read string array: ${read_fruits}')
+	
+	// Clean up created files
+	os.rm(text_file_path) or {}
+}
+```
+
 ### Orm
 
 #### Orm Demo
@@ -5275,25 +8444,26 @@ This example demonstrates the concepts of **orm demo**.
 ```v
 module main
 
-import sqlite
+import db.sqlite
 
-[table: 'Notes']
+@[table: 'Notes']
 struct Note {
-    id      int    [primary; sql: serial]
-    message string [sql: 'detail'; unique]
-    status  bool   [nonull]
+    id      int    @[primary; sql: serial]
+    message string @[sql: 'detail'; unique]
+    status  bool
 }
 
 fn main() {
-    // Establishing a connection to the database
-
-    db := sqlite.connect('NotesDB.db') or { panic(err) }
-    db.exec('drop table if exists Notes')
+    mut db := sqlite.connect('NotesDB.db') or { panic(err) }
+    defer {
+        db.close() or {}
+    }
+    db.exec('drop table if exists Notes') or { panic(err) }
 
     // Creating a table
     sql db {
         create table Note
-    }
+    } or { panic(err) }
 
     // Inserting record(s)
     n1 := Note{
@@ -5308,14 +8478,14 @@ fn main() {
     sql db {
         insert n1 into Note
         insert n2 into Note
-    }
+    } or { panic(err) }
 
     println(db.last_id() as int)
 
     // Select records
     all_notes := sql db {
         select from Note
-    }
+    } or { panic(err) }
 
     println(all_notes)
     println('Type of all_notes is : ${typeof(all_notes).name}')
@@ -5323,13 +8493,13 @@ fn main() {
     // Select using order by clause
     notes_sorted := sql db {
         select from Note order by id desc
-    }
+    } or { panic(err) }
     println(notes_sorted)
 
     // Select using the limit clause
     notes_limited := sql db {
         select from Note order by id desc limit 1
-    }
+    } or { panic(err) }
 
     println(notes_limited)
     println('Type returned by select when limit is 1:  ${typeof(notes_limited).name}')
@@ -5337,36 +8507,35 @@ fn main() {
     // Select using where clause
     notes_latest := sql db {
         select from Note where id > 1
-    }
+    } or { panic(err) }
 
     println(notes_latest)
 
     // Update record(s)
     sql db {
         update Note set status = true where id == 2
-    }
+    } or { panic(err) }
 
     notes_updated := sql db {
         select from Note where id == 2
-    }
+    } or { panic(err) }
     println(notes_updated)
 
     // Delete record(s)
     sql db {
         delete from Note where id == 2
-    }
+    } or { panic(err) }
 
     notes_leftover := sql db {
         select from Note
-    }
+    } or { panic(err) }
     println(notes_leftover)
 
     sql db {
         drop table Note
-    }
+    } or { panic(err) }
     println('Dropped the Note table from database!')
 }
-
 ```
 
 ### Sqlite Raw Crud
@@ -5497,28 +8666,33 @@ This example demonstrates the concepts of **main**.
 ```v
 module main
 
-import vweb
-import sqlite
+import veb
+import db.sqlite
 
 struct App {
-    vweb.Context
 mut:
     db sqlite.DB
 }
 
-fn main() {
-    db := sqlite.connect('notes.db') or { panic(err) }
-    db.exec('drop table if exists Notes')
-    sql db {
-        create table Note
-    }
-    http_port := 8000
-    app := &App{
-        db: db
-    }
-    vweb.run(app, http_port)
+struct Context {
+    veb.Context
 }
 
+fn main() {
+    mut db := sqlite.connect('notes.db') or { panic(err) }
+    defer {
+        db.close() or {}
+    }
+    db.exec('drop table if exists Notes') or { panic(err) }
+    sql db {
+        create table Note
+    } or { panic(err) }
+    http_port := 8000
+    mut app := &App{
+        db: db
+    }
+    veb.run[App, Context](mut app, http_port)
+}
 ```
 
 #### Note
@@ -5531,41 +8705,45 @@ This example demonstrates the concepts of **note**.
 module main
 
 import json
-import vweb
+import veb
 
-[table: 'Notes']
+@[table: 'Notes']
 struct Note {
-    id      int    [primary; sql: serial]
-    message string [sql: 'detail'; unique]
-    status  bool   [nonull]
+    id      int    @[primary; sql: serial]
+    message string @[sql: 'detail'; unique]
+    status  bool
 }
 
 fn (n Note) to_json() string {
     return json.encode(n)
 }
 
-['/notes'; post]
-fn (mut app App) create() vweb.Result {
+@['/notes'; post]
+fn (mut app App) create(mut ctx Context) veb.Result {
     // malformed json
-    n := json.decode(Note, app.req.data) or {
-        app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, invalid_json}
-        return app.json(er.to_json())
+    n := json.decode(Note, ctx.req.data) or {
+        ctx.res.set_status(.bad_request)
+        return ctx.json(error_response(400, invalid_json))
     }
 
     // before we save, we must ensure the note's message is unique
     notes_found := sql app.db {
         select from Note where message == n.message
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
     if notes_found.len > 0 {
-        app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, unique_message}
-        return app.json(er.to_json())
+        ctx.res.set_status(.bad_request)
+        return ctx.json(error_response(400, unique_message))
     }
 
     // save to db
     sql app.db {
         insert n into Note
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
 
     // retrieve the last id from the db to build full Note object
@@ -5573,59 +8751,65 @@ fn (mut app App) create() vweb.Result {
 
     // build new note object including the new_id and send it as JSON response
     note_created := Note{new_id, n.message, n.status}
-    app.set_status(201, 'created')
-    app.add_header('Content-Location', '/notes/$new_id')
-    return app.json(note_created.to_json())
+    ctx.res.set_status(.created)
+    ctx.res.header.add(.content_location, '/notes/${new_id}')
+    return ctx.json(note_created.to_json())
 }
 
-['/notes/:id'; get]
-fn (mut app App) read(id int) vweb.Result {
+@['/notes/:id'; get]
+fn (mut app App) read(mut ctx Context, id int) veb.Result {
     n := sql app.db {
         select from Note where id == id
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
 
     // check if note exists
-    if n.id != id {
-        app.set_status(404, 'Not Found')
-        er := CustomResponse{400, note_not_found}
-        return app.json(er.to_json())
+    if n.len == 0 {
+        ctx.res.set_status(.not_found)
+        return ctx.json(error_response(400, note_not_found))
     }
 
     // found note, return it
-    ret := json.encode(n)
-    app.set_status(200, 'OK')
-    return app.json(ret)
+    ret := json.encode(n[0])
+    ctx.res.set_status(.ok)
+    return ctx.json(ret)
 }
 
-['/notes/'; get]
-fn (mut app App) read_all() vweb.Result {
+@['/notes'; get]
+fn (mut app App) read_all(mut ctx Context) veb.Result {
     n := sql app.db {
         select from Note
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
 
     ret := json.encode(n)
-    app.set_status(200, 'OK')
-    return app.json(ret)
+    ctx.res.set_status(.ok)
+    return ctx.json(ret)
 }
 
-['/notes/:id'; put]
-fn (mut app App) update(id int) vweb.Result {
+@['/notes/:id'; put]
+fn (mut app App) update(mut ctx Context, id int) veb.Result {
     // malformed json
-    n := json.decode(Note, app.req.data) or {
-        app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, invalid_json}
-        return app.json(er.to_json())
+    n := json.decode(Note, ctx.req.data) or {
+        ctx.res.set_status(.bad_request)
+        return ctx.json(error_response(400, invalid_json))
     }
 
     // check if note to be updated exists
     note_to_update := sql app.db {
         select from Note where id == id
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
 
-    if note_to_update.id != id {
-        app.set_status(404, 'Not Found')
-        er := CustomResponse{404, note_not_found}
-        return app.json(er.to_json())
+    if note_to_update.len == 0 {
+        ctx.res.set_status(.not_found)
+        return ctx.json(error_response(404, note_not_found))
     }
 
     // before update, we must ensure the note's message is unique
@@ -5633,17 +8817,22 @@ fn (mut app App) update(id int) vweb.Result {
     // message == n.message for unique check
     res := sql app.db {
         select from Note where message == n.message && id != id
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
 
     if res.len > 0 {
-        app.set_status(400, 'Bad Request')
-        er := CustomResponse{400, unique_message}
-        return app.json(er.to_json())
+        ctx.res.set_status(.bad_request)
+        return ctx.json(error_response(400, unique_message))
     }
 
     // update the note
     sql app.db {
         update Note set message = n.message, status = n.status where id == id
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
 
     // build the updated note using the :id and request body
@@ -5651,19 +8840,21 @@ fn (mut app App) update(id int) vweb.Result {
     updated_note := Note{id, n.message, n.status}
 
     ret := json.encode(updated_note)
-    app.set_status(200, 'OK')
-    return app.json(ret)
+    ctx.res.set_status(.ok)
+    return ctx.json(ret)
 }
 
-['/notes/:id'; delete]
-fn (mut app App) delete(id int) vweb.Result {
+@['/notes/:id'; delete]
+fn (mut app App) delete(mut ctx Context, id int) veb.Result {
     sql app.db {
         delete from Note where id == id
+    } or {
+        ctx.res.set_status(.internal_server_error)
+        return ctx.json(error_response(500, err.msg()))
     }
-    app.set_status(204, 'No Content')
-    return app.ok('')
+    ctx.res.set_status(.no_content)
+    return ctx.ok('')
 }
-
 ```
 
 #### Util
@@ -5677,21 +8868,23 @@ module main
 
 import json
 
-struct CustomResponse {
+struct NotesResponse {
     status  int
     message string
 }
 
-fn (c CustomResponse) to_json() string {
+fn (c NotesResponse) to_json() string {
     return json.encode(c)
 }
 
-const (
-    invalid_json   = 'Invalid JSON Payload'
-    note_not_found = 'Note not found'
-    unique_message = 'Please provide a unique message for Note'
-)
+const invalid_json = 'Invalid JSON Payload'
+const note_not_found = 'Note not found'
+const unique_message = 'Please provide a unique message for Note'
 
+fn error_response(status int, message string) string {
+    er := NotesResponse{status, message}
+    return er.to_json()
+}
 ```
 
 ## Language Updates And Stdlib
@@ -6454,6 +9647,65 @@ fn main() {
 
 ```
 
+#### Command Line Arguments
+
+_File location: `language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v`_
+
+This example demonstrates how to directly access and parse command-line arguments using `os.args` to build simple command-line applications.
+
+```v
+module main
+
+import os
+
+fn main() {
+	// os.args is a []string containing all command line arguments.
+	// os.args[0] is always the name of the executable (or the script path if run via v run).
+	// os.args[1..] contains the actual command-line arguments passed to the program.
+	println('Executable / script path: ${os.args[0]}')
+	println('Total arguments count:    ${os.args.len}')
+	println('All arguments list:       ${os.args}')
+
+	if os.args.len < 2 {
+		println('\nUsage: v run command_line_arguments.v <command> [arguments...]')
+		println('Try running: v run command_line_arguments.v greet Alice')
+		println('Try running: v run command_line_arguments.v sum 3 5 8')
+		return
+	}
+
+	command := os.args[1]
+	args := os.args[2..]
+
+	println('\nProcessing command: "${command}" with args: ${args}')
+
+	match command {
+		'greet' {
+			if args.len < 1 {
+				println('Error: greet command requires a name.')
+				return
+			}
+			name := args[0]
+			println('Hello, ${name}!')
+		}
+		'sum' {
+			if args.len < 1 {
+				println('Error: sum command requires at least one number.')
+				return
+			}
+			mut total := 0
+			for arg in args {
+				num := arg.int()
+				total += num
+			}
+			println('Sum of numbers: ${total}')
+		}
+		else {
+			println('Unknown command: "${command}". Allowed commands: "greet", "sum".')
+		}
+	}
+}
+```
+
 #### Time And Stopwatch
 
 _File location: `language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v`_
@@ -6491,7 +9743,1552 @@ fn main() {
     elapsed := sw.elapsed()
     println('Elapsed time: ${elapsed.milliseconds()} ms')
 }
+```
 
+#### Math And Rand
+
+_File location: `language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v`_
+
+This example demonstrates the concepts of **math and rand**.
+
+```v
+module main
+
+import math
+import rand
+
+fn main() {
+	println('=== Math & Rand Module Examples ===')
+
+	// --- math ---
+	println('\n--- math ---')
+	println('Pi constant: ${math.pi}')
+	println('E constant:  ${math.e}')
+	
+	// Trigonometry
+	angle := 45.0 * (math.pi / 180.0) // 45 degrees in radians
+	println('sin(45 deg): ${math.sin(angle):.4f}')
+	println('cos(45 deg): ${math.cos(angle):.4f}')
+	println('tan(45 deg): ${math.tan(angle):.4f}')
+
+	// Power, Square Root, Logarithms
+	println('2^10:        ${math.pow(2.0, 10.0)}')
+	println('sqrt(144):   ${math.sqrt(144.0)}')
+	println('ln(e):       ${math.log(math.e)}')
+	println('log10(100):  ${math.log10(100.0)}')
+
+	// Absolute, Min/Max, Rounding
+	println('abs(-5.5):   ${math.abs(-5.5)}')
+	println('max(10, 20): ${math.max(10.0, 20.0)}')
+	println('min(10, 20): ${math.min(10.0, 20.0)}')
+	println('ceil(4.2):   ${math.ceil(4.2)}')
+	println('floor(4.8):  ${math.floor(4.8)}')
+	println('round(4.5):  ${math.round(4.5)}')
+
+	// --- rand ---
+	println('\n--- rand ---')
+	// Random integers and floats
+	random_int := rand.int_in_range(1, 100) or { 0 }
+	println('Random integer in [1, 100): ${random_int}')
+
+	random_f64 := rand.f64()
+	println('Random f64 in [0.0, 1.0):   ${random_f64:.4f}')
+
+	// Random boolean simulated using rand.intn
+	random_bool := (rand.intn(2) or { 0 }) == 0
+	println('Random boolean:             ${random_bool}')
+
+	// Choosing a random element from an array
+	items := ['Apple', 'Banana', 'Cherry', 'Date']
+	chosen := rand.element(items) or { 'None' }
+	println('Randomly chosen fruit:      ${chosen}')
+
+	// Random UUID generation (commonly used)
+	uuid_str := rand.uuid_v4()
+	println('Random UUID v4:             ${uuid_str}')
+}
+```
+
+#### Log And Crypto
+
+_File location: `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v`_
+
+This example demonstrates the concepts of **log and crypto**.
+
+```v
+module main
+
+import log
+import crypto.sha256
+import crypto.md5
+
+fn main() {
+	println('=== Log & Crypto Module Examples ===')
+
+	// --- log ---
+	println('\n--- log ---')
+	// V's log module provides customizable levels (debug, info, warn, error, fatal)
+	mut logger := log.Log{}
+	logger.set_level(.info) // Set threshold (ignores debug level)
+	
+	logger.info('Logger initialized.')
+	logger.warn('This is a warning message.')
+	logger.error('This is an error message.')
+
+	// --- crypto ---
+	println('\n--- crypto ---')
+	input := 'V language standard library'
+	
+	// SHA256 Hash
+	sha_hash := sha256.hexhash(input)
+	println('SHA-256 of "${input}":')
+	println('  ${sha_hash}')
+
+	// MD5 Hash
+	md5_hash := md5.hexhash(input)
+	println('MD5 of "${input}":')
+	println('  ${md5_hash}')
+}
+```
+
+#### Sync Concurrency
+
+_File location: `language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v`_
+
+This example demonstrates the concepts of **sync concurrency**.
+
+```v
+module main
+
+import sync
+import time
+
+fn worker(id int, mut wg sync.WaitGroup) {
+	defer {
+		wg.done()
+	}
+	println('Worker ${id} starting...')
+	time.sleep(50 * time.millisecond)
+	println('Worker ${id} done!')
+}
+
+fn main() {
+	println('=== Sync & Concurrency Examples ===')
+
+	// 1. WaitGroup (Wait for multiple goroutines/tasks)
+	mut wg := sync.new_waitgroup()
+	for i in 1 .. 4 {
+		wg.add(1)
+		go worker(i, mut wg)
+	}
+	wg.wait()
+	println('All workers completed!')
+
+	// 2. Mutex (Thread-safe shared state access)
+	println('\n=== Mutex Demo ===')
+	mut mu := sync.new_mutex()
+	mu.@lock()
+	println('Mutex locked')
+	mu.unlock()
+	println('Mutex unlocked')
+}
+```
+
+#### Encoding Formats
+
+_File location: `language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v`_
+
+This example demonstrates the concepts of **encoding formats**.
+
+```v
+module main
+
+import encoding.base64
+import encoding.hex
+import encoding.csv
+
+fn main() {
+	println('=== Encoding Modules Examples ===')
+
+	// --- 1. Base64 ---
+	println('\n--- Base64 ---')
+	raw_str := 'V Programming Language'
+	encoded_b64 := base64.encode_str(raw_str)
+	println('Encoded Base64: ${encoded_b64}')
+
+	decoded_b64 := base64.decode_str(encoded_b64)
+	println('Decoded Base64: ${decoded_b64}')
+
+	// --- 2. Hex ---
+	println('\n--- Hex ---')
+	raw_bytes := [u8(72), 101, 108, 108, 111] // "Hello"
+	encoded_hex := hex.encode(raw_bytes)
+	println('Encoded Hex:    ${encoded_hex}')
+
+	decoded_hex := hex.decode(encoded_hex) or { []u8{} }
+	println('Decoded Hex:    ${decoded_hex.bytestr()}')
+
+	// --- 3. CSV ---
+	println('\n--- CSV ---')
+	csv_data := 'Name,Age,City\nAlice,30,New York\nBob,25,San Francisco'
+	
+	mut reader := csv.new_reader(csv_data)
+	println('Reading CSV rows:')
+	for {
+		row := reader.read() or { break }
+		println('  Row: ${row}')
+	}
+}
+```
+
+#### Arrays Utility
+
+_File location: `language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v`_
+
+This example demonstrates the concepts of **arrays utility**.
+
+```v
+module main
+
+import arrays
+
+fn main() {
+	println('=== arrays Utility Module Examples ===')
+
+	nums := [5, 3, 9, 1, 7, 3]
+
+	// Find min and max
+	min_val := arrays.min(nums) or { 0 }
+	max_val := arrays.max(nums) or { 0 }
+	println('Array: ${nums}')
+	println('Min:   ${min_val}') // 1
+	println('Max:   ${max_val}') // 9
+
+	// Find index of min/max
+	min_idx := arrays.idx_min(nums) or { -1 }
+	max_idx := arrays.idx_max(nums) or { -1 }
+	println('Index of Min: ${min_idx}') // 3
+	println('Index of Max: ${max_idx}') // 2
+
+	// Chunking
+	chunked := arrays.chunk(nums, 2)
+	println('Chunked into sizes of 2: ${chunked}') // [[5, 3], [9, 1], [7, 3]]
+
+	// Uniq (remove consecutive duplicates)
+	consecutive_dups := [1, 1, 2, 2, 3, 1, 1]
+	unique := arrays.uniq(consecutive_dups)
+	println('Consecutive duplicates array: ${consecutive_dups}')
+	println('After uniq():                 ${unique}') // [1, 2, 3, 1]
+}
+```
+
+#### GG Graphics
+
+_File location: `language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v`_
+
+This example demonstrates the concepts of **gg graphics** using V's simple graphics module. It shows how to initialize a window, define an application state struct, draw various 2D shapes (rectangles, circles, triangles, polygons, lines), render formatted text, and intercept keyboard and mouse event inputs.
+
+```v
+module main
+
+import gg
+import math
+
+// AppContext holds the state of our graphical application.
+// Using a state struct is a recommended best practice for gg applications
+// to avoid global variables (which V does not support by default).
+struct AppContext {
+mut:
+	ctx          &gg.Context = unsafe { nil }
+	width        int  = 800
+	height       int  = 600
+	// Interactive shape parameters
+	shape_x      f32  = 400.0
+	shape_y      f32  = 300.0
+	shape_size   f32  = 50.0
+	shape_color  gg.Color = gg.blue
+	active_shape int  // 0 = Circle, 1 = Rectangle, 2 = Triangle
+	// Tracking mouse positions and clicks
+	mouse_x      f32
+	mouse_y      f32
+	click_x      f32  = -1.0
+	click_y      f32  = -1.0
+	click_color  gg.Color = gg.red
+	// Last key pressed message
+	last_key     string = 'None'
+}
+
+fn main() {
+	// Initialize state
+	mut app := &AppContext{
+		width: 800
+		height: 600
+	}
+
+	// Create a new gg context.
+	// You specify callbacks for rendering frames, processing events,
+	// and cleanups, along with initial window configurations.
+	app.ctx = gg.new_context(
+		width:        app.width
+		height:       app.height
+		window_title: "V's gg graphics module: Tutorial & Interactive Demo"
+		bg_color:     gg.rgb(240, 244, 248) // A subtle modern light-blue background
+		user_data:    app                 // Pass our state struct to be accessible inside callbacks
+		frame_fn:     frame               // Callback called once per frame (to draw shapes/UI)
+		event_fn:     on_event            // Callback called for user inputs (mouse & keyboard)
+	)
+
+	println('Starting interactive graphics window...')
+	println('Controls:')
+	println('  - Move the mouse to see cursor position tracking.')
+	println('  - Left-Click anywhere to draw a red dot at the click location.')
+	println('  - Use Arrow Keys (Up/Down/Left/Right) to move the active shape.')
+	println('  - Press [C] or [c] to cycle the active shape\'s color.')
+	println('  - Press [S] or [s] to toggle between Circle, Rectangle, and Triangle.')
+	println('  - Press [Escape] to close the window.')
+	println('\nReal-world Case Study:')
+	println('  - Check out a complete journaling application built with gg:')
+	println('    https://github.com/codecaine-zz/MindSpace-Journal')
+
+	// Start the application main event loop.
+	app.ctx.run()
+}
+
+// frame is the drawing function called per frame.
+// All rendering code MUST reside between ctx.begin() and ctx.end().
+fn frame(data voidptr) {
+	mut app := unsafe { &AppContext(data) }
+	mut ctx := app.ctx
+	ctx.begin()
+
+	// --- 1. Draw Static 2D Shapes ---
+	
+	// Draw a thick horizontal line dividing the header from the demo workspace
+	ctx.draw_line(0, 80, app.width, 80, gg.gray)
+
+	// Draw a filled rectangle (Left)
+	ctx.draw_rect_filled(50, 120, 120, 80, gg.green)
+	// Draw an empty/outline rectangle just next to it
+	ctx.draw_rect_empty(200, 120, 120, 80, gg.dark_gray)
+
+	// Draw a filled circle (Middle-Left)
+	ctx.draw_circle_filled(430, 160, 45, gg.orange)
+	// Draw an empty/outline circle
+	ctx.draw_circle_empty(560, 160, 45, gg.purple)
+
+	// Draw a filled triangle (Middle-Right)
+	ctx.draw_triangle_filled(700, 115, 750, 205, 650, 205, gg.pink)
+
+	// Draw a custom convex polygon (a star-like pentagon, bottom right)
+	poly_points := [
+		f32(650.0), 480.0, // Point 1
+		750.0, 480.0,      // Point 2
+		780.0, 560.0,      // Point 3
+		700.0, 520.0,      // Point 4
+		620.0, 560.0       // Point 5
+	]
+	ctx.draw_convex_poly(poly_points, gg.cyan)
+
+	// --- 2. Render Text using custom configurations (TextCfg) ---
+
+	// Main Title with default configuration
+	ctx.draw_text_def(20, 15, "Welcome to V's Simple Graphics (gg) Tutorial!")
+
+	// Instructions and state metadata at the top right
+	ctx.draw_text(20, 45, 'Cursor: (${app.mouse_x:.1f}, ${app.mouse_y:.1f}) | Last Key: ${app.last_key}',
+		color: gg.dark_blue
+		size: 16
+		bold: true
+	)
+
+	// Context description
+	ctx.draw_text(50, 215, 'Filled & Empty Rectangles', size: 12, color: gg.dark_gray)
+	ctx.draw_text(400, 215, 'Filled & Empty Circles', size: 12, color: gg.dark_gray)
+	ctx.draw_text(650, 215, 'Filled Triangle', size: 12, color: gg.dark_gray)
+	ctx.draw_text(630, 570, 'Convex Polygon (Pentagon)', size: 12, color: gg.dark_gray)
+
+	// Help panel explaining key bindings
+	ctx.draw_rect_filled(20, 440, 280, 140, gg.Color{r: 255, g: 255, b: 255, a: 180})
+	ctx.draw_rect_empty(20, 440, 280, 140, gg.gray)
+	ctx.draw_text(35, 450, 'Controls Panel', size: 15, bold: true, color: gg.black)
+	ctx.draw_text(35, 475, '- Arrows: Move active shape', size: 13, color: gg.black)
+	ctx.draw_text(35, 495, '- C: Cycle shape color', size: 13, color: gg.black)
+	ctx.draw_text(35, 515, '- S: Switch shape type', size: 13, color: gg.black)
+	ctx.draw_text(35, 535, '- Mouse Click: Draw a dot', size: 13, color: gg.black)
+	ctx.draw_text(35, 555, '- Escape: Quit application', size: 13, color: gg.black)
+
+	// Case Study reference
+	ctx.draw_text(20, 585, 'Case Study: github.com/codecaine-zz/MindSpace-Journal', size: 10, italic: true, color: gg.dark_blue)
+
+	// --- 3. Draw Dynamic / Interactive Elements ---
+
+	// Draw a dot where the user clicked, if a click has occurred
+	if app.click_x >= 0.0 {
+		ctx.draw_circle_filled(app.click_x, app.click_y, 8, app.click_color)
+		ctx.draw_circle_empty(app.click_x, app.click_y, 12, gg.black)
+		ctx.draw_text(int(app.click_x) + 12, int(app.click_y) - 6, 'Last Click: (${app.click_x:.0f}, ${app.click_y:.0f})',
+			size: 11
+			color: gg.black
+		)
+	}
+
+	// Draw the active shape controlled by the user
+	match app.active_shape {
+		0 {
+			// Draw interactive Circle
+			ctx.draw_circle_filled(app.shape_x, app.shape_y, app.shape_size, app.shape_color)
+			ctx.draw_circle_empty(app.shape_x, app.shape_y, app.shape_size, gg.black)
+		}
+		1 {
+			// Draw interactive Rectangle (centered on coordinates)
+			half := app.shape_size
+			ctx.draw_rect_filled(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, app.shape_color)
+			ctx.draw_rect_empty(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, gg.black)
+		}
+		2 {
+			// Draw interactive Equilateral Triangle (centered on coordinates)
+			// Using trigonometry to draw an equilateral triangle of size `shape_size`
+			h := app.shape_size * f32(math.sqrt(3.0)) / 2.0
+			x1 := app.shape_x
+			y1 := app.shape_y - (2.0 / 3.0) * h
+			x2 := app.shape_x - app.shape_size
+			y2 := app.shape_y + (1.0 / 3.0) * h
+			x3 := app.shape_x + app.shape_size
+			y3 := app.shape_y + (1.0 / 3.0) * h
+			ctx.draw_triangle_filled(x1, y1, x2, y2, x3, y3, app.shape_color)
+		}
+		else {}
+	}
+
+	// Draw label above the active shape
+	ctx.draw_text(int(app.shape_x) - 40, int(app.shape_y) - int(app.shape_size) - 20, 'Active Shape',
+		size: 13
+		bold: true
+		color: gg.black
+	)
+
+	ctx.end()
+}
+
+// on_event intercepts and handles all system-level user inputs.
+fn on_event(e &gg.Event, data voidptr) {
+	mut app := unsafe { &AppContext(data) }
+	mut ctx := app.ctx
+
+	match e.typ {
+		.mouse_move {
+			app.mouse_x = e.mouse_x
+			app.mouse_y = e.mouse_y
+		}
+		.mouse_down {
+			app.click_x = e.mouse_x
+			app.click_y = e.mouse_y
+			// Randomize click dot color slightly for visual variety
+			if app.click_color.r == 255 {
+				app.click_color = gg.Color{r: 0, g: 180, b: 0, a: 255}
+			} else {
+				app.click_color = gg.red
+			}
+		}
+		.key_down {
+			app.last_key = e.key_code.str()
+
+			match e.key_code {
+				.escape {
+					ctx.quit()
+				}
+				// Change Color when 'C' or 'c' is pressed
+				.c {
+					if app.shape_color.r == 0 && app.shape_color.b == 255 { // blue -> red
+						app.shape_color = gg.red
+					} else if app.shape_color.r == 255 && app.shape_color.g == 0 { // red -> green
+						app.shape_color = gg.green
+					} else { // green -> blue
+						app.shape_color = gg.blue
+					}
+				}
+				// Toggle shape type when 'S' or 's' is pressed
+				.s {
+					app.active_shape = (app.active_shape + 1) % 3
+				}
+				// Use Arrow Keys to move the active shape
+				.left {
+					app.shape_x -= 15.0
+					if app.shape_x < 0 { app.shape_x = 0 }
+				}
+				.right {
+					app.shape_x += 15.0
+					if app.shape_x > app.width { app.shape_x = f32(app.width) }
+				}
+				.up {
+					app.shape_y -= 15.0
+					if app.shape_y < 80 { app.shape_y = 80 } // Keep below divider line
+				}
+				.down {
+					app.shape_y += 15.0
+					if app.shape_y > app.height { app.shape_y = f32(app.height) }
+				}
+				else {}
+			}
+		}
+		else {}
+}
+}
+```
+
+#### Case Study: MindSpace Journal (Real-World Application)
+
+A great real-world example of using V's `gg` module for a complete GUI application is [MindSpace Journal](https://github.com/codecaine-zz/MindSpace-Journal).
+
+MindSpace Journal is a sleek, local-first personal journaling application built from scratch on V's hardware-accelerated canvas (`gg`/`sokol`). It showcases the following advanced architectural patterns:
+
+1. **Custom Widget Rendering**: Building completely custom GUI components (such as text input fields with cursor blinking and text selection, mood selectors, and scrollbars) using primitive 2D drawing calls (`draw_rect_filled`, `draw_circle_filled`, etc.).
+2. **Advanced Event Routing**: Intercepting and dispatching mouse clicks, mouse moves, scroll wheels, and keyboard inputs (including character code mapping, arrow key navigation, and backspace handling) across custom widgets.
+3. **Dynamic State Management**: Using a single global application state struct passed via the `user_data` pointer to handle context across all rendering and event functions.
+4. **Theme Persistence**: Dynamically recalculating palettes and rendering either Light Mode or Dark Mode layouts on the fly, with configurations and window bounds saved locally via the `json` module.
+5. **Local Database Serialisation**: Storing entries locally as structured JSON data by encoding and decoding structs automatically.
+
+Check out the full repository and source code on GitHub: [MindSpace Journal Repository](https://github.com/codecaine-zz/MindSpace-Journal).
+
+#### TOML Parser
+
+_File location: `language_updates_and_stdlib/02_standard_library/15_toml/toml.v`_
+
+This example demonstrates how to parse and query TOML configuration files using V's built-in `toml` module.
+
+```v
+module main
+
+import toml
+
+const toml_content = '
+# TOML configuration example
+title = "V TOML Demo"
+
+[owner]
+name = "Antigravity AI"
+organization = "Google DeepMind"
+
+[database]
+server = "127.0.0.1"
+ports = [ 5432, 5433 ]
+connection_max = 1000
+enabled = true
+'
+
+fn main() {
+	println('=== TOML Module Demo ===')
+	doc := toml.parse_text(toml_content) or {
+		println('Failed to parse TOML: ${err}')
+		return
+	}
+
+	// 1. Reading basic values using value() and type converters
+	title := doc.value('title').string()
+	println('Project Title: ${title}')
+
+	// 2. Accessing nested tables
+	owner_name := doc.value('owner.name').string()
+	org := doc.value('owner.organization').string()
+	println('Owner: ${owner_name} (${org})')
+
+	// 3. Accessing primitive values
+	server := doc.value('database.server').string()
+	conn_max := doc.value('database.connection_max').int()
+	enabled := doc.value('database.enabled').bool()
+	println('DB Server: ${server} | Connection Max: ${conn_max} | Enabled: ${enabled}')
+
+	// 4. Retrieving array values
+	ports_any := doc.value('database.ports')
+	println('Ports Any: ${ports_any}')
+	
+	// Accessing array elements with query syntax
+	port_0 := doc.value('database.ports[0]').int()
+	port_1 := doc.value('database.ports[1]').int()
+	println('Primary Port: ${port_0} | Secondary Port: ${port_1}')
+
+	// 5. Using default values for non-existing keys
+	db_timeout := doc.value('database.timeout').default_to(30).int()
+	println('Database Timeout (Default): ${db_timeout} seconds')
+
+	// 6. Optional retrieval using value_opt()
+	if db_server := doc.value_opt('database.server') {
+		println('Optional check: Database server key exists. Value = ${db_server.string()}')
+	} else {
+		println('Optional check: Database server key does not exist.')
+	}
+}
+```
+
+#### Strconv (String Conversion)
+
+_File location: `language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v`_
+
+This example demonstrates how to convert strings to numbers, parse numbers in different bases and bit-sizes, and convert numbers back to base string representations using the `strconv` module.
+
+```v
+module main
+
+import strconv
+
+fn main() {
+	println('=== strconv Module Demo ===')
+
+	// 1. Convert string to integer types (with error propagation/handling)
+	val_int := strconv.atoi('12345') or {
+		println('Error parsing int: ${err}')
+		0
+	}
+	println('Parsed int: ${val_int}')
+
+	val_i64 := strconv.atoi64('9223372036854775807') or {
+		println('Error parsing i64: ${err}')
+		0
+	}
+	println('Parsed i64: ${val_i64}')
+
+	// 2. Parse unsigned and specific bases/bit-sizes
+	// parse_int(s string, base int, bit_size int) !i64
+	val_hex := strconv.parse_int('0xff', 0, 64) or {
+		println('Error parsing hex: ${err}')
+		0
+	}
+	println('Parsed hex (0xff in base 0): ${val_hex}')
+
+	val_bin := strconv.parse_uint('101010', 2, 32) or {
+		println('Error parsing binary: ${err}')
+		0
+	}
+	println('Parsed binary (101010 in base 2): ${val_bin}')
+
+	// 3. Convert string to float (atof64)
+	val_f64 := strconv.atof64('3.14159265') or {
+		println('Error parsing f64: ${err}')
+		0.0
+	}
+	println('Parsed float64: ${val_f64}')
+
+	// 4. Convert number to base string representation
+	// format_int(n i64, radix int) string
+	binary_str := strconv.format_int(42, 2)
+	hex_str := strconv.format_int(255, 16)
+	println('42 in binary: ${binary_str}')
+	println('255 in hex:   ${hex_str}')
+}
+```
+
+#### Terminal Styling
+
+_File location: `language_updates_and_stdlib/02_standard_library/17_term/term.v`_
+
+This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, and retrieving the terminal size using the `term` module.
+
+```v
+module main
+
+import term
+
+fn main() {
+	println('=== term Module Demo ===')
+
+	// 1. Get terminal size
+	width, height := term.get_terminal_size()
+	println('Terminal size: ${width} columns x ${height} rows')
+
+	// 2. Colored text helpers
+	println(term.green('This text is green!'))
+	println(term.red('This text is red!'))
+	println(term.yellow('This text is yellow!'))
+	println(term.blue('This text is blue!'))
+
+	// 3. Text styling modifiers
+	println(term.bold('This text is bold!'))
+	println(term.underline('This text is underlined!'))
+	println(term.strikethrough('This text has a strikethrough!'))
+
+	// 4. Background styling
+	println(term.bg_blue(' This has a blue background! '))
+
+	// 5. Message box helper formats
+	println(term.ok_message('Operation succeeded!'))
+	println(term.warn_message('This is a warning!'))
+	println(term.fail_message('Operation failed!'))
+}
+```
+
+#### Benchmark Testing
+
+_File location: `language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v`_
+
+This example demonstrates timing code execution chunks and step-by-step progress benchmarking using the `benchmark` module.
+
+```v
+module main
+
+import benchmark
+import time
+
+fn main() {
+	println('=== benchmark Module Demo ===')
+
+	// Example 1: Using benchmark.start() and measure()
+	println('--- Simple Measurement ---')
+	mut b := benchmark.start()
+	
+	// Simulate work chunk 1
+	time.sleep(50 * time.millisecond)
+	b.measure('Simulated task 1 (50ms sleep)')
+
+	// Simulate work chunk 2
+	time.sleep(100 * time.millisecond)
+	b.measure('Simulated task 2 (100ms sleep)')
+
+	// Example 2: Using structured new_benchmark()
+	println('\n--- Structured Step-by-Step Benchmarking ---')
+	mut bmark := benchmark.new_benchmark()
+	
+	// Step 1: Ok step
+	bmark.step()
+	time.sleep(30 * time.millisecond)
+	bmark.ok()
+	println(bmark.step_message('Step 1 (successful arithmetic)'))
+
+	// Step 2: Failed step demo
+	bmark.step()
+	time.sleep(10 * time.millisecond)
+	bmark.fail()
+	println(bmark.step_message('Step 2 (simulated failure verification)'))
+
+	// Finalize and print results summary
+	bmark.stop()
+	println(bmark.total_message('Final summary of execution stages'))
+}
+```
+
+#### Clipboard Access
+
+_File location: `language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v`_
+
+This example demonstrates writing to and reading from the system clipboard on macOS using the `clipboard` module, including a backup and restore mechanism.
+
+```v
+module main
+
+import clipboard
+
+fn main() {
+	println('=== clipboard Module Demo ===')
+
+	// 1. Initialize clipboard
+	mut cb := clipboard.new()
+	defer {
+		cb.destroy()
+	}
+
+	if !cb.is_available() {
+		println('Clipboard is not available on this platform/session.')
+		return
+	}
+
+	// 2. Backup current clipboard content so we do not overwrite user data permanently
+	original_text := cb.paste()
+	println('Backed up original clipboard text (length: ${original_text.len})')
+
+	// 3. Copy new text to clipboard
+	test_message := 'Hello from Vlang standard library!'
+	println('Copying text to clipboard: "${test_message}"')
+	if cb.copy(test_message) {
+		println('Text successfully copied!')
+	} else {
+		println('Failed to copy text.')
+	}
+
+	// 4. Paste back to verify
+	pasted_text := cb.paste()
+	println('Pasted text from clipboard:  "${pasted_text}"')
+
+	// 5. Restore original clipboard content
+	println('Restoring original clipboard content...')
+	cb.copy(original_text)
+	println('Clipboard restore completed successfully.')
+}
+```
+
+#### Semantic Versioning
+
+_File location: `language_updates_and_stdlib/02_standard_library/20_semver/semver.v`_
+
+This example demonstrates parsing semantic versions and checking constraint satisfaction using the `semver` module.
+
+```v
+module main
+
+import semver
+
+fn main() {
+	println('=== semver Module Demo ===')
+
+	// 1. Parsing semver strings
+	v1 := semver.from('1.5.0-beta.1+build.123') or {
+		println('Failed to parse version: ${err}')
+		return
+	}
+	v2 := semver.from('1.5.0') or {
+		println('Failed to parse version: ${err}')
+		return
+	}
+	v3 := semver.from('2.0.0-rc.1') or {
+		println('Failed to parse version: ${err}')
+		return
+	}
+
+	// 2. Accessing parts of the version struct
+	println('Version 1 components:')
+	println('  Raw string: ${v1.str()}')
+	println('  Major:      ${v1.major}')
+	println('  Minor:      ${v1.minor}')
+	println('  Patch:      ${v1.patch}')
+	println('  Prerelease: ${v1.prerelease}')
+	println('  Build info: ${v1.metadata}')
+
+	// 3. Comparisons using relational operators
+	println('\nVersion Comparisons:')
+	println('  ${v1} < ${v2} ? -> ${v1 < v2}')
+	println('  ${v2} > ${v1} ? -> ${v2 > v1}')
+	println('  ${v3} >= ${v2} ? -> ${v3 >= v2}')
+
+	// 4. Checking against version ranges (constraints)
+	println('\nVersion Constraint Satisfactions:')
+	// Range checking
+	println('  Is ${v2} in range ">=1.0.0 <2.0.0" ? -> ${v2.satisfies('>=1.0.0 <2.0.0')}')
+	println('  Is ${v3} in range ">=1.0.0 <2.0.0" ? -> ${v3.satisfies('>=1.0.0 <2.0.0')}')
+	
+	// Complex constraint checking using logical OR (||)
+	range_query := '^1.4.0 || >=2.0.0'
+	println('  Does ${v2} satisfy "${range_query}"? -> ${v2.satisfies(range_query)}')
+	println('  Does ${v3} satisfy "${range_query}"? -> ${v3.satisfies(range_query)}')
+}
+```
+
+#### Maps Utility
+
+_File location: `language_updates_and_stdlib/02_standard_library/21_maps/maps.v`_
+
+This example demonstrates map utility functions such as filtering, converting map keys and values to arrays, inverting maps, and merging maps using the `maps` module.
+
+```v
+module main
+
+import maps
+
+fn main() {
+	println('=== maps Module Demo ===')
+
+	m1 := {
+		'apple':  1
+		'banana': 2
+		'cherry': 3
+	}
+
+	// 1. Filter elements by condition
+	filtered := maps.filter(m1, fn (k string, v int) bool {
+		return v > 1
+	})
+	println('Filtered (values > 1): ${filtered}')
+
+	// 2. Transform map entries to an array
+	keys_upper := maps.to_array(m1, fn (k string, v int) string {
+		return k.to_upper()
+	})
+	println('Transformed keys to upper array: ${keys_upper}')
+
+	// 3. Invert map (swap keys and values)
+	inverted := maps.invert(m1)
+	println('Inverted map: ${inverted}')
+
+	// 4. Construct a map from an array
+	fruits := ['apple', 'banana', 'cherry']
+	map_from_arr := maps.from_array(fruits)
+	println('Map from array (index to element): ${map_from_arr}')
+
+	// 5. Merge two maps
+	m2 := {
+		'banana': 20
+		'date':   4
+	}
+	merged := maps.merge(m1, m2)
+	println('Merged map (m2 overwrites duplicates): ${merged}')
+
+	// 6. Merge in place (mutates the target map)
+	mut mut_map := {
+		'a': 1
+	}
+	maps.merge_in_place(mut mut_map, {'b': 2, 'c': 3})
+	println('In-place merged map: ${mut_map}')
+}
+```
+
+#### Context Propagation
+
+_File location: `language_updates_and_stdlib/02_standard_library/22_context/context.v`_
+
+This example demonstrates propagating request-scoped values, cancellation signals, and timeouts across thread boundaries using the `context` module.
+
+```v
+module main
+
+import context
+import time
+
+fn main() {
+	println('=== context Module Demo ===')
+
+	// 1. Context with Value
+	// Useful for passing metadata (e.g. Request ID) through call chains
+	mut ctx_bg := context.background()
+	mut ctx_val := context.with_value(ctx_bg, 'request_id', 'REQ-101')
+
+	if req_id := ctx_val.value('request_id') {
+		if req_id is string {
+			println('Request ID in context: ${req_id}')
+		}
+	}
+
+	// 2. Context with Cancellation
+	mut ctx_cancel, cancel := context.with_cancel(mut ctx_val)
+	
+	// Check if canceled
+	println('Before cancel - Done channel is open')
+	cancel() // trigger cancellation
+	
+	// Select block to read from done channel
+	done_ch := ctx_cancel.done()
+	select {
+		_ := <-done_ch {
+			println('Context cancellation detected successfully!')
+		}
+		1 * time.second {
+			println('Timeout waiting for cancellation.')
+		}
+	}
+
+	// 3. Context with Timeout
+	// Abandon execution after a duration
+	mut ctx_timeout, cancel_timeout := context.with_timeout(mut ctx_bg, 50 * time.millisecond)
+	defer {
+		cancel_timeout()
+	}
+
+	println('Waiting for context timeout (50ms)...')
+	start := time.now()
+	timeout_ch := ctx_timeout.done()
+	select {
+		_ := <-timeout_ch {
+			elapsed := time.since(start)
+			println('Timeout triggered after ${elapsed.milliseconds()} ms!')
+		}
+		1 * time.second {
+			println('Error: Timeout did not trigger in time.')
+		}
+	}
+}
+```
+
+#### Net URL Parsing
+
+_File location: `language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v`_
+
+This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
+
+```v
+module main
+
+import net.urllib
+
+fn main() {
+	println('=== net.urllib Module Demo ===')
+
+	// 1. Parsing a URL
+	raw_url := 'https://user:pass@vlang.io:8080/docs/stdlib?lang=v&version=0.5.1#intro'
+	println('Parsing URL: ${raw_url}')
+	
+	u := urllib.parse(raw_url) or {
+		println('Failed to parse URL: ${err}')
+		return
+	}
+
+	println('Parsed URL parts:')
+	println('  Scheme:   ${u.scheme}')
+	println('  Host:     ${u.host}')
+	println('  Path:     ${u.path}')
+	println('  Query:    ${u.raw_query}')
+	println('  Fragment: ${u.fragment}')
+
+	// 2. Query escaping and unescaping
+	original_query := 'V compiler version 0.5.1 & details'
+	escaped := urllib.query_escape(original_query)
+	unescaped := urllib.query_unescape(escaped) or { 'failed' }
+
+	println('\nQuery Escaping:')
+	println('  Original:  ${original_query}')
+	println('  Escaped:   ${escaped}')
+	println('  Unescaped: ${unescaped}')
+
+	// 3. Managing Query Parameters using urllib.Values
+	println('\nManaging Query Values:')
+	mut query_params := urllib.new_values()
+	query_params.add('format', 'json')
+	query_params.add('tags', 'programming')
+	query_params.add('tags', 'tutorial')
+	query_params.set('version', '0.5.1')
+
+	// Encode to raw query string
+	encoded_query := query_params.encode()
+	println('  Encoded query string: ${encoded_query}')
+
+	// Parse it back
+	parsed_params := urllib.parse_query(encoded_query) or { urllib.new_values() }
+	println('  Parsed format tag:    ${parsed_params.get('format') or { 'none' }}')
+	println('  Parsed tags:          ${parsed_params.get_all('tags')}')
+}
+```
+
+#### Net WebSockets
+
+_File location: `language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v`_
+
+This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
+
+```v
+module main
+
+import net.websocket
+import time
+
+fn main() {
+	println('=== net.websocket Module Demo ===')
+
+	port := 30099
+	uri := 'ws://localhost:${port}'
+
+	// 1. Initialize and run a local WebSocket server in a separate thread
+	mut ws_server := websocket.new_server(.ip, port, '/')
+	
+	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
+		println('Server: Client connecting from ${s.client_key}')
+		return true
+	})!
+
+	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
+		if msg.opcode == .text_frame {
+			payload := msg.payload.bytestr()
+			println('Server received text: "${payload}"')
+			
+			// Echo message back to client
+			ws.write_string('Echo: ' + payload)!
+		}
+	})
+
+	// Run the server listening loop in a background thread
+	spawn fn [mut ws_server] () {
+		ws_server.listen() or {
+			println('Server error: ${err}')
+		}
+	}()
+
+	// Allow the server a moment to start
+	time.sleep(100 * time.millisecond)
+
+	// 2. Initialize the WebSocket client
+	mut ws_client := websocket.new_client(uri) or {
+		println('Client init failed: ${err}')
+		return
+	}
+
+	ws_client.on_open(fn (mut c websocket.Client) ! {
+		println('Client: Connection opened!')
+	})
+
+	ws_client.on_message(fn (mut c websocket.Client, msg &websocket.Message) ! {
+		if msg.opcode == .text_frame {
+			payload := msg.payload.bytestr()
+			println('Client received text response: "${payload}"')
+		}
+	})
+
+	ws_client.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client error: ${error_msg}')
+	})
+
+	// 3. Connect and run the client
+	ws_client.connect() or {
+		println('Client failed to connect: ${err}')
+		return
+	}
+
+	// Start the client listen loop in a background thread
+	spawn ws_client.listen()
+
+	// 4. Send a test message
+	time.sleep(50 * time.millisecond)
+	msg_to_send := 'Hello WebSocket Server!'
+	println('Client sending: "${msg_to_send}"')
+	ws_client.write_string(msg_to_send) or {
+		println('Client failed to send: ${err}')
+	}
+
+	// Wait for echo to arrive
+	time.sleep(200 * time.millisecond)
+
+	// Clean close
+	println('Client closing connection...')
+	ws_client.close(1000, 'Done') or {
+		println('Client close error: ${err}')
+	}
+	time.sleep(50 * time.millisecond)
+	println('WebSocket Demo finished.')
+}
+```
+
+#### Tar Archiving
+
+_File location: `language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v`_
+
+This example demonstrates reading and inspecting the contents of `.tar.gz` files using the `archive.tar` module.
+
+```v
+module main
+
+import archive.tar
+import os
+
+// CustomReader implements the tar.Reader interface
+struct CustomReader {
+pub mut:
+	files_found int
+}
+
+fn (mut cr CustomReader) dir_block(mut read tar.Read, size u64) {
+	println('Directory in tar: ${read.get_path()}')
+}
+
+fn (mut cr CustomReader) file_block(mut read tar.Read, size u64) {
+	println('File in tar:      ${read.get_path()} (${size} bytes)')
+	cr.files_found++
+}
+
+fn (mut cr CustomReader) data_block(mut read tar.Read, data []u8, pending int) {
+	// Trim content bytes to display them cleanly
+	content := data.bytestr().trim_space()
+	println('  Content snippet: "${content}"')
+}
+
+fn (mut cr CustomReader) other_block(mut read tar.Read, details string) {
+	// Ignore details for this demo
+}
+
+fn main() {
+	println('=== archive.tar Module Demo ===')
+
+	// 1. Create a dummy file to archive
+	temp_file := 'temp_file_for_tar.txt'
+	os.write_file(temp_file, 'Hello standard archive tar from Vlang!') or {
+		println('Failed to write temp file: ${err}')
+		return
+	}
+	defer {
+		os.rm(temp_file) or {}
+	}
+
+	// 2. Create the tar.gz archive using system tar
+	tar_archive := 'temp_archive.tar.gz'
+	println('Creating tar archive using system tar...')
+	tar_cmd := if os.user_os() == 'macos' { 'COPYFILE_DISABLE=1 tar -czf' } else { 'tar -czf' }
+	os.execute('${tar_cmd} ${tar_archive} ${temp_file}')
+	defer {
+		os.rm(tar_archive) or {}
+	}
+
+	// 3. Read and parse the tar.gz archive using V's archive.tar module
+	println('Reading archive using vlib/archive/tar:')
+	mut reader := CustomReader{}
+	
+	// Read and parse
+	tar.read_tar_gz_file(tar_archive, reader) or {
+		println('Failed to read tar archive: ${err}')
+		return
+	}
+
+	println('Total files found in archive: ${reader.files_found}')
+}
+```
+
+#### Gzip Compression
+
+_File location: `language_updates_and_stdlib/02_standard_library/27_compress_gzip/compress_gzip.v`_
+
+This example demonstrates compressing and decompressing binary or text data using the `compress.gzip` module.
+
+```v
+module main
+
+import compress.gzip
+
+fn main() {
+	println('=== compress.gzip Module Demo ===')
+
+	// 1. Original text data
+	original_text := 'V programming language standard library gzip compression and decompression demonstration. This string is long enough to show compression.'
+	println('Original Text length: ${original_text.len} bytes')
+
+	// 2. Compress the data
+	compressed_bytes := gzip.compress(original_text.bytes()) or {
+		println('Compression failed: ${err}')
+		return
+	}
+	println('Compressed size:      ${compressed_bytes.len} bytes')
+
+	// 3. Decompress the data
+	decompressed_bytes := gzip.decompress(compressed_bytes) or {
+		println('Decompression failed: ${err}')
+		return
+	}
+	println('Decompressed size:    ${decompressed_bytes.len} bytes')
+
+	// 4. Convert back to string and verify
+	decompressed_text := decompressed_bytes.bytestr()
+	println('Decompressed text equals original? -> ${decompressed_text == original_text}')
+	println('Decompressed Text: "${decompressed_text}"')
+}
+```
+
+#### IO Stream Interfaces
+
+_File location: `language_updates_and_stdlib/02_standard_library/28_io/io.v`_
+
+This example demonstrates implementing custom Reader and Writer structs and using the `io.cp` utility to copy data between streams using the `io` module.
+
+```v
+module main
+
+import io
+
+// SimpleReader implements the io.Reader interface
+struct SimpleReader {
+	data string
+mut:
+	pos int
+}
+
+fn (mut sr SimpleReader) read(mut buf []u8) !int {
+	if sr.pos >= sr.data.len {
+		// Return io.Eof when the end of the stream is reached
+		return io.Eof{}
+	}
+	mut bytes_read := 0
+	for sr.pos < sr.data.len && bytes_read < buf.len {
+		buf[bytes_read] = sr.data[sr.pos]
+		sr.pos++
+		bytes_read++
+	}
+	return bytes_read
+}
+
+// SimpleWriter implements the io.Writer interface
+struct SimpleWriter {
+mut:
+	buf []u8
+}
+
+fn (mut sw SimpleWriter) write(buf []u8) !int {
+	sw.buf << buf
+	return buf.len
+}
+
+fn main() {
+	println('=== io Module Demo ===')
+
+	// 1. Initialize Reader and Writer
+	mut reader := SimpleReader{
+		data: 'Vlang standard library: io package demo.'
+	}
+	mut writer := SimpleWriter{}
+
+	// 2. Use io.cp to copy data from Reader to Writer
+	println('Copying data from custom Reader to custom Writer via io.cp...')
+	io.cp(mut reader, mut writer) or {
+		println('Error copying data: ${err}')
+		return
+	}
+
+	// 3. Print the written data
+	written_str := writer.buf.bytestr()
+	println('Writer received: "${written_str}"')
+}
+```
+
+#### Hash Functions
+
+_File location: `language_updates_and_stdlib/02_standard_library/29_hash/hash.v`_
+
+This example demonstrates calculating FNV-1a (32-bit and 64-bit) hashes and CRC32 checksums using the `hash` module.
+
+```v
+module main
+
+import hash.fnv1a
+import hash.crc32
+
+fn main() {
+	println('=== hash Module Demo ===')
+
+	input := 'V language standard library'
+	println('Input string: "${input}"')
+
+	// 1. FNV-1a 32-bit and 64-bit string hashing
+	fnv_32 := fnv1a.sum32_string(input)
+	fnv_64 := fnv1a.sum64_string(input)
+	println('FNV-1a 32-bit hash: ${fnv_32}')
+	println('FNV-1a 64-bit hash: ${fnv_64}')
+
+	// 2. CRC32 IEEE checksum
+	crc_val := crc32.sum(input.bytes())
+	println('CRC32 checksum:     ${crc_val}')
+}
+```
+
+#### Bitfield Manipulation
+
+_File location: `language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v`_
+
+This example demonstrates creating bitfields, getting/setting individual bits, performing logical operations (AND, OR, XOR, NOT), and converting to string representation using the `bitfield` module.
+
+```v
+module main
+
+import bitfield
+
+fn main() {
+	println('=== bitfield Module Demo ===')
+
+	// 1. Create bitfield from string
+	mut bf1 := bitfield.from_str('101100')
+	println('BitField 1 (from str):  ${bf1.str()}')
+	println('Size of BitField 1:      ${bf1.get_size()}')
+	println('Number of 1s (pop_count): ${bf1.pop_count()}')
+
+	// 2. Accessing and modifying individual bits
+	println('\nModifying individual bits:')
+	println('  Bit at index 1 before:  ${bf1.get_bit(1)}')
+	bf1.set_bit(1)
+	println('  Bit at index 1 after set: ${bf1.get_bit(1)}')
+	bf1.clear_bit(0)
+	println('  Bitfield after changes: ${bf1.str()}')
+
+	// 3. Logical bitwise operations
+	mut bf2 := bitfield.from_str('011010')
+	println('\nLogical operations on ${bf1.str()} and ${bf2.str()}:')
+	
+	and_result := bitfield.bf_and(bf1, bf2)
+	or_result  := bitfield.bf_or(bf1, bf2)
+	xor_result := bitfield.bf_xor(bf1, bf2)
+	not_result := bitfield.bf_not(bf1)
+
+	println('  AND: ${and_result.str()}')
+	println('  OR:  ${or_result.str()}')
+	println('  XOR: ${xor_result.str()}')
+	println('  NOT: ${not_result.str()}')
+}
+```
+
+#### CLI Command Builder
+
+_File location: `language_updates_and_stdlib/02_standard_library/31_cli/cli.v`_
+
+This example demonstrates building structured CLI applications with commands, subcommands, and option flags in POSIX mode using the `cli` module.
+
+```v
+module main
+
+import cli
+
+fn main() {
+	println('=== cli Module Demo ===')
+
+	mut app := cli.Command{
+		name:        'tool'
+		description: 'A sample CLI tool showing V\'s cli package.'
+		version:     '1.0.0'
+		posix_mode:  true
+		execute:     fn (cmd cli.Command) ! {
+			println('Root command execution. Use --help to see subcommands.')
+		}
+		commands:    [
+			cli.Command{
+				name:        'greet'
+				description: 'Greet a user with custom options'
+				posix_mode:  true
+				execute:     fn (cmd cli.Command) ! {
+					name := cmd.flags.get_string('name') or { 'Guest' }
+					verbose := cmd.flags.get_bool('verbose') or { false }
+					
+					if verbose {
+						println('Log: Initiating greeting process...')
+					}
+					println('Hello, ${name}!')
+				}
+				flags: [
+					cli.Flag{
+						flag:        .string
+						name:        'name'
+						abbrev:      'n'
+						description: 'Name of person to greet'
+					},
+					cli.Flag{
+						flag:        .bool
+						name:        'verbose'
+						abbrev:      'v'
+						description: 'Enable verbose logging'
+					},
+				]
+			},
+		]
+	}
+
+	app.setup()
+	
+	// Test by parsing args mock
+	println('\nParsing args: tool greet --name Antigravity -v')
+	app.parse(['tool', 'greet', '--name', 'Antigravity', '-v'])
+}
+```
+
+#### Veb Web Framework
+
+_File location: `language_updates_and_stdlib/02_standard_library/32_veb/veb.v`_
+
+This example demonstrates building a web application with routes, starting it in a background thread, and testing requests using the modern `veb` web framework.
+
+```v
+module main
+
+import veb
+import net.http
+import time
+
+pub struct Context {
+	veb.Context
+}
+
+pub struct App {
+	secret_key string
+}
+
+// Route handler
+pub fn (app &App) index(mut ctx Context) veb.Result {
+	return ctx.text('Hello from veb web framework!')
+}
+
+fn main() {
+	println('=== veb Web Framework Demo ===')
+
+	mut app := &App{
+		secret_key: 'veb_secret_key'
+	}
+
+	port := 30088
+
+	// Run the web server in a separate thread to avoid blocking the main execution
+	spawn fn [mut app, port] () {
+		println('Starting veb server on port ${port}...')
+		veb.run[App, Context](mut app, port)
+	}()
+
+	// Wait for the server to spin up
+	time.sleep(200 * time.millisecond)
+
+	// Make an HTTP GET request to verify the server is running and responding
+	url := 'http://localhost:${port}/'
+	println('Sending request to: ${url}')
+	
+	resp := http.get(url) or {
+		println('HTTP request failed: ${err}')
+		return
+	}
+
+	println('Response Status Code: ${resp.status_code}')
+	println('Response Body:        "${resp.body}"')
+	println('veb server tested successfully.')
+}
+```
+
+#### Readline Prompt
+
+_File location: `language_updates_and_stdlib/02_standard_library/33_readline/readline.v`_
+
+This example demonstrates prompting users for text input from terminal lines in a structured manner using the `readline` module.
+
+```v
+module main
+
+import readline
+
+fn main() {
+	println('=== readline Module Demo ===')
+
+	mut r := readline.Readline{}
+	println('Simulating readline input (feed via stdin if non-interactive):')
+	
+	// Read a line from standard input
+	line := r.read_line('Enter text: ') or {
+		println('Error or EOF: ${err}')
+		return
+	}
+	println('You entered: "${line}"')
+}
+```
+
+#### Runtime System Info
+
+_File location: `language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v`_
+
+This example demonstrates inspecting hardware specifications, processor cores, system endianness, and memory usage statistics using the `runtime` module.
+
+```v
+module main
+
+import runtime
+
+fn main() {
+	println('=== runtime Module Demo ===')
+
+	// 1. CPU and job info
+	cpus := runtime.nr_cpus()
+	jobs := runtime.nr_jobs()
+	println('CPU Cores:              ${cpus}')
+	println('Concurrent Jobs (VJOBS): ${jobs}')
+
+	// 2. System architecture details
+	println('Is 64-bit architecture?  ${runtime.is_64bit()}')
+	println('Is 32-bit architecture?  ${runtime.is_32bit()}')
+	println('Is Little Endian?        ${runtime.is_little_endian()}')
+	println('Is Big Endian?           ${runtime.is_big_endian()}')
+
+	// 3. Memory statistics
+	total_mem := runtime.total_memory() or { 0 }
+	free_mem := runtime.free_memory() or { 0 }
+	used_mem := runtime.used_memory() or { 0 }
+
+	// Format to megabytes
+	total_mb := total_mem / (1024 * 1024)
+	free_mb := free_mem / (1024 * 1024)
+	used_mb := used_mem / (1024 * 1024)
+
+	println('\nPhysical Memory info:')
+	println('  Total Memory: ${total_mb} MB')
+	println('  Free Memory:  ${free_mb} MB')
+	println('  Used (by App): ${used_mb} MB')
+}
 ```
 
 ---
