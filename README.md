@@ -96,6 +96,39 @@ A modern, feature-rich web application for browsing and viewing markdown-based t
 
 ## ⚙️ Installation & Setup
 
+### Prerequisites
+
+Before setting up the project, ensure you have PHP and Composer installed.
+
+#### Install PHP using Homebrew (macOS)
+
+1. **Install Homebrew** (if not already installed):
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+
+2. **Install PHP**:
+   ```bash
+   brew install php
+   ```
+
+3. **Verify the installation**:
+   ```bash
+   php --version
+   ```
+
+#### Install Composer
+
+If you don't have Composer installed, install it globally:
+```bash
+brew install composer
+```
+
+Verify the installation:
+```bash
+composer --version
+```
+
 ### Setup
 
 1. **Clone the repository**:
