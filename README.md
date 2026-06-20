@@ -100,7 +100,7 @@ A modern, feature-rich web application for browsing and viewing markdown-based t
 
 1. **Clone the repository**:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/codecaine-zz/markdown_tutorials.git
    cd markdown_tutorials
    ```
 
