@@ -25,11 +25,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         rewriteAnchorHrefs(contentDiv);
                         // After rendering, highlight code blocks
                         hljs.highlightAll();
-                        addCopyButtons();
+                        enhanceCodeBlocks();
+                        addHeadingAnchorLinks(contentDiv);
                         wireInPageLinks(contentDiv); // Enable smooth in-page navigation
                         buildTableOfContents(); // Build ToC from headings
                         initTocScrollSpy(); // Highlight active section while scrolling
                         scrollToAnchor(); // Scroll to anchor after content is rendered
+                        updateFloatingToc();
 
                         // Update document title from first heading and record correct history entry
                         try {
@@ -819,6 +821,7 @@ document.addEventListener('DOMContentLoaded', function() {
             articleLayout.classList.add('toc-hidden');
         }
     }
+    window.updateFloatingToc();
         
         // Update button text based on new state
         const toggleBtn = document.getElementById('tocToggle');
@@ -1023,6 +1026,443 @@ document.addEventListener('DOMContentLoaded', function() {
         if ((e.key === '+' || e.key === '=')) { e.preventDefault(); TB.zoomIn && TB.zoomIn.click(); }
         if ((e.key === '-') ) { e.preventDefault(); TB.zoomOut && TB.zoomOut.click(); }
     });
+
+    // ===== SPA Navigation =====
+    function loadPage(url, push = true) {
+        busy.show();
+        fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load page');
+                return res.text();
+            })
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                const newContent = doc.getElementById('contentZoom');
+                const currentContent = document.getElementById('contentZoom');
+                
+                function updateDOM() {
+                    if (newContent && currentContent) {
+                        currentContent.innerHTML = newContent.innerHTML;
+                    }
+                    
+                    document.title = doc.title;
+                    
+                    // Update active sidebar state
+                    const urlObj = new URL(url, window.location.origin);
+                    const pageParam = urlObj.searchParams.get('page') || 'home';
+                    
+                    document.querySelectorAll('#nav-items .nav-item a').forEach(a => {
+                        const aUrl = new URL(a.href, window.location.origin);
+                        const aPage = aUrl.searchParams.get('page') || '';
+                        if (aPage === pageParam) {
+                            a.classList.add('active');
+                            const icon = a.querySelector('i');
+                            if (icon) icon.classList.add('active');
+                        } else {
+                            a.classList.remove('active');
+                            const icon = a.querySelector('i');
+                            if (icon) icon.classList.remove('active');
+                        }
+                    });
+                    
+                    expandCurrentPath();
+                }
+                
+                if (document.startViewTransition) {
+                    const transition = document.startViewTransition(updateDOM);
+                    transition.updateCallbackDone.then(() => {
+                        renderMarkdown();
+                        if (push) {
+                            history.pushState({ url }, '', url);
+                        }
+                        initEnhancedFeatures();
+                        updateFloatingToc();
+                    });
+                } else {
+                    updateDOM();
+                    renderMarkdown();
+                    if (push) {
+                        history.pushState({ url }, '', url);
+                    }
+                    initEnhancedFeatures();
+                    updateFloatingToc();
+                }
+            })
+            .catch(err => {
+                console.error('SPA error:', err);
+                window.location.href = url; // Fallback
+            })
+            .finally(() => busy.hide());
+    }
+
+    // Intercept clicks on links
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a');
+        if (!link) return;
+        
+        // Skip external, target=_blank, and non-page links
+        if (link.target === '_blank' || link.host !== window.location.host) return;
+        
+        const href = link.getAttribute('href') || '';
+        if (href.startsWith('?page=') || href.startsWith('index.php?page=') || href === '') {
+            e.preventDefault();
+            loadPage(link.href);
+        }
+    });
+
+    window.addEventListener('popstate', (e) => {
+        if (e.state && e.state.url) {
+            loadPage(e.state.url, false);
+        } else {
+            loadPage(window.location.href, false);
+        }
+    });
+
+    // ===== Heading Anchors =====
+    function addHeadingAnchorLinks(root) {
+        const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        headings.forEach(h => {
+            if (!h.id) return;
+            if (h.querySelector('.heading-anchor')) return;
+            
+            const anchor = document.createElement('a');
+            anchor.className = 'heading-anchor';
+            anchor.href = `#${h.id}`;
+            anchor.innerHTML = '<i class="fas fa-link"></i>';
+            anchor.title = 'Copy section link';
+            
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const urlObj = new URL(window.location.href);
+                urlObj.hash = h.id;
+                navigator.clipboard.writeText(urlObj.href).then(() => {
+                    showNotification('Copied section link to clipboard!', 'success');
+                });
+            });
+            
+            h.insertBefore(anchor, h.firstChild);
+        });
+    }
+
+    // ===== Code Block Line Numbers & Headers =====
+    function enhanceCodeBlocks() {
+        const codeBlocks = document.querySelectorAll('pre code');
+        codeBlocks.forEach(codeBlock => {
+            const pre = codeBlock.parentNode;
+            if (pre.parentNode.classList.contains('code-block-wrapper')) return;
+            
+            // Detect language
+            let lang = 'code';
+            codeBlock.classList.forEach(cls => {
+                if (cls.startsWith('language-')) {
+                    lang = cls.replace('language-', '');
+                }
+            });
+            
+            // Wrap pre in code-block-wrapper
+            const wrapper = document.createElement('div');
+            wrapper.className = 'code-block-wrapper';
+            pre.parentNode.insertBefore(wrapper, pre);
+            
+            // Code header with copy button
+            const header = document.createElement('div');
+            header.className = 'code-header';
+            header.innerHTML = `
+                <span class="code-language">${lang}</span>
+                <button class="copy-button" type="button"><i class="fas fa-copy"></i> Copy</button>
+            `;
+            wrapper.appendChild(header);
+            wrapper.appendChild(pre);
+            
+            const copyBtn = header.querySelector('.copy-button');
+            copyBtn.addEventListener('click', async () => {
+                const codeToCopy = codeBlock.innerText;
+                try {
+                    await navigator.clipboard.writeText(codeToCopy);
+                    copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    copyBtn.classList.add('copied');
+                    setTimeout(() => {
+                        copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                        copyBtn.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy', err);
+                }
+            });
+            
+            // Line numbers (only if white-space: pre holds)
+            const lines = codeBlock.innerText.split('\n');
+            if (lines.length > 0 && lines[lines.length - 1] === '') {
+                lines.pop();
+            }
+            
+            const lineNumbers = document.createElement('div');
+            lineNumbers.className = 'line-numbers-container';
+            for (let i = 1; i <= lines.length; i++) {
+                const lineNum = document.createElement('span');
+                lineNum.textContent = i;
+                lineNumbers.appendChild(lineNum);
+            }
+            pre.insertBefore(lineNumbers, codeBlock);
+        });
+    }
+
+    // ===== Floating TOC outline popover =====
+    function addFloatingTocElements() {
+        if (document.getElementById('floatingTocBtn')) return;
+        
+        const btn = document.createElement('button');
+        btn.id = 'floatingTocBtn';
+        btn.className = 'floating-toc-btn';
+        btn.title = 'Show Outline';
+        btn.innerHTML = '<i class="fas fa-list"></i>';
+        
+        const menu = document.createElement('div');
+        menu.id = 'floatingTocMenu';
+        menu.className = 'floating-toc-menu';
+        
+        document.body.appendChild(btn);
+        document.body.appendChild(menu);
+        
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.toggle('open');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#floatingTocMenu') && !e.target.closest('#floatingTocBtn')) {
+                menu.classList.remove('open');
+            }
+        });
+    }
+
+    function updateFloatingToc() {
+        const articleLayout = document.querySelector('.article-layout');
+        const isHidden = articleLayout && articleLayout.classList.contains('toc-hidden');
+        const floatingBtn = document.getElementById('floatingTocBtn');
+        const floatingMenu = document.getElementById('floatingTocMenu');
+        if (!floatingBtn || !floatingMenu) return;
+        
+        if (isHidden) {
+            floatingBtn.style.display = 'flex';
+            const tocList = document.querySelector('.table-of-contents .toc-list');
+            if (tocList) {
+                floatingMenu.innerHTML = '<h4 class="floating-toc-title">Outline</h4>' + tocList.outerHTML;
+                floatingMenu.querySelectorAll('.toc-link').forEach(a => {
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const id = decodeURIComponent((a.getAttribute('href') || '').replace('#', ''));
+                        const el = document.getElementById(id) || document.getElementById(`user-content-${id}`);
+                        if (el) {
+                            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            floatingMenu.classList.remove('open');
+                        }
+                    });
+                });
+            }
+        } else {
+            floatingBtn.style.display = 'none';
+            floatingMenu.classList.remove('open');
+        }
+    }
+    window.updateFloatingToc = updateFloatingToc;
+
+    // ===== Global Cmd+K Command Palette =====
+    const paletteCommands = [
+        { title: 'Toggle Light/Dark Theme', subtitle: 'Action', icon: 'fa-moon', action: () => { 
+            const themeBtn = document.getElementById('tbTheme');
+            if (themeBtn) themeBtn.click();
+        }},
+        { title: 'Toggle Table of Contents', subtitle: 'Action', icon: 'fa-list', action: () => {
+            window.toggleTableOfContents();
+        }},
+        { title: 'Zoom In', subtitle: 'Action', icon: 'fa-search-plus', action: () => {
+            const btn = document.getElementById('tbZoomIn');
+            if (btn) btn.click();
+        }},
+        { title: 'Zoom Out', subtitle: 'Action', icon: 'fa-search-minus', action: () => {
+            const btn = document.getElementById('tbZoomOut');
+            if (btn) btn.click();
+        }},
+        { title: 'Go to Home', subtitle: 'Navigation', icon: 'fa-home', action: () => {
+            loadPage('?page=home');
+        }}
+    ];
+
+    function initCommandPalette() {
+        if (document.getElementById('commandPalette')) return;
+        
+        const modal = document.createElement('div');
+        modal.id = 'commandPalette';
+        modal.className = 'command-palette-modal';
+        modal.style.display = 'none';
+        modal.innerHTML = `
+            <div class="command-palette-content">
+                <div class="command-palette-header">
+                    <i class="fas fa-terminal"></i>
+                    <input type="text" id="commandPaletteSearch" placeholder="Type a command or search tutorials..." autocomplete="off">
+                    <kbd>ESC</kbd>
+                </div>
+                <div class="command-palette-results" id="commandPaletteResults"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        const input = document.getElementById('commandPaletteSearch');
+        const resultsContainer = document.getElementById('commandPaletteResults');
+        let selectedIndex = 0;
+        let visibleItems = [];
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) hidePalette();
+        });
+        
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hidePalette();
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedIndex = (selectedIndex + 1) % visibleItems.length;
+                updateSelection();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedIndex = (selectedIndex - 1 + visibleItems.length) % visibleItems.length;
+                updateSelection();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (visibleItems[selectedIndex]) {
+                    visibleItems[selectedIndex].click();
+                }
+            }
+        });
+        
+        input.addEventListener('input', (e) => {
+            renderResults(e.target.value);
+        });
+        
+        function hidePalette() {
+            modal.style.display = 'none';
+            input.value = '';
+        }
+        
+        function showPalette() {
+            modal.style.display = 'flex';
+            input.value = '';
+            input.focus();
+            renderResults('');
+        }
+        
+        function updateSelection() {
+            const itemEls = resultsContainer.querySelectorAll('.command-palette-item');
+            itemEls.forEach((el, idx) => {
+                if (idx === selectedIndex) {
+                    el.classList.add('selected');
+                    el.scrollIntoView({ block: 'nearest' });
+                } else {
+                    el.classList.remove('selected');
+                }
+            });
+        }
+        
+        function renderResults(query) {
+            resultsContainer.innerHTML = '';
+            selectedIndex = 0;
+            visibleItems = [];
+            
+            const q = query.trim().toLowerCase();
+            
+            const filteredCommands = paletteCommands.filter(cmd => 
+                cmd.title.toLowerCase().includes(q) || cmd.subtitle.toLowerCase().includes(q)
+            );
+            
+            if (!allNavItems.length) cacheNavItems();
+            const filteredTutorials = allNavItems.filter(item => 
+                item.title.toLowerCase().includes(q) || item.fullPath.includes(q)
+            );
+            
+            if (filteredCommands.length > 0) {
+                const title = document.createElement('div');
+                title.className = 'command-palette-group-title';
+                title.textContent = 'Commands';
+                resultsContainer.appendChild(title);
+                
+                filteredCommands.forEach(cmd => {
+                    const item = document.createElement('div');
+                    item.className = 'command-palette-item';
+                    item.innerHTML = `
+                        <i class="fas ${cmd.icon}"></i>
+                        <div class="command-palette-item-text">
+                            <span class="command-palette-item-title">${cmd.title}</span>
+                            <span class="command-palette-item-subtitle">${cmd.subtitle}</span>
+                        </div>
+                    `;
+                    item.addEventListener('click', () => {
+                        cmd.action();
+                        hidePalette();
+                    });
+                    resultsContainer.appendChild(item);
+                    visibleItems.push(item);
+                });
+            }
+            
+            if (filteredTutorials.length > 0) {
+                const title = document.createElement('div');
+                title.className = 'command-palette-group-title';
+                title.textContent = 'Tutorials';
+                resultsContainer.appendChild(title);
+                
+                filteredTutorials.forEach(t => {
+                    const item = document.createElement('div');
+                    item.className = 'command-palette-item';
+                    item.innerHTML = `
+                        <i class="fas fa-file-alt"></i>
+                        <div class="command-palette-item-text">
+                            <span class="command-palette-item-title">${t.title}</span>
+                            <span class="command-palette-item-subtitle">${t.path || 'Root'}</span>
+                        </div>
+                    `;
+                    item.addEventListener('click', () => {
+                        loadPage(t.href);
+                        hidePalette();
+                    });
+                    resultsContainer.appendChild(item);
+                    visibleItems.push(item);
+                });
+            }
+            
+            if (visibleItems.length === 0) {
+                resultsContainer.innerHTML = '<div class="command-palette-empty">No results found.</div>';
+            } else {
+                updateSelection();
+            }
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            const cmd = e.metaKey || e.ctrlKey;
+            if (cmd && (e.key === 'k' || e.key === 'K')) {
+                e.preventDefault();
+                showPalette();
+            }
+        });
+        
+        window.showCommandPalette = showPalette;
+    }
+
+    // Initialize scroll progress indicator
+    window.addEventListener('scroll', () => {
+        const progressEl = document.getElementById('scrollProgress');
+        if (progressEl) {
+            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = totalHeight > 0 ? (window.scrollY / totalHeight) * 100 : 0;
+            progressEl.style.width = `${progress}%`;
+        }
+    }, { passive: true });
+
+    addFloatingTocElements();
+    initCommandPalette();
 
     // Initialize enhanced features when content is loaded
     if (document.querySelector('.markdown-content')) {
@@ -1479,6 +1919,9 @@ function restorePreferences() {
             const articleLayout = toc.closest('.article-layout');
             if (articleLayout) {
                 articleLayout.classList.add('toc-hidden');
+            }
+            if (window.updateFloatingToc) {
+                window.updateFloatingToc();
             }
             const toggleBtn = document.getElementById('tocToggle');
             if (toggleBtn) {

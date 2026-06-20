@@ -82,6 +82,9 @@ class MarkdownTutorialApp {
             <script defer src="assets/js/highlight-languages/v.js"></script>
         </head>
         <body>
+            <!-- Scroll Progress Indicator -->
+            <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
+
             <button class="mobile-menu-toggle" onclick="toggleSidebar()">
                 <i class="fas fa-bars"></i>
             </button>

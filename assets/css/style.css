@@ -2559,3 +2559,418 @@ html {
         backdrop-filter: none;
     }
 }
+
+/* Scroll Progress Indicator */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(to right, #3498db, #9b59b6);
+    z-index: 10000;
+    transition: width 0.1s ease-out;
+}
+
+/* Heading Anchors */
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+    position: relative;
+}
+
+.heading-anchor {
+    position: absolute;
+    left: -24px;
+    opacity: 0;
+    color: #3498db;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    font-size: 0.85em;
+    padding-right: 8px;
+}
+
+.markdown-content h1:hover .heading-anchor,
+.markdown-content h2:hover .heading-anchor,
+.markdown-content h3:hover .heading-anchor,
+.markdown-content h4:hover .heading-anchor,
+.markdown-content h5:hover .heading-anchor,
+.markdown-content h6:hover .heading-anchor {
+    opacity: 0.7;
+}
+
+.heading-anchor:hover {
+    opacity: 1 !important;
+}
+
+@media (max-width: 768px) {
+    .heading-anchor {
+        position: static;
+        margin-left: 8px;
+        opacity: 0.4;
+    }
+}
+
+/* Floating TOC */
+.floating-toc-btn {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #27ae60;
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+    transition: all 0.3s ease;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    z-index: 999;
+}
+
+.floating-toc-btn:hover {
+    background: #219653;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.6);
+}
+
+.floating-toc-menu {
+    position: fixed;
+    bottom: 170px;
+    right: 30px;
+    width: 280px;
+    max-height: 400px;
+    background: white;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 998;
+    overflow-y: auto;
+    padding: 15px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+
+.floating-toc-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.floating-toc-title {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid #e1e8ed;
+    padding-bottom: 5px;
+    color: #2c3e50;
+}
+
+.floating-toc-menu .toc-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.floating-toc-menu .toc-item {
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+}
+
+.floating-toc-menu .toc-link {
+    color: #555;
+    text-decoration: none;
+    display: block;
+    padding: 3px 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.floating-toc-menu .toc-link:hover {
+    background: #f1f5f9;
+    color: #3498db;
+}
+
+.floating-toc-menu .toc-nested {
+    padding-left: 15px;
+    list-style: none;
+}
+
+.theme-dark .floating-toc-menu {
+    background: #0b1220;
+    border-color: #1f2937;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.theme-dark .floating-toc-title {
+    color: #e2e8f0;
+    border-bottom-color: #1f2937;
+}
+
+.theme-dark .floating-toc-menu .toc-link {
+    color: #cbd5e1;
+}
+
+.theme-dark .floating-toc-menu .toc-link:hover {
+    background: #1e293b;
+    color: #60a5fa;
+}
+
+/* Code Blocks line numbers & headers */
+.code-block-wrapper {
+    margin: 20px 0;
+    background: #1e293b;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.code-header {
+    background: #0f172a;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #1f2937;
+}
+
+.code-language {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.copy-button {
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #334155;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.copy-button:hover {
+    background: #334155;
+    color: #f8fafc;
+    border-color: #475569;
+}
+
+.copy-button.copied {
+    background: #059669;
+    color: white;
+    border-color: #059669;
+}
+
+.code-block-wrapper pre {
+    position: relative;
+    margin: 0 !important;
+    padding: 16px 16px 16px 56px !important;
+    background: #1e293b !important;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.code-block-wrapper code {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    color: #e2e8f0 !important;
+    display: block;
+}
+
+.line-numbers-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44px;
+    height: 100%;
+    padding: 16px 0 !important;
+    border-right: 1px solid #334155;
+    background: #0f172a;
+    color: #475569;
+    text-align: right;
+    padding-right: 10px !important;
+    user-select: none;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.85rem;
+}
+
+.line-numbers-container span {
+    display: block;
+    line-height: 1.5;
+}
+
+/* Command Palette Modal */
+.command-palette-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+}
+
+.command-palette-content {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.command-palette-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid #e2e8f0;
+    gap: 12px;
+}
+
+.command-palette-header i {
+    color: #64748b;
+    font-size: 1.1rem;
+}
+
+.command-palette-header input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    color: #0f172a;
+    background: transparent;
+}
+
+.command-palette-header kbd {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    color: #64748b;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.1);
+}
+
+.command-palette-results {
+    max-height: 330px;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.command-palette-group-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #64748b;
+    padding: 8px 12px 4px 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.command-palette-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #334155;
+    transition: all 0.15s ease;
+    text-decoration: none;
+}
+
+.command-palette-item i {
+    width: 16px;
+    text-align: center;
+    color: #64748b;
+}
+
+.command-palette-item-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.command-palette-item-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.command-palette-item-subtitle {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.command-palette-item.selected {
+    background: #3498db;
+    color: #ffffff;
+}
+
+.command-palette-item.selected i,
+.command-palette-item.selected .command-palette-item-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.command-palette-empty {
+    padding: 24px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.theme-dark .command-palette-content {
+    background: #0f172a;
+    border-color: #1f2937;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.theme-dark .command-palette-header {
+    border-bottom-color: #1f2937;
+}
+
+.theme-dark .command-palette-header input {
+    color: #e2e8f0;
+}
+
+.theme-dark .command-palette-header kbd {
+    background: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+.theme-dark .command-palette-item {
+    color: #cbd5e1;
+}
+
+.theme-dark .command-palette-item i {
+    color: #94a3b8;
+}
+
+.theme-dark .command-palette-item.selected {
+    background: #2563eb;
+    color: #ffffff;
+}
