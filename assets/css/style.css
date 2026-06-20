@@ -2974,3 +2974,79 @@ html {
     background: #2563eb;
     color: #ffffff;
 }
+
+/* TOC Filter */
+.toc-filter-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    transition: all 0.2s ease;
+}
+
+.toc-filter-container:focus-within {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+}
+
+.theme-dark .toc-filter-container {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.theme-dark .toc-filter-container:focus-within {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
+}
+
+.toc-filter-icon {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-right: 8px;
+}
+
+.theme-dark .toc-filter-icon {
+    color: #94a3b8;
+}
+
+.toc-filter-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.85rem;
+    color: #0f172a;
+    width: 100%;
+}
+
+.theme-dark .toc-filter-input {
+    color: #e2e8f0;
+}
+
+.toc-filter-clear {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.15s ease;
+}
+
+.toc-filter-clear:hover {
+    color: #0f172a;
+}
+
+.theme-dark .toc-filter-clear {
+    color: #94a3b8;
+}
+
+.theme-dark .toc-filter-clear:hover {
+    color: #e2e8f0;
+}

@@ -13,6 +13,7 @@ A modern, feature-rich web application for browsing and viewing markdown-based t
 - **Global Command Palette (`Cmd+K` / `Ctrl+K`)** - Fast keyboard-driven interface to search all tutorials, toggle theme, control zoom, and toggle outline view.
 - **Code Blocks with Line Numbers** - Restructured code block wrapper featuring language tags, Copy button, and vertical line numbers aligned with code lines.
 - **Floating Outline TOC** - A floating outline button and menu overlay appears in the bottom right when the main TOC is hidden.
+- **Outline TOC Filtering** - Real-time filter search bar added to both the right-rail TOC panel and the floating outline popover for quick section lookups.
 - **Heading Hover Anchor Links** - Hovering over headings in a tutorial displays a deep link icon (`🔗`). Click to copy a direct section link.
 - **Scroll Progress Indicator** - A gradient progress bar fixed to the top of the viewport tracks reading completion.
 

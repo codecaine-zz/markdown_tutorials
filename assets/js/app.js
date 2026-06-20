@@ -185,6 +185,68 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!list) return;
         list.innerHTML = '';
 
+        // Add filter input above the list if it doesn't exist
+        let filterContainer = toc.querySelector('.toc-filter-container');
+        if (!filterContainer) {
+            filterContainer = document.createElement('div');
+            filterContainer.className = 'toc-filter-container';
+            filterContainer.innerHTML = `
+                <i class="fas fa-search toc-filter-icon"></i>
+                <input type="text" class="toc-filter-input" placeholder="Filter outline..." autocomplete="off">
+                <button class="toc-filter-clear" style="display: none;"><i class="fas fa-times"></i></button>
+            `;
+            toc.insertBefore(filterContainer, list);
+            
+            const filterInput = filterContainer.querySelector('.toc-filter-input');
+            const filterClear = filterContainer.querySelector('.toc-filter-clear');
+            
+            filterInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                filterClear.style.display = query ? 'block' : 'none';
+                
+                const items = list.querySelectorAll('li.toc-item');
+                
+                if (!query) {
+                    items.forEach(li => {
+                        li.style.display = '';
+                    });
+                    return;
+                }
+                
+                // Hide all first
+                items.forEach(li => {
+                    li.style.display = 'none';
+                });
+                
+                // Show matches and their parent items
+                items.forEach(li => {
+                    const link = li.querySelector('.toc-link');
+                    if (link && link.textContent.toLowerCase().includes(query)) {
+                        li.style.display = '';
+                        
+                        let parent = li.parentElement;
+                        while (parent && parent !== list) {
+                            if (parent.tagName === 'LI') {
+                                parent.style.display = '';
+                            }
+                            parent = parent.parentElement;
+                        }
+                    }
+                });
+            });
+            
+            filterClear.addEventListener('click', () => {
+                filterInput.value = '';
+                filterInput.dispatchEvent(new Event('input'));
+            });
+        } else {
+            // Reset filter input if re-building TOC
+            const filterInput = filterContainer.querySelector('.toc-filter-input');
+            const filterClear = filterContainer.querySelector('.toc-filter-clear');
+            if (filterInput) filterInput.value = '';
+            if (filterClear) filterClear.style.display = 'none';
+        }
+
         const headings = document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4');
         const stack = [{ level: 0, ul: list }];
 
@@ -1250,7 +1312,18 @@ document.addEventListener('DOMContentLoaded', function() {
             floatingBtn.style.display = 'flex';
             const tocList = document.querySelector('.table-of-contents .toc-list');
             if (tocList) {
-                floatingMenu.innerHTML = '<h4 class="floating-toc-title">Outline</h4>' + tocList.outerHTML;
+                floatingMenu.innerHTML = `
+                    <h4 class="floating-toc-title">Outline</h4>
+                    <div class="toc-filter-container">
+                        <i class="fas fa-search toc-filter-icon"></i>
+                        <input type="text" class="toc-filter-input" placeholder="Filter outline..." autocomplete="off">
+                        <button class="toc-filter-clear" style="display: none;"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+                
+                const clonedList = tocList.cloneNode(true);
+                floatingMenu.appendChild(clonedList);
+                
                 floatingMenu.querySelectorAll('.toc-link').forEach(a => {
                     a.addEventListener('click', (e) => {
                         e.preventDefault();
@@ -1261,6 +1334,48 @@ document.addEventListener('DOMContentLoaded', function() {
                             floatingMenu.classList.remove('open');
                         }
                     });
+                });
+
+                const filterInput = floatingMenu.querySelector('.toc-filter-input');
+                const filterClear = floatingMenu.querySelector('.toc-filter-clear');
+                const list = floatingMenu.querySelector('.toc-list');
+                
+                filterInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    filterClear.style.display = query ? 'block' : 'none';
+                    
+                    const items = list.querySelectorAll('li.toc-item');
+                    
+                    if (!query) {
+                        items.forEach(li => {
+                            li.style.display = '';
+                        });
+                        return;
+                    }
+                    
+                    items.forEach(li => {
+                        li.style.display = 'none';
+                    });
+                    
+                    items.forEach(li => {
+                        const link = li.querySelector('.toc-link');
+                        if (link && link.textContent.toLowerCase().includes(query)) {
+                            li.style.display = '';
+                            
+                            let parent = li.parentElement;
+                            while (parent && parent !== list) {
+                                if (parent.tagName === 'LI') {
+                                    parent.style.display = '';
+                                }
+                                parent = parent.parentElement;
+                            }
+                        }
+                    });
+                });
+                
+                filterClear.addEventListener('click', () => {
+                    filterInput.value = '';
+                    filterInput.dispatchEvent(new Event('input'));
                 });
             }
         } else {
