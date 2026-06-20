@@ -119,30 +119,6 @@ A modern, feature-rich web application for browsing and viewing markdown-based t
 
 ---
 
-## 🐋 Bun-based Docker Container Installers
-
-The repository includes optional helper scripts written in Bun for deploying persistent container environments:
-
-- `scripts/install-kali-docker-persistent.ts` - Creates a persistent Kali Linux container.
-- `scripts/install-ubuntu-docker-persistent.ts` - Creates a persistent Ubuntu container.
-
-### Run Installers
-```bash
-# Dry run: check drives and exit
-DRY_RUN=1 bun run scripts/install-kali-docker-persistent.ts
-
-# Interactive install:
-bun run scripts/install-kali-docker-persistent.ts
-```
-
-Shortcuts (defined in `package.json`):
-```bash
-bun run kali:install
-bun run ubuntu:install
-```
-
----
-
 ## 📂 Project Structure
 
 ```text
