@@ -2502,6 +2502,15 @@ html {
     padding-right: 24px;
 }
 
+/* Adjust layout when ToC is hidden */
+.article-layout.toc-hidden {
+    grid-template-columns: 1fr;
+}
+
+.article-layout.toc-hidden .markdown-content {
+    padding-right: 0;
+}
+
 /* Collapse ToC below on small screens */
 @media (max-width: 1024px) {
     .article-layout {

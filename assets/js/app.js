@@ -809,6 +809,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const nowVisible = isHidden; // after toggle, it'll be visible if it was hidden
     toc.style.display = isHidden ? 'block' : 'none';
     try { localStorage.setItem('tocVisible', String(nowVisible)); } catch {}
+
+    // Toggle toc-hidden class on the parent layout container
+    const articleLayout = toc.closest('.article-layout');
+    if (articleLayout) {
+        if (nowVisible) {
+            articleLayout.classList.remove('toc-hidden');
+        } else {
+            articleLayout.classList.add('toc-hidden');
+        }
+    }
         
         // Update button text based on new state
         const toggleBtn = document.getElementById('tocToggle');
@@ -1465,6 +1475,11 @@ function restorePreferences() {
         const toc = document.getElementById('tableOfContents');
         if (toc) {
             toc.style.display = 'none';
+            // Set toc-hidden class on the parent layout container
+            const articleLayout = toc.closest('.article-layout');
+            if (articleLayout) {
+                articleLayout.classList.add('toc-hidden');
+            }
             const toggleBtn = document.getElementById('tocToggle');
             if (toggleBtn) {
                 const icon = toggleBtn.querySelector('i');
