@@ -2508,7 +2508,7 @@ html {
 
 /* Adjust layout when ToC is hidden */
 .article-layout.toc-hidden {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .article-layout.toc-hidden .markdown-content {
@@ -2518,7 +2518,7 @@ html {
 /* Collapse ToC below on small screens */
 @media (max-width: 1024px) {
     .article-layout {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
     }
     /* Keep ToC sticky even on narrower screens; place above content but sticky */
     .article-layout .table-of-contents {
