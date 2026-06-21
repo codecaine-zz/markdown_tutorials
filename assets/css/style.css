@@ -562,7 +562,11 @@ body {
 .tb-btn i { color: inherit; }
 .tb-sep { width: 1px; height: 22px; background: #e1e8ed; margin: 0 4px; }
 .tb-indicator { min-width: 44px; text-align: center; color: #7f8c8d; font-variant-numeric: tabular-nums; }
-.zoom-container { transform-origin: top left; }
+.zoom-container {
+    transform-origin: top left;
+    transform: scale(var(--md-scale, 1));
+    width: calc(100% / var(--md-scale, 1));
+}
 
 /* Busy overlay */
 .busy-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.15); display: none; align-items: center; justify-content: center; z-index: 9999; }

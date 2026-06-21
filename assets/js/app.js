@@ -986,19 +986,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Zoom controls with persistence
     const ZOOM_KEY = 'mt_zoom';
-    let zoomTarget = null;
     function resolveZoomTarget() {
         // Prefer zooming the markdown article only, so ToC stays sticky
-        zoomTarget = document.querySelector('.markdown-content')
-            || document.querySelector('#contentZoom .content-wrapper')
+        return document.querySelector('.markdown-content')
             || document.getElementById('contentZoom');
     }
     let zoom = 1.0;
     function applyZoom() {
-        if (!zoomTarget) resolveZoomTarget();
-        if (!zoomTarget) return;
-        zoomTarget.style.setProperty('--md-scale', String(zoom));
-        TB.zoomIndicator && (TB.zoomIndicator.textContent = `${Math.round(zoom*100)}%`);
+        const target = resolveZoomTarget();
+        if (!target) return;
+        
+        // Clear scale on other potential targets to prevent double scaling
+        const container = document.getElementById('contentZoom');
+        if (container && target !== container) {
+            container.style.removeProperty('--md-scale');
+        }
+        
+        target.style.setProperty('--md-scale', String(zoom));
+        TB.zoomIndicator && (TB.zoomIndicator.textContent = `${Math.round(zoom * 100)}%`);
         localStorage.setItem(ZOOM_KEY, String(zoom));
     }
     function loadZoom() {
@@ -1011,6 +1016,7 @@ document.addEventListener('DOMContentLoaded', function() {
     TB.zoomIn && TB.zoomIn.addEventListener('click', () => { zoom = Math.min(1.8, zoom + 0.1); applyZoom(); });
     TB.zoomOut && TB.zoomOut.addEventListener('click', () => { zoom = Math.max(0.8, zoom - 0.1); applyZoom(); });
     loadZoom();
+    window.applyZoom = applyZoom;
 
     // Persist sidebar and folder states
     const UI_KEY = 'mt_ui_state';
@@ -2047,6 +2053,11 @@ function restorePreferences() {
                 toggleBtn.title = 'Show table of contents';
             }
         }
+    }
+    
+    // Restore zoom preference
+    if (typeof window.applyZoom === 'function') {
+        window.applyZoom();
     }
 }
 
