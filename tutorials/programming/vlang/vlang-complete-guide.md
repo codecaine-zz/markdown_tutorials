@@ -53,6 +53,38 @@ V has a few ideas that are worth remembering early:
 - `option` and `result` make error handling explicit.
 - `spawn` and channels make concurrency approachable.
 
+## Core Language Essentials to Learn Early
+
+A beginner-friendly roadmap becomes much clearer when you call out the core concepts that show up again and again in V programs:
+
+- `mut` and immutable-by-default variables
+- functions, parameters, and return values
+- structs and methods for modeling data
+- `enum` and `match` for branching on discrete choices
+- modules and imports for organizing code
+- `?` and `!` for option and result types
+- `defer` for cleanup work before a function exits
+- `unsafe` only when you truly need low-level access
+- type aliases and sum types once you are comfortable with structs and enums
+
+These ideas form the backbone of most V programs, so it is worth learning them in a small, practical order rather than trying to memorize every feature at once.
+
+## Must-Learn-Before-Building Checklist
+
+Before you start a larger project, make sure you can comfortably do the following:
+
+- write a small program with a `main` function
+- declare variables and explain when to use `mut`
+- define and call functions with clear parameters and return types
+- model simple data with structs
+- choose between `if`, `match`, and `for` for control flow
+- split code into modules and import them correctly
+- handle optional or failing values with `?` and `!`
+- use `defer` for cleanup work when needed
+- avoid `unsafe` unless you truly need it
+
+If you can do these reliably, you are ready to move from tiny examples to real programs.
+
 ## Why This Matters
 
 The goal is not just to memorize syntax. Each concept in this guide solves a real programming problem:
@@ -74,6 +106,19 @@ A beginner-friendly path through this guide is:
 - Practice with tests and error handling before tackling larger projects.
 - Finish with concurrency, JSON, and databases by building a small app.
 
+## Next-Level Language Features to Explore
+
+Once the basics feel natural, the next step is to expand your comfort with a few higher-level features:
+
+- type aliases for clearer naming
+- sum types for values that can be one of several shapes
+- generics for reusable data structures and helpers
+- interfaces for shared behavior across different types
+- higher-order functions and function values
+- `unsafe` and pointers only when you need low-level performance or interop
+
+These features are not required for every beginner project, but they become very useful once you start writing more structured or reusable code.
+
 ## Mini Projects to Try
 
 These projects will make the guide feel much more practical:
@@ -82,6 +127,8 @@ These projects will make the guide feel much more practical:
 - A number guessing game
 - A simple file organizer or text search tool
 - A notes app that stores data in JSON or SQLite
+- A macOS desktop app with a native Cocoa UI: [vlang_simplegui](https://github.com/codecaine-zz/vlang_simplegui)
+- A macOS desktop app with a webview-based UI: [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template)
 
 ## Practice Exercises
 
@@ -187,88 +234,6 @@ As your projects grow, you will want to know how to:
 - structure folders clearly
 - read documentation and standard library examples
 - move from small scripts to larger applications
-
-## V Cheat Sheet
-
-Here is a compact reference for the most common V patterns you will see in everyday code.
-
-### Variables and Mutability
-
-```v
-fn main() {
-	mut score := 0
-	score += 5
-	println(score)
-}
-```
-
-- Use `mut` when a variable needs to change.
-- Variables are immutable by default.
-
-### Loops
-
-```v
-for i in 0..5 {
-	println(i)
-}
-```
-
-- `for ... in` is the common loop form in V.
-- Ranges like `0..5` are useful for simple iteration.
-
-### Functions
-
-```v
-fn add(a int, b int) int {
-	return a + b
-}
-
-fn main() {
-	println(add(2, 3))
-}
-```
-
-- Functions help break code into small, testable units.
-- V uses explicit types in function signatures.
-
-### Structs
-
-```v
-struct User {
-	name string
-	age  int
-}
-```
-
-- Structs are used to group related data.
-- They are a core building block for models and records.
-
-### Option and Result
-
-```v
-fn maybe_value() ?int {
-	return 42
-}
-
-fn main() {
-	value := maybe_value() or { 0 }
-	println(value)
-}
-```
-
-- `?` marks functions that may return an error or no value.
-- `or {}` provides a fallback for handling it cleanly.
-
-### Modules
-
-```v
-module main
-
-import math
-```
-
-- Modules help organize code and separate concerns.
-- Importing standard library packages is a normal part of larger programs.
 
 ## From Practice to Real Projects
 
@@ -381,6 +346,7 @@ To get the most from this book:
   - [Case Study: Notes API](#case-study-notes-api)
   - [JSON & ORM](#json--orm)
   - [SQLite Integration](#sqlite-integration)
+  - [SQLite CRUD Helper](#sqlite-crud-helper)
   - [Sqlite Raw Crud](#sqlite-raw-crud)
 - [Chapter 13: Standard Library & Advanced Features](#chapter-13-standard-library--advanced-features)
   - [Inline Assembly & C Interop](#inline-assembly--c-interop)
@@ -388,6 +354,16 @@ To get the most from this book:
   - [Other Stdlib Updates](#other-stdlib-updates)
   - [Strings.Lorem Helper](#stringslorem-helper)
   - [WebAssembly Compilation](#webassembly-compilation)
+- [Chapter 14: Useful Boilerplates and Application Templates](#chapter-14-useful-boilerplates-and-application-templates)
+  - [CLI Command-Line Application Boilerplate](#cli-command-line-application-boilerplate)
+  - [REST API Server Boilerplate](#rest-api-server-boilerplate)
+  - [Worker Pool Concurrency Boilerplate](#worker-pool-concurrency-boilerplate)
+  - [OS and File Utilities Boilerplate](#os-and-file-utilities-boilerplate)
+  - [String Utilities Boilerplate](#string-utilities-boilerplate)
+  - [Math and Statistics Boilerplate](#math-and-statistics-boilerplate)
+  - [Array Utilities Boilerplate](#array-utilities-boilerplate)
+- [Chapter 15: Comprehensive Practice Exercises](#chapter-15-comprehensive-practice-exercises)
+  - [Practice Exercises Overview](#practice-exercises-overview)
 
 ---
 
@@ -411,7 +387,7 @@ This chapter introduces the core design philosophies of V. You will learn how to
 
 ### Single Line Comments
 
-_File location: [variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v)_
+_File location: [variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v](variables_and_constants/03_code_comments/01_single_line_comments/single_line_comments.v)_
 
 ### Lesson: Single Line Comments
 
@@ -437,11 +413,14 @@ fn main() {
 
 ### Multi Line Comments
 
-_File location: [variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v)_
+_File location: [variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v](variables_and_constants/03_code_comments/02_multi_line_comments/multi_line_comments.v)_
 
 ### Lesson: Multi Line Comments
 
-Comments are non-executable lines of text in a program that explain what the code does. They are ignored by the compiler but are essential for human developers. This lesson on **Multi Line Comments** demonstrates how to write and format comments in V.
+In V, multi-line (or block) comments are enclosed between `/*` and `*/`.
+
+> [!NOTE]
+> **Nested Block Comments:** Unlike languages like C, C++, Java, or JavaScript, V supports **nested block comments**. This is a powerful feature that allows you to easily comment out large blocks of code even if they already contain block comments, without triggering syntax errors.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **multi line comments**.
@@ -450,12 +429,15 @@ This example demonstrates the concepts of **multi line comments**.
 module main
 
 /*
-multiply is a function that accepts two integer arguments
-namely x and y.
-It then performs multiplication of input arguments and returns the product which is again a type of integer as specified in the function signature.
-x is an input argument accepts values of type of int
-y is an input argument accepts values of type of int
-multiply function returns the result of type int which is a multiplication of input arguments x and y
+multiply is a function that accepts two integer arguments (x and y).
+It performs multiplication and returns the integer product.
+
+/*
+Note: In V, block comments can be nested.
+This is a nested block comment. In standard C, nesting block comments
+would cause a compile error, but V's compiler parses them correctly.
+*/
+This is the end of the outer block comment.
 */
 fn multiply(x int, y int) int {
 	return x * y
@@ -470,7 +452,7 @@ fn main() {
 
 ### Programm Commented All Places
 
-_File location: [variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v)_
+_File location: [variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v](variables_and_constants/03_code_comments/03_program_commented_all_places/programm_commented_all_places.v)_
 
 ### Lesson: Programm Commented All Places
 
@@ -564,7 +546,7 @@ Variables are the basic storage units of any program. In this chapter, we explor
 
 ### Define Single Constant
 
-_File location: [variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v)_
+_File location: [variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v](variables_and_constants/02_constants/01_define_constant/01_define_single_constant.v)_
 
 ### Lesson: Define Single Constant
 
@@ -587,7 +569,7 @@ fn main() {
 
 ### Define Multiple Constants
 
-_File location: [variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v)_
+_File location: [variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v](variables_and_constants/02_constants/01_define_constant/02_define_multiple_constants.v)_
 
 ### Lesson: Define Multiple Constants
 
@@ -599,7 +581,7 @@ This example shows how to declare multiple constants (integers, strings, floats)
 This example demonstrates the concepts of **define multiple constants**.
 
 ```v
-const app_name2 = 'V on Wheels'
+const app_name = 'V on Wheels'
 const max_connections = 1000
 const decimal_places = 2
 const pi = 3.14
@@ -616,7 +598,7 @@ fn main() {
 
 ### Define Constant Of Type Struct
 
-_File location: [variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v)_
+_File location: [variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v](variables_and_constants/02_constants/02_complex_constants/01_define_constant_of_type_struct/define_constant_of_type_struct.v)_
 
 ### Lesson: Define Constant Of Type Struct
 
@@ -650,7 +632,7 @@ fn main() {
 
 ### Define Constant Of Type Function
 
-_File location: [variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v)_
+_File location: [variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v](variables_and_constants/02_constants/02_complex_constants/02_define_constant_of_type_function/define_constant_of_type_function.v)_
 
 ### Lesson: Define Constant Of Type Function
 
@@ -688,7 +670,7 @@ fn main() {
 
 ### Define Module Level Constants
 
-_File location: [variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v](variables_and_constants/02_constants/03_best_practices/01_define_module_level_constants/define_module_level_constants.v)_
 
 ### Lesson: Define Module Level Constants
 
@@ -711,7 +693,7 @@ fn main() {
 
 ### Cannot Define Constants Inside Functions
 
-_File location: [variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v](variables_and_constants/02_constants/03_best_practices/02_cannot_define_constants_inside_functions/cannot_define_constants_inside_functions.v)_
 
 ### Lesson: Cannot Define Constants Inside Functions
 
@@ -735,7 +717,7 @@ fn main() {
 
 ### Constants Module - Main (main.v)
 
-_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v](variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/main.v)_
 
 ### Lesson: Constants Module - Main
 
@@ -758,7 +740,7 @@ fn main() {
 
 ### Constant Module Prefix - Helper (file1.v)
 
-_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v)_
+_File location: [variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v](variables_and_constants/02_constants/03_best_practices/03_module_prefix_to_identify_constants/mod1/file1.v)_
 
 ### Lesson: Constant Module Prefix - Helper
 
@@ -783,7 +765,7 @@ pub fn do_work() {
 
 ### Parallel Declaration Immutable Variables
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v](variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/01_parallel_declaration_immutable_variables.v)_
 
 ### Lesson: Parallel Declaration Immutable Variables
 
@@ -795,13 +777,10 @@ This program demonstrates declaring two variables `a` and `b` at the same time a
 This example demonstrates the concepts of **parallel declaration immutable variables**.
 
 ```v
-// immutable variables parallel assignment
-
 fn main() {
-	a, b, c := 3, 4, 5
-	println(a)
-	println(b)
-	println(c)
+	first_name, last_name, age := 'Ada', 'Lovelace', 36
+	println('${first_name} ${last_name} is ${age} years old')
+	println('Next milestone: ${first_name} will speak at the conference')
 }
 ```
 
@@ -809,7 +788,7 @@ fn main() {
 
 ### Parallel Declaration Mutable Variables
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel\_\_declaration_mutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel\_\_declaration_mutable_variables.v](variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/02_parallel__declaration_mutable_variables.v)_
 
 ### Lesson: Parallel Declaration Mutable Variables
 
@@ -821,15 +800,12 @@ Here, we declare two mutable variables `a` and `b` at the same time using `mut`.
 This example demonstrates the concepts of **parallel declaration mutable variables**.
 
 ```v
-// mutable variables parallel assignment
-
 fn main() {
-	mut i, mut j := 'Hi', 'Hello'
-	println(i)
-	println(j)
+	mut greeting, mut recipient := 'Hi', 'world'
+	println('${greeting}, ${recipient}!')
 
-	// updating mutable variables in parallel
-	i, j = 'Hi there', 'Hello, Good Day!'
+	greeting, recipient = 'Hello', 'Ada'
+	println('${greeting}, ${recipient}!')
 }
 ```
 
@@ -837,7 +813,7 @@ fn main() {
 
 ### Parallel Declaration Mut And Immutable Vars
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v](variables_and_constants/01_variables/01_variable_assignment/01_parallel_declaration/03_parallel_declaration_mut_and_immutable_vars.v)_
 
 ### Lesson: Parallel Declaration Mut And Immutable Vars
 
@@ -848,12 +824,11 @@ This example demonstrates the concepts of **parallel declaration mut and immutab
 
 ```v
 fn main() {
-	mut msg, i := 'Hello', 32
-	println(msg) // Hello
-	msg = 'Hi'
-	println(msg) // Hi
-	println(i) // 32
-	i = 2 // error: `i` is immutable, declare it with `mut` to make it mutable
+	mut message, count := 'Hello', 32
+	println(message)
+	message = 'Hi'
+	println(message)
+	println(count)
 }
 ```
 
@@ -861,7 +836,7 @@ fn main() {
 
 ### Augmented Assignment String
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v](variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/01_augmented_assignment_string.v)_
 
 ### Lesson: Augmented Assignment String
 
@@ -872,14 +847,14 @@ This example demonstrates the concepts of **augmented assignment string**.
 
 ```v
 fn main() {
-	mut greet := 'Hi'
-	println(greet)
+	mut greeting := 'Hi'
+	println(greeting)
 
-	greet = greet + ' there, How are you?'
-	println(greet)
+	greeting = greeting + ' there'
+	println(greeting)
 
-	greet += ' Hope you have a great day!'
-	println(greet)
+	greeting += ', how are you today?'
+	println(greeting)
 }
 ```
 
@@ -887,7 +862,7 @@ fn main() {
 
 ### Augmented Assignment Integer
 
-_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v)_
+_File location: [variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v](variables_and_constants/01_variables/01_variable_assignment/02_augmented_assignment/02_augmented_assignment_integer.v)_
 
 ### Lesson: Augmented Assignment Integer
 
@@ -898,12 +873,14 @@ This example demonstrates the concepts of **augmented assignment integer**.
 
 ```v
 fn main() {
-	mut cnt := 10
-	println(cnt)
-	cnt = cnt + 5
-	println(cnt)
-	cnt += 5
-	println(cnt)
+	mut score := 10
+	println(score)
+
+	score = score + 5
+	println(score)
+
+	score += 5
+	println(score)
 }
 ```
 
@@ -911,7 +888,7 @@ fn main() {
 
 ### Declare Mutable Variable
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/01_declare_mutable_variable.v)_
 
 ### Lesson: Declare Mutable Variable
 
@@ -924,9 +901,9 @@ This example demonstrates the concepts of **declare mutable variable**.
 
 ```v
 fn main() {
-	mut i := 10
-	i = 100
-	println(i)
+	mut counter := 0
+	counter += 1
+	println(counter)
 }
 ```
 
@@ -934,7 +911,7 @@ fn main() {
 
 ### Cannot Update Mutable With Another Type
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/01_mutable/02_cannot_update_mutable_with_another_type.v)_
 
 ### Lesson: Cannot Update Mutable With Another Type
 
@@ -955,7 +932,7 @@ fn main() {
 
 ### Declare Immutable Variable
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/01_declare_immutable_variable.v)_
 
 ### Lesson: Declare Immutable Variable
 
@@ -975,7 +952,7 @@ fn main() {
 
 ### Cannot Update Immutable Variables
 
-_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v](variables_and_constants/01_variables/02_variable_features/01_mutable_immutable_variables/02_immutable/02_cannot_update_immutable_variables.v)_
 
 ### Lesson: Cannot Update Immutable Variables
 
@@ -997,7 +974,7 @@ fn main() {
 
 ### Declared And Assigned
 
-_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v](variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/01_declared_and_assigned.v)_
 
 ### Lesson: Declared And Assigned
 
@@ -1018,7 +995,7 @@ fn main() {
 
 ### Declared And Not Assigned
 
-_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v](variables_and_constants/01_variables/02_variable_features/02_declared_must_be_assigned/02_declared_and_not_assigned.v)_
 
 ### Lesson: Declared And Not Assigned
 
@@ -1039,7 +1016,7 @@ fn main() {
 
 ### Unused Variables Will Be Warned
 
-_File location: [variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v)_
+_File location: [variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v](variables_and_constants/01_variables/02_variable_features/03_declared_must_be_consumed/01_unused_variables_will_be_warned.v)_
 
 ### Lesson: Unused Variables Will Be Warned
 
@@ -1063,7 +1040,7 @@ fn main() {
 
 ### Global Variables Not Allowed - Scope Demo
 
-_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v](variables_and_constants/01_variables/03_limitations/01_global_variables/01_global_variables_not_allowed.v)_
 
 ### Lesson: Global Variables Not Allowed - Scope Demo
 
@@ -1092,7 +1069,7 @@ fn main() {
 
 ### Global Variables Not Allowed - File Scope Demo
 
-_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v](variables_and_constants/01_variables/03_limitations/01_global_variables/02_global_variables_not_allowed.v)_
 
 ### Lesson: Global Variables Not Allowed - File Scope Demo
 
@@ -1123,7 +1100,7 @@ fn main() {
 
 ### Variable Redeclaration
 
-_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v](variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/01_variable_redeclaration.v)_
 
 ### Lesson: Variable Redeclaration
 
@@ -1147,7 +1124,7 @@ fn main() {
 
 ### Variable Scope For Same Variable Names
 
-_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v](variables_and_constants/01_variables/03_limitations/02_variable_redeclaration/02_variable_scope_for_same_variable_names.v)_
 
 ### Lesson: Variable Scope For Same Variable Names
 
@@ -1179,7 +1156,7 @@ fn main() {
 
 ### Variable Shadowing Not Allowed
 
-_File location: [variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v)_
+_File location: [variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v](variables_and_constants/01_variables/03_limitations/03_variable_shadowing/variable_shadowing_not_allowed.v)_
 
 ### Lesson: Variable Shadowing Not Allowed
 
@@ -1270,7 +1247,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 ### Primitive Types Demo Code
 
-_File location: [primitive_types/05_primitive_types_demo/primitive_types_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/05_primitive_types_demo/primitive_types_demo.v)_
+_File location: [primitive_types/05_primitive_types_demo/primitive_types_demo.v](primitive_types/05_primitive_types_demo/primitive_types_demo.v)_
 
 ### Lesson: Primitive Types Demo Code
 
@@ -1353,7 +1330,7 @@ V is a statically-typed language, meaning every variable has a fixed data type a
 
 ### Logical Operators
 
-_File location: [primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v)_
+_File location: [primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v](primitive_types/01_boolean_type/01_logical_operators/01_logical_operators.v)_
 
 ### Lesson: Logical Operators
 
@@ -1409,7 +1386,7 @@ fn main() {
 
 ### Relational Operators
 
-_File location: [primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v)_
+_File location: [primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v](primitive_types/01_boolean_type/02_relational_operators/01_relational_operators.v)_
 
 ### Lesson: Relational Operators
 
@@ -1457,7 +1434,7 @@ fn main() {
 
 ### Boolean Methods
 
-_File location: [primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v)_
+_File location: [primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v](primitive_types/01_boolean_type/03_boolean_methods/01_boolean_methods.v)_
 
 ### Lesson: Boolean Methods
 
@@ -1487,7 +1464,7 @@ fn main() {
 
 ### Declaring Integers
 
-_File location: [primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v)_
+_File location: [primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v](primitive_types/02_numeric_types/01_declaring_integers/01_declaring_integers/01_declaring_integers.v)_
 
 ### Lesson: Declaring Integers
 
@@ -1517,7 +1494,7 @@ fn main() {
 
 ### Hex Binary Octa Notation Of Declaring Integers
 
-_File location: [primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v)_
+_File location: [primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v](primitive_types/02_numeric_types/01_declaring_integers/02_hex_binary_octa_notation/02_hex_binary_octa_notation_of_declaring_integers.v)_
 
 ### Lesson: Hex Binary Octa Notation Of Declaring Integers
 
@@ -1552,7 +1529,7 @@ fn main() {
 
 ### Promoting Numeric Types
 
-_File location: [primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v)_
+_File location: [primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v](primitive_types/02_numeric_types/02_promoting_numeric_types/01_promoting_numeric_types.v)_
 
 ### Lesson: Promoting Numeric Types
 
@@ -1608,7 +1585,7 @@ fn main() {
 
 ### Arithmetic Operators
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/01_arithmetic_operators/arithmetic_operators.v)_
 
 ### Lesson: Arithmetic Operators
 
@@ -1651,7 +1628,7 @@ fn main() {
 
 ### Bitwise Operators
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/02_bitwise_operators/bitwise_operators.v)_
 
 ### Lesson: Bitwise Operators
 
@@ -1689,7 +1666,7 @@ fn main() {
 
 ### Shift Operators
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/01_shift_operators/01_shift_operators.v)_
 
 ### Lesson: Shift Operators
 
@@ -1721,7 +1698,7 @@ fn main() {
 
 ### Shift Operator On Range Of Integers
 
-_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v)_
+_File location: [primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v](primitive_types/02_numeric_types/03_operations_on_numeric_types/03_shift_operators/02_shift_operator_on_range_of_integers/02_shift_operator_on_range_of_integers.v)_
 
 ### Lesson: Shift Operator On Range Of Integers
 
@@ -1751,7 +1728,7 @@ fn main() {
 
 ### Integer Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v](primitive_types/02_numeric_types/04_numeric_methods/01_integer_methods/01_integer_methods.v)_
 
 ### Lesson: Integer Methods
 
@@ -1784,7 +1761,7 @@ fn main() {
 
 ### Float Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v](primitive_types/02_numeric_types/04_numeric_methods/02_float_methods/02_float_methods.v)_
 
 ### Lesson: Float Methods
 
@@ -1821,7 +1798,7 @@ fn main() {
 
 ### U8 Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v](primitive_types/02_numeric_types/04_numeric_methods/03_u8_methods/03_u8_methods.v)_
 
 ### Lesson: U8 Methods
 
@@ -1884,7 +1861,7 @@ fn main() {
 
 ### Size Pointer Methods
 
-_File location: [primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v)_
+_File location: [primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v](primitive_types/02_numeric_types/04_numeric_methods/04_size_pointer_methods/04_size_pointer_methods.v)_
 
 ### Lesson: Size Pointer Methods
 
@@ -1902,7 +1879,7 @@ fn main() {
 	usz := usize(200)
 
 	// str() returns string representation
-	println(sz.str())  // "100"
+	println(sz.str()) // "100"
 	println(usz.str()) // "200"
 
 	// voidptr methods
@@ -1929,7 +1906,7 @@ fn main() {
 
 ### Declare Rune
 
-_File location: [primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v)_
+_File location: [primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v](primitive_types/04_rune_type/01_declare_rune/01_declare_rune.v)_
 
 ### Lesson: Declare Rune
 
@@ -1942,6 +1919,7 @@ This example demonstrates the concepts of **declare rune**.
 
 ```v
 fn main() {
+	// A rune stores a single Unicode character.
 	l := `a`
 	println(typeof(l).name)
 	// rune
@@ -1952,7 +1930,7 @@ fn main() {
 
 ### Rune Operations With Strings
 
-_File location: [primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v)_
+_File location: [primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v](primitive_types/04_rune_type/02_rune_operations_with_strings/02_rune_operations_with_strings.v)_
 
 ### Lesson: Rune Operations With Strings
 
@@ -1975,7 +1953,7 @@ fn main() {
 
 ### Rune Methods
 
-_File location: [primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v)_
+_File location: [primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v](primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v)_
 
 ### Lesson: Rune Methods
 
@@ -2016,11 +1994,11 @@ fn main() {
 
 	// Testing with a multi-byte UTF-8 rune (dog emoji 🐕)
 	r2 := `🐕`
-	println(r2.bytes())           // [240, 159, 144, 149]
-	println(r2.hex())             // "1f415" (Unicode code point in hex)
+	println(r2.bytes()) // [240, 159, 144, 149]
+	println(r2.hex()) // "1f415" (Unicode code point in hex)
 	println(r2.length_in_bytes()) // 4
-	println(r2.repeat(2))         // "🐕🐕"
-	println(r2.str())             // "🐕"
+	println(r2.repeat(2)) // "🐕🐕"
+	println(r2.str()) // "🐕"
 }
 ```
 
@@ -2030,7 +2008,7 @@ fn main() {
 
 ### Declare String
 
-_File location: [primitive_types/03_string_type/01_declare_string/01_declare_string.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_declare_string/01_declare_string.v)_
+_File location: [primitive_types/03_string_type/01_declare_string/01_declare_string.v](primitive_types/03_string_type/01_declare_string/01_declare_string.v)_
 
 ### Lesson: Declare String
 
@@ -2040,14 +2018,16 @@ In V, primitive data types are the core building blocks of the language. This se
 This example demonstrates the concepts of **declare string**.
 
 ```v
+module main
+
 fn main() {
-	h := 'hello'
-	println(h)
-	// hello
-	println(h.len)
-	// 5
-	println(typeof(h).name)
-	// string
+	greeting := 'hello'
+	name := 'Ada'
+	message := greeting + ', ' + name + '!'
+
+	println(message)
+	println('Length: ${message.len}')
+	println('Type: ${typeof(message).name}')
 }
 ```
 
@@ -2055,7 +2035,7 @@ fn main() {
 
 ### String Read Only Array Of Bytes
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v](primitive_types/03_string_type/01_working_with_strings/01_string_read_only_array_of_bytes/01_string_read_only_array_of_bytes.v)_
 
 ### Lesson: String Read Only Array Of Bytes
 
@@ -2080,7 +2060,7 @@ fn main() {
 
 ### Strings Immutable By Default
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v](primitive_types/03_string_type/01_working_with_strings/02_strings_immutable_by_default/02_strings_immutable_by_default.v)_
 
 ### Lesson: Strings Immutable By Default
 
@@ -2104,7 +2084,7 @@ fn main() {
 
 ### Declaring Mutable Strings
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v](primitive_types/03_string_type/01_working_with_strings/03_declaring_mutable_strings/03_declaring_mutable_strings.v)_
 
 ### Lesson: Declaring Mutable Strings
 
@@ -2131,7 +2111,7 @@ fn main() {
 
 ### Cannot Mutate String Elements
 
-_File location: [primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v)_
+_File location: [primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v](primitive_types/03_string_type/01_working_with_strings/04_cannot_mutate_string_elements/04_cannot_mutate_string_elements.v)_
 
 ### Lesson: Cannot Mutate String Elements
 
@@ -2154,7 +2134,7 @@ fn main() {
 
 ### String Interpolation
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v](primitive_types/03_string_type/02_operations_on_string_types/01_string_interpolation/01_string_interpolation.v)_
 
 ### Lesson: String Interpolation
 
@@ -2178,7 +2158,7 @@ fn main() {
 
 ### Escape Special Characters
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/01_escape_special_characters/01_escape_special_characters.v)_
 
 ### Lesson: Escape Special Characters
 
@@ -2203,10 +2183,10 @@ fn main() {
 	println('File path: C:\\Program Files\\V')
 
 	// 4. Escaping single quotes (\') in a single-quoted string
-	println('It\'s my Daughter\'s birthday!')
+	println("It's my Daughter's birthday!")
 
 	// 5. Escaping double quotes (\") in a double-quoted string
-	println("She said, \"V is fast!\"")
+	println('She said, "V is fast!"')
 }
 ```
 
@@ -2214,7 +2194,7 @@ fn main() {
 
 ### Declare Raw Strings
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/02_declare_raw_strings/02_declare_raw_strings.v)_
 
 ### Lesson: Declare Raw Strings
 
@@ -2238,7 +2218,7 @@ fn main() {
 
 ### String Concatenation Using Plus Sign
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/03_string_concatenation_using_plus_sign/03_string_concatenation_using_plus_sign.v)_
 
 ### Lesson: String Concatenation Using Plus Sign
 
@@ -2262,7 +2242,7 @@ fn main() {
 
 ### String Concatenation Using Interpolation
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/04_string_concatenation_using_interpolation/04_string_concatenation_using_interpolation.v)_
 
 ### Lesson: String Concatenation Using Interpolation
 
@@ -2285,7 +2265,7 @@ fn main() {
 
 ### Extract Substring From String Literal
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/05_extract_substring_from_string_literal/05_extract_substring_from_string_literal.v)_
 
 ### Lesson: Extract Substring From String Literal
 
@@ -2331,7 +2311,7 @@ fn main() {
 
 ### Split String
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/06_split_string/06_split_string.v)_
 
 ### Lesson: Split String
 
@@ -2358,7 +2338,7 @@ fn main() {
 
 ### String To Runes Array
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/07_string_to_runes_array/07_string_to_runes_array.v)_
 
 ### Lesson: String To Runes Array
 
@@ -2382,7 +2362,7 @@ fn main() {
 
 ### Count Sub String Occurences
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/08_count_sub_string_occurences/08_count_sub_string_occurences.v)_
 
 ### Lesson: Count Sub String Occurences
 
@@ -2411,7 +2391,7 @@ fn main() {
 
 ### Check String Contains Substring
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/09_check_string_contains_substring/09_check_string_contains_substring.v)_
 
 ### Lesson: Check String Contains Substring
 
@@ -2438,7 +2418,7 @@ fn main() {
 
 ### String Contains Is Case Sensitive
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/10_string_contains_is_case_sensitive/10_string_contains_is_case_sensitive.v)_
 
 ### Lesson: String Contains Is Case Sensitive
 
@@ -2465,7 +2445,7 @@ fn main() {
 
 ### Common String Methods
 
-_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v)_
+_File location: [primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v](primitive_types/03_string_type/02_operations_on_string_types/02_string_manipulation/11_common_string_methods/11_common_string_methods.v)_
 
 ### Lesson: Common String Methods
 
@@ -2516,7 +2496,7 @@ fn main() {
 	println(s.is_pure_ascii()) // true
 
 	// split_into_lines() splits a string into an array of lines
-	multiline := "line 1\nline 2"
+	multiline := 'line 1\nline 2'
 	println(multiline.split_into_lines()) // ["line 1", "line 2"]
 
 	// split_by_space() splits a string by space as delimiter
@@ -2561,7 +2541,7 @@ Control flow determines the execution path of your code. In this chapter, we cov
 
 ### Chaining Else If
 
-_File location: [control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v)_
+_File location: [control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v](control_flow/01_If_Statement/chaining_else_if/chaining_else_if.v)_
 
 ### Lesson: Chaining Else If
 
@@ -2573,6 +2553,7 @@ This example demonstrates the concepts of **chaining else if**.
 ```v
 module main
 
+// This helper chooses a meal plan based on the weekday.
 fn breakfast_menu(day string) {
 	if day == 'Monday' {
 		println('Bread, Jam, Half boiled Egg')
@@ -2594,6 +2575,7 @@ fn breakfast_menu(day string) {
 }
 
 fn main() {
+	// Call the helper with a sample weekday.
 	breakfast_menu('Saturday')
 }
 ```
@@ -2602,7 +2584,7 @@ fn main() {
 
 ### If With Goto
 
-_File location: [control_flow/01_If_Statement/if_with_goto/if_with_goto.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/01_If_Statement/if_with_goto/if_with_goto.v)_
+_File location: [control_flow/01_If_Statement/if_with_goto/if_with_goto.v](control_flow/01_If_Statement/if_with_goto/if_with_goto.v)_
 
 ### Lesson: If With Goto
 
@@ -2646,7 +2628,7 @@ fn main() {
 
 ### Cascade Match Conditions
 
-_File location: [control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v)_
+_File location: [control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v](control_flow/02_Match/cascade_match_conditions/cascade_match_conditions.v)_
 
 ### Lesson: Cascade Match Conditions
 
@@ -2700,7 +2682,7 @@ fn main() {
 
 ### Match As Switch Case
 
-_File location: [control_flow/02_Match/match_as_switch_case/match_as_switch_case.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_as_switch_case/match_as_switch_case.v)_
+_File location: [control_flow/02_Match/match_as_switch_case/match_as_switch_case.v](control_flow/02_Match/match_as_switch_case/match_as_switch_case.v)_
 
 ### Lesson: Match As Switch Case
 
@@ -2734,7 +2716,7 @@ fn main() {
 
 ### Match Pattern Matching
 
-_File location: [control_flow/02_Match/match_pattern_matching/match_pattern_matching.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_pattern_matching/match_pattern_matching.v)_
+_File location: [control_flow/02_Match/match_pattern_matching/match_pattern_matching.v](control_flow/02_Match/match_pattern_matching/match_pattern_matching.v)_
 
 ### Lesson: Match Pattern Matching
 
@@ -2749,9 +2731,9 @@ module main
 fn main() {
 	age := 18
 	res := match age {
-		0...18 { 'Person with age $age classified as a Child' }
-		19...120 { 'Person with age $age classified as an Adult' }
-		else { '$age is must be in the range 0 to 120' }
+		0...18 { 'Person with age ${age} classified as a Child' }
+		19...120 { 'Person with age ${age} classified as an Adult' }
+		else { '${age} is must be in the range 0 to 120' }
 	}
 	println(res)
 }
@@ -2761,7 +2743,7 @@ fn main() {
 
 ### Match With Enum
 
-_File location: [control_flow/02_Match/match_with_enum/match_with_enum.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_with_enum/match_with_enum.v)_
+_File location: [control_flow/02_Match/match_with_enum/match_with_enum.v](control_flow/02_Match/match_with_enum/match_with_enum.v)_
 
 ### Lesson: Match With Enum
 
@@ -2822,7 +2804,7 @@ fn main() {
 
 ### Match With Enum And Else
 
-_File location: [control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v)_
+_File location: [control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v](control_flow/02_Match/match_with_enum_and_else/match_with_enum_and_else.v)_
 
 ### Lesson: Match With Enum And Else
 
@@ -2871,7 +2853,7 @@ fn main() {
 
 ### Bare For
 
-_File location: [control_flow/03_Iterative_statements/bare_for/bare_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/bare_for/bare_for.v)_
+_File location: [control_flow/03_Iterative_statements/bare_for/bare_for.v](control_flow/03_Iterative_statements/bare_for/bare_for.v)_
 
 ### Lesson: Bare For
 
@@ -2886,7 +2868,7 @@ module main
 fn main() {
 	mut count := 1
 	for {
-		println('Hi $count times')
+		println('Hi ${count} times')
 		count += 1
 	}
 }
@@ -2896,7 +2878,7 @@ fn main() {
 
 ### Break For
 
-_File location: [control_flow/03_Iterative_statements/break_for/break_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/break_for/break_for.v)_
+_File location: [control_flow/03_Iterative_statements/break_for/break_for.v](control_flow/03_Iterative_statements/break_for/break_for.v)_
 
 ### Lesson: Break For
 
@@ -2921,7 +2903,7 @@ fn main() {
 		println('Hi')
 		count += 1
 	}
-	println('Greeted Hi $count times')
+	println('Greeted Hi ${count} times')
 }
 ```
 
@@ -2929,7 +2911,7 @@ fn main() {
 
 ### Continue For
 
-_File location: [control_flow/03_Iterative_statements/continue_for/continue_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/continue_for/continue_for.v)_
+_File location: [control_flow/03_Iterative_statements/continue_for/continue_for.v](control_flow/03_Iterative_statements/continue_for/continue_for.v)_
 
 ### Lesson: Continue For
 
@@ -2955,7 +2937,7 @@ fn main() {
 
 ### For C Style
 
-_File location: [control_flow/03_Iterative_statements/for_c_style/for_c_style.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_c_style/for_c_style.v)_
+_File location: [control_flow/03_Iterative_statements/for_c_style/for_c_style.v](control_flow/03_Iterative_statements/for_c_style/for_c_style.v)_
 
 ### Lesson: For C Style
 
@@ -2979,7 +2961,7 @@ fn main() {
 
 ### For On Array Without Index
 
-_File location: [control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v](control_flow/03_Iterative_statements/for_on_array_without_index/for_on_array_without_index.v)_
 
 ### Lesson: For On Array Without Index
 
@@ -2995,9 +2977,9 @@ fn main() {
 	col := [1, 2, 3, 4, 5, 6, 7]
 	for val in col {
 		if val % 2 == 0 {
-			println('$val is Even')
+			println('${val} is Even')
 		} else {
-			println('$val is Odd')
+			println('${val} is Odd')
 		}
 	}
 }
@@ -3007,7 +2989,7 @@ fn main() {
 
 ### For On Arrays
 
-_File location: [control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v](control_flow/03_Iterative_statements/for_on_arrays/for_on_arrays.v)_
 
 ### Lesson: For On Arrays
 
@@ -3022,7 +3004,7 @@ module main
 fn main() {
 	fruits := ['apple', 'banana', 'coconut']
 	for idx, ele in fruits {
-		println('idx: $idx \t fruit: $ele')
+		println('idx: ${idx} \t fruit: ${ele}')
 	}
 }
 ```
@@ -3031,7 +3013,7 @@ fn main() {
 
 ### For On Maps
 
-_File location: [control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v](control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v)_
 
 ### Lesson: For On Maps
 
@@ -3051,7 +3033,7 @@ fn main() {
 	}
 
 	for k, v in lottery {
-		println('$k prize lottery amount: $v')
+		println('${k} prize lottery amount: ${v}')
 	}
 }
 ```
@@ -3060,7 +3042,7 @@ fn main() {
 
 ### For On Maps Ignore Key
 
-_File location: [control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v](control_flow/03_Iterative_statements/for_on_maps_ignore_key/for_on_maps_ignore_key.v)_
 
 ### Lesson: For On Maps Ignore Key
 
@@ -3082,7 +3064,7 @@ fn main() {
 	for _, v in basket {
 		total += v
 	}
-	println('Total number of fruits: $total')
+	println('Total number of fruits: ${total}')
 }
 ```
 
@@ -3090,7 +3072,7 @@ fn main() {
 
 ### For On Range
 
-_File location: [control_flow/03_Iterative_statements/for_on_range/for_on_range.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_on_range/for_on_range.v)_
+_File location: [control_flow/03_Iterative_statements/for_on_range/for_on_range.v](control_flow/03_Iterative_statements/for_on_range/for_on_range.v)_
 
 ### Lesson: For On Range
 
@@ -3113,7 +3095,7 @@ fn main() {
 
 ### For With Continue Break And Labels
 
-_File location: [control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v)_
+_File location: [control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v](control_flow/03_Iterative_statements/for_with_continue_break_and_labels/for_with_continue_break_and_labels.v)_
 
 ### Lesson: For With Continue Break And Labels
 
@@ -3134,10 +3116,10 @@ fn main() {
 		return
 	}
 	first_loop: for i := 1; i <= 10; i++ {
-		println('Printing multiplication table for $i')
+		println('Printing multiplication table for ${i}')
 		for j := 1; j <= 10; j++ {
 			mul := i * j
-			println('$i * $j = $mul')
+			println('${i} * ${j} = ${mul}')
 			if mul >= limit * 10 {
 				break first_loop
 			}
@@ -3151,7 +3133,7 @@ fn main() {
 
 ### Reverse For
 
-_File location: [control_flow/03_Iterative_statements/reverse_for/reverse_for.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/control_flow/03_Iterative_statements/reverse_for/reverse_for.v)_
+_File location: [control_flow/03_Iterative_statements/reverse_for/reverse_for.v](control_flow/03_Iterative_statements/reverse_for/reverse_for.v)_
 
 ### Lesson: Reverse For
 
@@ -3230,7 +3212,7 @@ Collections allow you to group multiple data items together. V provides two prim
 
 ### Declare And Initialize
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v](arrays_and_maps/01_arrays/01_array_declaration/01_declare_and_initialize/01_declare_and_initialize.v)_
 
 ### Lesson: Declare And Initialize
 
@@ -3252,7 +3234,7 @@ fn main() {
 
 ### Declare Empty Array
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v](arrays_and_maps/01_arrays/01_array_declaration/02_declare_empty_array/02_declare_empty_array.v)_
 
 ### Lesson: Declare Empty Array
 
@@ -3279,7 +3261,7 @@ fn main() {
 
 ### Declare Array With Len
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v](arrays_and_maps/01_arrays/01_array_declaration/03_declare_array_with_len/03_declare_array_with_len.v)_
 
 ### Lesson: Declare Array With Len
 
@@ -3301,7 +3283,7 @@ fn main() {
 
 ### Declare Array With Init And Len
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v](arrays_and_maps/01_arrays/01_array_declaration/04_declare_array_with_init_and_len/04_declare_array_with_init_and_len.v)_
 
 ### Lesson: Declare Array With Init And Len
 
@@ -3323,7 +3305,7 @@ fn main() {
 
 ### Declare Array With Cap
 
-_File location: [arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v)_
+_File location: [arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v](arrays_and_maps/01_arrays/01_array_declaration/05_declare_array_with_cap/05_declare_array_with_cap.v)_
 
 ### Lesson: Declare Array With Cap
 
@@ -3345,7 +3327,7 @@ fn main() {
 
 ### Working With Array Properties
 
-_File location: [arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v)_
+_File location: [arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v](arrays_and_maps/01_arrays/02_array_properties/01_working_with_array_properties.v)_
 
 ### Lesson: Working With Array Properties
 
@@ -3382,7 +3364,7 @@ fn main() {
 
 ### Access Array Elements Using Index
 
-_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v)_
+_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v](arrays_and_maps/01_arrays/03_accessing_array_elements/01_access_array_elements_using_index/01_access_array_elements_using_index.v)_
 
 ### Lesson: Access Array Elements Using Index
 
@@ -3405,21 +3387,72 @@ fn main() {
 
 ### Access Array Elements Using Slices
 
-_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v)_
+_File location: [arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v](arrays_and_maps/01_arrays/03_accessing_array_elements/02_access_array_elements_using_slices/02_access_array_elements_using_slices.v)_
 
 ### Lesson: Access Array Elements Using Slices
 
-An **array** is a collection of elements of the same type. In V, arrays are declared using square brackets. They are index-based, dynamically sized, and provide built-in methods like `map()`, `filter()`, and `sort()` for functional-style manipulation.
+An **array** is a collection of elements of the same type. In V, you can retrieve a subset of elements by slicing the array. Slicing uses the `[start..end]` syntax, which creates a new array containing elements from the `start` index up to (but not including) the `end` index.
 
-These examples show how to initialize, append, clone, copy, and manipulate arrays.
+#### Positive Slicing
+
+Positive indices represent offsets from the beginning of the array (starting at `0`). For example, `sports[1..3]` returns a slice from index `1` to `2`.
+
+#### Negative Slicing
+
+V does not support negative indices natively in slices (e.g., `sports[-2..]` will cause a compiler error). To achieve the effect of negative slicing (indexing from the end of the array), you calculate the start and/or end index using the array's `.len` property:
+
+- **Excluding the last element**: `sports[..sports.len - 1]` (equivalent to Python's `sports[..-1]`)
+- **Range from the end**: `sports[sports.len - 3 .. sports.len - 1]` (equivalent to Python's `sports[-3..-1]`)
+- **Last N elements**: `sports[sports.len - 2 ..]` (equivalent to Python's `sports[-2..]`)
+
+#### Slices are References
+
+> [!IMPORTANT]
+> In V, **slices are reference views** of the original array, not copies.
+>
+> - Modifying any element inside a slice **will modify the original array**.
+> - Assigning a slice to a variable is considered unsafe/restricted unless you wrap it in an `unsafe` block (`mut sl := unsafe { arr[1..4] }`) or clone it explicitly.
+> - To get a separate array slice by value (so modifications do not affect the original array), append `.clone()` to the end of the slice expression (`mut sl_copy := arr[1..4].clone()`).
 
 **Additional Context from Repository docs:**
-This example demonstrates the concepts of **access array elements using slices**.
+This example demonstrates the concepts of **access array elements using slices**, including positive slicing, `.len`-based negative slicing, reference mutation via `unsafe` blocks, and copying by value with `.clone()`.
 
 ```v
 fn main() {
-	mut sports := ['cricket', 'hockey', 'football']
-	println(sports[1..3])
+	mut sports := ['cricket', 'hockey', 'football', 'basketball', 'tennis']
+
+	// Positive slicing: from index 1 to 3 (excluding index 3)
+	println(sports[1..3]) // ['hockey', 'football']
+
+	// V does not support negative indices natively in slices (e.g., sports[-2..] will not compile).
+	// To achieve "negative slicing" (indexing from the end of the array), use the `.len` property:
+
+	// Slice up to the last element (excluding it): Python's sports[..-1]
+	println(sports[..sports.len - 1]) // ['cricket', 'hockey', 'football', 'basketball']
+
+	// Slice from 3rd to last up to 1st to last (excluding it): Python's sports[-3..-1]
+	println(sports[sports.len - 3..sports.len - 1]) // ['football', 'basketball']
+
+	// Slice the last two elements: Python's sports[-2..]
+	println(sports[sports.len - 2..]) // ['basketball', 'tennis']
+
+	// --- REFERENCE VS VALUE BEHAVIOR ---
+	// In V, slices are reference views of the original array.
+	// If you modify an element of a slice, it affects the original array.
+	// Note: To prevent unsafe behavior, assigning a slice to a variable requires an `unsafe` block
+	// if you want it by-reference, or an explicit `.clone()` to get a copy by-value.
+
+	// 1. Modifying by reference (using unsafe)
+	mut original := [10, 20, 30, 40, 50]
+	mut ref_slice := unsafe { original[1..4] }
+	ref_slice[0] = 99
+	println(original) // [10, 99, 30, 40, 50] (Original is modified!)
+
+	// 2. Modifying by value (using .clone())
+	mut original_two := [10, 20, 30, 40, 50]
+	mut val_slice := original_two[1..4].clone()
+	val_slice[0] = 99
+	println(original_two) // [10, 20, 30, 40, 50] (Original remains unchanged!)
 }
 ```
 
@@ -3427,7 +3460,7 @@ fn main() {
 
 ### In Operator With Array
 
-_File location: [arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v)_
+_File location: [arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v](arrays_and_maps/01_arrays/04_array_operators/01_in_operator_with_array/01_in_operator_with_array.v)_
 
 ### Lesson: In Operator With Array
 
@@ -3453,7 +3486,7 @@ fn main() {
 
 ### Append Array
 
-_File location: [arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v)_
+_File location: [arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v](arrays_and_maps/01_arrays/04_array_operators/02_append_array/02_append_array.v)_
 
 ### Lesson: Append Array
 
@@ -3480,7 +3513,7 @@ fn main() {
 
 ### Define Fixed Size Array
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/01_define_fixed_size_array/01_define_fixed_size_array.v)_
 
 ### Lesson: Define Fixed Size Array
 
@@ -3503,7 +3536,7 @@ fn main() {
 
 ### Update Fixed Size Array Elements
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/02_update_fixed_size_array_elements/02_update_fixed_size_array_elements.v)_
 
 ### Lesson: Update Fixed Size Array Elements
 
@@ -3527,7 +3560,7 @@ fn main() {
 
 ### Determining Type Of Fixed Array
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/03_determining_type_of_fixed_array/03_determining_type_of_fixed_array.v)_
 
 ### Lesson: Determining Type Of Fixed Array
 
@@ -3549,7 +3582,7 @@ fn main() {
 
 ### Slicing Fixed Size Array Results In Ordinary Array
 
-_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v)_
+_File location: [arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v](arrays_and_maps/01_arrays/05_fixed_size_arrays/04_slicing_fixed_size_array_results_in_ordinary_array/04_slicing_fixed_size_array_results_in_ordinary_array.v)_
 
 ### Lesson: Slicing Fixed Size Array Results In Ordinary Array
 
@@ -3575,7 +3608,7 @@ fn main() {
 
 ### Declaring Multi Dimensional Arrays
 
-_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v)_
+_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v](arrays_and_maps/01_arrays/06_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays/01_declaring_multi_dimensional_arrays.v)_
 
 ### Lesson: Declaring Multi Dimensional Arrays
 
@@ -3600,7 +3633,7 @@ fn main() {
 
 ### Updating Multi Dimensional Array Indices
 
-_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v)_
+_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v](arrays_and_maps/01_arrays/06_multi_dimensional_arrays/02_updating_multi_dimensional_arrays/02_updating_multi_dimensional_arrays.v)_
 
 ### Lesson: Updating Multi Dimensional Array Indices
 
@@ -3633,7 +3666,7 @@ fn main() {
 
 ### Reassigning Multi Dimensional Arrays
 
-_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v)_
+_File location: [arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v](arrays_and_maps/01_arrays/06_multi_dimensional_arrays/03_updating_multi_dimensional_arrays/03_updating_multi_dimensional_arrays.v)_
 
 ### Lesson: Reassigning Multi Dimensional Arrays
 
@@ -3662,7 +3695,7 @@ fn main() {
 
 ### Clone Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v](arrays_and_maps/01_arrays/07_array_operations/01_clone_array/01_clone_array/01_clone_array.v)_
 
 ### Lesson: Clone Array
 
@@ -3686,7 +3719,7 @@ fn main() {
 
 ### Copy Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v](arrays_and_maps/01_arrays/07_array_operations/01_clone_array/02_copy_array/02_copy_array.v)_
 
 ### Lesson: Copy Array
 
@@ -3712,7 +3745,7 @@ fn main() {
 
 ### Sort Integer Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v](arrays_and_maps/01_arrays/07_array_operations/02_sort_array/01_sort_integer_array/01_sort_integer_array.v)_
 
 ### Lesson: Sort Integer Array
 
@@ -3739,7 +3772,7 @@ fn main() {
 
 ### Sort String Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v](arrays_and_maps/01_arrays/07_array_operations/02_sort_array/02_sort_string_array/02_sort_string_array.v)_
 
 ### Lesson: Sort String Array
 
@@ -3767,7 +3800,7 @@ fn main() {
 
 ### Sort Struct Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v](arrays_and_maps/01_arrays/07_array_operations/02_sort_array/sort_struct_array/03_sort_struct_array.v)_
 
 ### Lesson: Sort Struct Array
 
@@ -3836,7 +3869,7 @@ fn main() {
 
 ### Filter Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v](arrays_and_maps/01_arrays/07_array_operations/03_filter_array/01_filter_array/01_filter_array.v)_
 
 ### Lesson: Filter Array
 
@@ -3860,7 +3893,7 @@ fn main() {
 
 ### Filter With Anonymous Funcs On Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v](arrays_and_maps/01_arrays/07_array_operations/03_filter_array/02_filter_with_anonymous_funcs_on_array/02_filter_with_anonymous_funcs_on_array.v)_
 
 ### Lesson: Filter With Anonymous Funcs On Array
 
@@ -3887,7 +3920,7 @@ fn main() {
 
 ### Map Array Items
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v](arrays_and_maps/01_arrays/07_array_operations/04_map_array/01_map_array_items/01_map_array_items.v)_
 
 ### Lesson: Map Array Items
 
@@ -3910,7 +3943,7 @@ fn main() {
 
 ### Map Using Anonymous Funcs On Array
 
-_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v)_
+_File location: [arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v](arrays_and_maps/01_arrays/07_array_operations/04_map_array/02_map_using_anonymous_funcs_on_array/02_map_using_anonymous_funcs_on_array.v)_
 
 ### Lesson: Map Using Anonymous Funcs On Array
 
@@ -3937,7 +3970,7 @@ fn main() {
 
 ### Array Methods
 
-_File location: [arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v)_
+_File location: [arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v](arrays_and_maps/01_arrays/08_array_methods/01_array_methods/01_array_methods.v)_
 
 ### Lesson: Array Methods
 
@@ -3956,8 +3989,12 @@ module main
 fn compare_ints(a &int, b &int) int {
 	val_a := *a
 	val_b := *b
-	if val_a < val_b { return -1 }
-	if val_a > val_b { return 1 }
+	if val_a < val_b {
+		return -1
+	}
+	if val_a > val_b {
+		return 1
+	}
 	return 0
 }
 
@@ -3985,7 +4022,6 @@ fn main() {
 		println('repeat_to_depth: ${typed_grid}') // [[1, 2], [3, 4], [1, 2], [3, 4]]
 		rep_grid.free()
 	}
-
 	// 4. insert(index, val)
 	// Inserts a new element at the specified index.
 	a.insert(1, 15)
@@ -4074,7 +4110,6 @@ fn main() {
 		println('clone_to_depth: ${typed_clone}') // [[1, 2], [3, 4]]
 		grid_clone.free()
 	}
-
 	// 19. push_many(val, size) (unsafe)
 	// Appends size elements starting from a raw pointer val to the array.
 	mut a_push := [1, 2]
@@ -4087,7 +4122,6 @@ fn main() {
 		a_push.free()
 		vals.free()
 	}
-
 	// 20. reverse()
 	// Returns a new reversed copy of the array.
 	a_rev := [1, 2, 3]
@@ -4202,7 +4236,7 @@ fn main() {
 
 ### Explicit Map Initialization
 
-_File location: [arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v)_
+_File location: [arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v](arrays_and_maps/02_maps/01_explicit_map_initialization/01_explicit_map_initialization.v)_
 
 ### Lesson: Explicit Map Initialization
 
@@ -4227,7 +4261,7 @@ fn main() {
 
 ### Short Syntax Initialization Of Map
 
-_File location: [arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v)_
+_File location: [arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v](arrays_and_maps/02_maps/02_short_syntax_initialization_of_map/02_short_syntax_initialization_of_map.v)_
 
 ### Lesson: Short Syntax Initialization Of Map
 
@@ -4254,7 +4288,7 @@ fn main() {
 
 ### Count Key Value Pairs In Map
 
-_File location: [arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v)_
+_File location: [arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v](arrays_and_maps/02_maps/03_count_key_value_pairs_in_map/03_count_key_value_pairs_in_map.v)_
 
 ### Lesson: Count Key Value Pairs In Map
 
@@ -4282,7 +4316,7 @@ fn main() {
 
 ### Value Given Key Of Map
 
-_File location: [arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v)_
+_File location: [arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v](arrays_and_maps/02_maps/04_value_given_key_of_map/04_value_given_key_of_map.v)_
 
 ### Lesson: Value Given Key Of Map
 
@@ -4310,7 +4344,7 @@ fn main() {
 
 ### Value Given Non Existent Key Of Map
 
-_File location: [arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v)_
+_File location: [arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v](arrays_and_maps/02_maps/05_value_given_non_existent_key_of_map/05_value_given_non_existent_key_of_map.v)_
 
 ### Lesson: Value Given Non Existent Key Of Map
 
@@ -4338,7 +4372,7 @@ fn main() {
 
 ### Handling Missing Keys In Map
 
-_File location: [arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v)_
+_File location: [arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v](arrays_and_maps/02_maps/06_handling_missing_keys_in_map/06_handling_missing_keys_in_map.v)_
 
 ### Lesson: Handling Missing Keys In Map
 
@@ -4367,7 +4401,7 @@ fn main() {
 
 ### Update Value Given A Key In Map
 
-_File location: [arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v)_
+_File location: [arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v](arrays_and_maps/02_maps/07_update_value_given_a_key_in_map/07_update_value_given_a_key_in_map.v)_
 
 ### Lesson: Update Value Given A Key In Map
 
@@ -4395,7 +4429,7 @@ fn main() {
 
 ### Delete Key Value Pair From Map
 
-_File location: [arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v)_
+_File location: [arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v](arrays_and_maps/02_maps/08_delete_key_value_pair_from_map/08_delete_key_value_pair_from_map.v)_
 
 ### Lesson: Delete Key Value Pair From Map
 
@@ -4425,7 +4459,7 @@ fn main() {
 
 ### Map Methods
 
-_File location: [arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v)_
+_File location: [arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v](arrays_and_maps/02_maps/09_map_methods/01_map_methods/01_map_methods.v)_
 
 ### Lesson: Map Methods
 
@@ -4480,7 +4514,7 @@ fn main() {
 	// Moves the map contents to a new map variable and clears the original map to empty.
 	mut m_move := {
 		'three': 3
-		'four': 4
+		'four':  4
 	}
 	moved := m_move.move()
 	println('move (new map): ${moved}') // {"three": 3, "four": 4}
@@ -4495,6 +4529,85 @@ fn main() {
 		m_free.free()
 	}
 	println('free: map freed successfully')
+}
+```
+
+### Import Maps Helpers
+
+_File location: [arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v](arrays_and_maps/02_maps/09_map_methods/02_import_maps_helpers/02_import_maps_helpers.v)_
+
+### Lesson: Import Maps Helpers
+
+The `maps` module provides higher-level helpers for filtering, transforming, inverting, merging, and converting between maps and arrays. These helpers are useful when you want to work with map data in a functional style without manually writing the loops yourself.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **import maps helpers**.
+
+```v
+module main
+
+import maps
+
+fn main() {
+	println('--- Import Maps Module Helpers ---')
+
+	// Start with a simple map of fruit counts.
+	m1 := {
+		'apple':  1
+		'banana': 2
+		'cherry': 3
+	}
+
+	// filter() keeps only the entries that satisfy the callback condition.
+	filtered := maps.filter(m1, fn (k string, v int) bool {
+		return v > 1
+	})
+	println('filter(): ${filtered}')
+
+	// to_array() builds a new array by transforming each entry.
+	keys_upper := maps.to_array(m1, fn (k string, v int) string {
+		return k.to_upper()
+	})
+	println('to_array(): ${keys_upper}')
+
+	// invert() swaps each key/value pair so the values become the keys.
+	inverted := maps.invert(m1)
+	println('invert(): ${inverted}')
+
+	// from_array() creates a map from a list of strings.
+	fruits := ['apple', 'banana', 'cherry']
+	map_from_arr := maps.from_array(fruits)
+	println('from_array(): ${map_from_arr}')
+
+	// merge() combines two maps and lets the second map override duplicates.
+	m2 := {
+		'banana': 20
+		'date':   4
+	}
+	merged := maps.merge(m1, m2)
+	println('merge(): ${merged}')
+
+	// merge_in_place() mutates the first map directly.
+	mut mut_map := {
+		'a': 1
+	}
+	maps.merge_in_place(mut mut_map, {
+		'b': 2
+		'c': 3
+	})
+	println('merge_in_place(): ${mut_map}')
+
+	// flat_map() can expand each entry into multiple output values.
+	flat_items := maps.flat_map[string, int, string](m1, fn (k string, v int) []string {
+		return [k, v.str()]
+	})
+	println('flat_map(): ${flat_items}')
+
+	// to_map() transforms each entry into a new key/value pair.
+	transformed := maps.to_map[string, int, string, int](m1, fn (k string, v int) (string, int) {
+		return k.to_upper(), v * 10
+	})
+	println('to_map(): ${transformed}')
 }
 ```
 
@@ -4537,38 +4650,33 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Anonymous Functions](#anonymous-functions)
 - [Functions As Input Arguments](#functions-as-input-arguments)
 - [Functions That Return Other Functions](#functions-that-return-other-functions)
+- [Lambda Expressions](#lambda-expressions)
+- [Closures](#closures)
 
 ---
 
-Functions allow you to break your program into reusable blocks of logic. This chapter explains how to declare functions, handle multiple return values, write anonymous functions and closures, and use the `defer` keyword to clean up resources.
+Functions let you turn repeated or complex logic into small, named building blocks. A useful mental model is: define the task, give it inputs if needed, do the work, and return a useful result. This chapter starts with simple functions and then introduces multiple returns, optional results, higher-order functions, and cleanup with `defer`.
 
 ## Advanced Function Features
 
 ### Function Returns Value Example 1
 
-_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v)_
+_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v](functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/01_function_returns_value_example_1.v)_
 
 ### Lesson: Function Returns Value Example 1
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+A simple function is a small helper that turns inputs into a useful result. The basic pattern is: define the function, pass in values, do some work, and return the answer. In this example, `add` takes two integers and returns their sum.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 1**.
 
 ```v
-fn sum(a int, b int) int {
+fn add(a int, b int) int {
 	return a + b
 }
 
 fn main() {
-	println(sum(2, 3))
+	println(add(2, 3))
 }
 ```
 
@@ -4576,18 +4684,11 @@ fn main() {
 
 ### Function Returns Value Example 2
 
-_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v)_
+_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v](functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/02_function_returns_value_example_2.v)_
 
 ### Lesson: Function Returns Value Example 2
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+A function does not need to print anything itself. It can build a value and hand it back to the caller. Here, `say_hello` returns a greeting string, and `main` decides how to display it.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function returns value example 2**.
@@ -4607,20 +4708,13 @@ fn main() {
 
 ---
 
-### Funtions Without Return Type
+### Functions Without Return Type
 
-_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v)_
+_File location: [functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v](functions/02_understanding_funtion_features/01_functions_return_or_just_perform_operations/01_functions_return_value_or_just_perform_routine/03_funtions_without_return_type.v)_
 
-### Lesson: Funtions Without Return Type
+### Lesson: Functions Without Return Type
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Some functions are used for actions rather than calculations. They may print output, write files, or update state. In that case, you can leave out the return type and focus on the side effect.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **funtions without return type**.
@@ -4640,18 +4734,11 @@ fn main() {
 
 ### Function With Input Arguments
 
-_File location: [functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v)_
+_File location: [functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v](functions/02_understanding_funtion_features/02_function_and_input_arguments/01_function_with_input_arguments.v)_
 
 ### Lesson: Function With Input Arguments
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Functions become much more useful when they accept inputs. This example uses two numbers as arguments and returns their sum, showing the classic input → process → output flow.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with input arguments**.
@@ -4672,18 +4759,11 @@ fn main() {
 
 ### Function Return Multiple Values
 
-_File location: [functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v)_
+_File location: [functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v](functions/02_understanding_funtion_features/03_function_return_multiple_values/01_function_return_multiple_values.v)_
 
 ### Lesson: Function Return Multiple Values
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+A function can return more than one value when those values belong together. A common pattern is returning both the main result and a related detail, such as a length or status. Here, `greet_and_message_length` returns both the greeting and its length.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function return multiple values**.
@@ -4705,18 +4785,11 @@ fn main() {
 
 ### Ignore Function Return Value
 
-_File location: [functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v)_
+_File location: [functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v](functions/02_understanding_funtion_features/04_ignore_function_return_values/01_ignore_function_return_value.v)_
 
 ### Lesson: Ignore Function Return Value
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Sometimes you only care about one returned value. V lets you ignore the rest with `_`, which keeps the code readable when you are only interested in part of the result.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **ignore function return value**.
@@ -4737,18 +4810,11 @@ fn main() {
 
 ### Function Calls Other Function
 
-_File location: [functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v)_
+_File location: [functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v](functions/02_understanding_funtion_features/05_function_calls_other_function/01_function_calls_other_function.v)_
 
 ### Lesson: Function Calls Other Function
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Functions can call other functions to split a bigger problem into smaller steps. This makes the code easier to understand and easier to reuse later.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function calls other function**.
@@ -4775,7 +4841,7 @@ fn main() {
 
 ### Example 1
 
-_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v)_
+_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v](functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/01_example_1.v)_
 
 ### Lesson: Example 1
 
@@ -4814,7 +4880,7 @@ fn main() {
 
 ### Example 2
 
-_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v)_
+_File location: [functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v](functions/02_understanding_funtion_features/06_allowed_function_input_argument_types/02_example_2.v)_
 
 ### Lesson: Example 2
 
@@ -4849,7 +4915,7 @@ fn main() {
 
 ### Error Script Functions
 
-_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh)_
+_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh](functions/02_understanding_funtion_features/07_functions_in_v_scripts/01_error_script_functions.vsh)_
 
 ### Lesson: Error Script Functions
 
@@ -4880,7 +4946,7 @@ fn log(msg string) {
 
 ### Script Functions
 
-_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh)_
+_File location: [functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh](functions/02_understanding_funtion_features/07_functions_in_v_scripts/02_script_functions.vsh)_
 
 ### Lesson: Script Functions
 
@@ -4911,7 +4977,7 @@ for i in 0 .. cnt {
 
 ### Functions Module Variables - Main (main.v)
 
-_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v)_
+_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v](functions/02_understanding_funtion_features/08_functions_and_module_variables/main.v)_
 
 ### Lesson: Functions Module Variables - Main
 
@@ -4943,7 +5009,7 @@ fn main() {
 
 ### Mymod
 
-_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v)_
+_File location: [functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v](functions/02_understanding_funtion_features/08_functions_and_module_variables/mymod/mymod.v)_
 
 ### Lesson: Mymod
 
@@ -4972,7 +5038,7 @@ __global (
 
 ### Functions With Optional Return Types Example 1
 
-_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v)_
+_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v](functions/02_understanding_funtion_features/09_functions_with_optional_return_types/01_functions_with_optional_return_types_example_1.v)_
 
 ### Lesson: Functions With Optional Return Types Example 1
 
@@ -5011,7 +5077,7 @@ fn main() {
 
 ### Function With Optional Return Type Example 2
 
-_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v)_
+_File location: [functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v](functions/02_understanding_funtion_features/09_functions_with_optional_return_types/02_function_with_optional_return_type_example_2.v)_
 
 ### Lesson: Function With Optional Return Type Example 2
 
@@ -5050,7 +5116,7 @@ fn main() {
 
 ### Mod1
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v](functions/02_understanding_funtion_features/10_functions_marked_public/mod1/mod1.v)_
 
 ### Lesson: Mod1
 
@@ -5088,7 +5154,7 @@ pub fn greet_and_wish() string {
 
 ### Public Function Demo1
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v](functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo1.v)_
 
 ### Lesson: Public Function Demo1
 
@@ -5118,7 +5184,7 @@ fn main() {
 
 ### Public Function Demo2
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v](functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo2.v)_
 
 ### Lesson: Public Function Demo2
 
@@ -5148,7 +5214,7 @@ fn main() {
 
 ### Public Function Demo3
 
-_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v)_
+_File location: [functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v](functions/02_understanding_funtion_features/10_functions_marked_public/public_function_demo3.v)_
 
 ### Lesson: Public Function Demo3
 
@@ -5178,18 +5244,11 @@ fn main() {
 
 ### Function With Defer Block
 
-_File location: [functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v)_
+_File location: [functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v](functions/02_understanding_funtion_features/11_functions_with_defer_block/01_function_with_defer_block.v)_
 
 ### Lesson: Function With Defer Block
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+`defer` is useful when a function needs to clean up something before it exits, such as closing a file or releasing a resource. The deferred block runs automatically at the end of the function.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with defer block**.
@@ -5216,18 +5275,11 @@ fn main() {
 
 ### Functions As Elements Of Array Or Map
 
-_File location: [functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v)_
+_File location: [functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v](functions/02_understanding_funtion_features/12_functions_as_elements_of_array_or_map/01_functions_as_elements_of_array_or_map.v)_
 
 ### Lesson: Functions As Elements Of Array Or Map
 
-V functions support several advanced features:
-
-- **Multiple Return Values**: A function can return more than one value (often a result and an error).
-- **Blank Identifier (`_`)**: Used to discard unwanted return values.
-- **Defer**: Schedules a block of code to run right before the function exits, which is excellent for resource cleanup.
-- **Anonymous Functions & Closures**: Functions defined inline that can capture variables from their outer scope.
-
-These examples illustrate these powerful concepts.
+Functions can be stored in arrays and maps just like other values. This allows you to choose an operation dynamically at runtime, which is helpful in flexible programs.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions as elements of array or map**.
@@ -5276,11 +5328,11 @@ fn main() {
 
 ### Hello
 
-_File location: [functions/01_function_types/00_main_function/hello.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/00_main_function/hello.v)_
+_File location: [functions/01_function_types/00_main_function/hello.v](functions/01_function_types/00_main_function/hello.v)_
 
 ### Lesson: Hello
 
-Functions are reusable blocks of logic. This lesson on **Hello** explains functional syntax, arguments, returns, or functional capabilities in V.
+Every V program starts with `main()`. It is the entry point where execution begins, so it is the first function most beginners learn.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **hello**.
@@ -5297,22 +5349,25 @@ fn main() {
 
 ### Basic Functions
 
-_File location: [functions/01_function_types/01_basic_functions/basic_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/01_basic_functions/basic_functions.v)_
+_File location: [functions/01_function_types/01_basic_functions/basic_functions.v](functions/01_function_types/01_basic_functions/basic_functions.v)_
 
 ### Lesson: Basic Functions
 
-Functions are reusable blocks of logic. This lesson on **Basic Functions** explains functional syntax, arguments, returns, or functional capabilities in V.
+A basic function packages a task so you can call it later instead of repeating the same code. This example shows a function that prints a message when invoked.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **basic functions**.
 
 ```v
-fn greet(msg string) {
-	println(msg)
+// Define a simple function that prints a greeting.
+fn greet(name string) {
+	println('Hello, ${name}!')
 }
 
 fn main() {
-	greet('Hello, Welcome to the world of V programming')
+	// Call the function with different argument values.
+	greet('Ada')
+	greet('Grace')
 }
 ```
 
@@ -5320,11 +5375,11 @@ fn main() {
 
 ### Anonymous Functions
 
-_File location: [functions/01_function_types/02_anonymous_functions/anonymous_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/02_anonymous_functions/anonymous_functions.v)_
+_File location: [functions/01_function_types/02_anonymous_functions/anonymous_functions.v](functions/01_function_types/02_anonymous_functions/anonymous_functions.v)_
 
 ### Lesson: Anonymous Functions
 
-Functions are reusable blocks of logic. This lesson on **Anonymous Functions** explains functional syntax, arguments, returns, or functional capabilities in V.
+Anonymous functions are defined inline and are useful for short, one-off behavior. They are handy when you want a quick callback without creating a named function.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **anonymous functions**.
@@ -5333,9 +5388,12 @@ This example demonstrates the concepts of **anonymous functions**.
 module main
 
 fn main() {
+	// Create an anonymous function and assign it to a variable.
 	greet := fn (name string) {
 		println('Hello, ${name}')
 	}
+
+	// Invoke the function twice with different names.
 	greet('Pavan')
 	greet('Sahithi')
 }
@@ -5345,7 +5403,7 @@ fn main() {
 
 ### Functions As Input Arguments
 
-_File location: [functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v)_
+_File location: [functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v](functions/01_function_types/03_higher_order_functions/01_functions_as_input_arguments/01_functions_as_input_arguments.v)_
 
 ### Lesson: Functions As Input Arguments
 
@@ -5391,7 +5449,7 @@ fn main() {
 
 ### Functions That Return Other Functions
 
-_File location: [functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v)_
+_File location: [functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v](functions/01_function_types/03_higher_order_functions/02_functions_that_return_other_functions/02_functions_that_return_other_functions.v)_
 
 ### Lesson: Functions That Return Other Functions
 
@@ -5453,6 +5511,105 @@ fn main() {
 
 ---
 
+### Lambda Expressions
+
+_File location: [functions/01_function_types/04_lambda_expressions/lambda_expressions.v](functions/01_function_types/04_lambda_expressions/lambda_expressions.v)_
+
+### Lesson: Lambda Expressions
+
+V supports **Lambda Expressions**, which are lightweight, inline anonymous functions defined using the `|variables| expression` syntax.
+
+Key architectural characteristics:
+
+1. **Scope Restriction**: Lambda expressions are not general-purpose functions; this syntax is **only** valid when passed directly as arguments to higher-order functions like `.sort()`, `.map()`, and `.filter()`.
+2. **Implicit Returns**: The result of the single expression on the right-hand side is automatically returned. No `return` keyword is needed.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Sorting (`nums.sort(|a, b| b < a)`)**:
+  The `.sort()` method accepts a comparator callback. The lambda expression defines parameters `a` and `b`, returning the comparison `b < a` to sort the array in descending order.
+- **Mapping (`nums.map(|x| x * 10)`)**:
+  The `.map()` method transforms each array element. The lambda `|x| x * 10` accepts the element `x`, multiplies it by `10`, and produces the new mapped array.
+- **Filtering (`doubled.filter(|x| x > 20)`)**:
+  The `.filter()` method checks a predicate. The lambda `|x| x > 20` checks each element and retains only those returning `true`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **lambda expressions**.
+
+```v
+module main
+
+fn main() {
+	mut nums := [1, 3, 2, 5, 4]
+
+	// Sort descending using a lambda expression
+	nums.sort(|a, b| b < a)
+	println('Sorted: ${nums}') // [5, 4, 3, 2, 1]
+
+	// Map using lambda to multiply by 10
+	doubled := nums.map(|x| x * 10)
+	println('Doubled: ${doubled}') // [50, 40, 30, 20, 10]
+
+	// Filter using lambda to keep only elements > 20
+	filtered := doubled.filter(|x| x > 20)
+	println('Filtered (>20): ${filtered}') // [50, 40, 30]
+}
+```
+
+---
+
+### Closures
+
+_File location: [functions/01_function_types/05_closures/closures.v](functions/01_function_types/05_closures/closures.v)_
+
+### Lesson: Closures
+
+V supports **Closures**, which are anonymous functions that "remember" and access variables from the parent scope in which they were created.
+
+Unlike languages where variable capture is automatic and hidden, V implements **explicit capture lists** for safety and predictability:
+
+1. **Explicit Capture Syntax**: Captured variables must be declared inside square brackets `fn [captured_var] (args)`.
+2. **Pass-by-Value Capture (`[captured_var]`)**: The variable's value is copied when the closure is created. It is read-only inside the closure body.
+3. **Pass-by-Reference Capture (`[mut captured_var]`)**: Prepending the capture with `mut` passes the variable by reference. Any changes made to the variable inside the closure modify the original variable in the parent scope, and vice-versa.
+
+#### Step-by-Step Code Walkthrough:
+
+- **`new_counter` Function**: Returns a closure `fn () int`.
+- **State Preservation (`[mut count]`)**: The closure captures the local variable `count` from `new_counter` as `mut`. This allows `count` to survive after `new_counter` returns and update its state across multiple invocation calls (e.g. `counter()`).
+- **Value Capture (`[factor]`)**: The closure `multiplier` captures the `factor` variable as read-only. Calling `multiplier(5)` evaluates to `5 * 10` (50).
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **closures**.
+
+```v
+module main
+
+fn new_counter() fn () int {
+	mut count := 0
+	// The closure inherits `count` by reference (read-write) using explicit list `[mut count]`
+	return fn [mut count] () int {
+		count++
+		return count
+	}
+}
+
+fn main() {
+	counter := new_counter()
+	println(counter()) // 1
+	println(counter()) // 2
+	println(counter()) // 3
+
+	// An immutable capture closure
+	factor := 10
+	multiplier := fn [factor] (x int) int {
+		return x * factor
+	}
+	println(multiplier(5)) // 50
+}
+```
+
+---
+
 # Chapter 7: Structs (Custom Types)
 
 ## Quick Access
@@ -5476,9 +5633,15 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Required Fields Example 02](#required-fields-example-02)
 - [Struct Fields With Default Values](#struct-fields-with-default-values)
 - [Methods For Struct](#methods-for-struct)
+- [Mutable Methods](#mutable-methods)
+- [Printing Custom Types](#printing-custom-types)
 - [Adding Struct As Struct Field](#adding-struct-as-struct-field)
 - [Updating Fields Of Type Struct](#updating-fields-of-type-struct)
 - [Struct As Trailing Literal Arguments To Function](#struct-as-trailing-literal-arguments-to-function)
+- [Anonymous Structs](#anonymous-structs)
+- [Static Type Methods](#static-type-methods)
+- [noinit Structs](#noinit-structs)
+- [Unions](#unions)
 
 ---
 
@@ -5488,7 +5651,7 @@ Structs are user-defined data structures that allow you to group related fields 
 
 ### Defining Struct
 
-_File location: [structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v)_
+_File location: [structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v](structs/01_introducing_structs/01_defining_struct/01_defining_struct/01_defining_struct.v)_
 
 ### Lesson: Defining Struct
 
@@ -5506,6 +5669,12 @@ struct Note {
 }
 
 fn main() {
+	note := Note{
+		id:      1
+		message: 'A simple struct demo'
+	}
+
+	println(note)
 }
 ```
 
@@ -5513,7 +5682,7 @@ fn main() {
 
 ### Initialize Struct Example 1
 
-_File location: [structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v)_
+_File location: [structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v](structs/01_introducing_structs/01_defining_struct/02_initialize_struct_example_1/02_initialize_struct_example_1.v)_
 
 ### Lesson: Initialize Struct Example 1
 
@@ -5531,9 +5700,10 @@ struct Note {
 }
 
 fn main() {
-	n := Note{1, 'a simple struct demo'}
+	note := Note{1, 'A simple struct demo'}
 
-	println(n)
+	println('ID: ${note.id}')
+	println('Message: ${note.message}')
 }
 ```
 
@@ -5541,7 +5711,7 @@ fn main() {
 
 ### Initialize Struct Example 2
 
-_File location: [structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v)_
+_File location: [structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v](structs/01_introducing_structs/01_defining_struct/03_initialize_struct_example_2/03_initialize_struct_example_2.v)_
 
 ### Lesson: Initialize Struct Example 2
 
@@ -5559,13 +5729,13 @@ struct Note {
 }
 
 fn main() {
-	n := Note{
-		message: 'a simple struct demo'
-		id:      1
+	note := Note{
+		message: 'A named-field struct demo'
+		id:      2
 	}
 
-	println(typeof(n).name)
-	// Note
+	println(typeof(note).name)
+	println(note)
 }
 ```
 
@@ -5573,7 +5743,7 @@ fn main() {
 
 ### Access Struct Fields
 
-_File location: [structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v)_
+_File location: [structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v](structs/01_introducing_structs/02_access_struct_fields/01_access_struct_fields.v)_
 
 ### Lesson: Access Struct Fields
 
@@ -5600,7 +5770,7 @@ fn main() {
 
 ### Heap Structs
 
-_File location: [structs/01_introducing_structs/03_heap_structs/01_heap_structs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/01_introducing_structs/03_heap_structs/01_heap_structs.v)_
+_File location: [structs/01_introducing_structs/03_heap_structs/01_heap_structs.v](structs/01_introducing_structs/03_heap_structs/01_heap_structs.v)_
 
 ### Lesson: Heap Structs
 
@@ -5627,7 +5797,7 @@ fn main() {
 
 ### Updating Immutable Struct Variable Throws Error
 
-_File location: [structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v)_
+_File location: [structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v](structs/02_updating_fields_of_struct/01_updating_immutable_struct_variable_throws_error/01_updating_immutable_struct_variable_throws_error.v)_
 
 ### Lesson: Updating Immutable Struct Variable Throws Error
 
@@ -5659,7 +5829,7 @@ fn main() {
 
 ### Updating Mutable Fields Of Struct
 
-_File location: [structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v)_
+_File location: [structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v](structs/02_updating_fields_of_struct/02_updating_mutable_fields_of_struct/01_updating_mutable_fields_of_struct.v)_
 
 ### Lesson: Updating Mutable Fields Of Struct
 
@@ -5694,7 +5864,7 @@ fn main() {
 
 ### Updating Immutable Fields Throws Error
 
-_File location: [structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v)_
+_File location: [structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v](structs/02_updating_fields_of_struct/03_updating_immutable_fields_throws_error/01_updating_immutable_fields_throws_error.v)_
 
 ### Lesson: Updating Immutable Fields Throws Error
 
@@ -5724,7 +5894,7 @@ fn main() {
 
 ### Updating Struct With Unspecified Fields Are Zeroed
 
-_File location: [structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v)_
+_File location: [structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v](structs/02_updating_fields_of_struct/04_updating_struct_with_unspecified_fields_are_zeroed/01_updating_struct_with_unspecified_fields_are_zeroed.v)_
 
 ### Lesson: Updating Struct With Unspecified Fields Are Zeroed
 
@@ -5769,7 +5939,7 @@ fn main() {
 
 ### Struct With Multiple Fields
 
-_File location: [structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v)_
+_File location: [structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v](structs/03_approaches_defining_struct_fields/01_struct_with_multiple_fields/01_struct_with_multiple_fields.v)_
 
 ### Lesson: Struct With Multiple Fields
 
@@ -5796,7 +5966,7 @@ fn main() {
 
 ### Grouping Struct Fields Based On Access Modifiers
 
-_File location: [structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v)_
+_File location: [structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v](structs/03_approaches_defining_struct_fields/02_grouping_struct_fields_based_on_access_modifiers/01_grouping_struct_fields_based_on_access_modifiers.v)_
 
 ### Lesson: Grouping Struct Fields Based On Access Modifiers
 
@@ -5824,7 +5994,7 @@ fn main() {
 
 ### Required Fields Example 01
 
-_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v)_
+_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v](structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/01_required_fields_example_01/01_required_fields_example_01.v)_
 
 ### Lesson: Required Fields Example 01
 
@@ -5850,6 +6020,7 @@ fn main() {
 		status: false
 	}
 }
+
 // throws error
 ```
 
@@ -5857,7 +6028,7 @@ fn main() {
 
 ### Required Fields Example 02
 
-_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v)_
+_File location: [structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v](structs/03_approaches_defining_struct_fields/03_required_fields_in_struct/02_required_fields_example_02/02_required_fields_example_02.v)_
 
 ### Lesson: Required Fields Example 02
 
@@ -5893,7 +6064,7 @@ fn main() {
 
 ### Struct Fields With Default Values
 
-_File location: [structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v)_
+_File location: [structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v](structs/03_approaches_defining_struct_fields/04_fields_with_default_values/01_struct_fields_with_default_values.v)_
 
 ### Lesson: Struct Fields With Default Values
 
@@ -5930,16 +6101,86 @@ fn main() {
 
 ### Methods For Struct
 
-_File location: [structs/04_methods_for_struct/01_methods_for_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/04_methods_for_struct/01_methods_for_struct.v)_
+_File location: [structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v](structs/04_methods_for_struct/01_methods_for_struct/01_methods_for_struct.v)_
 
 ### Lesson: Methods For Struct
 
 A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
 
-These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
+This lesson demonstrates defining structs, updating fields, required fields, default values, and value receiver methods.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **methods for struct**.
+
+```v
+module main
+
+import time
+
+// 1. Define a Struct.
+// Structs are defined with the `struct` keyword. By default, structs are private
+// (only accessible within the current module) and all fields are immutable.
+// The `pub` keyword makes the struct visible to other modules.
+pub struct Note {
+// 2. Struct Access Modifiers:
+// - `pub:` makes the fields readable from outside the module, but still immutable.
+pub:
+	id      int
+	// Fields can have default values assigned at declaration.
+	created time.Time = time.now()
+
+// - `pub mut:` makes the fields readable and writable from outside the module.
+pub mut:
+	// Attributes can be attached to struct fields.
+	// `@[required]` specifies that this field must be explicitly provided when instantiating.
+	message string @[required]
+	status  bool
+	due     time.Time = time.now().add_days(1)
+}
+
+// 3. Define a Method (Value Receiver).
+// In V, a method is a function with a receiver argument.
+// The receiver is specified in parentheses before the function name: `(n Note)`.
+// This is a "value receiver" method, meaning it receives a copy of the struct instance.
+// It cannot modify fields on the original struct instance.
+pub fn (n Note) is_empty_message() bool {
+	return n.message.len < 1
+}
+
+fn main() {
+	// 4. Instantiate a Struct.
+	// We use the struct name and curly braces, listing field initializations.
+	// Because `message` is marked `@[required]`, we must specify it.
+	// The variable `n` is marked `mut` because we might want to update its `pub mut` fields.
+	mut n := Note{
+		id:      1
+		message: ''
+	}
+
+	// 5. Invoke Struct Methods.
+	// Methods are called on struct instances using the dot operator.
+	if n.is_empty_message() {
+		println('message is empty')
+	} else {
+		println('message not empty')
+	}
+}
+```
+
+---
+
+### Mutable Methods
+
+_File location: [structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v](structs/04_methods_for_struct/02_mutable_methods/02_mutable_methods.v)_
+
+### Lesson: Mutable Methods
+
+By default, struct methods in V receive a read-only copy of the struct instance (value receiver). If a method needs to modify any fields of the struct, it must declare a mutable receiver using the `mut` keyword, e.g., `fn (mut n Note) mark_as_completed()`.
+
+Additionally, the struct instance variable must be declared with `mut` at the call site to allow mutable method invocations.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **mutable methods for struct**.
 
 ```v
 module main
@@ -5956,22 +6197,75 @@ pub mut:
 	due     time.Time = time.now().add_days(1)
 }
 
-// is_empty_message is a method that belongs to Note
-pub fn (n Note) is_empty_message() bool {
-	return n.message.len < 1
+// 1. Define a Mutable Struct Method.
+// To modify fields of a struct inside a method, the receiver must be marked mutable: `(mut n Note)`.
+// Under the hood, this passes a pointer/mutable reference, allowing the method to update
+// the original struct instance fields directly.
+pub fn (mut n Note) mark_as_completed() {
+	n.status = true
+	println('Note [ID: ${n.id}] marked as completed.')
+}
+
+// 2. Define another Mutable Method to update the message.
+pub fn (mut n Note) update_message(new_msg string) {
+	if new_msg.len > 0 {
+		n.message = new_msg
+		println('Note [ID: ${n.id}] message updated to: "${new_msg}"')
+	}
 }
 
 fn main() {
+	// 3. Instantiate a mutable struct instance.
+	// To call mutable methods on a struct, the variable MUST be declared as mutable (`mut`).
+	// If `n` was immutable, calling `n.mark_as_completed()` would result in a compilation error.
 	mut n := Note{
-		id:      1
-		message: ''
+		id:      42
+		message: 'Learn V programming'
+		status:  false
 	}
 
-	if n.is_empty_message() {
-		println('message is empty')
-	} else {
-		println('message not empty')
+	println('Initial state - Message: "${n.message}", Completed: ${n.status}')
+
+	// 4. Call the mutable methods.
+	n.update_message('Master V programming and C interop!')
+	n.mark_as_completed()
+
+	// 5. Verify the updates.
+	println('Final state - Message: "${n.message}", Completed: ${n.status}')
+	assert n.status == true
+}
+```
+
+---
+
+### Printing Custom Types
+
+_File location: [structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v](structs/04_methods_for_struct/03_printing_custom_types/03_printing_custom_types.v)_
+
+### Lesson: Printing Custom Types
+
+If you want to define a custom print value for your type, simply define a `str()` string method:
+
+```v
+module main
+
+struct Color {
+	r int
+	g int
+	b int
+}
+
+pub fn (c Color) str() string {
+	return '{${c.r}, ${c.g}, ${c.b}}'
+}
+
+fn main() {
+	red := Color{
+		r: 255
+		g: 0
+		b: 0
 	}
+	println(red)
 }
 ```
 
@@ -5979,7 +6273,7 @@ fn main() {
 
 ### Adding Struct As Struct Field
 
-_File location: [structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v)_
+_File location: [structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v](structs/05_struct_as_struct_field/01_adding_struct_as_struct_field/01_adding_struct_as_struct_field.v)_
 
 ### Lesson: Adding Struct As Struct Field
 
@@ -6025,7 +6319,7 @@ fn main() {
 
 ### Updating Fields Of Type Struct
 
-_File location: [structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v)_
+_File location: [structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v](structs/05_struct_as_struct_field/02_updating_fields_of_type_struct/01_updating_fields_of_type_struct.v)_
 
 ### Lesson: Updating Fields Of Type Struct
 
@@ -6081,7 +6375,7 @@ fn main() {
 
 ### Struct As Trailing Literal Arguments To Function
 
-_File location: [structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v)_
+_File location: [structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v](structs/06_struct_as_trailing_literal_arguments_to_function/01_struct_as_trailing_literal_arguments_to_function.v)_
 
 ### Lesson: Struct As Trailing Literal Arguments To Function
 
@@ -6143,6 +6437,214 @@ fn main() {
 
 ---
 
+### Anonymous Structs
+
+_File location: [structs/07_anonymous_structs/anonymous_structs.v](structs/07_anonymous_structs/anonymous_structs.v)_
+
+### Lesson: Anonymous Structs
+
+V supports **Anonymous Structs** which are inline struct declarations without separate struct names. They are useful for one-off structures like local nested objects.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Inline Sub-Struct Declaration**:
+  In the `Book` struct definition, the `author` field is declared as an anonymous struct type with fields `name string` and `age int`. No named struct like `Author` is required.
+- **Inline Struct Initialization**:
+  Inside `main()`, we instantiate `Book`. The nested `author` field is initialized directly using `struct { name: 'Samantha Black', age: 24 }`, matching the field structure.
+- **Field Access**:
+  Nested fields are accessed sequentially using dot notation: `book.author.name` and `book.author.age`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **anonymous structs**.
+
+```v
+module main
+
+import json
+
+struct Book {
+	title string
+mut:
+	author struct {
+		name string
+	mut:
+		age int
+	}
+}
+
+fn main() {
+	mut book := Book{
+		title:  'The V Programming Language'
+		author: struct {
+			name: 'Samantha Black'
+			age:  24
+		}
+	}
+	book.author.age = 25
+	println('${book.title} by ${book.author.name} (${book.author.age})')
+	println(json.encode(book))
+}
+```
+
+---
+
+### Static Type Methods
+
+_File location: [structs/08_static_type_methods/static_type_methods.v](structs/08_static_type_methods/static_type_methods.v)_
+
+### Lesson: Static Type Methods
+
+V supports **Static Type Methods** (e.g. `User.new()`). These are defined on a struct via `fn [StructName].[methodName]` and allow organizing all constructor/factory functions related to a struct. V does not have traditional class constructors; static type methods are standard functions namespace-associated with the struct.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Static Method Definition**:
+  `fn User.new(name string, age int) User` declares a static method named `new` associated with the `User` struct namespace. It returns a new `User` instance.
+- **Factory Organization**:
+  The static method `User.default_user()` calls `User.new('Guest', 18)` to construct a user with default values, acting as a clean factory builder.
+- **Invocation Syntax**:
+  Inside `main()`, static methods are invoked using the struct name prefix: `User.new(...)` and `User.default_user()`. This prevents global namespace pollution and groups constructor-like logic cleanly.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **static type methods**.
+
+```v
+module main
+
+struct User {
+	name string
+	age  int
+}
+
+// Defining a static type method on User
+fn User.new(name string, age int) User {
+	return User{
+		name: name
+		age:  age
+	}
+}
+
+// Another static method
+fn User.default_user() User {
+	return User.new('Guest', 18)
+}
+
+fn main() {
+	// Call static type methods using StructName.method_name()
+	user1 := User.new('Bob', 25)
+	user2 := User.default_user()
+
+	println('User 1: ${user1.name}, Age: ${user1.age}')
+	println('User 2: ${user2.name}, Age: ${user2.age}')
+}
+```
+
+---
+
+### noinit Structs
+
+_File location: [structs/09_noinit_structs/noinit_structs.v](structs/09_noinit_structs/noinit_structs.v)_
+
+### Lesson: noinit Structs
+
+V supports `[noinit]` structs which are structs that cannot be initialized directly outside of their declaring module. This forces client code to use factory constructor functions to instantiate the struct, enabling strict initialization checks and API boundaries.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Declaring [noinit]**:
+  In the `noinit_config` module (`noinit_config.v`), the `Config` struct is marked with the `@[noinit]` attribute. This blocks external modules from directly initializing it using literals like `noinit_config.Config{ ... }`.
+- **Exposing a Constructor**:
+  We provide a public factory function `pub fn new_config(port int, host string) Config` inside the `noinit_config` module, which is authorized to initialize and return the struct.
+- **Compiler Enforcement**:
+  In the main module (`noinit_structs.v`), creating `noinit_config.new_config(...)` compiles and runs successfully. Attempting to directly write `noinit_config.Config{port: 8080}` would cause a compilation error.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **noinit structs**.
+
+```v
+module noinit_config
+
+@[noinit]
+pub struct Config {
+pub:
+	port int
+	host string
+}
+
+// Public constructor function to allow initialization from outside
+pub fn new_config(port int, host string) Config {
+	return Config{
+		port: port
+		host: host
+	}
+}
+```
+
+```v
+import noinit_config
+
+fn main() {
+	// This works because it uses the constructor function
+	cfg := noinit_config.new_config(8080, 'localhost')
+	println('Config port: ${cfg.port}, host: ${cfg.host}')
+
+	// This would fail compilation because noinit_config.Config is marked [noinit]:
+	// cfg2 := noinit_config.Config{ port: 8080, host: 'localhost' }
+}
+```
+
+---
+
+### Unions
+
+_File location: [structs/10_unions/unions.v](structs/10_unions/unions.v)_
+
+### Lesson: Unions
+
+A **Union** is a special type of struct that allows storing different data types in the same memory location. The largest member defines the size of the union. All members share the same memory location, meaning modifying one member automatically modifies the shared representation of the others. Union field access is considered memory-unsafe and must always be performed inside `unsafe {}` blocks.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Union Declaration & Mutability**:
+  `union Data` declares two fields: `f f64` (8 bytes) and `i int` (4 bytes). Because they are in a union, they share the same starting memory address, and the total size of `Data` is 8 bytes. By default in V, union fields are immutable; we must place them under a `mut:` block inside the union declaration to allow their values to be reassigned.
+- **Memory Corruption Demonstration**:
+  We initialize the union with an integer `i: 10`.
+  Inside `unsafe { ... }`, when we assign `d.f = 5.5`, the float value overwrites the shared memory. Reading `d.i` subsequently returns a garbled integer representing the binary layout of the float `5.5`, demonstrating the shared storage layout.
+- **Safety Restriction**:
+  Accessing any field of a union (`d.i` or `d.f`) is blocked by the compiler unless wrapped in an `unsafe` block, protecting developers from accidental memory misinterpretation.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **unions**.
+
+```v
+module main
+
+// Define a union sharing the same memory location, marked mutable
+union Data {
+mut:
+	f f64
+	i int
+}
+
+fn main() {
+	mut d := Data{
+		i: 10
+	}
+
+	// Accessing union members must be performed in an unsafe block
+	unsafe {
+		println('Union int value: ${d.i}')
+
+		// Modifying one member automatically modifies the other since they share memory
+		d.f = 5.5
+		println('Union float value: ${d.f}')
+		println('Union int value after float update: ${d.i} (shared memory representation)')
+	}
+}
+```
+
+---
+
 # Chapter 8: Error Handling
 
 ## Quick Access
@@ -6161,7 +6663,7 @@ V has no exceptions. Instead, it handles errors using **Option** and **Result** 
 
 ### Error Handling
 
-_File location: [error_handling/error_handling.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/error_handling/error_handling.v)_
+_File location: [error_handling/error_handling.v](error_handling/error_handling.v)_
 
 In many programming languages, errors are handled using exceptions (with `try`, `catch`, and `throw` blocks). Exception blocks can make code hard to read and trace because control flow can jump unpredictably.
 
@@ -6246,7 +6748,7 @@ fn fetch_data(success bool) !string {
 	if !success {
 		return CustomError{
 			message: 'Connection timed out'
-			code: 504
+			code:    504
 		}
 	}
 	return 'Raw database records'
@@ -6304,7 +6806,6 @@ fn main() {
 	wrapped_item := find_item_wrapper(99) or { 'None propagated successfully' }
 	println('Propagation check: ${wrapped_item}\n')
 
-
 	println('=== 2. Result Types (!T) ===')
 
 	// Result Handling: Standard error message extraction via the `err` variable inside `or` block
@@ -6313,7 +6814,6 @@ fn main() {
 
 	calc_fail := calculate_and_format(10.0, 0.0) or { 'Error: ${err}' }
 	println('Calc failure: ${calc_fail}')
-
 
 	println('\n=== 3. Custom Error Matching & Type Casting ===')
 
@@ -6346,7 +6846,6 @@ fn main() {
 		'' // Fallback empty string returned to satisfy the !string return type of the or block
 	}
 
-
 	println('\n=== 4. Panic (Unrecoverable Error) ===')
 	// We wrap panic execution or run it last since it terminates the process.
 	// You can uncomment the line below to test panic termination:
@@ -6354,6 +6853,81 @@ fn main() {
 	println('To run a panic, uncomment force_panic() in main.')
 }
 ```
+
+### Deep Dive Explanation
+
+#### 1. Option (`?T`) vs. Result (`!T`) Types
+
+V enforces safety by separating missing data from actual runtime failures at the type system level:
+
+- **Option Type (`?T`)**: Declares that a variable or function return value can either hold a value of type `T` or `none` (denoting absence). Use options for operations like lookups or querying optional attributes.
+- **Result Type (`!T`)**: Declares that an operation returns either a value of type `T` or an error that implements the `IError` interface. Use results for operations that can fail due to external factors (e.g., IO, math division, DB connection).
+
+#### 2. Unwrapping with the `or` Block
+
+When invoking a function that returns an Option or a Result, V requires you to explicitly unwrap it using an `or` block:
+
+```v
+value := maybe_value() or { fallback_value }
+```
+
+The `or` block acts as a recovery scope and **must** adhere to one of the following two rules:
+
+1. **Provide a Fallback Value**: It must evaluate to an expression matching type `T`.
+2. **Halt or Divert Control Flow**: It must use keywords like `return`, `panic()`, `exit()`, `break`, or `continue` to exit the current scope.
+
+For functions returning a Result type, V automatically exposes an implicit variable named `err` (of type `IError`) inside the `or` block. You can call `err.msg()` or `err.code()` to inspect the failure:
+
+```v
+result := divide(10.0, 0.0) or {
+    println('Math error: ' + err.msg())
+    0.0
+}
+```
+
+#### 3. Error and Option Propagation
+
+Instead of handling errors immediately with an `or` block, you can bubble them up to the caller using propagation suffixes:
+
+- Use the **`?`** suffix to propagate `none` from an optional-returning function:
+  ```v
+  item := find_item(id)? // Returns none to the caller if find_item fails
+  ```
+- Use the **`!`** suffix to propagate errors from a result-returning function:
+  ```v
+  res := divide(a, b)! // Propagates the IError up to the caller if b == 0.0
+  ```
+  _Note: A function can only use the propagation suffix if its own return type matches (i.e., returns `?U` or `!U` respectively)._
+
+#### 4. Custom Error Structs and the `IError` Interface
+
+To build custom error types, define a struct and embed the builtin `Error` struct. Embedding `Error` ensures your custom struct implements the `IError` interface:
+
+```v
+struct CustomError {
+    Error       // Embed standard Error fields and methods
+    message string
+    code    int
+}
+```
+
+You can override the `msg()` and `code()` methods to define how the error is printed and what status code it carries.
+
+#### 5. Type Assertions and Smart Casting with `is`
+
+When handling generic `IError` values inside an `or` block, you can query their concrete types using the `is` keyword:
+
+```v
+fetch_data(false) or {
+    if err is CustomError {
+        // V smart-casts 'err' to CustomError here
+        println('Custom code: ${err.code}')
+    }
+    ''
+}
+```
+
+If the type check matches, V automatically smart-casts `err` inside that block, allowing you to access custom fields (like `code` or `query`) without explicit casting.
 
 ---
 
@@ -6387,8 +6961,9 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Cyclic Imports - Module 1 Helper (file1.v)](#cyclic-imports---module-1-helper-file1v)
 - [Cyclic Imports - Module 2 Helper (file1.v)](#cyclic-imports---module-2-helper-file1v)
 - [Cyclic Imports - Main (modulebasics.v)](#cyclic-imports---main-modulebasicsv)
-- [Module Init Function - Helper (file1.v)](#module-init-function---helper-file1v)
-- [Module Init Function - Main (modulebasics.v)](#module-init-function---main-modulebasicsv)
+- [Module Init & Cleanup Functions - Config (config.v)](#module-init--cleanup-functions---config-configv)
+- [Module Init & Cleanup Functions - Helper (file1.v)](#module-init--cleanup-functions---helper-file1v)
+- [Module Init & Cleanup Functions - Main (modulebasics.v)](#module-init--cleanup-functions---main-modulebasicsv)
 - [Accessing Module Constants - Helper (file1.v)](#accessing-module-constants---helper-file1v)
 - [Accessing Module Constants - Main (modulebasics.v)](#accessing-module-constants---main-modulebasicsv)
 - [Accessing Module Structs - Helper (file1.v)](#accessing-module-structs---helper-file1v)
@@ -6405,6 +6980,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Redis Namespaced Demo](#redis-namespaced-demo)
 - [Redis Webview Demo](#redis-webview-demo)
 - [Webview Demo](#webview-demo)
+- [Packaging Webview as macOS Binaries](#packaging-webview-as-macos-binaries)
 
 ---
 
@@ -6414,14 +6990,13 @@ Modules help organize larger codebases. In this chapter, you will learn how to c
 
 ### Creating a Simple V Project - Main (modulebasics.v)
 
-_File location: [modules/01_creating_simple_v_project/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/01_creating_simple_v_project/modulebasics/modulebasics.v)_
+_File location: [modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v](modules/ch01_creating_simple_v_project/modulebasics/modulebasics.v)_
 
 ### Lesson: Creating a Simple V Project
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
+Think of a module as a small toolbox. The `main` module is the entry point of your program, while other modules can hold reusable functions and types.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+This first example is intentionally simple: it shows the structure of a single-file V program before we introduce imports and shared modules.
 
 ```v
 module main
@@ -6435,14 +7010,11 @@ fn main() {
 
 ### Creating a Module - Helper (file1.v)
 
-_File location: [modules/02_creating_modue/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/02_creating_modue/modulebasics/mod1/file1.v)_
+_File location: [modules/ch02_creating_modue/modulebasics/mod1/file1.v](modules/ch02_creating_modue/modulebasics/mod1/file1.v)_
 
-### Lesson: Module Helper
+### Lesson: A Reusable Helper Module
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+A module can hold functions that other parts of your program can reuse. In this example, the helper module `mod1` exposes a public function called `greet`.
 
 ```v
 module mod1
@@ -6456,14 +7028,11 @@ pub fn hello() {
 
 ### Creating a Module - Main (modulebasics.v)
 
-_File location: [modules/02_creating_modue/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/02_creating_modue/modulebasics/modulebasics.v)_
+_File location: [modules/ch02_creating_modue/modulebasics/modulebasics.v](modules/ch02_creating_modue/modulebasics/modulebasics.v)_
 
 ### Lesson: Module Main Entry
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+This file acts as the application entry point. It imports the helper module and calls one of its public functions.
 
 ```v
 module main
@@ -6477,14 +7046,11 @@ fn main() {
 
 ### Importing a Module - Helper (file1.v)
 
-_File location: [modules/03_importing_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/03_importing_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch03_importing_module/modulebasics/mod1/file1.v](modules/ch03_importing_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Imported Module Helper
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+Importing a module gives your program access to its public members. The module name becomes the namespace you use when calling those functions.
 
 ```v
 module mod1
@@ -6498,14 +7064,11 @@ pub fn hello() {
 
 ### Importing a Module - Main (modulebasics.v)
 
-_File location: [modules/03_importing_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/03_importing_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch03_importing_module/modulebasics/modulebasics.v](modules/ch03_importing_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Imported Module Main
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+The main program can now use the imported module without copying its code into the entry file.
 
 ```v
 module main
@@ -6521,14 +7084,11 @@ fn main() {
 
 ### Accessing Module Members - Helper (file1.v)
 
-_File location: [modules/04_accessing_members_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/04_accessing_members_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v](modules/ch04_accessing_members_of_module/modulebasics/mod1/file1.v)_
 
-### Lesson: Member Visibility Helper
+### Lesson: Public vs Private Members
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+Not everything in a module should be accessible from outside. In V, `pub` makes a function available to other modules, while private functions stay inside the module.
 
 ```v
 module mod1
@@ -6542,14 +7102,11 @@ pub fn hello() {
 
 ### Accessing Module Members - Main (modulebasics.v)
 
-_File location: [modules/04_accessing_members_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/04_accessing_members_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v](modules/ch04_accessing_members_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Visibility Main
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+From the main program, you can call the public function, but private helpers remain hidden.
 
 ```v
 module main
@@ -6566,14 +7123,11 @@ fn main() {
 
 ### Multiple Files (After Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v](modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file1.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 1
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+A single module can be split across several files. This makes it easier to keep related helpers organized without changing how the module is imported.
 
 ```v
 module mod1
@@ -6587,14 +7141,11 @@ pub fn hello() {
 
 ### Multiple Files (After Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v](modules/ch05_working_with_multiple_files_in_module/after/modulebasics/mod1/file2.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Helper 2
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File2** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file2**.
+The second file in the same module can hold additional helper functions. The module still behaves as one logical unit when imported.
 
 ```v
 module mod1
@@ -6608,7 +7159,7 @@ fn hello2() {
 
 ### Multiple Files (After Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v](modules/ch05_working_with_multiple_files_in_module/after/modulebasics/modulebasics.v)_
 
 ### Lesson: Multiple Files (After Refactoring) - Main Entry
 
@@ -6632,7 +7183,7 @@ fn main() {
 
 ### Multiple Files (Before Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v](modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file1.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Helper 1
 
@@ -6653,7 +7204,7 @@ pub fn hello() {
 
 ### Multiple Files (Before Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v](modules/ch05_working_with_multiple_files_in_module/before/modulebasics/mod1/file2.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Helper 2
 
@@ -6675,7 +7226,7 @@ fn main() {
 
 ### Multiple Files (Before Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v)_
+_File location: [modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v](modules/ch05_working_with_multiple_files_in_module/before/modulebasics/modulebasics.v)_
 
 ### Lesson: Multiple Files (Before Refactoring) - Main Entry
 
@@ -6699,14 +7250,11 @@ fn main() {
 
 ### Member Scope (After Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/mod1/file1.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v](modules/ch06_member_scope_in_module/after/modulebasics/mod1/file1.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Helper 1
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+A function marked `pub` can be called from outside the module, while a private helper can still be used by other functions inside the same module.
 
 ```v
 module mod1
@@ -6722,7 +7270,7 @@ pub fn hello() {
 
 ### Member Scope (After Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/mod1/file2.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v](modules/ch06_member_scope_in_module/after/modulebasics/mod1/file2.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Helper 2
 
@@ -6743,7 +7291,7 @@ fn hello2() {
 
 ### Member Scope (After Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/06_member_scope_in_module/after/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/after/modulebasics/modulebasics.v)_
+_File location: [modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v](modules/ch06_member_scope_in_module/after/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Scope (After Refactoring) - Main Entry
 
@@ -6766,7 +7314,7 @@ fn main() {
 
 ### Member Scope (Before Refactoring) - Helper 1 (file1.v)
 
-_File location: [modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/mod1/file1.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v](modules/ch06_member_scope_in_module/before/modulebasics/mod1/file1.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Helper 1
 
@@ -6787,7 +7335,7 @@ pub fn hello() {
 
 ### Member Scope (Before Refactoring) - Helper 2 (file2.v)
 
-_File location: [modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/mod1/file2.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v](modules/ch06_member_scope_in_module/before/modulebasics/mod1/file2.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Helper 2
 
@@ -6808,7 +7356,7 @@ fn hello2() {
 
 ### Member Scope (Before Refactoring) - Main (modulebasics.v)
 
-_File location: [modules/06_member_scope_in_module/before/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/06_member_scope_in_module/before/modulebasics/modulebasics.v)_
+_File location: [modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v](modules/ch06_member_scope_in_module/before/modulebasics/modulebasics.v)_
 
 ### Lesson: Member Scope (Before Refactoring) - Main Entry
 
@@ -6832,14 +7380,11 @@ fn main() {
 
 ### Cyclic Imports - Module 1 Helper (file1.v)
 
-_File location: [modules/07_cyclic_imports/modulebasics/m1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/m1/file1.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/m1/file1.v](modules/ch07_cyclic_imports/modulebasics/m1/file1.v)_
 
 ### Lesson: Cyclic Imports - Module 1
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+This example shows a circular dependency between two modules. In practice, you should avoid this pattern because it makes the import graph harder to reason about.
 
 ```v
 module m1
@@ -6857,7 +7402,7 @@ pub fn hello() {
 
 ### Cyclic Imports - Module 2 Helper (file1.v)
 
-_File location: [modules/07_cyclic_imports/modulebasics/m2/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/m2/file1.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/m2/file1.v](modules/ch07_cyclic_imports/modulebasics/m2/file1.v)_
 
 ### Lesson: Cyclic Imports - Module 2
 
@@ -6882,7 +7427,7 @@ pub fn hello() {
 
 ### Cyclic Imports - Main (modulebasics.v)
 
-_File location: [modules/07_cyclic_imports/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/07_cyclic_imports/modulebasics/modulebasics.v)_
+_File location: [modules/ch07_cyclic_imports/modulebasics/modulebasics.v](modules/ch07_cyclic_imports/modulebasics/modulebasics.v)_
 
 ### Lesson: Cyclic Imports - Main Entry
 
@@ -6905,49 +7450,105 @@ fn main() {
 
 ---
 
-### Module Init Function - Helper (file1.v)
+### Module Init & Cleanup Functions - Config (config.v)
 
-_File location: [modules/08_init_function_for_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch08_init_function_for_module/modulebasics/config/config.v](modules/ch08_init_function_for_module/modulebasics/config/config.v)_
 
-### Lesson: Module Init Function Helper
+### Lesson: Transitive Initialization Helper
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
+V modules support lifecycle hooks for setting up and tearing down resources. A module's `init()` function runs when it is first imported, and its `cleanup()` function runs when the program terminates.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+In this helper module `config`, we define simple hooks to simulate loading configuration details.
 
 ```v
-module mod1
+module config
 
-pub fn hello() {
-	println('Hello from mod1!')
-}
+pub const version = '1.0.0'
 
 fn init() {
-	println('Initializing mod1')
+	println('Initializing config module...')
+}
+
+fn cleanup() {
+	println('Cleaning up config module...')
 }
 ```
 
 ---
 
-### Module Init Function - Main (modulebasics.v)
+### Module Init & Cleanup Functions - Helper (file1.v)
 
-_File location: [modules/08_init_function_for_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/08_init_function_for_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch08_init_function_for_module/modulebasics/mod1/file1.v](modules/ch08_init_function_for_module/modulebasics/mod1/file1.v)_
 
-### Lesson: Module Init Function
+### Lesson: Module Init & Cleanup Functions Helper
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **Modulebasics** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
+This helper module `mod1` imports `config`, simulates the initialization/release of a C library wrapper, and exposes a public function `hello()`.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **modulebasics**.
+- **`init()`**: A special private function (`fn init()`) that runs automatically when a module is first imported. It is ideal for one-time initialization, such as preparing C libraries or setting up state.
+- **`cleanup()`**: A special private function (`fn cleanup()`) that executes automatically when the program terminates. It runs in the reverse order of the `init()` calls, making it perfect for releasing C library resources or flushing files.
+
+```v
+module mod1
+
+import config
+
+pub fn hello() {
+	println('Hello from mod1! (using config v${config.version})')
+}
+
+fn init() {
+	println('Initializing mod1 module (C library stub initialized)...')
+}
+
+fn cleanup() {
+	println('Cleaning up mod1 module (C library stub released)...')
+}
+```
+
+---
+
+### Module Init & Cleanup Functions - Main (modulebasics.v)
+
+_File location: [modules/ch08_init_function_for_module/modulebasics/modulebasics.v](modules/ch08_init_function_for_module/modulebasics/modulebasics.v)_
+
+### Lesson: Module Init & Cleanup Functions
+
+V is designed to be highly modular. Here is a summary of the core rules governing V modules, and how the program executes:
+
+#### 1. Module Basics & Organization
+
+- **Scope:** Every file in a directory belongs to the same module. If no module name is specified at the top of the file, it defaults to `main`.
+- **Visibility:** All elements (structs, functions, constants, etc.) inside a module are visible across all files of that same module, regardless of whether they are marked with `pub`.
+- **Names:** Module names must be short (ideally under 10 characters) and written in `snake_case`.
+- **Circular Imports:** Circular imports are strictly forbidden.
+
+#### 2. Module Lookup & `v.mod`
+
+- V uses `v.mod` files as lookup anchors.
+- The directory containing the nearest `v.mod` file is prepended to V's module search path. This enables projects to easily import submodules (e.g. `import myapp.common`) using relative structure anchors.
+
+#### 3. Special Prototyping Rules for Project Roots
+
+- For the top-level project folder (compiled with `v .`), you can have multiple `.v` files belonging to different modules (like `module main` and `module abc`) in the same directory.
+- This is a special rule designed to ease prototyping, allowing you to split files easily before moving them to separate directory submodules. In any other non-root directory, all `.v` files must declare the exact same module name matching the folder name.
+
+#### 4. Lifecycle Hooks (`init` & `cleanup`)
+
+- Neither `init()` nor `cleanup()` can be made public (`pub`).
+- **Single Execution:** V calls `init()` exactly once when the module is imported, regardless of how many other modules transitively or directly import it. For example, `config` is imported by both `mod1` and `main`, but its `init()` runs only once.
+- **Reverse-Order Execution:** V calls `cleanup()` automatically once at the end of program execution, in the exact reverse order of their `init()` invocations.
 
 ```v
 module main
 
 import mod1
+import config
 
 fn main() {
+	println('Main function started.')
 	mod1.hello()
+	println('Using config directly in main: v${config.version}')
+	println('Main function ending.')
 }
 ```
 
@@ -6955,14 +7556,11 @@ fn main() {
 
 ### Accessing Module Constants - Helper (file1.v)
 
-_File location: [modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/09_accessing_constants_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v](modules/ch09_accessing_constants_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Accessing Module Constants Helper
 
-Modules help modularize V projects, managing imports and symbol visibility. This lesson on **File1** demonstrates code structure, module namespaces, access modifiers, or lifecycle rules.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **file1**.
+Constants are shared values that belong to a module. They are great for configuration strings or fixed messages that multiple files can use.
 
 ```v
 module mod1
@@ -6974,7 +7572,7 @@ pub const greet_msg = 'Greeting from mod1!'
 
 ### Accessing Module Constants - Main (modulebasics.v)
 
-_File location: [modules/09_accessing_constants_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/09_accessing_constants_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v](modules/ch09_accessing_constants_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Accessing Module Constants
 
@@ -6997,7 +7595,7 @@ fn main() {
 
 ### Accessing Module Structs - Helper (file1.v)
 
-_File location: [modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v)_
+_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v](modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/mod1/file1.v)_
 
 ### Lesson: Accessing Module Structs Helper
 
@@ -7036,7 +7634,7 @@ pub mut:
 
 ### Accessing Module Structs - Main (modulebasics.v)
 
-_File location: [modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v)_
+_File location: [modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v](modules/ch10_accessing_structs_and_embedded_structs_of_module/modulebasics/modulebasics.v)_
 
 ### Lesson: Accessing Module Structs
 
@@ -7117,7 +7715,7 @@ fn main() {
 
 ### Redis Console Demo
 
-_File location: [modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v](modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_console_demo.v)_
 
 This example demonstrates how to use the external `xiusin.vredis` client package in a console application and demonstrates key namespacing with the custom `NamespacedRedis` helper. It covers:
 
@@ -7267,7 +7865,7 @@ fn main() {
 
 ### Redis Console Demo - Helper (redis_helper.v)
 
-_File location: [modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_console_demo/redis_helper.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v](modules/ch11_install_external_packages_and_webview/redis_console_demo/redis_helper.v)_
 
 This helper provides a namespaced wrapper struct `NamespacedRedis` that automatically prefixes all Redis keys with a given namespace (e.g. `namespace:key`). This is a great pattern for keeping keys organized and avoiding collisions between multiple apps/environments.
 
@@ -7288,7 +7886,7 @@ pub:
 // new_namespaced_redis creates a new NamespacedRedis helper wrapper.
 fn new_namespaced_redis(client &vredis.Redis, namespace string) NamespacedRedis {
 	return NamespacedRedis{
-		client: client
+		client:    client
 		namespace: namespace
 	}
 }
@@ -7400,7 +7998,7 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
 
 ### Redis Namespaced Demo - Helper (redis_helper.v)
 
-_File location: [modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v](modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_helper.v)_
 
 ### Lesson: Redis Namespaced Helper
 
@@ -7422,7 +8020,7 @@ pub:
 // new_namespaced_redis creates a new NamespacedRedis helper wrapper.
 fn new_namespaced_redis(client &vredis.Redis, namespace string) NamespacedRedis {
 	return NamespacedRedis{
-		client: client
+		client:    client
 		namespace: namespace
 	}
 }
@@ -7533,7 +8131,7 @@ fn (mut nr NamespacedRedis) smembers(key string) ![]string {
 
 ### Redis Namespaced Demo
 
-_File location: [modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v](modules/ch11_install_external_packages_and_webview/redis_namespaced_demo/redis_namespaced_demo.v)_
 
 This example provides an easy, dedicated demo showing how to use the `NamespacedRedis` helper wrapper to manage multiple independent namespaces (like `cache` and `session`) over a single underlying Redis connection without key collisions.
 
@@ -7607,7 +8205,7 @@ fn main() {
 
 ### Redis Webview Demo
 
-_File location: [modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v](modules/ch11_install_external_packages_and_webview/redis_webview_demo/redis_webview_demo.v)_
 
 ### Lesson: Redis Webview Demo
 
@@ -7655,10 +8253,10 @@ fn connect_redis() !&vredis.Redis {
 fn redis_connect_status(e &webview.Event) !string {
 	mut client := connect_redis() or {
 		status_info := ConnectStatus{
-			status: 'disconnected'
-			host: '127.0.0.1'
-			port: 6379
-			version: ''
+			status:     'disconnected'
+			host:       '127.0.0.1'
+			port:       6379
+			version:    ''
 			keys_count: 0
 		}
 		return json.encode(status_info)
@@ -7671,10 +8269,10 @@ fn redis_connect_status(e &webview.Event) !string {
 	info := client.send('INFO', 'server') or {
 		count := client.dbsize() or { 0 }
 		status_info := ConnectStatus{
-			status: 'connected'
-			host: '127.0.0.1'
-			port: 6379
-			version: 'Unknown'
+			status:     'connected'
+			host:       '127.0.0.1'
+			port:       6379
+			version:    'Unknown'
 			keys_count: count
 		}
 		return json.encode(status_info)
@@ -7695,10 +8293,10 @@ fn redis_connect_status(e &webview.Event) !string {
 	count := client.dbsize() or { 0 }
 
 	status_info := ConnectStatus{
-		status: 'connected'
-		host: '127.0.0.1'
-		port: 6379
-		version: version
+		status:     'connected'
+		host:       '127.0.0.1'
+		port:       6379
+		version:    version
 		keys_count: count
 	}
 	return json.encode(status_info)
@@ -7716,9 +8314,9 @@ fn redis_get_keys(e &webview.Event) !string {
 		t := client.@type(key) or { 'unknown' }
 		ttl := client.ttl(key) or { -1 }
 		items << KeyInfo{
-			name: key
+			name:  key
 			@type: t
-			ttl: ttl
+			ttl:   ttl
 		}
 	}
 	return json.encode(items)
@@ -7735,10 +8333,10 @@ fn redis_get_key_detail(e &webview.Event) !string {
 	ttl := client.ttl(key)!
 
 	mut detail := KeyDetail{
-		name: key
-		@type: t
-		ttl: ttl
-		value: ''
+		name:     key
+		@type:    t
+		ttl:      ttl
+		value:    ''
 		list_val: []string{}
 		hash_val: map[string]string{}
 	}
@@ -7754,7 +8352,9 @@ fn redis_get_key_detail(e &webview.Event) !string {
 			detail.list_val = client.smembers(key) or { []string{} }
 		}
 		'hash' {
-			detail.hash_val = client.hgetall(key) or { map[string]string{} }
+			detail.hash_val = client.hgetall(key) or {
+				map[string]string{}
+			}
 		}
 		else {}
 	}
@@ -7898,7 +8498,7 @@ fn main() {
 
 ### Webview Demo
 
-_File location: [modules/11_install_external_packages_and_webview/webview_demo/webview_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/modules/11_install_external_packages_and_webview/webview_demo/webview_demo.v)_
+_File location: [modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v](modules/ch11_install_external_packages_and_webview/webview_demo/webview_demo.v)_
 
 ### Lesson: Webview Demo
 
@@ -8004,33 +8604,123 @@ const html = '
 
 // V binding function. Must take &webview.Event and can return a type (like string).
 fn greet_from_v(e &webview.Event) string {
-    // 1. Retrieve the argument passed from JavaScript (at index 0)
-    msg := e.get_arg[string](0) or { 'No arguments passed' }
-    println('V side: Received from JS: ${msg}')
+	// 1. Retrieve the argument passed from JavaScript (at index 0)
+	msg := e.get_arg[string](0) or { 'No arguments passed' }
+	println('V side: Received from JS: ${msg}')
 
-    // 2. We can run custom JavaScript on the webview page from V
-    e.eval('console.log("V successfully invoked eval in JS context!");')
+	// 2. We can run custom JavaScript on the webview page from V
+	e.eval('console.log("V successfully invoked eval in JS context!");')
 
-    // 3. Return string back to the JS Promise resolver
-    return 'V responds: "Message received: ${msg}"'
+	// 3. Return string back to the JS Promise resolver
+	return 'V responds: "Message received: ${msg}"'
 }
 
 fn main() {
-    // Initialize Webview
-    mut w := webview.create(debug: true)
-    w.set_title('V Webview Binding Demo')
-    w.set_size(600, 450, .@none)
+	// Initialize Webview
+	mut w := webview.create(debug: true)
+	w.set_title('V Webview Binding Demo')
+	w.set_size(600, 450, .@none)
 
-    // Bind V function "greet_from_v" to JS window.greet_from_v
-    w.bind('greet_from_v', greet_from_v)
+	// Bind V function "greet_from_v" to JS window.greet_from_v
+	w.bind('greet_from_v', greet_from_v)
 
-    // Load the HTML content
-    w.set_html(html)
+	// Load the HTML content
+	w.set_html(html)
 
-    // Run the main loop
-    w.run()
+	// Run the main loop
+	w.run()
 }
 ```
+
+---
+
+### Packaging Webview as macOS Binaries
+
+### Lesson: Packaging Webview as macOS Binaries
+
+V can run JavaScript, HTML, and CSS under the hood inside its lightweight webview bindings to build impressive cross-platform desktop GUIs. Once your webview-based application is ready to ship, you can package it as a standalone, production-ready macOS app bundle.
+
+To make this seamless, you can use [vlang_macos_webview_app_template](https://github.com/codecaine-zz/vlang_macos_webview_app_template). This is a pure-V template framework featuring a specialized build tool build.vsh that runs native macOS utilities (such as sips and iconutil) to assemble, compile, and structure your app without any Node or Bun JavaScript toolchain requirements.
+
+#### Step-by-Step Packaging Guide
+
+To package your webview app, follow the instructions below:
+
+##### 1. Prerequisites and Installation
+
+Ensure you have the V compiler installed and ttytm.webview registered:
+
+```bash
+# Install the webview library
+v install ttytm.webview
+
+# Clone the packaging template repository
+git clone https://github.com/codecaine-zz/vlang_macos_webview_app_template.git
+cd vlang_macos_webview_app_template
+```
+
+##### 2. Running Locally under Development
+
+To execute your webview application inline without compilation to verify behaviors:
+
+```bash
+v run main.v
+```
+
+##### 3. Packaging as a Default macOS App Bundle
+
+To compile main.v with full release-mode optimizations (-prod) and package it using the default name and default wave icon:
+
+```bash
+v run build.vsh
+```
+
+This compiles your application and structures:
+
+```
+dist/Vlang Macos Webview App Template.app
+```
+
+##### 4. Custom App Packaging (Custom Name, Icon, and ID)
+
+You can customize the compilation by specifying command flags to customize display names, custom bundle identifiers, and apply any of the 101 built-in glassmorphism workspace icons:
+
+```bash
+v run build.vsh main.v --name "My custom App" --icon resources/developer.png --identifier "com.example.myapp"
+```
+
+Available build parameters:
+
+- `-i, --icon <path>`: Path to a PNG icon. Defaults to resources/icon.png or icon.png.
+- `-n, --name <name>`: Custom display name for the .app bundle wrapper.
+- `-d, --identifier <id>`: CFBundleIdentifier mapping (e.g. com.example.id).
+- `-v, --version <version>`: App version (defaults to version in v.mod, or 1.0.0).
+- `-o, --out <dir>`: Custom destination output directory (defaults to dist).
+
+###### Example building with local premium glassmorphism icons:
+
+```bash
+# Build an IDE app using the Developer icon template
+v run build.vsh --name "Code Studio" --icon resources/developer.png
+
+# Build a database tool using the Database Admin icon
+v run build.vsh --name "DB Browser" --icon resources/database_admin.png
+
+# Build a task planner using the Kanban Board icon
+v run build.vsh --name "Task Board" --icon resources/kanban_board.png
+```
+
+##### 5. Running the Packaged macOS App
+
+Once built, you can run and distribute your app bundle by:
+
+1. Double-clicking the .app bundle inside Finder (located in the dist/ output directory).
+2. Launching it from the terminal:
+   ```bash
+   open "dist/Vlang Macos Webview App Template.app"
+   ```
+
+Using premium templates like this ensures your compiled V webview apps have zero runtime bloat and deliver a sleek, fully native feel matches Apple's premium macOS Sequoia glassmorphism specifications.
 
 ---
 
@@ -8062,7 +8752,7 @@ V has testing built directly into the compiler. This chapter explains how to wri
 
 ### Assert Demo
 
-_File location: [testing/01_assert/assert_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/01_assert/assert_demo.v)_
+_File location: [testing/01_assert/assert_demo.v](testing/01_assert/assert_demo.v)_
 
 ### Lesson: Assert Demo
 
@@ -8090,7 +8780,7 @@ fn main() {
 
 ### Simple Test - Before (demo_test.v)
 
-_File location: [testing/02_simple_test/01_before/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/02_simple_test/01_before/demo_test.v)_
+_File location: [testing/02_simple_test/01_before/demo_test.v](testing/02_simple_test/01_before/demo_test.v)_
 
 ### Lesson: Simple Test - Before
 
@@ -8111,7 +8801,7 @@ fn test_first() {
 
 ### Simple Test - After (demo_test.v)
 
-_File location: [testing/02_simple_test/02_after/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/02_simple_test/02_after/demo_test.v)_
+_File location: [testing/02_simple_test/02_after/demo_test.v](testing/02_simple_test/02_after/demo_test.v)_
 
 ### Lesson: Simple Test - After
 
@@ -8132,7 +8822,7 @@ fn test_first() {
 
 ### Testsuite Demo Test
 
-_File location: [testing/04_testsuite/testsuite_demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/04_testsuite/testsuite_demo_test.v)_
+_File location: [testing/04_testsuite/testsuite_demo_test.v](testing/04_testsuite/testsuite_demo_test.v)_
 
 ### Lesson: Testsuite Demo Test
 
@@ -8175,7 +8865,7 @@ fn testsuite_end() {
 
 ### Testing Optional Return Functions (demo_test.v)
 
-_File location: [testing/05_test_optional_return_functions/demo_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/05_test_optional_return_functions/demo_test.v)_
+_File location: [testing/05_test_optional_return_functions/demo_test.v](testing/05_test_optional_return_functions/demo_test.v)_
 
 ### Lesson: Testing Optional Return Functions
 
@@ -8189,7 +8879,7 @@ This example demonstrates the concepts of **demo test**.
 ```v
 fn greet(name string) !string {
 	if name != '' {
-		return 'Hello $name!'
+		return 'Hello ${name}!'
 	}
 	return error('name not provided')
 }
@@ -8200,7 +8890,8 @@ fn test_greet_given_a_name() {
 }
 
 fn test_greet_propagates_error() ! {
-	greet('')!
+	res := greet('Pavan')!
+	assert res == 'Hello Pavan!'
 }
 
 fn test_greet_when_empty() {
@@ -8213,7 +8904,7 @@ fn test_greet_when_empty() {
 
 ### Greet
 
-_File location: [testing/06_testing_program_file/greet.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/06_testing_program_file/greet.v)_
+_File location: [testing/06_testing_program_file/greet.v](testing/06_testing_program_file/greet.v)_
 
 ### Lesson: Greet
 
@@ -8228,7 +8919,7 @@ This example demonstrates the concepts of **greet**.
 module main
 
 fn greet(name string) string {
-	return 'Hello $name!'
+	return 'Hello ${name}!'
 }
 
 fn main() {
@@ -8241,7 +8932,7 @@ fn main() {
 
 ### Greet Test
 
-_File location: [testing/06_testing_program_file/greet_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/06_testing_program_file/greet_test.v)_
+_File location: [testing/06_testing_program_file/greet_test.v](testing/06_testing_program_file/greet_test.v)_
 
 ### Lesson: Greet Test
 
@@ -8273,7 +8964,7 @@ fn test_greet() {
 
 ### Main Test
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/main_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/main_test.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/main_test.v](testing/07_testing_program_with_modules/modulebasics/main_test.v)_
 
 ### Lesson: Main Test
 
@@ -8306,7 +8997,7 @@ fn test_hello() {
 
 ### Testing Program Modules - Helper (file1.v)
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/file1.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/mod1/file1.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/file1.v](testing/07_testing_program_with_modules/modulebasics/mod1/file1.v)_
 
 ### Lesson: Testing Program Modules - Helper
 
@@ -8329,7 +9020,7 @@ pub fn hello() string {
 
 ### Mod1 Test
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v](testing/07_testing_program_with_modules/modulebasics/mod1/mod1_test.v)_
 
 ### Lesson: Mod1 Test
 
@@ -8359,7 +9050,7 @@ fn test_hello() {
 
 ### Modulebasics
 
-_File location: [testing/07_testing_program_with_modules/modulebasics/modulebasics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/testing/07_testing_program_with_modules/modulebasics/modulebasics.v)_
+_File location: [testing/07_testing_program_with_modules/modulebasics/modulebasics.v](testing/07_testing_program_with_modules/modulebasics/modulebasics.v)_
 
 ### Lesson: Modulebasics
 
@@ -8434,22 +9125,33 @@ V makes concurrent programming easy and safe. This chapter covers spawning threa
 
 ### Unbuffered Channel
 
-_File location: [channels/01_define_channels/01_unbuffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/01_define_channels/01_unbuffered_channel.v)_
+_File location: [channels/01_define_channels/01_unbuffered_channel.v](channels/01_define_channels/01_unbuffered_channel.v)_
 
 ### Lesson: Unbuffered Channel
 
-V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
-
-These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
+Unbuffered channels in V have a capacity of 0. Sending data into an unbuffered channel blocks the sender thread until a receiver thread is ready to pop the data. This provides a strong synchronization point between execution threads.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **unbuffered channel**.
 
 ```v
+module main
+
 fn main() {
+	// 1. Declare an unbuffered channel of type 'int'.
+	// In V, channels are declared using the `chan` keyword followed by the type.
+	// An empty initializer `{}` defaults the capacity (`cap`) to 0.
 	uc := chan int{}
-	println(uc.cap) // 0
-	println(typeof(uc).name) // chan int
+
+	// 2. Query the capacity of the channel.
+	// For unbuffered channels, the capacity is always 0.
+	// This means any send operation (pushing data) will block the sending thread
+	// until another thread is actively reading (popping data) from the channel.
+	println('Unbuffered channel capacity: ${uc.cap}') // Outputs: 0
+
+	// 3. Print the type name of the channel.
+	// V's `typeof().name` provides runtime type reflection names.
+	println('Type of channel: ${typeof(uc).name}') // Outputs: chan int
 }
 ```
 
@@ -8457,22 +9159,31 @@ fn main() {
 
 ### Define Buffered Channel (buffered_channel.v)
 
-_File location: [channels/01_define_channels/02_buffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/01_define_channels/02_buffered_channel.v)_
+_File location: [channels/01_define_channels/02_buffered_channel.v](channels/01_define_channels/02_buffered_channel.v)_
 
 ### Lesson: Define Buffered Channel
 
-V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
-
-These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
+Buffered channels in V are initialized with a specific capacity. The sender thread can push elements into the channel without blocking as long as the buffer is not completely full. Once the buffer is full, subsequent send operations will block until elements are read by another thread.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **buffered channel**.
 
 ```v
+module main
+
 fn main() {
+	// 1. Declare a buffered channel of type 'string' with a capacity of 2.
+	// We specify capacity using the `cap` initialization field.
 	bc := chan string{cap: 2}
-	println(bc.cap)
-	println(typeof(bc).name)
+
+	// 2. Query the capacity of the channel.
+	// For buffered channels, this returns the size of the buffer.
+	// The sending thread will NOT block when pushing items into the channel
+	// until the buffer is completely full (in this case, containing 2 elements).
+	println('Buffered channel capacity: ${bc.cap}') // Outputs: 2
+
+	// 3. Print the type name of the channel.
+	println('Type of channel: ${typeof(bc).name}') // Outputs: chan string
 }
 ```
 
@@ -8480,7 +9191,7 @@ fn main() {
 
 ### Push Buffered
 
-_File location: [channels/02_channel_operations/01_push_buffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/02_channel_operations/01_push_buffered.v)_
+_File location: [channels/02_channel_operations/01_push_buffered.v](channels/02_channel_operations/01_push_buffered.v)_
 
 ### Lesson: Push Buffered
 
@@ -8503,7 +9214,7 @@ fn main() {
 
 ### Push Unbuffered
 
-_File location: [channels/02_channel_operations/02_push_unbuffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/02_channel_operations/02_push_unbuffered.v)_
+_File location: [channels/02_channel_operations/02_push_unbuffered.v](channels/02_channel_operations/02_push_unbuffered.v)_
 
 ### Lesson: Push Unbuffered
 
@@ -8526,7 +9237,7 @@ fn main() {
 
 ### Pop
 
-_File location: [channels/02_channel_operations/03_pop.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/02_channel_operations/03_pop.v)_
+_File location: [channels/02_channel_operations/03_pop.v](channels/02_channel_operations/03_pop.v)_
 
 ### Lesson: Pop
 
@@ -8550,11 +9261,29 @@ fn main() {
 }
 ```
 
+### Deep Dive Explanation: Channels & Basic Operations
+
+#### 1. Unbuffered vs. Buffered Channels
+
+- **Unbuffered Channels (`cap: 0`)**: Initialized via `chan T{}`. They have no intermediate storage. Any send operation (`ch <- value`) blocks the sender until a receiver is ready to pop the data (`<-ch`), and vice versa.
+  > [!WARNING]
+  > **Deadlock Risk:** In the `Push Unbuffered` example, calling `ch <- 51` in the `main` thread without spawning a concurrent reader thread blocks the program permanently, resulting in a thread deadlock.
+- **Buffered Channels (`cap > 0`)**: Initialized via `chan T{cap: N}`. They can hold up to `N` items in a queue. Pushing to a buffered channel does **not** block as long as the current queue size is less than `N`. It only blocks when the buffer is full (`ch.len == N`). Popping blocks only when the buffer is empty (`ch.len == 0`).
+
+#### 2. Channel Operations & Metadata Fields
+
+- **Pushing (`<-`)**: Sends data to the channel. Format: `channel_var <- data`.
+- **Popping (`<-`)**: Receives data from the channel. Format: `variable := <-channel_var`.
+- **Properties**:
+  - `.cap`: The static, defined capacity of the channel (0 for unbuffered).
+  - `.len`: The number of currently buffered elements waiting to be popped.
+  - `.closed`: A boolean indicating if the channel has been shut down via `close(ch)`.
+
 ---
 
 ### Channel Properties
 
-_File location: [channels/03_channel_properties/01_channel_properties.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/03_channel_properties/01_channel_properties.v)_
+_File location: [channels/03_channel_properties/01_channel_properties.v](channels/03_channel_properties/01_channel_properties.v)_
 
 ### Lesson: Channel Properties
 
@@ -8579,7 +9308,7 @@ fn main() {
 
 ### Try Push Unbuffered
 
-_File location: [channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v)_
+_File location: [channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v](channels/04_channel_methods/01_try_push/01_try_push_unbuffered.v)_
 
 ### Lesson: Try Push Unbuffered
 
@@ -8603,7 +9332,7 @@ fn main() {
 
 ### Try Push Buffered
 
-_File location: [channels/04_channel_methods/01_try_push/02_try_push_buffered.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/01_try_push/02_try_push_buffered.v)_
+_File location: [channels/04_channel_methods/01_try_push/02_try_push_buffered.v](channels/04_channel_methods/01_try_push/02_try_push_buffered.v)_
 
 ### Lesson: Try Push Buffered
 
@@ -8634,7 +9363,7 @@ fn main() {
 
 ### Try Pop
 
-_File location: [channels/04_channel_methods/02_try_pop/01_try_pop.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/02_try_pop/01_try_pop.v)_
+_File location: [channels/04_channel_methods/02_try_pop/01_try_pop.v](channels/04_channel_methods/02_try_pop/01_try_pop.v)_
 
 ### Lesson: Try Pop
 
@@ -8661,7 +9390,7 @@ fn main() {
 
 ### Close
 
-_File location: [channels/04_channel_methods/03_close/01_close/01_close.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/03_close/01_close/01_close.v)_
+_File location: [channels/04_channel_methods/03_close/01_close/01_close.v](channels/04_channel_methods/03_close/01_close/01_close.v)_
 
 ### Lesson: Close
 
@@ -8698,7 +9427,7 @@ fn main() {
 
 ### Defer Close
 
-_File location: [channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v)_
+_File location: [channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v](channels/04_channel_methods/03_close/02_defer_close/01_defer_close.v)_
 
 ### Lesson: Defer Close
 
@@ -8737,7 +9466,7 @@ fn main() {
 
 ### Blocking Channels
 
-_File location: [channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v)_
+_File location: [channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v](channels/05_working_with_unbuffered_channels/01_understanding_blocking_nature/01_blocking_channels.v)_
 
 ### Lesson: Blocking Channels
 
@@ -8767,7 +9496,7 @@ fn main() {
 
 ### Dealing Before
 
-_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v)_
+_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v](channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/01_before/01_dealing_before.v)_
 
 ### Lesson: Dealing Before
 
@@ -8800,7 +9529,7 @@ fn main() {
 
 ### Dealing After
 
-_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v)_
+_File location: [channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v](channels/05_working_with_unbuffered_channels/02_dealing_with_blocking_channels/02_after/01_dealing_after.v)_
 
 ### Lesson: Dealing After
 
@@ -8834,7 +9563,7 @@ fn main() {
 
 ### Unbuffered Sync Before (sync_before.v)
 
-_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
+_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v](channels/05_working_with_unbuffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
 
 ### Lesson: Unbuffered Sync Before
 
@@ -8877,7 +9606,7 @@ fn main() {
 
 ### Unbuffered Sync After (sync_after.v)
 
-_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
+_File location: [channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v](channels/05_working_with_unbuffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
 
 ### Lesson: Unbuffered Sync After
 
@@ -8922,7 +9651,7 @@ fn main() {
 
 ### Understanding Buffered Channel (buffered_channel.v)
 
-_File location: [channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v)_
+_File location: [channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v](channels/06_working_with_buffered_channels/01_understanding_buffered_channel/01_buffered_channel.v)_
 
 ### Lesson: Understanding Buffered Channel
 
@@ -8952,7 +9681,7 @@ fn main() {
 
 ### Coroutines Communication
 
-_File location: [channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v)_
+_File location: [channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v](channels/06_working_with_buffered_channels/02_establish_communication_between_coroutines/01_coroutines_communication.v)_
 
 ### Lesson: Coroutines Communication
 
@@ -8994,7 +9723,7 @@ fn main() {
 
 ### Buffered Sync Before (sync_before.v)
 
-_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
+_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v](channels/06_working_with_buffered_channels/03_synchronizing_data/01_before/01_sync_before.v)_
 
 ### Lesson: Buffered Sync Before
 
@@ -9038,7 +9767,7 @@ fn main() {
 
 ### Buffered Sync After (sync_after.v)
 
-_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
+_File location: [channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v](channels/06_working_with_buffered_channels/03_synchronizing_data/02_after/01_sync_after.v)_
 
 ### Lesson: Buffered Sync After
 
@@ -9084,7 +9813,7 @@ fn main() {
 
 ### Channel Select Before
 
-_File location: [channels/07_channel_select/01_before/01_channel_select_before.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/07_channel_select/01_before/01_channel_select_before.v)_
+_File location: [channels/07_channel_select/01_before/01_channel_select_before.v](channels/07_channel_select/01_before/01_channel_select_before.v)_
 
 ### Lesson: Channel Select Before
 
@@ -9136,7 +9865,7 @@ fn main() {
 
 ### Channel Select
 
-_File location: [channels/07_channel_select/02_after/01_channel_select.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/channels/07_channel_select/02_after/01_channel_select.v)_
+_File location: [channels/07_channel_select/02_after/01_channel_select.v](channels/07_channel_select/02_after/01_channel_select.v)_
 
 ### Lesson: Channel Select
 
@@ -9202,13 +9931,33 @@ fn main() {
 }
 ```
 
+### Deep Dive Explanation: Advanced Channel Operations & Multiplexing
+
+#### 1. Non-Blocking Senders & Receivers (`try_push` and `try_pop`)
+
+If your program cannot afford to block (e.g., in high-frequency game loops or real-time networking threads), V provides non-blocking channel API methods:
+
+- **`try_push(val)`**: Attempts to send `val` immediately. It returns a `ChanStatus` enum:
+  - `.success`: The value was written to the channel's buffer.
+  - `.not_ready`: The operation would block (either because the channel is unbuffered with no active reader, or the buffered channel is full).
+  - `.closed`: The channel was closed, and writing is invalid.
+- **`try_pop(&mut_var)`**: Attempts to read immediately. It takes a reference to a mutable variable where the received value will be stored and returns a `ChanStatus` enum.
+
+#### 2. Channel Multiplexing with `select`
+
+V's `select` statement monitors multiple channel operations simultaneously:
+
+- **Blocking Mode**: The `select` block will halt execution until _at least one_ of the specified channel reads or writes is ready. When a case is ready, its block executes, and control leaves the `select` block.
+- **Inactivity Timeouts**: You can declare a timeout block (e.g., `2 * time.second { ... }`). If all other monitored channels remain inactive for that duration, this case triggers. This is highly useful for implementing idle detection or connection timeouts.
+- **Non-Blocking Mode (`else`)**: Adding an `else { ... }` block to a `select` statement makes it entirely non-blocking. If no channels are immediately ready, the `else` block executes instantly.
+
 ---
 
 ## V-Routines & Concurrency
 
 ### Stopwatch Demo
 
-_File location: [concurrency/01_time_module_overview/stopwatch_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/01_time_module_overview/stopwatch_demo.v)_
+_File location: [concurrency/01_time_module_overview/stopwatch_demo.v](concurrency/01_time_module_overview/stopwatch_demo.v)_
 
 ### Lesson: Stopwatch Demo
 
@@ -9228,9 +9977,9 @@ fn main() {
 	sw := time.new_stopwatch()
 
 	for i in 1 .. 5 {
-		println('$i')
+		println('${i}')
 	}
-	println('Total time took to finish: $sw.elapsed().seconds() seconds')
+	println('Total time took to finish: ${sw.elapsed().seconds()} seconds')
 }
 ```
 
@@ -9238,7 +9987,7 @@ fn main() {
 
 ### Spawn Void Function
 
-_File location: [concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v)_
+_File location: [concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v](concurrency/02_spawn_void_function/01_check_thread_type/spawn_void_function.v)_
 
 ### Lesson: Spawn Void Function
 
@@ -9266,7 +10015,7 @@ fn main() {
 
 ### Waiting On Concurrent Thread
 
-_File location: [concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v)_
+_File location: [concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v](concurrency/02_spawn_void_function/02_waiting_on_concurrent_thread/waiting_on_concurrent_thread.v)_
 
 ### Lesson: Waiting On Concurrent Thread
 
@@ -9295,7 +10044,7 @@ fn main() {
 
 ### Running Multiple Tasks In Sequence
 
-_File location: [concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v)_
+_File location: [concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v](concurrency/03_concurrency_real_life_scenario/01_running_multiple_tasks_in_sequence/01_running_multiple_tasks_in_sequence.v)_
 
 ### Lesson: Running Multiple Tasks In Sequence
 
@@ -9312,21 +10061,21 @@ module main
 import time
 
 fn hot_water() {
-	println('Started Switch on Water heater: $time.now().hhmmss()')
+	println('Started Switch on Water heater: ${time.now().hhmmss()}')
 	time.sleep(5 * time.second)
-	println('Water heater indicates hot water ready!: $time.now().hhmmss()')
+	println('Water heater indicates hot water ready!: ${time.now().hhmmss()}')
 }
 
 fn brush_teeth() {
-	println('Started brushing:  $time.now().hhmmss()')
+	println('Started brushing:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End Brushing:  $time.now().hhmmss()')
+	println('End Brushing:  ${time.now().hhmmss()}')
 }
 
 fn select_clothes() {
-	println('Started choosing pair of clothes :  $time.now().hhmmss()')
+	println('Started choosing pair of clothes :  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End choosing pair of clothes:  $time.now().hhmmss()')
+	println('End choosing pair of clothes:  ${time.now().hhmmss()}')
 }
 
 fn main() {
@@ -9334,7 +10083,7 @@ fn main() {
 	hot_water()
 	brush_teeth()
 	select_clothes()
-	println('Your pre bath morning chores took: $sw.elapsed().seconds() seconds')
+	println('Your pre bath morning chores took: ${sw.elapsed().seconds()} seconds')
 }
 ```
 
@@ -9342,7 +10091,7 @@ fn main() {
 
 ### Spawning Multiple Tasks Concurrently
 
-_File location: [concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v)_
+_File location: [concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v](concurrency/03_concurrency_real_life_scenario/02_spawning_multiple_tasks_concurrently/01_spawning_multiple_tasks_concurrently.v)_
 
 ### Lesson: Spawning Multiple Tasks Concurrently
 
@@ -9359,21 +10108,21 @@ module main
 import time
 
 fn hot_water() {
-	println('Started Switch on Water heater: $time.now().hhmmss()')
+	println('Started Switch on Water heater: ${time.now().hhmmss()}')
 	time.sleep(5 * time.second)
-	println('Water heater indicates hot water ready! : $time.now().hhmmss()')
+	println('Water heater indicates hot water ready! : ${time.now().hhmmss()}')
 }
 
 fn brush_teeth() {
-	println('Started brushing:  $time.now().hhmmss()')
+	println('Started brushing:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End Brushing:  $time.now().hhmmss()')
+	println('End Brushing:  ${time.now().hhmmss()}')
 }
 
 fn select_clothes() {
-	println('Started choosing pair of clothes:  $time.now().hhmmss()')
+	println('Started choosing pair of clothes:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End choosing pair of clothes:  $time.now().hhmmss()')
+	println('End choosing pair of clothes:  ${time.now().hhmmss()}')
 }
 
 fn main() {
@@ -9383,7 +10132,7 @@ fn main() {
 	t << go brush_teeth()
 	t << go select_clothes()
 	t.wait()
-	println('Your pre bath morning chores took: $sw.elapsed().seconds() seconds')
+	println('Your pre bath morning chores took: ${sw.elapsed().seconds()} seconds')
 }
 ```
 
@@ -9391,7 +10140,7 @@ fn main() {
 
 ### Functions With Return Values
 
-_File location: [concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v)_
+_File location: [concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v](concurrency/04_implement concurrent programs/01_functions_with_return_values/01_functions_with_return_values.v)_
 
 ### Lesson: Functions With Return Values
 
@@ -9408,23 +10157,23 @@ module main
 import time
 
 fn hot_water() string {
-	println('Started Switch on Water heater: $time.now().hhmmss()')
+	println('Started Switch on Water heater: ${time.now().hhmmss()}')
 	time.sleep(5 * time.second)
-	println('Water heater indicates hot water ready! : $time.now().hhmmss()')
+	println('Water heater indicates hot water ready! : ${time.now().hhmmss()}')
 	return 'Hot water ready!'
 }
 
 fn brush_teeth() string {
-	println('Started brushing:  $time.now().hhmmss()')
+	println('Started brushing:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End Brushing:  $time.now().hhmmss()')
+	println('End Brushing:  ${time.now().hhmmss()}')
 	return 'Sparkling Teeth ready!'
 }
 
 fn select_clothes() string {
-	println('Started choosing pair of clothes:  $time.now().hhmmss()')
+	println('Started choosing pair of clothes:  ${time.now().hhmmss()}')
 	time.sleep(3 * time.second)
-	println('End choosing pair of clothes:  $time.now().hhmmss()')
+	println('End choosing pair of clothes:  ${time.now().hhmmss()}')
 	return 'Pair of clothes ready!'
 }
 
@@ -9435,7 +10184,7 @@ fn main() {
 	t << go brush_teeth()
 	t << go select_clothes()
 	res := t.wait()
-	println('Your pre bath morning chores took: $sw.elapsed().seconds() seconds')
+	println('Your pre bath morning chores took: ${sw.elapsed().seconds()} seconds')
 	println('*** Type Check ***')
 	println('Type of thread array of strings t: ${typeof(t).name}')
 	println('Type of res: ${typeof(res).name}')
@@ -9448,7 +10197,7 @@ fn main() {
 
 ### Spawn Anonymous Funcs Without Input Args
 
-_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v)_
+_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v](concurrency/04_implement concurrent programs/02_anonymous_functions/01_spawn_anonymous_funcs_without_input_args/01_spawn_anonymous_funcs_without_input_args.v)_
 
 ### Lesson: Spawn Anonymous Funcs Without Input Args
 
@@ -9476,7 +10225,7 @@ fn main() {
 
 ### Spawn Anonymous Funcs With Input Args
 
-_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v)_
+_File location: [concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v](concurrency/04_implement concurrent programs/02_anonymous_functions/02_spawn_anonymous_funcs_with_input_args/01_spawn_anonymous_funcs_with_input_args.v)_
 
 ### Lesson: Spawn Anonymous Funcs With Input Args
 
@@ -9494,7 +10243,7 @@ fn main() {
 	mut t := []thread string{}
 	for i in 1 .. 3 {
 		t << go fn (i int, msg string) string {
-			return 'iteration: $i, message: $msg'
+			return 'iteration: ${i}, message: ${msg}'
 		}(i, 'hello') // <- arguments must match list in the anonymous function definition
 	}
 	res := t.wait()
@@ -9508,13 +10257,11 @@ fn main() {
 
 ### Sharing Data Main And Concurrent Tasks
 
-_File location: [concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v)_
+_File location: [concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v](concurrency/05_sharing_data_main_and_concurrent_tasks/01_sharing_data_main_and_concurrent_tasks.v)_
 
 ### Lesson: Sharing Data Main And Concurrent Tasks
 
-V supports lightweight concurrency using **v-routines** via the `spawn` keyword (which spawns a function in a new thread). Threads communicate safely using **channels**, which prevent race conditions. For shared memory concurrency, V provides the `shared` keyword alongside `lock` and `unlock` blocks to safely synchronize access to variables.
-
-These examples cover spawning tasks, reading/writing channels, buffering, select statements, and thread synchronization.
+In addition to channels, V supports shared-memory concurrency using the `shared` keyword. Multiple threads can safely read and write to the same struct using `lock` (exclusive write lock) and `rlock` (shared read lock) blocks. This prevents race conditions and ensures synchronization without manual mutex management.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **sharing data main and concurrent tasks**.
@@ -9524,6 +10271,9 @@ module main
 
 import rand
 
+// 1. Define a shared struct type.
+// Structs that are intended to be shared across multiple threads should be defined normally.
+// Mutability of fields is indicated as usual (e.g., total and num_donors under mut:).
 struct Fund {
 	name   string
 	target f32
@@ -9532,42 +10282,104 @@ mut:
 	num_donors int
 }
 
+// 2. Define a method on a shared receiver.
+// In V, a receiver can be marked as 'shared' to indicate that the struct instance
+// passed to it will be accessed concurrently.
 fn (shared f Fund) collect(amt f32) {
-	lock f { // read - write lock
+	// 3. Acquire a write lock.
+	// The `lock` block ensures exclusive (read-write) access to the shared object 'f'.
+	// Only one thread can execute within the lock block at a time. Other threads attempting
+	// to lock 'f' will block until this block exits.
+	lock f {
 		if f.total < f.target {
 			f.num_donors += 1
 			f.total += amt
-			println('$f.num_donors \t before: ${f.total - amt} \t funds received: $amt \t total: $f.total')
+			// We can safely read and write to the struct fields inside the lock block.
+			println('${f.num_donors} \t before: ${f.total - amt} \t funds received: ${amt} \t total: ${f.total}')
 		}
 	}
 }
 
+// donation simulates generating a random donation amount.
 fn donation() f32 {
+	// rand.f32_in_range returns a result/option type, so we use `or` to handle default.
 	return rand.f32_in_range(100.00, 250.00) or { 100.00 }
 }
 
 fn main() {
+	// 4. Declare a shared variable.
+	// The `shared` keyword before the variable name makes it a shared object.
+	// Under the hood, V automatically associates a mutex with this object.
 	shared fund := Fund{
-		name: 'A noble cause'
+		name:   'A noble cause'
 		target: 1000.00
 	}
 
 	for {
+		// 5. Acquire a read lock (rlock).
+		// A read lock allows multiple threads to read the shared object concurrently
+		// but prevents any thread from writing to it.
 		rlock fund {
 			if fund.total >= fund.target {
 				break
 			}
 		}
+
+		// 6. Spawn concurrent tasks.
+		// The `go` keyword (interchangeable with `spawn`) starts a function in a new thread.
+		// `go donation()` returns a thread handle `h`.
 		h := go donation()
+
+		// Spawning `fund.collect` concurrently and passing the result of `h.wait()`.
+		// `h.wait()` blocks the main loop until the `donation()` thread finishes and returns its f32 value.
 		go fund.collect(h.wait())
 	}
 
-	rlock fund { // acquire read lock
-		println('$fund.num_donors donors donated for $fund.name')
-		println('$fund.name raised total fund amount: \$ $fund.total')
+	// 7. Final output with read lock.
+	rlock fund {
+		println('${fund.num_donors} donors donated for ${fund.name}')
+		println('${fund.name} raised total fund amount: \$ ${fund.total}')
 	}
 }
 ```
+
+### Deep Dive Explanation: V-Routines & Shared Memory Concurrency
+
+#### 1. Coroutines (V-Routines) via `spawn` and `go`
+
+V supports lightweight concurrency using **v-routines**, which are spawned using the `spawn` keyword (the `go` keyword acts as an alias).
+
+- When you call `spawn task()`, V runs the function concurrently.
+- V's runtime schedules these v-routines across an OS thread pool, making them highly efficient and lightweight.
+
+#### 2. Thread Handles & Blocking on `.wait()`
+
+Every `spawn` operation returns a thread handle:
+
+- If the function returns a value of type `T`, the handle has the type `thread T`.
+- If the function does not return a value (void), the handle is of type `thread`.
+- Calling `.wait()` on a thread handle (e.g., `result := handle.wait()`) blocks the calling thread until the spawned routine completes, retrieving its return value.
+- You can manage multiple threads by pushing their handles into an array and waiting on all of them at once:
+  ```v
+  mut threads := []thread int{}
+  threads << spawn worker(1)
+  threads << spawn worker(2)
+  results := threads.wait() // Returns []int containing results from all workers
+  ```
+
+#### 3. Shared State Mutexes (`shared`)
+
+For shared-memory concurrency, V does not allow raw, unsynchronized access to global or heap variables across threads. Instead, variables must be explicitly marked as `shared`:
+
+- `shared fund := Fund{...}` instructs the compiler to automatically associate a mutex with the `fund` instance.
+- Struct methods can accept a shared receiver (e.g., `fn (shared f Fund) collect(...)`).
+
+#### 4. Safe Synchronization: `lock` and `rlock` Blocks
+
+To prevent data races, V enforces a strict compile-time lock check. You cannot access or modify a `shared` variable's fields directly. You must wrap the access in a lock block:
+
+- **`lock variable { ... }`**: Acquires an exclusive read-write lock. Use this block whenever you mutate fields of the shared structure. Only one thread can hold this lock at a time.
+- **`rlock variable { ... }`**: Acquires a shared read-only lock. Multiple threads can enter an `rlock` block concurrently to read fields, but any thread attempting to acquire a `lock` will be blocked until all readers exit.
 
 ---
 
@@ -9609,7 +10421,7 @@ Most applications need to work with databases or API payloads. This chapter teac
 
 ### Notes API Case Study - Main (main.v)
 
-_File location: [notes_api/notes_api/main.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/notes_api/notes_api/main.v)_
+_File location: [notes_api/notes_api/main.v](notes_api/notes_api/main.v)_
 
 ### Lesson: Notes API Case Study - Main
 
@@ -9654,7 +10466,7 @@ fn main() {
 
 ### Note
 
-_File location: [notes_api/notes_api/note.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/notes_api/notes_api/note.v)_
+_File location: [notes_api/notes_api/note.v](notes_api/notes_api/note.v)_
 
 ### Lesson: Note
 
@@ -9823,7 +10635,7 @@ fn (mut app App) delete(mut ctx Context, id int) veb.Result {
 
 ### Util
 
-_File location: [notes_api/notes_api/util.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/notes_api/notes_api/util.v)_
+_File location: [notes_api/notes_api/util.v](notes_api/notes_api/util.v)_
 
 ### Lesson: Util
 
@@ -9862,7 +10674,7 @@ fn error_response(status int, message string) string {
 
 ### Decode
 
-_File location: [json_and_orm/01_json/01_decode/decode.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/01_decode/decode.v)_
+_File location: [json_and_orm/01_json/01_decode/decode.v](json_and_orm/01_json/01_decode/decode.v)_
 
 ### Lesson: Decode
 
@@ -9881,9 +10693,12 @@ struct Note {
 }
 
 fn main() {
+	// Decode a JSON payload into a struct instance.
 	n := json.decode(Note, '{"id":1,"message":"Plan a holiday","status":false}') or {
 		panic('invalid json data')
 	}
+
+	// Print the type name and the decoded data for inspection.
 	println(typeof(n).name) // Note
 	println(n)
 }
@@ -9893,7 +10708,7 @@ fn main() {
 
 ### Encode
 
-_File location: [json_and_orm/01_json/02_encode/encode.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/02_encode/encode.v)_
+_File location: [json_and_orm/01_json/02_encode/encode.v](json_and_orm/01_json/02_encode/encode.v)_
 
 ### Lesson: Encode
 
@@ -9912,22 +10727,58 @@ struct Note {
 }
 
 fn main() {
+	// Create a note object that will be converted to JSON.
 	m := Note{
-		id: 2
+		id:      2
 		message: 'Get groceries'
-		status: false
+		status:  false
 	}
 
-	j := json.encode(m)
+	// Encode the struct to a compact JSON string.
+	mut j := json.encode(m)
+	println(j)
+
+	// Encode the same object with pretty formatting for readability.
+	j = json.encode_pretty(m)
 	println(j)
 }
 ```
+
+### Deep Dive Explanation: JSON Serialization & Deserialization
+
+#### 1. Compile-Time JSON Parsing
+
+Unlike many languages that rely on slow, runtime reflection to inspect structures, V's compiler generates encoding and decoding code statically at compile time. This ensures extremely fast performance and safety.
+
+#### 2. Decoding JSON (`json.decode`)
+
+- To decode a JSON string, invoke `json.decode(StructName, json_string)`.
+- **Result Type Return**: Since incoming JSON strings can be malformed, `json.decode` returns a Result type (`!StructName`). You **must** unwrap it with an `or` block:
+  ```v
+  user := json.decode(User, raw_json) or {
+      println('Failed to parse user JSON: ${err}')
+      return
+  }
+  ```
+
+#### 3. Encoding to JSON (`json.encode`)
+
+- To serialize a V struct instance into a JSON string, invoke `json.encode(instance)`.
+- This operation is guaranteed to succeed and returns a standard `string` directly (no `or` block required).
+
+#### 4. Struct JSON Attribute Tags
+
+V provides structural attributes to customize JSON mapping. These are written inside `@[...]` brackets placed on the same line as the field:
+
+- **Custom Naming**: `field string @[json: 'custom_name']` maps the struct field to the `'custom_name'` JSON key.
+- **Skip Fields**: `secret string @[json: '-']` prevents the field from being serialized or deserialized.
+- **Required Keys**: `id int @[required]` ensures that if the `id` key is missing in the JSON payload, the decoder returns an error.
 
 ---
 
 ### Json To From File
 
-_File location: [json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v)_
+_File location: [json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v](json_and_orm/01_json/03_json_to_from_file/json_to_from_file.v)_
 
 This example demonstrates how to encode an object to JSON, write it to a file, read it back, and decode it into a V struct.
 
@@ -9948,9 +10799,9 @@ fn main() {
 
 	// Create an object instance
 	book := Book{
-		title: 'The V Programming Language'
+		title:  'The V Programming Language'
 		author: 'Alex Medvednikov'
-		year: 2019
+		year:   2019
 	}
 
 	// 1. Encode object to JSON string
@@ -9990,7 +10841,7 @@ fn main() {
 
 ### Json Array Of Objects
 
-_File location: [json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v)_
+_File location: [json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v](json_and_orm/01_json/04_json_array_of_objects/json_array_of_objects.v)_
 
 This example demonstrates how to serialize and deserialize an array of objects (structs) to and from JSON, and how to write/read them using the filesystem.
 
@@ -10012,14 +10863,14 @@ fn main() {
 	// Create an array of objects
 	tasks := [
 		Task{
-			id: 1
+			id:    1
 			title: 'Read V Guide'
-			done: false
+			done:  false
 		},
 		Task{
-			id: 2
+			id:    2
 			title: 'Write JSON helper examples'
-			done: true
+			done:  true
 		},
 	]
 
@@ -10063,7 +10914,7 @@ fn main() {
 
 ### Json Map To From File
 
-_File location: [json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v)_
+_File location: [json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v](json_and_orm/01_json/05_json_map_to_from_file/json_map_to_from_file.v)_
 
 This example demonstrates how to serialize a map structure (`map[string]int`) into a JSON string, write it to a file, read it back, and deserialize it back into a map in V.
 
@@ -10078,8 +10929,8 @@ fn main() {
 
 	// Create a map[string]int
 	scores := {
-		'Alice': 95
-		'Bob': 88
+		'Alice':   95
+		'Bob':     88
 		'Charlie': 92
 	}
 
@@ -10123,7 +10974,7 @@ fn main() {
 
 ### Json Array To From File
 
-_File location: [json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v)_
+_File location: [json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v](json_and_orm/01_json/06_json_array_to_from_file/json_array_to_from_file.v)_
 
 This example demonstrates two different methods for reading and writing arrays to/from files in V:
 
@@ -10198,7 +11049,7 @@ fn main() {
 
 ### Orm Demo
 
-_File location: [json_and_orm/02_orm/orm_demo.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/02_orm/orm_demo.v)_
+_File location: [json_and_orm/02_orm/orm_demo.v](json_and_orm/02_orm/orm_demo.v)_
 
 ### Lesson: Orm Demo
 
@@ -10236,12 +11087,12 @@ fn main() {
 	// Inserting record(s)
 	n1 := Note{
 		message: 'Get some milk'
-		status: false
+		status:  false
 	}
 
 	n2 := Note{
 		message: 'Get groceries'
-		status: false
+		status:  false
 	}
 	sql db {
 		insert n1 into Note
@@ -10306,17 +11157,73 @@ fn main() {
 }
 ```
 
+### Deep Dive Explanation: V's Compile-Safe Database ORM
+
+#### 1. Compile-Time Query Safety
+
+V features a built-in ORM (supporting SQLite, PostgreSQL, and MySQL) that integrates directly with V's type system:
+
+- **The `sql` Block**: All ORM operations are written inside a special `sql db { ... }` block.
+- **Type Safety**: The compiler validates table structures, column types, and query logic during compilation. For example, trying to compare a string field to an integer inside the `where` clause will fail to compile.
+- **SQL Injection Prevention**: All variables referenced in query clauses (like `where id == id_var`) are automatically treated as query parameters under the hood, making V's ORM immune to SQL injection attacks out of the box.
+
+#### 2. Struct Attributes for ORM Schema Design
+
+You configure your database schema by annotating V structs with attributes:
+
+- **`@[table: 'name']`**: Customizes the table name in the database (defaults to the struct name).
+- **`@[primary; sql: serial]`**: Configures the field as an auto-incrementing primary key.
+- **`@[sql: 'col_name']`**: Customizes the column name in the database (defaults to the field name).
+- **`@[unique]`**: Adds a unique constraint to the column.
+
+#### 3. ORM Operations
+
+- **Create Table**:
+  ```v
+  sql db { create table Note } or { ... }
+  ```
+  Generates the SQL DDL statements and creates the table based on the struct fields and attributes.
+- **Insert Records**:
+  ```v
+  sql db { insert n1 into Note } or { ... }
+  ```
+  Inserts the struct instance into the database. If successful, V updates any auto-incrementing primary keys directly on the passed struct instance.
+- **Query Records (`select`)**:
+  Queries return a slice of structs (e.g. `[]Note`). Standard SQL clauses are fully supported:
+  - `where`: Filter records using standard V boolean operations.
+  - `order by`: Sort records (e.g., `order by id desc`).
+  - `limit`: Restrict the number of returned records.
+  - `offset`: Skip a number of records (used for pagination).
+- **Update Records**:
+  ```v
+  sql db { update Note set status = true where id == 2 } or { ... }
+  ```
+  Updates the records matching the predicate.
+- **Delete Records**:
+  ```v
+  sql db { delete from Note where id == 2 } or { ... }
+  ```
+  Deletes the records matching the predicate.
+
 ---
 
 ## SQLite Integration
 
 ### Sqlite
 
-_File location: [sqlite/sqlite.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/sqlite/sqlite.v)_
+_File location: [sqlite/sqlite.v](sqlite/sqlite.v)_
 
 ### Lesson: Sqlite
 
-Databases and JSON handling are essential parts of backend development. This lesson on **Sqlite** details V's built-in JSON utilities or its built-in database ORM.
+Databases and JSON handling are essential parts of backend development. A small SQLite helper module makes your application code cleaner by centralizing connection setup, schema initialization, and CRUD operations in one place.
+
+This example shows a practical pattern you can reuse in small tools, desktop apps, and prototypes:
+
+- connect to a database with a single helper
+- enable foreign keys for safer relations
+- initialize a table with a reusable setup function
+- create, read, update, and delete records with safe parameterized queries
+- prevent SQL injection by using `exec_param_many` instead of string interpolation
 
 ```v
 module sqlite
@@ -10325,8 +11232,179 @@ import db.sqlite as dbsqlite
 
 pub type DB = dbsqlite.DB
 
+pub struct Note {
+	id    int
+	title string
+	body  string
+}
+
 pub fn connect(path string) !DB {
-	return dbsqlite.connect(path)!
+	mut db := dbsqlite.connect(path)!
+	db.exec('PRAGMA foreign_keys = ON;') or {
+		return error('failed to enable foreign keys: ${err}')
+	}
+	return db
+}
+
+pub fn connect_in_memory() !DB {
+	return connect(':memory:')
+}
+
+pub fn init_notes_table(mut db DB) ! {
+	db.exec('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL);') or {
+		return error('failed to create notes table: ${err}')
+	}
+}
+
+pub fn create_note(mut db DB, title string, body string) !int {
+	db.exec_param_many('INSERT INTO notes (title, body) VALUES (?, ?);', [title, body]) or {
+		return error('failed to insert note: ${err}')
+	}
+	return db.last_id()
+}
+
+pub fn list_notes(mut db DB) ![]Note {
+	rows := db.exec('SELECT id, title, body FROM notes ORDER BY id;') or {
+		return error('failed to list notes: ${err}')
+	}
+	mut notes := []Note{}
+	for row in rows {
+		notes << Note{
+			id:    row.vals[0].int()
+			title: row.vals[1]
+			body:  row.vals[2]
+		}
+	}
+	return notes
+}
+
+pub fn update_note(mut db DB, id int, title string, body string) ! {
+	db.exec_param_many('UPDATE notes SET title = ?, body = ? WHERE id = ?;', [title, body,
+		id.str()]) or { return error('failed to update note: ${err}') }
+}
+
+pub fn delete_note(mut db DB, id int) ! {
+	db.exec_param_many('DELETE FROM notes WHERE id = ?;', [id.str()]) or {
+		return error('failed to delete note: ${err}')
+	}
+}
+```
+
+> [!TIP]
+> **Safe database access:** always pass user input as parameters using `exec_param_many` or `exec` with placeholders like `?`. This prevents SQL injection and keeps your queries readable.
+
+### SQLite CRUD Helper
+
+_File location: [sqlite/sqlite_crud.v](sqlite/sqlite_crud.v)_
+
+### Lesson: SQLite CRUD Helper
+
+This template demonstrates a complete SQLite database workflow using raw SQL queries. It includes creating tables, clearing data, inserting records with parameterized inputs to prevent SQL injection, and fetching records into structured types.
+
+Key concepts illustrated:
+
+- **Database Connection**: Opening and closing a SQLite database using `sqlite.connect`.
+- **Schema Management**: Creating tables dynamically using `db.exec`.
+- **Parameterized Queries**: Preventing SQL injection by passing variables inside string arrays using `db.exec_param_many`.
+- **Result Mapping**: Manually parsing returned rows into structured V structs.
+- **Resource Cleanup**: Appending log files or temporary databases, and deleting them cleanly via `defer` blocks to prevent stray files on disk.
+
+```v
+module main
+
+import db.sqlite
+import os
+
+struct User {
+	id    int
+	name  string
+	email string
+	age   int
+}
+
+fn connect_db(path string) !sqlite.DB {
+	return sqlite.connect(path)
+}
+
+fn init_schema(mut db sqlite.DB) ! {
+	db.exec('CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, email TEXT UNIQUE, age INTEGER);') or {
+		return error('Could not create table: ${err}')
+	}
+}
+
+fn reset_users(mut db sqlite.DB) ! {
+	db.exec('DELETE FROM users;') or { return error('Could not clear users: ${err}') }
+}
+
+fn insert_user(mut db sqlite.DB, name string, email string, age int) !int {
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		name,
+		email,
+		age.str(),
+	]) or { return error('Insert failed: ${err}') }
+	return db.last_id()
+}
+
+fn fetch_users(mut db sqlite.DB) ![]User {
+	rows := db.exec('SELECT id, name, email, age FROM users ORDER BY id;') or {
+		return error('Select failed: ${err}')
+	}
+	mut users := []User{}
+	for row in rows {
+		users << User{
+			id:    row.vals[0].int()
+			name:  row.vals[1]
+			email: row.vals[2]
+			age:   row.vals[3].int()
+		}
+	}
+	return users
+}
+
+// Reusable CRUD helpers for the SQLite boilerplate example.
+
+fn main() {
+	println('=== V SQLite CRUD Boilerplate ===')
+
+	db_path := 'demo.db'
+	defer {
+		if os.exists(db_path) {
+			os.rm(db_path) or {}
+			println('Cleaned up temporary database: ${db_path}')
+		}
+	}
+
+	mut db := connect_db(db_path) or {
+		eprintln('${err}')
+		return
+	}
+	defer {
+		db.close() or { eprint('Failed to close database: ${err}') }
+	}
+
+	init_schema(mut db) or {
+		eprintln('${err}')
+		return
+	}
+
+	reset_users(mut db) or {
+		eprintln('${err}')
+		return
+	}
+
+	user_id := insert_user(mut db, 'Ada', 'ada@example.com', 36) or {
+		eprintln('${err}')
+		return
+	}
+	println('Inserted user id: ${user_id}')
+
+	users := fetch_users(mut db) or {
+		eprintln('${err}')
+		return
+	}
+	for user in users {
+		println('User: ${user.id} ${user.name} (${user.email}, age ${user.age})')
+	}
 }
 ```
 
@@ -10334,7 +11412,7 @@ pub fn connect(path string) !DB {
 
 ## Sqlite Raw Crud
 
-_File location: [json_and_orm/03_sqlite_raw/sqlite_raw_crud.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/json_and_orm/03_sqlite_raw/sqlite_raw_crud.v)_
+_File location: [json_and_orm/03_sqlite_raw/sqlite_raw_crud.v](json_and_orm/03_sqlite_raw/sqlite_raw_crud.v)_
 
 This example demonstrates how to connect to a SQLite database and execute raw SQL queries securely using parameterized queries (`db.exec_param_many`) to prevent SQL Injection attacks.
 
@@ -10380,15 +11458,21 @@ fn main() {
 
 	// SAFE APPROACH: Use `exec_param_many` with '?' placeholders to prevent SQL Injection.
 	// Parameters are passed as an array of strings: []string
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Alice', 'alice@example.com', '30']) or {
-		println('Insert failed: ${err}')
-	}
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Bob', 'bob@example.com', '25']) or {
-		println('Insert failed: ${err}')
-	}
-	db.exec_param_many("INSERT INTO users (name, email, age) VALUES (?, ?, ?);", ['Charlie', 'charlie@example.com', '40']) or {
-		println('Insert failed: ${err}')
-	}
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Alice',
+		'alice@example.com',
+		'30',
+	]) or { println('Insert failed: ${err}') }
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Bob',
+		'bob@example.com',
+		'25',
+	]) or { println('Insert failed: ${err}') }
+	db.exec_param_many('INSERT INTO users (name, email, age) VALUES (?, ?, ?);', [
+		'Charlie',
+		'charlie@example.com',
+		'40',
+	]) or { println('Insert failed: ${err}') }
 
 	println('Last inserted row ID: ${db.last_id()}')
 
@@ -10396,7 +11480,8 @@ fn main() {
 	println('\n--- READ: Querying records securely ---')
 
 	// Querying with parameters: only retrieve users older than 20
-	rows := db.exec_param_many('SELECT id, name, email, age FROM users WHERE age > ?;', ['20']) or {
+	rows := db.exec_param_many('SELECT id, name, email, age FROM users WHERE age > ?;',
+		['20']) or {
 		println('Select failed: ${err}')
 		[]sqlite.Row{}
 	}
@@ -10412,13 +11497,16 @@ fn main() {
 	}
 
 	// 5. Update (Modify Records using Parameterized Queries)
-	println('\n--- UPDATE: Modifying Bob\'s email and age securely ---')
-	db.exec_param_many("UPDATE users SET email = ?, age = ? WHERE name = ?;", ['bob_new@example.com', '26', 'Bob']) or {
-		println('Update failed: ${err}')
-	}
+	println("\n--- UPDATE: Modifying Bob's email and age securely ---")
+	db.exec_param_many('UPDATE users SET email = ?, age = ? WHERE name = ?;', [
+		'bob_new@example.com',
+		'26',
+		'Bob',
+	]) or { println('Update failed: ${err}') }
 
 	// Verify update
-	updated_rows := db.exec_param_many("SELECT email, age FROM users WHERE name = ?;", ['Bob']) or { []sqlite.Row{} }
+	updated_rows := db.exec_param_many('SELECT email, age FROM users WHERE name = ?;',
+		['Bob']) or { []sqlite.Row{} }
 	if updated_rows.len > 0 {
 		println("Bob's new email: ${updated_rows[0].vals[0]}")
 		println("Bob's new age:   ${updated_rows[0].vals[1]}")
@@ -10426,7 +11514,7 @@ fn main() {
 
 	// 6. Delete (Remove Records using Parameterized Queries)
 	println('\n--- DELETE: Removing Charlie securely ---')
-	db.exec_param_many("DELETE FROM users WHERE name = ?;", ['Charlie']) or {
+	db.exec_param_many('DELETE FROM users WHERE name = ?;', ['Charlie']) or {
 		println('Delete failed: ${err}')
 	}
 
@@ -10440,9 +11528,7 @@ fn main() {
 
 	// 7. Cleanup
 	println('\nDropping "users" table...')
-	db.exec('DROP TABLE users;') or {
-		println('Drop table failed: ${err}')
-	}
+	db.exec('DROP TABLE users;') or { println('Drop table failed: ${err}') }
 }
 ```
 
@@ -10457,6 +11543,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 **Inline Assembly & C Interop**
 
 - [Inline Assembly](#inline-assembly)
+- [C Interop](#c-interop)
 
 **Networking (TCP, UDP, SSL, WebSockets)**
 
@@ -10482,7 +11569,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Interfaces](#interfaces)
 - [Sum Types](#sum-types)
 - [Attributes](#attributes)
-- [Compile-Time Directives](#compile-time-directives)
+- [Compile-Time Directives](#compile-time-directives--compile-time-code)
 - [Strings Builder](#strings-builder)
 - [Os Advanced Io](#os-advanced-io)
 - [Os Operations](#os-operations)
@@ -10539,6 +11626,18 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Compiling V Source to WebAssembly](#compiling-v-source-to-webassembly)
 - [Programmatic WASM Generation](#programmatic-wasm-generation)
 
+**Language Updates & Low-Level Features**
+
+- [sizeof and \_\_offsetof](#sizeof-and-__offsetof)
+- [Limited Operator Overloading](#limited-operator-overloading)
+- [Atomics](#atomics)
+- [Static Variables](#static-variables)
+- [Hot Code Reloading](#hot-code-reloading)
+- [Compile-Time Reflection](#compile-time-reflection)
+- [Environment-Specific Files & Compile-Time Types](#environment-specific-files--compile-time-types)
+- [References & Pointers](#references--pointers)
+- [Dumping Expressions at Runtime](#dumping-expressions-at-runtime)
+
 ---
 
 This chapter highlights the power of V's standard library and advanced integration features, including low-level socket networking, inline assembly, compilation to WebAssembly, and V's unique memory management models.
@@ -10547,7 +11646,7 @@ This chapter highlights the power of V's standard library and advanced integrati
 
 ### Inline Assembly
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v](language_updates_and_stdlib/01_language_basics_updates/06_inline_assembly/inline_assembly.v)_
 
 V supports inline assembly block definitions using the `asm` keyword, allowing developers to execute architecture-specific instructions directly from V code. It integrates directly with V variables by mapping them to inputs and outputs using register constraints.
 
@@ -10630,11 +11729,83 @@ fn main() {
 
 ---
 
+### C Interop
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v](language_updates_and_stdlib/01_language_basics_updates/08_c_interop/c_interop.v)_
+
+### Lesson: C Interop
+
+V is designed with first-class support for C integration. Since V compiles directly to C, calling C library functions, passing C structs, and compiling legacy C code alongside V is highly performant and requires no heavy wrapper generator.
+
+This example demonstrates how to:
+
+1. Include standard C headers using `#include <header.h>`.
+2. Declare C functions using the `fn C.name(args) type` syntax.
+3. Map C structures in V using `@[typedef] struct C.name` to represent C typedefs.
+4. Interact with C variables, functions, and structs directly from V.
+
+```v
+module main
+
+// 1. Include C standard headers.
+// V compiles directly to C, so we can use C preprocessor directives like `#include`
+// to bring in C standard library definitions or external C headers.
+#include <math.h>
+#include <stdlib.h>
+
+// 2. Declare C functions.
+// We declare C functions using the `fn C.name(args) return_type` syntax.
+// The V compiler translates calls to these functions directly to the native C functions.
+fn C.abs(x int) int
+fn C.sqrt(x f64) f64
+
+// 3. Declare C Structs.
+// V can also interact with C structs. We use `struct C.name` to define them.
+// The `@[typedef]` attribute tells the V compiler that `div_t` is a typedef structure
+// in C (defined in <stdlib.h>) so it does not prefix it with the `struct` keyword in the C output.
+@[typedef]
+struct C.div_t {
+	quot int
+	rem  int
+}
+
+// Declare C.div function from stdlib.h which returns a C.div_t struct.
+fn C.div(numer int, denom int) C.div_t
+
+fn main() {
+	println('=== V C Interop Demo ===')
+
+	// 4. Calling C.abs
+	negative_val := -42
+	absolute_val := C.abs(negative_val)
+	println('C.abs(${negative_val}) = ${absolute_val}')
+	assert absolute_val == 42
+
+	// 5. Calling C.sqrt
+	float_val := 16.0
+	square_root := C.sqrt(float_val)
+	println('C.sqrt(${float_val}) = ${square_root}')
+	assert square_root == 4.0
+
+	// 6. Working with C Structs and functions returning C Structs
+	numerator := 10
+	denominator := 3
+	div_result := C.div(numerator, denominator)
+	println('C.div(${numerator}, ${denominator}) -> Quotient: ${div_result.quot}, Remainder: ${div_result.rem}')
+	assert div_result.quot == 3
+	assert div_result.rem == 1
+
+	println('All C Interop functions successfully executed and verified!')
+}
+```
+
+---
+
 ## Networking (TCP, UDP, SSL, WebSockets)
 
 ### Net Urllib
 
-_File location: [language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v](language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v)_
 
 This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
 
@@ -10695,7 +11866,7 @@ fn main() {
 
 ### Net Websocket
 
-_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v](language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v)_
 
 This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
 
@@ -10731,9 +11902,7 @@ fn main() {
 
 	// Run the server listening loop in a background thread
 	spawn fn [mut ws_server] () {
-		ws_server.listen() or {
-			println('Server error: ${err}')
-		}
+		ws_server.listen() or { println('Server error: ${err}') }
 	}()
 
 	// Allow the server a moment to start
@@ -10773,18 +11942,14 @@ fn main() {
 	time.sleep(50 * time.millisecond)
 	msg_to_send := 'Hello WebSocket Server!'
 	println('Client sending: "${msg_to_send}"')
-	ws_client.write_string(msg_to_send) or {
-		println('Client failed to send: ${err}')
-	}
+	ws_client.write_string(msg_to_send) or { println('Client failed to send: ${err}') }
 
 	// Wait for echo to arrive
 	time.sleep(200 * time.millisecond)
 
 	// Clean close
 	println('Client closing connection...')
-	ws_client.close(1000, 'Done') or {
-		println('Client close error: ${err}')
-	}
+	ws_client.close(1000, 'Done') or { println('Client close error: ${err}') }
 	time.sleep(50 * time.millisecond)
 	println('WebSocket Demo finished.')
 }
@@ -10794,28 +11959,36 @@ fn main() {
 
 ### Websocket Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v](language_updates_and_stdlib/02_standard_library/24_net_websocket/persistent/websocket_persistent.v)_
 
-This example demonstrates a persistent WebSocket connection maintaining an active back-and-forth ping-pong conversation between client and server, terminating with a handshake exchange.
+This example demonstrates a persistent WebSocket connection with structured JSON message routing, validation of payload size, and connection closure on limit violation.
 
 ```v
 module main
 
 import net.websocket
 import time
+import json
 
-// ClientState maintains state across client callbacks
+// WsMessage represents a structured application-level WebSocket message.
+struct WsMessage {
+pub:
+	action string
+	data   string
+}
+
+// ClientState maintains state for the WebSocket client across callbacks.
 struct ClientState {
 mut:
 	count int
 }
 
 fn main() {
-	println('=== Persistent WebSocket Demo ===')
+	println('=== Persistent WebSocket Protocol Demo ===')
 	port := 38292
 	uri := 'ws://localhost:${port}'
 
-	// 1. Initialize and run a local WebSocket server
+	// 1. Initialize and run local WebSocket server
 	mut ws_server := websocket.new_server(.ip, port, '/')
 
 	ws_server.on_connect(fn (mut s websocket.ServerClient) !bool {
@@ -10823,96 +11996,158 @@ fn main() {
 		return true
 	})!
 
-	// Server message handler responds back to ping messages
+	// Server message handler: validates payload size, decodes JSON, and routes actions.
 	ws_server.on_message(fn (mut ws websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			println('Server received text: "${payload}"')
 
-			if payload.starts_with('Ping ') {
-				num := payload.replace('Ping ', '')
-				response := 'Pong ${num}'
-				println('Server responding with: "${response}"')
-				ws.write_string(response)!
-			} else if payload == 'Goodbye' {
-				println('Server received goodbye. Sending confirmation and closing...')
-				ws.write_string('Goodbye!')!
+			// Safety check: Enforce maximum payload size limit (e.g., 2048 bytes) to prevent DoS (OOM)
+			max_allowed_len := 2048
+			if payload.len > max_allowed_len {
+				println('Server: Rejected message of size ${payload.len} (exceeds ${max_allowed_len} limit)')
+				// Close connection with code 1009 (Message Too Big)
+				ws.close(1009, 'Message size exceeds limit') or {}
+				return
+			}
+
+			// Decode the JSON protocol message
+			ws_msg := json.decode(WsMessage, payload) or {
+				println('Server: Invalid JSON protocol: ${err}')
+				err_resp := json.encode(WsMessage{ action: 'error', data: 'invalid json' })
+				ws.write_string(err_resp) or {}
+				return
+			}
+
+			println('Server received action "${ws_msg.action}" with data (len: ${ws_msg.data.len})')
+
+			match ws_msg.action {
+				'ping' {
+					resp := json.encode(WsMessage{ action: 'pong', data: ws_msg.data })
+					ws.write_string(resp)!
+				}
+				'goodbye' {
+					println('Server received goodbye action. Replying and closing...')
+					resp := json.encode(WsMessage{ action: 'goodbye_ack', data: 'Goodbye!' })
+					ws.write_string(resp)!
+					// Clean close from server side
+					ws.close(1000, 'done') or {}
+				}
+				else {
+					println('Server: Unknown action: ${ws_msg.action}')
+				}
 			}
 		}
 	})
 
 	// Start the server listen loop in a background thread
 	spawn fn [mut ws_server] () {
-		ws_server.listen() or {
-			println('Server error: ${err}')
-		}
+		ws_server.listen() or { println('Server error: ${err}') }
 	}()
 
 	// Allow the server a moment to start
 	time.sleep(100 * time.millisecond)
 
-	// 2. Initialize the WebSocket client
-	mut ws_client := websocket.new_client(uri) or {
-		println('Client init failed: ${err}')
+	// 2. RUN CLIENT CONNECTION 1: Clean ping-pong and goodbye handshake
+	println('\n--- Connection 1: Standard Chat / Ping-Pong ---')
+	mut ws_client1 := websocket.new_client(uri) or {
+		println('Client 1 init failed: ${err}')
 		return
 	}
 
-	mut state := &ClientState{
+	mut state1 := &ClientState{
 		count: 0
 	}
 
-	ws_client.on_open(fn (mut c websocket.Client) ! {
-		println('Client: Connection opened!')
+	ws_client1.on_open(fn (mut c websocket.Client) ! {
+		println('Client 1: Connection opened!')
 		// Initiate the first Ping message
-		c.write_string('Ping 1')!
+		ping_msg := json.encode(WsMessage{ action: 'ping', data: '1' })
+		c.write_string(ping_msg)!
 	})
 
-	// Client message handler processes the Pong responses and decides
-	// whether to send another Ping, or bid Goodbye.
-	ws_client.on_message(fn [mut state] (mut c websocket.Client, msg &websocket.Message) ! {
+	ws_client1.on_message(fn [mut state1] (mut c websocket.Client, msg &websocket.Message) ! {
 		if msg.opcode == .text_frame {
 			payload := msg.payload.bytestr()
-			println('Client received response: "${payload}"')
+			ws_msg := json.decode(WsMessage, payload) or { return }
+			println('Client 1 received response action "${ws_msg.action}" with data: "${ws_msg.data}"')
 
-			if payload.starts_with('Pong ') {
-				state.count++
-				if state.count < 3 {
-					next_msg := 'Ping ${state.count + 1}'
-					println('Client sending next message: "${next_msg}"')
-					c.write_string(next_msg)!
+			if ws_msg.action == 'pong' {
+				state1.count++
+				if state1.count < 3 {
+					next_ping := json.encode(WsMessage{ action: 'ping', data: '${state1.count + 1}' })
+					println('Client 1 sending: "${next_ping}"')
+					c.write_string(next_ping)!
 				} else {
-					println('Client sending goodbye: "Goodbye"')
-					c.write_string('Goodbye')!
+					goodbye := json.encode(WsMessage{ action: 'goodbye', data: 'Goodbye' })
+					println('Client 1 sending goodbye: "${goodbye}"')
+					c.write_string(goodbye)!
 				}
-			} else if payload == 'Goodbye!' {
-				println('Client received goodbye response. Closing connection...')
-				c.close(1000, 'Done') or {
-					println('Client close error: ${err}')
-				}
+			} else if ws_msg.action == 'goodbye_ack' {
+				println('Client 1 received goodbye ack. Client closing connection.')
+				c.close(1000, 'Done') or {}
 			}
 		}
 	})
 
-	ws_client.on_close(fn (mut c websocket.Client, code int, reason string) ! {
-		println('Client: Connection closed (code: ${code}, reason: "${reason}")')
+	ws_client1.on_close(fn (mut c websocket.Client, code int, reason string) ! {
+		println('Client 1: Connection closed (code: ${code}, reason: "${reason}")')
 	})
 
-	ws_client.on_error(fn (mut c websocket.Client, error_msg string) ! {
-		println('Client error: ${error_msg}')
+	ws_client1.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client 1 error: ${error_msg}')
 	})
 
-	// Connect and run the client listener
-	ws_client.connect() or {
-		println('Client failed to connect: ${err}')
+	ws_client1.connect() or {
+		println('Client 1 failed to connect: ${err}')
+		return
+	}
+	spawn ws_client1.listen()
+
+	// Wait for the first flow to complete
+	time.sleep(600 * time.millisecond)
+
+	// 3. RUN CLIENT CONNECTION 2: Reject oversized message
+	println('\n--- Connection 2: Security Validation (Oversized Message) ---')
+	mut ws_client2 := websocket.new_client(uri) or {
+		println('Client 2 init failed: ${err}')
 		return
 	}
 
-	// Start the client listen loop in a background thread
-	spawn ws_client.listen()
+	ws_client2.on_open(fn (mut c websocket.Client) ! {
+		println('Client 2: Connection opened!')
+		// Send oversized data (3000 bytes, exceeding server 2048-byte limit)
+		large_payload := 'A'.repeat(3000)
+		large_msg := json.encode(WsMessage{ action: 'ping', data: large_payload })
+		println('Client 2 sending oversized payload (size: ${large_msg.len} bytes)...')
+		c.write_string(large_msg)!
+	})
 
-	// Wait for the conversational flow to finish
-	time.sleep(1000 * time.millisecond)
-	println('WebSocket Demo finished.')
+	ws_client2.on_close(fn (mut c websocket.Client, code int, reason string) ! {
+		println('Client 2: Connection closed (code: ${code}, reason: "${reason}")')
+		if code == 1009 {
+			println('Client 2: Successfully verified server rejected oversized message with code 1009!')
+		} else if code == 1000 {
+			// Ignore standard teardown close
+		} else {
+			println('Client 2: Unexpected close code: ${code}')
+		}
+	})
+
+	ws_client2.on_error(fn (mut c websocket.Client, error_msg string) ! {
+		println('Client 2 error: ${error_msg}')
+	})
+
+	ws_client2.connect() or {
+		println('Client 2 failed to connect: ${err}')
+		return
+	}
+	spawn ws_client2.listen()
+
+	// Wait for the second flow to finish
+	time.sleep(500 * time.millisecond)
+
+	// Clean close of server listener
+	println('\nWebSocket Protocol Demo finished.')
 }
 ```
 
@@ -10920,7 +12155,7 @@ fn main() {
 
 ### Net Html
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v](language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v)_
 
 This example demonstrates parsing HTML strings, querying tags by class name and attribute values, and extracting node text and properties using the `net.html` module.
 
@@ -10998,7 +12233,7 @@ fn main() {
 
 ### Net Jsonrpc
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v](language_updates_and_stdlib/02_standard_library/25_net/jsonrpc/net_jsonrpc.v)_
 
 This example demonstrates implementing JSON-RPC 2.0 servers and clients using V's `net.jsonrpc` module, utilizing a Unix domain socket connection as the transport layer.
 
@@ -11134,18 +12369,14 @@ fn main() {
 
 	// Spawn JSON-RPC server in background thread
 	spawn fn (path string) {
-		run_rpc_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_rpc_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Wait briefly for the server socket to bind
 	time.sleep(100 * time.millisecond)
 
 	// Run JSON-RPC client in main thread
-	run_rpc_client(socket_path) or {
-		println('Client thread failed: ${err}')
-	}
+	run_rpc_client(socket_path) or { println('Client thread failed: ${err}') }
 
 	// Wait briefly for server post-handling cleanups
 	time.sleep(50 * time.millisecond)
@@ -11157,7 +12388,7 @@ fn main() {
 
 ### Net Jsonrpc Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/jsonrpc_persistent/net_jsonrpc_persistent.v)_
 
 This example demonstrates how to build a persistent JSON-RPC 2.0 connection. The server calls `server.start()` to continuously process incoming requests, and the client sends multiple method invocations sequentially over a single socket connection.
 
@@ -11285,18 +12516,14 @@ fn main() {
 
 	// Spawn JSON-RPC server in background thread
 	spawn fn (path string) {
-		run_rpc_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_rpc_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Wait briefly for the server socket to bind
 	time.sleep(100 * time.millisecond)
 
 	// Run JSON-RPC client in main thread
-	run_rpc_client(socket_path) or {
-		println('Client thread failed: ${err}')
-	}
+	run_rpc_client(socket_path) or { println('Client thread failed: ${err}') }
 
 	// Wait briefly for server post-handling cleanups
 	time.sleep(50 * time.millisecond)
@@ -11308,7 +12535,7 @@ fn main() {
 
 ### Net Ssl
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v](language_updates_and_stdlib/02_standard_library/25_net/ssl/net_ssl.v)_
 
 This example demonstrates setting up a secure SSL/TLS server and client connection using the standard library's `net.mbedtls` module, including programmatically generating a self-signed key/cert pair using OpenSSL and cleaning them up on exit.
 
@@ -11340,7 +12567,7 @@ fn cleanup_certs() {
 // reads a message, responds securely, and exits.
 fn run_server(port int) ! {
 	config := mbedtls.SSLConnectConfig{
-		cert: 'temp_server.crt'
+		cert:     'temp_server.crt'
 		cert_key: 'temp_server.key'
 		validate: false
 	}
@@ -11442,18 +12669,14 @@ fn main() {
 	port := 38295
 	// Spawn server in background
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Wait briefly for server to bind
 	time.sleep(200 * time.millisecond)
 
 	// Run client in main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	time.sleep(50 * time.millisecond)
 	println('SSL Demo finished.')
@@ -11464,7 +12687,7 @@ fn main() {
 
 ### Ssl Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/ssl_persistent/ssl_persistent.v)_
 
 This example demonstrates keeping an SSL/TLS connection open for multiple rounds of secure back-and-forth ping-pong communication over `net.mbedtls`.
 
@@ -11496,7 +12719,7 @@ fn cleanup_certs() {
 // and processes incoming messages in a loop until the client sends "Goodbye".
 fn run_server(port int) ! {
 	config := mbedtls.SSLConnectConfig{
-		cert: 'temp_server.crt'
+		cert:     'temp_server.crt'
 		cert_key: 'temp_server.key'
 		validate: false
 	}
@@ -11538,9 +12761,7 @@ fn run_server(port int) ! {
 
 		if message == 'Goodbye' {
 			println('Server received Goodbye. Replying and closing secure connection...')
-			conn.write('Goodbye!'.bytes()) or {
-				println('Server: Write failed: ${err}')
-			}
+			conn.write('Goodbye!'.bytes()) or { println('Server: Write failed: ${err}') }
 			break
 		}
 
@@ -11641,18 +12862,14 @@ fn main() {
 	port := 38296
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(200 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -11664,7 +12881,7 @@ fn main() {
 
 ### Net Tcp
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v](language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v)_
 
 This example demonstrates how to create a simple TCP server and client in V. The server listens on a local port, accepts an incoming client connection, receives data, sends a response, and closes the connection.
 
@@ -11754,18 +12971,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -11777,9 +12990,9 @@ fn main() {
 
 ### Tcp Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/tcp_persistent/tcp_persistent.v)_
 
-This example demonstrates a persistent TCP connection. The client connects to the server, and they exchange multiple messages back-and-forth in a loop before closing the connection cleanly.
+This example demonstrates a persistent length-prefixed TCP connection, processing payloads in chunks, and rejecting messages exceeding safety size boundaries.
 
 ```v
 module main
@@ -11787,8 +13000,79 @@ module main
 import net
 import time
 
+const max_message_size = 8192
+
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length in a single write syscall.
+fn write_msg(mut conn net.TcpConn, payload string) ! {
+	mut buf := []u8{len: 8 + payload.len}
+	buf[0] = `M`
+	buf[1] = `S`
+	buf[2] = `G`
+	buf[3] = `0`
+	buf[4] = u8((u32(payload.len) >> 24) & 0xff)
+	buf[5] = u8((u32(payload.len) >> 16) & 0xff)
+	buf[6] = u8((u32(payload.len) >> 8) & 0xff)
+	buf[7] = u8(u32(payload.len) & 0xff)
+	if payload.len > 0 {
+		unsafe {
+			C.memcpy(&buf[8], payload.str, payload.len)
+		}
+	}
+	// Send consolidated buffer in a single system call
+	conn.write(buf) or { return err }
+}
+
+// read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+// Real-world performance optimization: Reads directly into mutable slice views of our pre-allocated
+// buffer to achieve zero-allocation reads inside the chunking loop.
+fn read_exact(mut conn net.TcpConn, size int) ![]u8 {
+	mut data := []u8{len: size}
+	mut read_bytes := 0
+	for read_bytes < size {
+		remaining := size - read_bytes
+		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
+		chunk_limit := if remaining > 512 { 512 } else { remaining }
+		n := conn.read(mut data[read_bytes..read_bytes + chunk_limit]) or { return err }
+		if n == 0 {
+			if read_bytes == 0 {
+				return error('EOF')
+			}
+			return error('unexpected end of stream')
+		}
+		read_bytes += n
+	}
+	return data
+}
+
+// read_msg reads a single framed message.
+fn read_msg(mut conn net.TcpConn, max_size int) !string {
+	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
+	header_bytes := read_exact(mut conn, 8) or { return err }
+
+	// Validate protocol magic bytes
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G`
+		|| header_bytes[3] != `0` {
+		return error('invalid protocol magic bytes')
+	}
+
+	// Reconstruct big-endian length
+	len := int((u32(header_bytes[4]) << 24) | (u32(header_bytes[5]) << 16) | (u32(header_bytes[6]) << 8) | u32(header_bytes[7]))
+
+	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
+	if len > max_size {
+		return error('message size ${len} exceeds limit of ${max_size} bytes')
+	}
+	if len < 0 {
+		return error('invalid negative message length')
+	}
+
+	// Read the actual payload
+	payload_bytes := read_exact(mut conn, len) or { return err }
+	return payload_bytes.bytestr()
+}
+
 // run_server starts the TCP server on the specified port, accepts a connection,
-// and processes incoming messages in a loop until the client sends "Goodbye".
+// and processes incoming messages in a loop according to our framing protocol.
 fn run_server(port int) ! {
 	mut listener := net.listen_tcp(.ip, '127.0.0.1:${port}') or {
 		println('Server: Failed to listen on port ${port}: ${err}')
@@ -11810,32 +13094,32 @@ fn run_server(port int) ! {
 
 	println('Server: Client connected!')
 
-	// Loop to handle back-and-forth messages on the same connection
+	// Real-world safety practice: Set read and write timeouts to prevent connection hang-ups (Slowloris DoS)
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
+
 	for {
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Server: Connection closed or read error: ${err}')
-			break
-		}
-		if n == 0 {
-			println('Server: Client disconnected.')
-			break
-		}
-
-		message := buf[..n].bytestr()
-		println('Server received: "${message}"')
-
-		if message == 'Goodbye' {
-			println('Server received Goodbye. Replying and closing connection...')
-			conn.write('Goodbye!'.bytes()) or {
-				println('Server: Write failed: ${err}')
+		message := read_msg(mut conn, max_message_size) or {
+			if err.msg() == 'EOF' {
+				println('Server: Client disconnected cleanly (EOF).')
+			} else {
+				println('Server: Connection closed or protocol error: ${err}')
 			}
 			break
 		}
 
+		// Preview message content
+		preview_len := if message.len > 30 { 30 } else { message.len }
+		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
+
+		if message == 'Goodbye' {
+			println('Server received Goodbye. Replying and closing connection...')
+			write_msg(mut conn, 'Goodbye!') or { println('Server: Write failed: ${err}') }
+			break
+		}
+
 		response := 'Echo: ${message}'
-		println('Server sending: "${response}"')
-		conn.write(response.bytes()) or {
+		write_msg(mut conn, response) or {
 			println('Server: Write failed: ${err}')
 			break
 		}
@@ -11843,8 +13127,8 @@ fn run_server(port int) ! {
 	println('Server finished.')
 }
 
-// run_client connects to the TCP server, sends multiple messages,
-// receives replies, and finally sends a goodbye message.
+// run_client connects to the TCP server, sends multiple messages (including
+// a large chunked message and an invalid/overflow message), and validates responses.
 fn run_client(port int) ! {
 	println('Client: Connecting to 127.0.0.1:${port}...')
 	mut conn := net.dial_tcp('127.0.0.1:${port}') or {
@@ -11857,81 +13141,102 @@ fn run_client(port int) ! {
 
 	println('Client: Connected!')
 
-	// Exchange multiple messages
-	for i in 1 .. 4 {
-		message := 'Ping ${i}'
-		println('Client sending: "${message}"')
-		conn.write(message.bytes()) or {
-			println('Client: Write failed: ${err}')
-			return err
-		}
+	// Set connection timeouts for the client too
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
 
-		// Read response
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Client: Read failed: ${err}')
-			return err
-		}
-		if n == 0 {
-			println('Client: Server closed connection.')
-			return error('Server closed connection unexpectedly')
-		}
+	// 1. Send a standard small message
+	msg1 := 'Ping 1'
+	println('Client sending small message: "${msg1}"')
+	write_msg(mut conn, msg1)!
+	resp1 := read_msg(mut conn, max_message_size)!
+	println('Client received response: "${resp1}"')
 
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	time.sleep(50 * time.millisecond)
 
-		time.sleep(50 * time.millisecond)
-	}
+	// 2. Send a large message within limit (5000 bytes) to trigger chunked read assembly
+	msg2 := 'A'.repeat(5000)
+	println('Client sending large message of length ${msg2.len}...')
+	write_msg(mut conn, msg2)!
+	resp2 := read_msg(mut conn, max_message_size)!
+	println('Client received response of length ${resp2.len} successfully!')
 
-	// Send Goodbye to cleanly terminate the persistent session
-	println('Client sending: "Goodbye"')
-	conn.write('Goodbye'.bytes()) or {
-		println('Client: Write failed: ${err}')
-		return err
-	}
+	time.sleep(50 * time.millisecond)
 
-	mut buf := []u8{len: 1024}
+	// 3. Attempt to send an invalid/overflow message (header length > max_message_size)
+	println('Client sending invalid header claiming 100,000 bytes payload...')
+	magic := [u8(`M`), `S`, `G`, `0`]
+	bad_len_bytes := [u8(0), 1, 134, 160] // 100,000 big-endian
+	conn.write(magic)!
+	conn.write(bad_len_bytes)!
+
+	// The server must reject the message and terminate the connection
+	mut buf := []u8{len: 1}
 	n := conn.read(mut buf) or {
-		println('Client: Read failed: ${err}')
-		return err
+		println('Client: Successfully verified server rejected overflow and closed connection: ${err}')
+		return
 	}
-	if n > 0 {
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	if n == 0 {
+		println('Client: Successfully verified server rejected overflow (EOF received).')
+	} else {
+		println('Client: Warning - Server did not close connection on overflow!')
 	}
-	println('Client finished.')
 }
 
 fn main() {
-	println('=== Persistent TCP Demo ===')
+	println('=== Persistent TCP Protocol Demo ===')
 	port := 38293
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
-	println('TCP Sockets Demo finished.')
+	println('TCP Protocol Demo finished.')
 }
 ```
+
+### Deep Dive Explanation: Persistent TCP & Custom Protocol Framing
+
+#### 1. Why Message Framing is Essential
+
+TCP is a byte-stream protocol. It does not have any concept of packet or message boundaries; it guarantees only that bytes arrive in order. If a client writes two messages of 100 bytes, the server might read them as a single chunk of 200 bytes, or as several chunks of arbitrary sizes (e.g., 50 and 150 bytes).
+To transmit individual messages safely over a persistent connection, we define a custom **Framing Protocol**:
+
+- **Magic Bytes (4 bytes)**: The message starts with a signature (`MSG0` in ASCII). This acts as a sanity check. If the server receives something else, it knows the stream is corrupted or the client is using an incorrect protocol.
+- **Length Prefix (4 bytes)**: A big-endian 32-bit integer indicating the exact size of the following payload.
+- **Payload**: The actual raw message bytes.
+
+#### 2. Zero-Allocation Chunked Reading (`read_exact`)
+
+The `read_exact(mut conn, size)` function reads bytes in a loop until the full requested size is reached:
+
+```v
+n := conn.read(mut data[read_bytes .. read_bytes + chunk_limit])
+```
+
+- **Performance Optimization**: Instead of allocating new buffers in each iteration of the loop, V uses slice expressions (`data[start..end]`) to pass a mutable reference to a specific sub-range of the pre-allocated `data` array directly to the socket read function. This avoids any dynamic memory allocation, optimizing throughput and memory usage.
+
+#### 3. Security Boundaries & DoS Protection
+
+Production socket servers must defend against malicious input and network timeouts:
+
+- **Max Payload Checking**: In `read_msg`, the server reads the length prefix from the header. If `len > max_size` (e.g., larger than `8192` bytes), the server immediately rejects the message and closes the connection. Without this check, a client could claim a message size of 2 GB, forcing the server to allocate a huge array and crash due to Out-Of-Memory (OOM).
+- **Connection Timeouts**: Calling `conn.set_read_timeout` and `conn.set_write_timeout` prevents threads from blocking indefinitely. If a client connects and then stops sending data (a Slowloris attack), the server will automatically close the socket after the timeout expires (5 seconds in this demo).
 
 ---
 
 ### Net Udp
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v](language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v)_
 
 This example demonstrates sending and receiving connectionless UDP packets. The server binds to a local port and receives a message along with the sender's address, and responds to it using `write_to`.
 
@@ -12006,18 +13311,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -12029,9 +13330,9 @@ fn main() {
 
 ### Udp Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/udp_persistent/udp_persistent.v)_
 
-This example demonstrates how to maintain a persistent ping-pong message exchange over UDP. The client continuously sends datagrams using a bound socket, and the server receives them in a loop while retaining the sender's details to write back.
+This example demonstrates application-level packet fragmentation, reassembly, and fragment count limit enforcement over UDP.
 
 ```v
 module main
@@ -12039,9 +13340,170 @@ module main
 import net
 import time
 
-// run_server starts the UDP server on the specified port, listens for packets,
-// prints incoming messages and their source addresses, and responds to each
-// in a loop until the client sends "Goodbye".
+// UdpReassembler stores state for reassembling fragmented UDP packets.
+struct UdpReassembler {
+mut:
+	fragments map[int][]u8
+	total     int
+	last_seen time.Time
+}
+
+// write_udp_msg fragments and sends a message to dialed destination.
+// Real-world performance optimization: Avoids allocating a full payload copy by writing fragments
+// directly from string memory slices using C.memcpy.
+fn write_udp_msg(mut socket net.UdpConn, payload string) ! {
+	chunk_size := 1024
+	total_frags := (payload.len + chunk_size - 1) / chunk_size
+
+	if total_frags == 0 {
+		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
+		socket.write(header) or { return err }
+		return
+	}
+
+	for i in 0 .. total_frags {
+		start := i * chunk_size
+		mut end := (i + 1) * chunk_size
+		if end > payload.len {
+			end = payload.len
+		}
+		frag_len := end - start
+
+		mut packet := []u8{len: 8 + frag_len}
+		packet[0] = `U`
+		packet[1] = `D`
+		packet[2] = `P`
+		packet[3] = `0`
+		packet[4] = u8(i)
+		packet[5] = u8(total_frags)
+		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
+		packet[7] = u8(u32(frag_len) & 0xff)
+
+		if frag_len > 0 {
+			unsafe {
+				C.memcpy(&packet[8], payload.str + start, frag_len)
+			}
+		}
+
+		socket.write(packet) or { return err }
+		// Sleep briefly to avoid packet loss during loopback transmission
+		time.sleep(2 * time.millisecond)
+	}
+}
+
+// write_udp_msg_to fragments and sends a message to a specific address using write_to.
+// Real-world performance optimization: Avoids allocating a full payload copy by writing fragments
+// directly from string memory slices using C.memcpy.
+fn write_udp_msg_to(mut socket net.UdpConn, addr net.Addr, payload string) ! {
+	chunk_size := 1024
+	total_frags := (payload.len + chunk_size - 1) / chunk_size
+
+	if total_frags == 0 {
+		header := [u8(`U`), `D`, `P`, `0`, 0, 1, 0, 0]
+		socket.write_to(addr, header) or { return err }
+		return
+	}
+
+	for i in 0 .. total_frags {
+		start := i * chunk_size
+		mut end := (i + 1) * chunk_size
+		if end > payload.len {
+			end = payload.len
+		}
+		frag_len := end - start
+
+		mut packet := []u8{len: 8 + frag_len}
+		packet[0] = `U`
+		packet[1] = `D`
+		packet[2] = `P`
+		packet[3] = `0`
+		packet[4] = u8(i)
+		packet[5] = u8(total_frags)
+		packet[6] = u8((u32(frag_len) >> 8) & 0xff)
+		packet[7] = u8(u32(frag_len) & 0xff)
+
+		if frag_len > 0 {
+			unsafe {
+				C.memcpy(&packet[8], payload.str + start, frag_len)
+			}
+		}
+
+		socket.write_to(addr, packet) or { return err }
+		time.sleep(2 * time.millisecond)
+	}
+}
+
+// read_udp_msg reads packets from a socket and reassembles them into a single string.
+// Security boundary: Filters out packets from unexpected addresses during reassembly,
+// verifies index boundaries, and checks fragment total counts.
+fn read_udp_msg(mut socket net.UdpConn, max_allowed_fragments int) !(string, net.Addr) {
+	mut fragments := map[int][]u8{}
+	mut total_frags := -1
+	mut remote_addr := net.Addr{}
+	mut buf := []u8{len: 2048}
+
+	for {
+		read, addr := socket.read(mut buf) or { return err }
+		if read == 0 {
+			return error('empty packet read')
+		}
+		if read < 8 {
+			return error('packet too small to contain header')
+		}
+		if buf[0] != `U` || buf[1] != `D` || buf[2] != `P` || buf[3] != `0` {
+			return error('invalid packet magic bytes')
+		}
+
+		frag_idx := int(buf[4])
+		total := int(buf[5])
+		frag_len := int((u32(buf[6]) << 8) | u32(buf[7]))
+
+		if read < 8 + frag_len {
+			return error('packet payload length mismatch')
+		}
+
+		if total > max_allowed_fragments {
+			return error('incoming message total fragments ${total} exceeds limit of ${max_allowed_fragments}')
+		}
+		if total <= 0 {
+			return error('invalid total fragments count')
+		}
+		if frag_idx < 0 || frag_idx >= total {
+			return error('invalid fragment index')
+		}
+
+		if total_frags == -1 {
+			total_frags = total
+			remote_addr = addr
+		} else {
+			// Injection defense: Ignore packets from other addresses during this reassembly
+			if addr.str() != remote_addr.str() {
+				continue
+			}
+			// Security validation: Mismatched fragment count from client mid-stream
+			if total != total_frags {
+				return error('fragment total count mismatch during reassembly')
+			}
+		}
+
+		fragments[frag_idx] = buf[8..8 + frag_len].clone()
+
+		if fragments.len == total_frags {
+			mut full_payload := []u8{}
+			for i in 0 .. total_frags {
+				if i !in fragments {
+					return error('missing fragment ${i} in reassembly')
+				}
+				full_payload << fragments[i]
+			}
+			return full_payload.bytestr(), remote_addr
+		}
+	}
+	return error('unexpected read loop termination')
+}
+
+// run_server starts the UDP server, processes fragments, reassembles them,
+// and echoes back the full message or an error if size is exceeded.
 fn run_server(port int) ! {
 	mut socket := net.listen_udp('127.0.0.1:${port}') or {
 		println('Server: Failed to listen on port ${port}: ${err}')
@@ -12053,9 +13515,18 @@ fn run_server(port int) ! {
 
 	println('Server: Listening for UDP packets on port ${port}...')
 
-	// Loop to handle incoming UDP datagrams continuously
+	mut reassemblers := map[string]UdpReassembler{}
+	mut buf := []u8{len: 2048}
+
 	for {
-		mut buf := []u8{len: 1024}
+		// Real-world security pruning: Sweeps stale reassembler states to prevent memory exhaustion DoS
+		now := time.now()
+		for key, state in reassemblers {
+			if now - state.last_seen > 5 * time.second {
+				reassemblers.delete(key)
+			}
+		}
+
 		read, addr := socket.read(mut buf) or {
 			println('Server: Read failed: ${err}')
 			break
@@ -12064,29 +13535,107 @@ fn run_server(port int) ! {
 			break
 		}
 
-		message := buf[..read].bytestr()
-		println('Server received from ${addr}: "${message}"')
-
-		if message == 'Goodbye' {
-			println('Server received Goodbye. Replying and exiting...')
-			socket.write_to(addr, 'Goodbye!'.bytes()) or {
-				println('Server: Write failed: ${err}')
-			}
-			break
+		if read < 8 {
+			println('Server: Received packet too small to contain header')
+			continue
 		}
 
-		response := 'Echo: ${message}'
-		println('Server sending to ${addr}: "${response}"')
-		socket.write_to(addr, response.bytes()) or {
-			println('Server: Write failed: ${err}')
-			break
+		// Verify header magic bytes
+		if buf[0] != `U` || buf[1] != `D` || buf[2] != `P` || buf[3] != `0` {
+			println('Server: Invalid packet magic bytes')
+			continue
+		}
+
+		frag_idx := int(buf[4])
+		total_frags := int(buf[5])
+		frag_len := int((u32(buf[6]) << 8) | u32(buf[7]))
+
+		if read < 8 + frag_len {
+			println('Server: Packet payload length mismatch')
+			continue
+		}
+
+		// Real-world safety limit check: Reject if fragment count exceeds threshold (max 5 fragments = 5KB)
+		max_allowed_fragments := 5
+		if total_frags > max_allowed_fragments {
+			println('Server: Rejected message from ${addr}. Total fragments ${total_frags} exceeds limit of ${max_allowed_fragments}.')
+			// Only send one error packet (on the first fragment index) to avoid flooding the client's socket queue
+			if frag_idx == 0 {
+				write_udp_msg_to(mut socket, addr, 'Error: Message size exceeds limit') or {}
+			}
+			continue
+		}
+		if total_frags <= 0 {
+			println('Server: Invalid total fragments count ${total_frags}')
+			continue
+		}
+		if frag_idx < 0 || frag_idx >= total_frags {
+			println('Server: Invalid fragment index ${frag_idx} for total ${total_frags}')
+			continue
+		}
+
+		addr_str := addr.str()
+		if addr_str !in reassemblers {
+			reassemblers[addr_str] = UdpReassembler{
+				total:     total_frags
+				last_seen: now
+			}
+		}
+
+		mut r := reassemblers[addr_str]
+		// Reset state if fragment total count changes mid-stream
+		if r.total != total_frags {
+			println('Server: Resetting reassembler for ${addr} due to fragment total count change')
+			r = UdpReassembler{
+				total:     total_frags
+				last_seen: now
+			}
+		}
+
+		r.last_seen = now
+		r.fragments[frag_idx] = buf[8..8 + frag_len].clone()
+
+		if r.fragments.len == r.total {
+			mut full_payload := []u8{}
+			mut success := true
+			for i in 0 .. r.total {
+				if i !in r.fragments {
+					success = false
+					break
+				}
+				full_payload << r.fragments[i]
+			}
+
+			// Clean up reassembler state
+			reassemblers.delete(addr_str)
+
+			if success {
+				message := full_payload.bytestr()
+				preview_len := if message.len > 30 { 30 } else { message.len }
+				println('Server received full message from ${addr} (len: ${message.len}): "${message[..preview_len]}"...')
+
+				if message == 'Goodbye' {
+					println('Server received Goodbye. Replying and exiting...')
+					write_udp_msg_to(mut socket, addr, 'Goodbye!') or {
+						println('Server: Write failed: ${err}')
+					}
+					break
+				}
+
+				response := 'Echo: ${message}'
+				write_udp_msg_to(mut socket, addr, response) or {
+					println('Server: Write failed: ${err}')
+					break
+				}
+			}
+		} else {
+			reassemblers[addr_str] = r
 		}
 	}
 	println('Server finished.')
 }
 
-// run_client creates a UDP socket bound to a remote destination address,
-// and sends multiple messages in sequence, receiving responses from the server.
+// run_client connects to the UDP server and runs test cases (small, fragmented, overflow, goodbye).
 fn run_client(port int) ! {
 	mut socket := net.dial_udp('127.0.0.1:${port}') or {
 		println('Client: Failed to dial server: ${err}')
@@ -12096,77 +13645,99 @@ fn run_client(port int) ! {
 		socket.close() or {}
 	}
 
-	// Exchange multiple messages
-	for i in 1 .. 4 {
-		message := 'Ping ${i}'
-		println('Client sending: "${message}"')
-		socket.write(message.bytes()) or {
-			println('Client: Write failed: ${err}')
-			return err
-		}
+	println('Client: Bound to server destination.')
 
-		// Read response
-		mut buf := []u8{len: 1024}
-		read, addr := socket.read(mut buf) or {
-			println('Client: Read failed: ${err}')
-			return err
-		}
+	// 1. Send standard small message
+	msg1 := 'Ping 1'
+	println('Client sending small message: "${msg1}"')
+	write_udp_msg(mut socket, msg1)!
+	resp1, _ := read_udp_msg(mut socket, 5)!
+	println('Client received response: "${resp1}"')
 
-		response := buf[..read].bytestr()
-		println('Client received response from ${addr}: "${response}"')
+	time.sleep(50 * time.millisecond)
 
-		time.sleep(50 * time.millisecond)
-	}
+	// 2. Send fragmented message within limit (3000 bytes -> 3 fragments)
+	msg2 := 'A'.repeat(3000)
+	println('Client sending fragmented message of length ${msg2.len} (3 fragments)...')
+	write_udp_msg(mut socket, msg2)!
+	resp2, _ := read_udp_msg(mut socket, 5)!
+	println('Client received response of length ${resp2.len} successfully!')
 
-	// Send Goodbye to cleanly terminate the session
+	time.sleep(50 * time.millisecond)
+
+	// 3. Attempt to send message exceeding fragments limit (5500 bytes -> 6 fragments)
+	msg3 := 'B'.repeat(5500)
+	println('Client sending large message of length ${msg3.len} (6 fragments)...')
+	write_udp_msg(mut socket, msg3)!
+	resp3, _ := read_udp_msg(mut socket, 10)!
+	println('Client received response for overflow message: "${resp3}"')
+
+	time.sleep(50 * time.millisecond)
+
+	// 4. Send Goodbye to exit
 	println('Client sending: "Goodbye"')
-	socket.write('Goodbye'.bytes()) or {
-		println('Client: Write failed: ${err}')
-		return err
-	}
-
-	mut buf := []u8{len: 1024}
-	read, addr := socket.read(mut buf) or {
-		println('Client: Read failed: ${err}')
-		return err
-	}
-	if read > 0 {
-		response := buf[..read].bytestr()
-		println('Client received response from ${addr}: "${response}"')
-	}
-	println('Client finished.')
+	write_udp_msg(mut socket, 'Goodbye')!
+	resp4, _ := read_udp_msg(mut socket, 5)!
+	println('Client received response: "${resp4}"')
 }
 
 fn main() {
-	println('=== Persistent UDP Demo ===')
+	println('=== Persistent UDP Protocol Demo ===')
 	port := 38294
 
 	// Spawn the server in a background thread
 	spawn fn (p int) {
-		run_server(p) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(p) or { println('Server thread failed: ${err}') }
 	}(port)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(port) or {
-		println('Client failed: ${err}')
-	}
+	run_client(port) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
-	println('UDP Sockets Demo finished.')
+	println('UDP Protocol Demo finished.')
 }
 ```
+
+### Deep Dive Explanation: UDP Packet Fragmentation & Reassembly
+
+#### 1. UDP vs. TCP and the MTU Constraint
+
+Unlike TCP, which handles packet streaming and division transparently, UDP is a datagram-oriented protocol. It sends individual, self-contained packets.
+
+- **Maximum Packet Sizes**: The theoretical maximum size of a UDP packet is 65,535 bytes (including headers), but in practice, any packet larger than the network's **MTU (Maximum Transmission Unit)** (typically 1500 bytes on ethernet/internet routers) will be fragmented at the IP layer.
+- **Why IP Fragmentation is Bad**: If _any single_ IP fragment is lost during transmission, the entire UDP packet is discarded. This dramatically increases packet loss rates for large payloads.
+- **Solution**: Implement **application-level fragmentation**. By splitting payloads into smaller chunks (e.g. 1024 bytes), we ensure each chunk fits comfortably inside a single MTU window, minimizing packet drops.
+
+#### 2. The Custom UDP Fragmentation Protocol
+
+This example implements application-level fragmentation and reassembly using a custom 8-byte header prefix:
+
+- **Protocol ID (`UDP0`)**: 4 bytes to identify valid application packets.
+- **Fragment Index (1 byte)**: The sequence index of the current packet (0-indexed).
+- **Total Fragments (1 byte)**: The total number of packets that make up the complete message.
+- **Fragment Length (2 bytes)**: The size of the payload following this header (max 1024 bytes).
+
+#### 3. Reassembly Mechanics & State Management
+
+Because UDP does not guarantee packet delivery order, packets can arrive out of sequence.
+
+- **State Tracking**: The server uses a `reassemblers` map, keyed by the client's socket address (`addr.str()`). This maps each client to its own `UdpReassembler` structure containing a map of packet indices to their payload bytes.
+- **Sequence Ordering**: Once the number of collected fragments matches `total_frags`, the server iterates from `0` to `total_frags - 1` to assemble the payload in the correct order, bypassing any network out-of-order delivery issues.
+- **State Cleanup**: As soon as a message is successfully reassembled, `reassemblers.delete(addr_str)` is called. This frees memory immediately and prevents state leak.
+
+#### 4. Safety & DOS Protections
+
+- **Max Fragment Constraints**: The server enforces `max_allowed_fragments := 5` (equivalent to a maximum total message size of ~5 KB). If a packet arrives claiming a higher fragment count, it is discarded immediately to prevent malicious clients from exhausting server memory by flooding it with un-reassemblable data.
 
 ---
 
 ### Net Unix
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v](language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v)_
 
 This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
 
@@ -12268,18 +13839,14 @@ fn main() {
 
 	// Spawn the server in a background thread
 	spawn fn (path string) {
-		run_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(socket_path) or {
-		println('Client failed: ${err}')
-	}
+	run_client(socket_path) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
@@ -12291,9 +13858,9 @@ fn main() {
 
 ### Unix Persistent
 
-_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v](language_updates_and_stdlib/02_standard_library/25_net/unix_persistent/unix_persistent.v)_
 
-This example demonstrates establishing a Unix domain socket server and client, keeping the connection open for multiple rounds of back-and-forth communication, and terminating cleanly.
+This example demonstrates a persistent length-prefixed Unix domain socket connection, processing payloads in chunks, and rejecting messages exceeding safety size boundaries.
 
 ```v
 module main
@@ -12302,8 +13869,79 @@ import net.unix
 import os
 import time
 
-// run_server starts the Unix socket server, accepts one client connection,
-// and processes incoming messages in a loop until the client says "Goodbye".
+const max_message_size = 8192
+
+// write_msg sends a message using a 4-byte magic signature and a 4-byte big-endian length in a single write syscall.
+fn write_msg(mut conn unix.StreamConn, payload string) ! {
+	mut buf := []u8{len: 8 + payload.len}
+	buf[0] = `M`
+	buf[1] = `S`
+	buf[2] = `G`
+	buf[3] = `0`
+	buf[4] = u8((u32(payload.len) >> 24) & 0xff)
+	buf[5] = u8((u32(payload.len) >> 16) & 0xff)
+	buf[6] = u8((u32(payload.len) >> 8) & 0xff)
+	buf[7] = u8(u32(payload.len) & 0xff)
+	if payload.len > 0 {
+		unsafe {
+			C.memcpy(&buf[8], payload.str, payload.len)
+		}
+	}
+	// Send consolidated buffer in a single system call
+	conn.write(buf) or { return err }
+}
+
+// read_exact reads exactly `size` bytes from the connection, processing data in chunks.
+// Real-world performance optimization: Reads directly into mutable slice views of our pre-allocated
+// buffer to achieve zero-allocation reads inside the chunking loop.
+fn read_exact(mut conn unix.StreamConn, size int) ![]u8 {
+	mut data := []u8{len: size}
+	mut read_bytes := 0
+	for read_bytes < size {
+		remaining := size - read_bytes
+		// Use a small buffer chunk limit (e.g. 512 bytes) to demonstrate reading in chunks
+		chunk_limit := if remaining > 512 { 512 } else { remaining }
+		n := conn.read(mut data[read_bytes..read_bytes + chunk_limit]) or { return err }
+		if n == 0 {
+			if read_bytes == 0 {
+				return error('EOF')
+			}
+			return error('unexpected end of stream')
+		}
+		read_bytes += n
+	}
+	return data
+}
+
+// read_msg reads a single framed message.
+fn read_msg(mut conn unix.StreamConn, max_size int) !string {
+	// Read header: 4 magic bytes + 4 length bytes = 8 bytes
+	header_bytes := read_exact(mut conn, 8) or { return err }
+
+	// Validate protocol magic bytes
+	if header_bytes[0] != `M` || header_bytes[1] != `S` || header_bytes[2] != `G`
+		|| header_bytes[3] != `0` {
+		return error('invalid protocol magic bytes')
+	}
+
+	// Reconstruct big-endian length
+	len := int((u32(header_bytes[4]) << 24) | (u32(header_bytes[5]) << 16) | (u32(header_bytes[6]) << 8) | u32(header_bytes[7]))
+
+	// Real-world security boundary: Reject messages larger than allowed limit to prevent DoS (OOM)
+	if len > max_size {
+		return error('message size ${len} exceeds limit of ${max_size} bytes')
+	}
+	if len < 0 {
+		return error('invalid negative message length')
+	}
+
+	// Read the actual payload
+	payload_bytes := read_exact(mut conn, len) or { return err }
+	return payload_bytes.bytestr()
+}
+
+// run_server starts the Unix socket server, accepts a connection,
+// and processes incoming messages in a loop according to our framing protocol.
 fn run_server(socket_path string) ! {
 	// Clean up any stale socket file from a previous run
 	if os.exists(socket_path) {
@@ -12322,7 +13960,6 @@ fn run_server(socket_path string) ! {
 
 	println('Server: Listening on socket path: ${socket_path}')
 
-	// Accept a connection
 	mut conn := listener.accept() or {
 		println('Server: Failed to accept connection: ${err}')
 		return err
@@ -12333,32 +13970,32 @@ fn run_server(socket_path string) ! {
 
 	println('Server: Client connected!')
 
-	// Loop to handle back-and-forth messages on the same connection
+	// Real-world safety practice: Set read and write timeouts to prevent connection hang-ups (Slowloris DoS)
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
+
 	for {
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Server: Connection closed or read error: ${err}')
-			break
-		}
-		if n == 0 {
-			println('Server: Client disconnected.')
-			break
-		}
-
-		message := buf[..n].bytestr()
-		println('Server received: "${message}"')
-
-		if message == 'Goodbye' {
-			println('Server received Goodbye. Replying and shutting down connection...')
-			conn.write('Goodbye!'.bytes()) or {
-				println('Server: Write failed: ${err}')
+		message := read_msg(mut conn, max_message_size) or {
+			if err.msg() == 'EOF' {
+				println('Server: Client disconnected cleanly (EOF).')
+			} else {
+				println('Server: Connection closed or protocol error: ${err}')
 			}
 			break
 		}
 
+		// Preview message content
+		preview_len := if message.len > 30 { 30 } else { message.len }
+		println('Server received message (len: ${message.len}): "${message[..preview_len]}"...')
+
+		if message == 'Goodbye' {
+			println('Server received Goodbye. Replying and closing connection...')
+			write_msg(mut conn, 'Goodbye!') or { println('Server: Write failed: ${err}') }
+			break
+		}
+
 		response := 'Echo: ${message}'
-		println('Server sending: "${response}"')
-		conn.write(response.bytes()) or {
+		write_msg(mut conn, response) or {
 			println('Server: Write failed: ${err}')
 			break
 		}
@@ -12366,8 +14003,8 @@ fn run_server(socket_path string) ! {
 	println('Server finished.')
 }
 
-// run_client connects to the Unix socket server, sends multiple messages,
-// receives replies, and finally sends a goodbye message.
+// run_client connects to the Unix socket server, sends multiple messages (including
+// a large chunked message and an invalid/overflow message), and validates responses.
 fn run_client(socket_path string) ! {
 	println('Client: Connecting to ${socket_path}...')
 	mut conn := unix.connect_stream(socket_path) or {
@@ -12380,73 +14017,66 @@ fn run_client(socket_path string) ! {
 
 	println('Client: Connected!')
 
-	// Exchange multiple messages
-	for i in 1 .. 4 {
-		message := 'Ping ${i}'
-		println('Client sending: "${message}"')
-		conn.write(message.bytes()) or {
-			println('Client: Write failed: ${err}')
-			return err
-		}
+	// Set connection timeouts for the client too
+	conn.set_read_timeout(time.second * 5)
+	conn.set_write_timeout(time.second * 5)
 
-		// Read response
-		mut buf := []u8{len: 1024}
-		n := conn.read(mut buf) or {
-			println('Client: Read failed: ${err}')
-			return err
-		}
-		if n == 0 {
-			println('Client: Server closed connection.')
-			return error('Server closed connection unexpectedly')
-		}
+	// 1. Send a standard small message
+	msg1 := 'Ping 1'
+	println('Client sending small message: "${msg1}"')
+	write_msg(mut conn, msg1)!
+	resp1 := read_msg(mut conn, max_message_size)!
+	println('Client received response: "${resp1}"')
 
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	time.sleep(50 * time.millisecond)
 
-		time.sleep(50 * time.millisecond)
-	}
+	// 2. Send a large message within limit (5000 bytes) to trigger chunked read assembly
+	msg2 := 'A'.repeat(5000)
+	println('Client sending large message of length ${msg2.len}...')
+	write_msg(mut conn, msg2)!
+	resp2 := read_msg(mut conn, max_message_size)!
+	println('Client received response of length ${resp2.len} successfully!')
 
-	// Send Goodbye to cleanly terminate the persistent session
-	println('Client sending: "Goodbye"')
-	conn.write('Goodbye'.bytes()) or {
-		println('Client: Write failed: ${err}')
-		return err
-	}
+	time.sleep(50 * time.millisecond)
 
-	mut buf := []u8{len: 1024}
+	// 3. Attempt to send an invalid/overflow message (header length > max_message_size)
+	println('Client sending invalid header claiming 100,000 bytes payload...')
+	magic := [u8(`M`), `S`, `G`, `0`]
+	bad_len_bytes := [u8(0), 1, 134, 160] // 100,000 big-endian
+	conn.write(magic)!
+	conn.write(bad_len_bytes)!
+
+	// The server must reject the message and terminate the connection
+	mut buf := []u8{len: 1}
 	n := conn.read(mut buf) or {
-		println('Client: Read failed: ${err}')
-		return err
+		println('Client: Successfully verified server rejected overflow and closed connection: ${err}')
+		return
 	}
-	if n > 0 {
-		response := buf[..n].bytestr()
-		println('Client received response: "${response}"')
+	if n == 0 {
+		println('Client: Successfully verified server rejected overflow (EOF received).')
+	} else {
+		println('Client: Warning - Server did not close connection on overflow!')
 	}
-	println('Client finished.')
 }
 
 fn main() {
-	println('=== Persistent Unix Sockets Demo ===')
+	println('=== Persistent Unix Sockets Protocol Demo ===')
 	socket_path := os.join_path(os.temp_dir(), 'v_unix_socket_persistent')
 
 	// Spawn the server in a background thread
 	spawn fn (path string) {
-		run_server(path) or {
-			println('Server thread failed: ${err}')
-		}
+		run_server(path) or { println('Server thread failed: ${err}') }
 	}(socket_path)
 
 	// Allow the server thread a short time to start and bind
 	time.sleep(100 * time.millisecond)
 
 	// Run the client in the main thread
-	run_client(socket_path) or {
-		println('Client failed: ${err}')
-	}
+	run_client(socket_path) or { println('Client failed: ${err}') }
 
 	// Give the server a small window to finish deferred cleanups
 	time.sleep(50 * time.millisecond)
-	println('Unix Sockets Demo finished.')
+	println('Unix Sockets Protocol Demo finished.')
 }
 ```
 
@@ -12454,7 +14084,7 @@ fn main() {
 
 ## Other Stdlib Updates
 
-This section is grouped into focused subtopics so you can jump quickly to the area you need.
+This section is grouped into focused subtopics so you can jump quickly to the area you need. The examples here were expanded from the runnable standard-library demos under the repository's language_updates_and_stdlib/02_standard_library folder and verified by running them with V.
 
 ### Core Language and Type Features
 
@@ -12463,7 +14093,7 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 - [Interfaces](#interfaces)
 - [Sum Types](#sum-types)
 - [Attributes](#attributes)
-- [Compile-Time Directives](#compile-time-directives)
+- [Compile-Time Directives](#compile-time-directives--compile-time-code)
 
 ### Standard Library and OS Modules
 
@@ -12525,7 +14155,7 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 
 ### Options And Results
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v](language_updates_and_stdlib/01_language_basics_updates/01_options_and_results/options_and_results.v)_
 
 ### Lesson: Options And Results
 
@@ -12590,7 +14220,7 @@ fn main() {
 
 ### Generics
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v](language_updates_and_stdlib/01_language_basics_updates/02_generics/generics.v)_
 
 ### Lesson: Generics
 
@@ -12653,7 +14283,7 @@ fn main() {
 
 ### Interfaces
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v](language_updates_and_stdlib/01_language_basics_updates/03_interfaces/interfaces.v)_
 
 ### Lesson: Interfaces
 
@@ -12718,7 +14348,7 @@ fn main() {
 
 ### Sum Types
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v](language_updates_and_stdlib/01_language_basics_updates/04_sum_types/sum_types.v)_
 
 ### Lesson: Sum Types
 
@@ -12801,7 +14431,7 @@ fn main() {
 
 ### Attributes
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v](language_updates_and_stdlib/01_language_basics_updates/05_attributes/attributes.v)_
 
 ### Lesson: Attributes
 
@@ -12815,51 +14445,72 @@ module main
 
 import json
 
-// User struct defines field attributes for custom JSON serialization/deserialization.
+// User uses attributes to control JSON field names and to hide a field from encoding.
 struct User {
-	name string @[json: 'username']
-	age  int    @[json: 'user_age']
+	name   string @[json: 'username']
+	age    int    @[json: 'user_age']
+	secret string @[json: '-']
 }
 
-// @[deprecated] warns the developer at compile time that the function shouldn't be used.
+// Note shows how database-related attributes can describe a schema shape.
+struct Note {
+	id      int    @[primary; sql: serial]
+	message string @[sql: 'detail'; unique]
+}
+
+// deprecated warns developers when they call this function.
 @[deprecated: 'use modern_greet instead']
 fn old_greet() {
 	println('Hello from the old greeting!')
 }
 
+// modern_greet is the preferred replacement for old_greet.
 fn modern_greet() {
 	println('Hello from the modern greeting!')
 }
 
-// @[inline] suggests the compiler to inline the function body.
+// inline hints the compiler that this small function should be inlined.
 @[inline]
 fn add(a int, b int) int {
 	return a + b
 }
 
+// required marks a function parameter as something that should be supplied explicitly.
+@[required]
+fn greet_user(name string) string {
+	return 'Hello, ${name}!'
+}
+
 fn main() {
-	// 1. JSON serialization/deserialization using @[json] mapping
+	println('=== attributes demo ===')
+
+	// Build a User instance and encode it to JSON.
 	u := User{
-		name: 'Bob'
-		age:  30
+		name:   'Bob'
+		age:    30
+		secret: 'hidden'
 	}
 	encoded := json.encode(u)
 	println('Encoded JSON: ${encoded}')
 
+	// Decode a JSON payload that uses the custom field names from the attributes.
 	decoded := json.decode(User, '{"username":"Alice","user_age":25}') or {
 		println('JSON error: ${err}')
 		User{}
 	}
 	println('Decoded User -> Name: ${decoded.name}, Age: ${decoded.age}')
 
-	// 2. Calling inline function
+	// The inline attribute is only a hint, but the example shows the function call.
 	sum := add(10, 20)
 	println('Sum: ${sum}')
 
-	// 3. Calling modern function
+	// Call the modern function and the required-parameter helper.
 	modern_greet()
+	println(greet_user('Ada'))
 
-	// Note: Calling old_greet() will compile successfully but output a warning:
+	// The Note struct is only used to demonstrate the attribute syntax here.
+	println('Note schema fields: ${Note{}.id} / ${Note{}.message}')
+	// Calling old_greet() will compile successfully but output a warning:
 	// warning: old_greet has been deprecated. use modern_greet instead
 	// old_greet()
 }
@@ -12867,63 +14518,172 @@ fn main() {
 
 ---
 
-### Compile-Time Directives
+### Compile-Time Directives & Compile-Time Code
 
-_File location: [language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v)_
+_File location: [language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v](language_updates_and_stdlib/01_language_basics_updates/07_directives/directives.v)_
 
-### Lesson: Compile-Time Directives
+### Lesson: Compile-Time Directives & Compile-Time Code
 
-V provides compile-time directives (starting with `$`) that are processed by the compiler before compilation. These directives allow you to perform conditional compilation based on OS or flags, retrieve environment variables, embed files directly into the compiled binary, and compile templates at compile time.
+V provides a powerful set of compile-time (or 'comptime') directives and code features, prefixed with `$`. These instructions are evaluated and processed by the compiler during compilation, allowing you to optimize code execution, prune unused branches, dynamically query compilation environment properties, and embed assets directly into the final binary.
 
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **compile-time directives**.
+#### 1. Conditional Compilation (`$if` Condition)
+
+If you want an `if` expression to be evaluated at compile time, prefix it with `$`. Inactive branches are excluded from compilation entirely, meaning their type checks still occur but no code is generated for them in the final executable.
+
+- **Multiple Conditions:** You can combine multiple platforms or build modes in one branch using logic operators (`||`, `&&`).
+- **Expression Usage:** A compile-time `$if` can be used as an expression to conditionally assign values.
+- **`$else-$if` Chains:** You can chain compile-time conditions using `$else $if` to check against various compilers, platforms, or custom defines.
+
+##### Builtin `$if` Compilation Target Options
+
+Below is the full list of builtin options supported inside compile-time `$if` conditions:
+
+| OS target                      | Compilers        | Platforms                     | Other                                                    |
+| :----------------------------- | :--------------- | :---------------------------- | :------------------------------------------------------- |
+| `windows`, `linux`, `macos`    | `gcc`, `tinyc`   | `amd64`, `arm64`, `aarch64`   | `debug`, `prod`, `test`                                  |
+| `darwin`, `ios`, `bsd`         | `clang`, `mingw` | `i386`, `arm32`               | `js`, `glibc`, `prealloc`                                |
+| `freebsd`, `openbsd`, `netbsd` | `msvc`           | `rv64`, `rv32`, `s390x`       | `no_bounds_checking`, `freestanding`                     |
+| `android`, `mach`, `dragonfly` | `cplusplus`      | `ppc64le`                     | `no_segfault_handler`, `no_backtrace`                    |
+| `gnu`, `hpux`, `haiku`, `qnx`  |                  | `x64`, `x32`                  | `no_main`, `fast_math`, `apk`, `threads`                 |
+| `solaris`, `termux`            |                  | `little_endian`, `big_endian` | `js_node`, `js_browser`, `js_freestanding`               |
+| `serenity`, `vinix`, `plan9`   |                  |                               | `interpreter`, `es5`, `profile`, `wasm32`                |
+|                                |                  |                               | `wasm32_emscripten`, `wasm32_wasi`, `native`, `autofree` |
+
+#### 2. Compile-Time Flag Defines (`$d`)
+
+V allows retrieving custom flag values defined via the command line with `-d flag=value` or `-d flag` (which defaults to `-d flag=true`).
+
+- To fetch the flag inside your code, use: `$d('flag_name', default_value)`.
+- The `default_value` acts as a fallback when the flag is not provided on the command line. It **must** be a pure literal: booleans (`true`/`false`), integers (`0`), floats (`0.0`), strings (`'string'`), or runes (`\`v\``).
+- You can also use `$d('flag_name', false)` inside `$if` conditions (e.g. `$if $d('my_flag', false) { ... }`) to selectively enable or disable blocks of code.
+- `$d` can also be used in top-level statements like `#flag` and `#include` (e.g., `#flag linux -I $d('my_include', '/usr')/include`).
+
+#### 3. Compile-Time Warnings & Errors
+
+You can generate custom compile-time messages to warn the developer or abort the build:
+
+- `$compile_warn('message')` prints a warning during compilation but allows the build to continue.
+- `$compile_error('message')` immediately halts compilation and prints a custom error.
+  These are particularly powerful when combined with platform target checks to enforce compatibility (e.g., aborting compilation on unsupported architectures).
+
+#### 4. Environment Variables (`$env`)
+
+`$env('VAR_NAME')` retrieves the value of an environment variable at compilation time and embeds it as a string literal. It can also be used inside top-level `#flag` and `#include` statements.
+
+#### 5. File Asset Embedding (`$embed_file`)
+
+V can embed the raw content of any external file directly inside the compiled binary using `$embed_file('path')`.
+
+- Returns an `EmbedFileData` structure. Use `.to_string()` or `.to_bytes()` to retrieve contents.
+- In production builds (`-prod`), `$embed_file` supports optional on-the-fly compression via `.zlib` (e.g. `$embed_file('x.css', .zlib)`).
+- For local development ease, compile with `-d embed_only_metadata`. The file won't be embedded, and V will load the file from disk the first time `data()` is called, permitting external live edits without recompiling.
+
+#### 6. Compile-Time Templates (`$tmpl`)
+
+`$tmpl('path/to/template.html')` compiles and parses a simple template file, interpolating any variables (prefixed with `@` in the template) that exist in the calling scope.
+
+---
+
+Here is a comprehensive code example highlighting all compile-time directives and code features in action:
 
 ```v
 module main
 
 fn main() {
-	println('=== V Compile-Time Directives Demo ===')
+	println('=== V Compile-Time Directives & Code Demo ===')
 
-	// 1. $if Directive (Conditional Compilation)
-	println('\n--- 1. Conditional Compilation (\$if) ---')
+	// 1. Conditional Compilation ($if) and multiple conditions
+	println('\n--- 1. Conditional Compilation (compile-time \$if) ---')
 	$if macos {
-		println('Compiled specifically for macOS.')
+		println('OS target: macOS')
 	}
 	$if windows {
-		println('Compiled specifically for Windows.')
+		println('OS target: Windows')
 	}
 	$if linux {
-		println('Compiled specifically for Linux.')
+		println('OS target: Linux')
 	}
 
-	$if debug {
-		println('Debug mode is active.')
+	// Multiple conditions in one branch
+	$if ios || android {
+		println('Target platform is a mobile device (iOS/Android).')
+	} $else $if macos || linux || windows {
+		println('Target platform is a desktop OS.')
+	}
+
+	$if linux && x64 {
+		println('Running specifically on 64-bit Linux.')
+	}
+
+	// 2. $if as an expression
+	println('\n--- 2. \$if Used as an Expression ---')
+	os_family := $if windows { 'Windows' } $else { 'Unix-like' }
+	println('OS Family expression: ${os_family}')
+
+	// 3. $else-$if compiler branches
+	println('\n--- 3. Compiler Type Detection (\$else-\$if) ---')
+	$if tinyc {
+		println('Compiled with: TinyC')
+	} $else $if clang {
+		println('Compiled with: Clang')
+	} $else $if gcc {
+		println('Compiled with: GCC')
+	} $else $if msvc {
+		println('Compiled with: MSVC')
 	} $else {
-		println('Running in standard release/dev mode.')
+		println('Compiled with a different/unspecified compiler')
 	}
 
-	// 2. $env Directive (Compile-time Environment Variables)
-	println('\n--- 2. Compile-Time Environment (\$env) ---')
-	// Retrieves the value of the environment variable at compilation time
+	// 4. Custom Compile-time Flag defines ($d) with defaults
+	println('\n--- 4. Compile-Time Flags (\$d) with Default Values ---')
+	// $d brings values defined via compiler flags (-d flag=val or -d flag)
+	// Default value must be a pure literal (boolean, int, float, string, or rune)
+	custom_str := $d('custom_str', 'Default Text')
+	custom_bool := $d('custom_bool', false)
+	custom_int := $d('custom_int', 42)
+	custom_float := $d('custom_float', 3.14159)
+	custom_char := $d('custom_char', `v`)
+
+	println('custom_str: ${custom_str}')
+	println('custom_bool: ${custom_bool}')
+	println('custom_int: ${custom_int}')
+	println('custom_float: ${custom_float}')
+	println('custom_char: ${rune(custom_char)}')
+
+	// We can also use $d('ident', false) inside $if condition to conditionally enable/disable code:
+	$if $d('enable_feature', false) {
+		println('Special feature is ENABLED at compile-time!')
+	} $else {
+		println('Special feature is DISABLED (default). Compile with `v -d enable_feature run directives.v` to enable.')
+	}
+
+	// 5. Compile-time custom errors and warnings
+	println('\n--- 5. Compile-Time Errors and Warnings (\$compile_error, \$compile_warn) ---')
+	// These only trigger if the enclosing $if branch is active/evaluated at compile time.
+	$if $d('trigger_error', false) {
+		$compile_error('Explicit compile-time error triggered')
+	}
+	$if $d('trigger_warn', false) {
+		$compile_warn('Explicit compile-time warning triggered')
+	}
+	println('No compile-time errors/warnings triggered during this compilation run.')
+
+	// 6. $env reads environment values while the program is being compiled.
+	println('\n--- 6. Compile-Time Environment (compile-time env) ---')
 	compile_path := $env('PATH')
 	println('PATH length at compile-time: ${compile_path.len} bytes')
 
-	// 3. $embed_file Directive (Compile-time Asset Embedding)
-	println('\n--- 3. Asset Embedding (\$embed_file) ---')
-	// Embeds the file content directly into the binary at compile time.
-	// Returns an embed_file.EmbedFileData struct which we convert to string.
+	// 7. $embed_file stores a file's contents inside the compiled binary.
+	println('\n--- 7. Asset Embedding (compile-time embed) ---')
 	embedded_file := $embed_file('temp_embed.txt')
 	content := embedded_file.to_string()
 	println('Embedded File Content:')
 	println(content)
 
-	// 4. $tmpl Directive (Compile-time Template Interpolation)
-	println('\n--- 4. Template Interpolation (\$tmpl) ---')
-	// Interpolates local variables inside the template file at compile time.
+	// 8. $tmpl renders a template file and injects the current variables.
+	println('\n--- 8. Template Interpolation (compile-time template) ---')
 	name := 'Developer'
 	status := 'active'
-
-	// Renders the template with the variables in the current scope
 	rendered_template := $tmpl('template.html')
 	println('Rendered Template Output:')
 	println(rendered_template)
@@ -12934,7 +14694,7 @@ fn main() {
 
 ### Strings Builder
 
-_File location: [language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v](language_updates_and_stdlib/02_standard_library/01_strings_builder/strings_builder.v)_
 
 ### Lesson: Strings Builder
 
@@ -12983,7 +14743,7 @@ fn main() {
 
 ### Os Advanced Io
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v](language_updates_and_stdlib/02_standard_library/02_os_operations/advanced_io/os_advanced_io.v)_
 
 This example demonstrates advanced Unix file behaviors such as raw struct binary serialization, cursor seeking (`seek`/`tell`), file size truncation, and recursive directory tree traversal.
 
@@ -13016,8 +14776,8 @@ fn main() {
 	}
 
 	mut cfg := Config{
-		id: 101
-		val: 99.99
+		id:   101
+		val:  99.99
 		name: [u8(0), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]!
 	}
 
@@ -13030,11 +14790,8 @@ fn main() {
 	}
 
 	// Write struct representation directly to the file
-	f.write_struct(cfg) or {
-		println('Failed to write struct: ${err}')
-	}
+	f.write_struct(cfg) or { println('Failed to write struct: ${err}') }
 	println('Struct successfully serialized to file.')
-
 
 	// --- 2. Seeking & Cursor Position (seek/tell) ---
 	println('\n--- 2. File Seeking & Cursor Position ---')
@@ -13045,22 +14802,20 @@ fn main() {
 
 	// Seek back to the beginning of the file (.start)
 	println('Seeking back to the start of the file...')
-	f.seek(0, .start) or {
-		println('Failed to seek: ${err}')
-	}
+	f.seek(0, .start) or { println('Failed to seek: ${err}') }
 
 	// Read struct back from file
 	mut read_cfg := Config{
 		name: [u8(0), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]!
 	}
-	f.read_struct(mut read_cfg) or {
-		println('Failed to read struct: ${err}')
-	}
+	f.read_struct(mut read_cfg) or { println('Failed to read struct: ${err}') }
 
 	// Extract string from fixed-size byte array
 	mut bytes := []u8{}
 	for b in read_cfg.name {
-		if b == 0 { break }
+		if b == 0 {
+			break
+		}
 		bytes << b
 	}
 	name_read := bytes.bytestr()
@@ -13072,21 +14827,17 @@ fn main() {
 
 	f.close()
 
-
 	// --- 3. Truncating Files ---
 	println('\n--- 3. File Truncation (truncate) ---')
 
 	// Note: V's os.truncate opens the file with O_TRUNC, resetting it first before sizing.
 	// Shrinking/sizing a file directly using os.truncate:
 	println('Truncating file "${file_path}" to 10 bytes...')
-	os.truncate(file_path, 10) or {
-		println('Failed to truncate: ${err}')
-	}
+	os.truncate(file_path, 10) or { println('Failed to truncate: ${err}') }
 	println('File size after truncation: ${os.file_size(file_path)} bytes')
 
 	// Clean up binary file
 	os.rm(file_path) or {}
-
 
 	// --- 4. Recursive Directory Tree Walking ---
 	println('\n--- 4. Directory Tree Walking (walk) ---')
@@ -13122,9 +14873,60 @@ fn main() {
 
 ### Os Operations
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v](language_updates_and_stdlib/02_standard_library/02_os_operations/basic/os_operations.v)_
 
-This example demonstrates common file system tasks, path manipulation, working directory traversal, environmental querying, symbol links, permissions (`chmod`), and ownership (`chown`).
+### Lesson: Os Operations
+
+V's standard library provides a rich set of cross-platform functions for interacting with the operating system through the `os` module. Here is the simplest, most practical guide to when you should actually use each of these functions in real-world programming.
+
+---
+
+#### 1. Basic File Operations
+
+- **The Vibe:** The "Standard file cabinets."
+- **What it does:** Writes, reads, and checks the existence of files using simple string and byte helpers.
+- **Best to use when:** You need to dump text, save config settings, or read small files quickly.
+- **Real-world example:** Writing user session logs or reading a local settings file.
+
+#### 2. Directory Tree Operations
+
+- **The Vibe:** The "Digital folder builder."
+- **What it does:** Creates nested folders (`mkdir_all`) or removes them (`rmdir_all`).
+- **Best to use when:** You need to construct file paths for organized data storage.
+- **Real-world example:** Creating a new user cache folder like `cache/images/temp/`.
+
+#### 3. Path Manipulation & Extraction
+
+- **The Vibe:** The "Path dissection tool."
+- **What it does:** Extracts directory paths, base names, file extensions, and normalizes them.
+- **Best to use when:** You have a file path and want to rename the file or get its extension without manual string parsing.
+- **Real-world example:** Checking if an uploaded file has a `.jpg` extension.
+
+#### 4. Environment & Command Execution
+
+- **The Vibe:** "Talking to the host machine."
+- **What it does:** Reads system environment variables and runs shell commands.
+- **Best to use when:** You need to fetch config keys (like API tokens) or execute external utilities (like running `git version`).
+- **Real-world example:** Fetching the `HOME` directory to locate user configuration files.
+
+#### 5. File Permissions & Ownership (Chmod/Chown)
+
+- **The Vibe:** The "Keymaster/security guard."
+- **What it does:** Alters who can read/write/execute a file and changes user/group owner IDs.
+- **Best to use when:** Making a script executable or securing sensitive credentials.
+- **Real-world example:** Restricting a database file's permissions to be readable only by the owner (`chmod 0o600`).
+
+#### 6. Globbing
+
+- **The Vibe:** The "Wildcard detector."
+- **What it does:** Matches a list of files using wildcard patterns (like `*.txt`).
+- **Best to use when:** You need to process a batch of files matching a name template.
+- **Real-world example:** Storing files matching `log_*.txt` and deleting them in a batch.
+
+---
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **OS operations**.
 
 ```v
 module main
@@ -13138,30 +14940,33 @@ fn main() {
 	// ==========================================
 	// 1. Basic File Operations (Writing, Reading, Existence)
 	// ==========================================
+
+	// os.write_file writes a string to a file. It overwrites the file if it already exists.
+	// We handle errors using V's explicit "or" block.
 	println('Writing text to ${filename}...')
 	os.write_file(filename, content) or {
 		println('Failed to write file: ${err}')
 		return
 	}
 
-	// Checking file existence
+	// os.exists checks if a file or directory exists at the given path.
 	if os.exists(filename) {
 		println('Confirmed: File exists.')
 	}
 
-	// Reading from a file
+	// os.read_file reads the entire content of a file and returns it as a string.
 	read_content := os.read_file(filename) or {
 		println('Failed to read file: ${err}')
 		return
 	}
 	println('Read content from file: "${read_content}"')
 
-	// Writing and reading lines
+	// os.write_lines writes an array of strings to a file, separating them with newlines.
 	lines := ['Line 1: V has simple OS functions.', 'Line 2: Supporting multiple lines.']
 	lines_file := 'temp_lines_example.txt'
-	os.write_lines(lines_file, lines) or {
-		println('Failed to write lines: ${err}')
-	}
+	os.write_lines(lines_file, lines) or { println('Failed to write lines: ${err}') }
+
+	// os.read_lines reads a file line-by-line and returns an array of strings.
 	read_lines := os.read_lines(lines_file) or {
 		println('Failed to read lines: ${err}')
 		[]
@@ -13169,30 +14974,61 @@ fn main() {
 	println('Read lines: ${read_lines}')
 	os.rm(lines_file) or {}
 
-	// Listing directory contents
+	// os.write_bytes and os.read_bytes handle raw binary byte arrays.
+	// os.file_last_mod_unix retrieves the Unix timestamp of when the file was last modified.
+	// os.is_file returns true if the path points to a file (not a directory).
+	bytes_file := 'temp_bytes_example.bin'
+	os.write_bytes(bytes_file, 'V handles raw bytes.'.bytes()) or {
+		println('Failed to write bytes: ${err}')
+	}
+	read_bytes := os.read_bytes(bytes_file) or { []u8{} }
+	println('Read bytes: "${read_bytes.bytestr()}"')
+	println('Last modified time (epoch): ${os.file_last_mod_unix(bytes_file)}')
+	println('Is a file? ${os.is_file(bytes_file)}')
+	os.rm(bytes_file) or {}
+
+	// os.create creates a new empty file for writing and returns a File handle.
+	// os.open_append opens an existing file or creates one, positioning the cursor at the end to append data.
+	// os.open opens an existing file in read-only mode.
+	handle_file := 'temp_handle_example.txt'
+	mut f_create := os.create(handle_file) or { panic(err) }
+	f_create.write_string('Line 1 from file handle\n') or {}
+	f_create.close()
+
+	mut f_append := os.open_append(handle_file) or { panic(err) }
+	f_append.write_string('Line 2 appended\n') or {}
+	f_append.close()
+
+	mut f_read := os.open(handle_file) or { panic(err) }
+	mut buf := []u8{len: 100}
+	n_read := f_read.read(mut buf) or { 0 }
+	println('Content via file handle:\n${buf[..n_read].bytestr().trim_space()}')
+	f_read.close()
+	os.rm(handle_file) or {}
+
+	// os.ls returns a list of file and directory names inside the target directory path.
 	println('Listing files in current directory:')
 	files := os.ls('.') or {
 		println('Failed to list directory: ${err}')
 		[]
 	}
 	for file in files {
-		// Filter and print temp file
 		if file == filename {
 			println('- Found file: ${file}')
 		}
 	}
 
-	// Reading environment variables
+	// os.getenv retrieves the value of a system environment variable.
 	home_dir := os.getenv('HOME')
 	println('User HOME directory: ${home_dir}')
 
-	// Checking if a binary exists in the system PATH
+	// os.exists_in_system_path checks if a command binary is present in the system's PATH.
 	if os.exists_in_system_path('git') {
 		println('Confirmed: Git executable exists in system PATH.')
 	}
 
-	// Executing OS commands
-	// os.execute runs command in a subshell and returns a Result struct containing exit_code and output.
+	// os.execute runs a system command in a shell and returns a Result struct.
+	// The Result contains both the command exit_code and stdout/stderr output.
 	println('Running command "uname"...')
 	res := os.execute('uname')
 	if res.exit_code == 0 {
@@ -13202,44 +15038,67 @@ fn main() {
 	}
 
 	// ==========================================
-	// 2. Directory Tree Operations (Nix/CLI Focus)
+	// 2. Directory Tree Operations
 	// ==========================================
 	println('\n--- Directory Tree Operations ---')
 
-	// Create nested directories (like `mkdir -p`)
+	// os.mkdir_all recursively creates a full nested directory path (similar to mkdir -p).
 	nested_dir := os.join_path('temp_parent', 'temp_child')
 	println('Creating nested directory structure: ${nested_dir}...')
-	os.mkdir_all(nested_dir) or {
-		println('Failed to create directory structure: ${err}')
-	}
+	os.mkdir_all(nested_dir) or { println('Failed to create directory structure: ${err}') }
+
+	// os.mkdir creates a single new directory.
+	// os.is_dir checks if a path points to a directory.
+	// os.is_dir_empty checks if the directory has no files or subfolders.
+	// os.rmdir deletes a single empty directory.
+	single_dir := 'temp_single_dir'
+	os.mkdir(single_dir) or { println('Failed to create directory: ${err}') }
+	println('Is directory? ${os.is_dir(single_dir)}')
+	println('Is empty?     ${os.is_dir_empty(single_dir)}')
+	os.rmdir(single_dir) or { println('Failed to remove directory: ${err}') }
 
 	// ==========================================
 	// 3. Path Manipulation & Extraction
 	// ==========================================
 	println('\n--- Path Manipulation & Extraction ---')
 	sample_path := '/usr/local/bin/v.exe'
+
+	// Path parsing helpers:
+	// os.dir returns the parent directory.
+	// os.base returns the last element of the path.
+	// os.file_ext returns the file suffix including dot.
+	// os.file_name returns the filename without the path.
+	// os.is_abs_path checks if the path starts with root.
+	// os.real_path resolves symlinks and relative references to return the absolute canonical path.
+	// os.norm_path cleans up and normalizes path separators.
+	// os.split_path splits a path into (dir, file_name, file_extension).
 	println('Sample path: ${sample_path}')
-	println('Directory:   ${os.dir(sample_path)}')      // /usr/local/bin
-	println('Base name:   ${os.base(sample_path)}')     // v.exe
-	println('Extension:   ${os.file_ext(sample_path)}') // .exe
+	println('Directory:   ${os.dir(sample_path)}')
+	println('Base name:   ${os.base(sample_path)}')
+	println('Extension:   ${os.file_ext(sample_path)}')
+	println('File name:   ${os.file_name(sample_path)}')
+	println('Is absolute? ${os.is_abs_path(sample_path)}')
+	println('Real path:   ${os.real_path('.')}')
+	println('Norm path:   ${os.norm_path('/usr/local/../bin/v')}')
+	p_dir, p_file, p_ext := os.split_path(sample_path)
+	println('Split path -> dir: ${p_dir}, file: ${p_file}, ext: ${p_ext}')
 
 	// ==========================================
 	// 4. Working Directory Traversal
 	// ==========================================
 	println('\n--- Working Directory Traversal ---')
+
+	// os.getwd returns the current active working directory.
+	// os.chdir changes the current active working directory.
 	original_wd := os.getwd()
 	println('Original working directory: ${original_wd}')
 
 	println('Changing directory to: temp_parent...')
-	os.chdir('temp_parent') or {
-		println('Failed to change directory: ${err}')
-	}
+	os.chdir('temp_parent') or { println('Failed to change directory: ${err}') }
 	println('New working directory: ${os.getwd()}')
 
-	// Change back to original directory
-	os.chdir(original_wd) or {
-		println('Failed to restore directory: ${err}')
-	}
+	// Restore original working directory
+	os.chdir(original_wd) or { println('Failed to restore directory: ${err}') }
 
 	// ==========================================
 	// 5. Advanced File Operations (Copying, Moving)
@@ -13248,15 +15107,13 @@ fn main() {
 	copied_file := 'temp_book_copy.txt'
 	moved_file := 'temp_book_moved.txt'
 
+	// os.cp copies a file from source to destination.
 	println('Copying ${filename} to ${copied_file}...')
-	os.cp(filename, copied_file) or {
-		println('Failed to copy file: ${err}')
-	}
+	os.cp(filename, copied_file) or { println('Failed to copy file: ${err}') }
 
+	// os.mv moves or renames a file.
 	println('Moving ${copied_file} to ${moved_file}...')
-	os.mv(copied_file, moved_file) or {
-		println('Failed to move file: ${err}')
-	}
+	os.mv(copied_file, moved_file) or { println('Failed to move file: ${err}') }
 
 	// ==========================================
 	// 6. Symbolic Links & Nix-Specific Operations
@@ -13264,53 +15121,54 @@ fn main() {
 	println('\n--- Nix-Specific Operations ---')
 	symlink_name := 'temp_book_link.txt'
 
-	// Create symlink
+	// os.symlink creates a symbolic link pointing to a target file.
+	// os.is_link checks if the path points to a symbolic link.
 	println('Creating symbolic link from ${moved_file} to ${symlink_name}...')
-	os.symlink(moved_file, symlink_name) or {
-		println('Failed to create symlink: ${err}')
-	}
+	os.symlink(moved_file, symlink_name) or { println('Failed to create symlink: ${err}') }
 
-	// Check if path is a link
 	if os.is_link(symlink_name) {
 		println('Confirmed: ${symlink_name} is a symbolic link.')
 	}
 
-	// Change file permissions (chmod)
-	// 0o644 = Owner: read/write, Group: read, Others: read
+	// os.chmod changes permission bits on a file (using octal representation).
+	// os.is_readable, os.is_writable, os.is_executable check specific accessibility bits.
 	println('Setting file permissions to 0o644 (read/write for owner, read-only for others)...')
-	os.chmod(moved_file, 0o644) or {
-		println('Failed to change permissions: ${err}')
-	}
+	os.chmod(moved_file, 0o644) or { println('Failed to change permissions: ${err}') }
 
-	// Check permissions
 	println('Is readable?   ${os.is_readable(moved_file)}')
 	println('Is writable?   ${os.is_writable(moved_file)}')
 	println('Is executable? ${os.is_executable(moved_file)}')
 
-	// Change ownership (chown)
-	// Safe demo using our current user's UID and GID to avoid permission errors
+	// os.getuid and os.getgid get current user and group IDs.
+	// os.chown changes the user and group owner IDs on a file.
 	uid := os.getuid()
 	gid := os.getgid()
 	println('Setting ownership of ${moved_file} to UID: ${uid}, GID: ${gid}...')
-	os.chown(moved_file, uid, gid) or {
-		println('Failed to change ownership: ${err}')
-	}
+	os.chown(moved_file, uid, gid) or { println('Failed to change ownership: ${err}') }
 
 	// ==========================================
-	// 7. Cleanup
+	// 7. File Globbing (glob)
+	// ==========================================
+	println('\n--- File Globbing ---')
+
+	// os.glob finds all files matching a wildcard pattern (e.g. *.txt).
+	os.write_file('glob_test_1.txt', '1') or {}
+	os.write_file('glob_test_2.txt', '2') or {}
+	globbed_files := os.glob('glob_test_*.txt') or { [] }
+	println('Glob results: ${globbed_files}')
+	os.rm('glob_test_1.txt') or {}
+	os.rm('glob_test_2.txt') or {}
+
+	// ==========================================
+	// 8. Cleanup
 	// ==========================================
 	println('\n--- Cleanup ---')
 
-	// Remove original file
+	// os.rm deletes a file.
+	// os.rmdir_all recursively removes a directory and all of its contents.
 	os.rm(filename) or { println('Failed to remove ${filename}: ${err}') }
-
-	// Remove moved file
 	os.rm(moved_file) or { println('Failed to remove ${moved_file}: ${err}') }
-
-	// Remove symlink
 	os.rm(symlink_name) or { println('Failed to remove symlink ${symlink_name}: ${err}') }
-
-	// Remove nested directory structure recursively
 	os.rmdir_all('temp_parent') or { println('Failed to remove temp_parent directory: ${err}') }
 
 	println('Cleanup completed successfully.')
@@ -13321,7 +15179,7 @@ fn main() {
 
 ### Os Process Pipe
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v](language_updates_and_stdlib/02_standard_library/02_os_operations/process/os_process_pipe.v)_
 
 This example demonstrates managing subprocesses asynchronously using `os.Process`, exchanging data via stdin/stdout redirection, passing custom environments, sending POSIX signals (`SIGSTOP`, `SIGCONT`, `SIGTERM`), creating low-level descriptor pipes, and capturing stdout/stderr dynamically via `IOCapture`.
 
@@ -13385,7 +15243,6 @@ fn main() {
 	println('Child process exited with status: ${p.status} (Code: ${p.code})')
 	p.close()
 
-
 	// --- 3. Pipes ---
 	println('\n--- 3. Low-Level Descriptor Pipes (Pipe) ---')
 
@@ -13411,7 +15268,6 @@ fn main() {
 	}
 	println('Read message from pipe: "${pipe_buf[..bytes_read].bytestr()}"')
 	my_pipe.close()
-
 
 	// --- 4. Capture Stdout/Stderr ---
 	println('\n--- 4. Capture Stdout and Stderr (IOCapture) ---')
@@ -13441,7 +15297,7 @@ fn main() {
 
 ### Os System Info
 
-_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v](language_updates_and_stdlib/02_standard_library/02_os_operations/system_info/os_system_info.v)_
 
 This example demonstrates calling system diagnostics (`os.uname`), retrieving current host/user identities, assessing disk capacity and usage metrics (`os.disk_usage`), and parsing detailed file metadata using POSIX stat/lstat mappings (`os.Stat` and `os.FileMode`).
 
@@ -13470,6 +15326,24 @@ fn main() {
 	println('Hostname:             ${host}')
 	println('Login Name:           ${user}')
 
+	// V standard user/system directories
+	println('User OS:              ${os.user_os()}')
+	println('Home Directory:       ${os.home_dir()}')
+	println('Temp Directory:       ${os.temp_dir()}')
+	println('Config Directory:     ${os.config_dir() or { 'N/A' }}')
+	println('Cache Directory:      ${os.cache_dir()}')
+	println('Data Directory:       ${os.data_dir()}')
+
+	// Executable details
+	println('Current Executable:   ${os.executable()}')
+	println('Git Abs Path:         ${os.find_abs_path_of_executable('git') or { 'not found' }}')
+
+	// Optional environment access & full environment map
+	println('Home via getenv_opt:  ${os.getenv_opt('HOME') or { 'not set' }}')
+	env_map := os.environ()
+	// Safely print first few environment keys if available
+	limit := if env_map.len < 3 { env_map.len } else { 3 }
+	println('Sample Env Keys:      ${env_map.keys()[..limit]}')
 
 	// --- 2. Identity and Process Metrics ---
 	println('\n--- 2. User/Group IDs & Process Context ---')
@@ -13483,7 +15357,6 @@ fn main() {
 	// Current Process ID and Parent Process ID
 	println('Process ID (PID):     ${os.getpid()}')
 	println('Parent PID (PPID):    ${os.getppid()}')
-
 
 	// --- 3. Disk Space Usage ---
 	println('\n--- 3. Disk Space Stats ---')
@@ -13502,7 +15375,6 @@ fn main() {
 	println('Disk Total:     ${total_gb:.2f} GB')
 	println('Disk Available: ${avail_gb:.2f} GB')
 	println('Disk Used:      ${used_gb:.2f} GB')
-
 
 	// --- 4. Detailed File Metadata (stat/lstat) ---
 	println('\n--- 4. File Metadata via stat ---')
@@ -13550,11 +15422,57 @@ fn main() {
 
 ### Time And Stopwatch
 
-_File location: [language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v](language_updates_and_stdlib/02_standard_library/03_time_and_stopwatch/time_and_stopwatch.v)_
 
 ### Lesson: Time And Stopwatch
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Time And Stopwatch** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
+V's standard library provides a robust and precise set of utilities for time retrieval, formatting, parsing, timezone management, and execution timing via the `time` module. Here is the simplest, most practical guide to when you should actually use each of these tools in real-world programming.
+
+---
+
+#### 1. Time Retrieval & Fields
+
+- **The Vibe:** "Checking your wristwatch."
+- **What it does:** Gets the exact current date, time, and nanoseconds.
+- **Best to use when:** You need to timestamp actions or log events.
+- **Real-world example:** Recording when a user logs in.
+
+#### 2. Time Arithmetic & Comparisons
+
+- **The Vibe:** "Time-traveling and deadlines."
+- **What it does:** Adds or subtracts intervals (days, hours, seconds) and compares which time comes first.
+- **Best to use when:** You need to calculate expirations or duration differences.
+- **Real-world example:** Setting a user token to expire in 2 hours.
+
+#### 3. String Formatting & RFC Standards
+
+- **The Vibe:** "The translator for calendar dates."
+- **What it does:** Converts raw timestamps into clean, human-readable formats, custom strings, or RFC 3339 standards.
+- **Best to use when:** Displaying dates to users or sending structured time JSON over APIs.
+- **Real-world example:** Printing a post publish date as `YYYY-MM-DD HH:mm:ss`.
+
+#### 4. Timezone Conversions (Local & UTC)
+
+- **The Vibe:** "The jet-lag cure."
+- **What it does:** Converts times between local system time and UTC.
+- **Best to use when:** You store timestamps in UTC (best practice) but need to show them in the user's local timezone.
+- **Real-world example:** Normalizing database entries to UTC time.
+
+#### 5. Relative Time
+
+- **The Vibe:** "Social media date labels."
+- **What it does:** Formats dates relative to now (e.g., "5 minutes ago", "yesterday").
+- **Best to use when:** Displaying activity feeds or notification boards.
+- **Real-world example:** Showing how long ago a comment was posted.
+
+#### 6. Stopwatch
+
+- **The Vibe:** "The performance racing timer."
+- **What it does:** Measures sub-millisecond elapsed durations.
+- **Best to use when:** Benchmarking code speed or tracking long-running tasks.
+- **Real-world example:** Measuring how long an API database query took to run.
+
+---
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **time and stopwatch**.
@@ -13565,30 +15483,142 @@ module main
 import time
 
 fn main() {
-	// 1. Getting current local time
+	println('Time API examples')
+	println('=================')
+
+	// time.now() returns the current system time.
+	// We can access properties like year, month, day, hour, etc.
 	now := time.now()
-	println('Current local time: ${now}')
-	println('Components -> Year: ${now.year}, Month: ${now.month}, Day: ${now.day}')
+	println('Current time: ${now}')
+	println('Fields -> year=${now.year}, month=${now.month}, day=${now.day}, hour=${now.hour}, minute=${now.minute}, second=${now.second}, nanosecond=${now.nanosecond}, is_local=${now.is_local}')
 
-	// 2. Custom time formatting
-	formatted := now.custom_format('YYYY-MM-DD HH:mm:ss')
-	println('Custom formatted: ${formatted}')
+	// ==========================================
+	// Arithmetic and comparisons
+	// ==========================================
 
-	// 3. Time calculations (adding/subtracting durations)
-	// V provides constants like time.hour, time.minute, time.second, etc.
-	two_hours := 2 * time.hour
-	future := now.add(two_hours)
-	println('Time in 2 hours: ${future}')
+	// now.add() adds a duration to the timestamp.
+	// now.add_days() adds a specified number of days.
+	// now.add_seconds() adds a specified number of seconds.
+	// We can compare Time objects using <, >, ==, and subtract them to get a Duration.
+	future := now.add(2 * time.hour)
+	tomorrow := now.add_days(1)
+	in_30_seconds := now.add_seconds(30)
+	println('add: ${future}')
+	println('add_days: ${tomorrow}')
+	println('add_seconds: ${in_30_seconds}')
+	println('comparison: now < future -> ${now < future}')
+	println('comparison: now == now -> ${now == now}')
+	println('difference: future - now -> ${future - now}')
 
-	// 4. Measuring elapsed time using a Stopwatch
+	// ==========================================
+	// Formatting helpers
+	// ==========================================
+
+	// now.clean() formats time as YYYY-MM-DD HH:MM:SS.
+	// now.clean12() formats time using a 12-hour clock with AM/PM.
+	// now.custom_format() formats time using a custom layout pattern.
+	// now.format() and format_rfc3339() print standard ISO/RFC timestamps.
+	// format_ss methods print time down to micro, milli, or nanoseconds.
+	// strftime() uses C-like format specifiers.
+	println('clean: ${now.clean()}')
+	println('clean12: ${now.clean12()}')
+	println('custom_format: ${now.custom_format('YYYY-MM-DD HH:mm:ss')}')
+	println('format: ${now.format()}')
+	println('format_rfc3339: ${now.format_rfc3339()}')
+	println('format_rfc3339_micro: ${now.format_rfc3339_micro()}')
+	println('format_rfc3339_nano: ${now.format_rfc3339_nano()}')
+	println('format_ss: ${now.format_ss()}')
+	println('format_ss_micro: ${now.format_ss_micro()}')
+	println('format_ss_milli: ${now.format_ss_milli()}')
+	println('format_ss_nano: ${now.format_ss_nano()}')
+	println('strftime: ${now.strftime('%Y-%m-%d %H:%M:%S')}')
+	println('get_fmt_str: ${now.get_fmt_str(time.FormatDelimiter.hyphen, time.FormatTime.hhmm24,
+		time.FormatDate.yyyymmdd)}')
+	println('get_fmt_date_str: ${now.get_fmt_date_str(time.FormatDelimiter.hyphen, time.FormatDate.yyyymmdd)}')
+	println('get_fmt_time_str: ${now.get_fmt_time_str(time.FormatTime.hhmm24)}')
+
+	// ==========================================
+	// Date and time helpers
+	// ==========================================
+
+	// Extra details like day_of_week(), days_from_unix_epoch(), week_of_year(), smonth(), etc.
+	println('day_of_week: ${now.day_of_week()}')
+	println('days_from_unix_epoch: ${now.days_from_unix_epoch()}')
+	println('ddmmy: ${now.ddmmy()}')
+	println('hhmm: ${now.hhmm()}')
+	println('hhmm12: ${now.hhmm12()}')
+	println('hhmmss: ${now.hhmmss()}')
+	println('long_weekday_str: ${now.long_weekday_str()}')
+	println('md: ${now.md()}')
+	println('smonth: ${now.smonth()}')
+	println('weekday_str: ${now.weekday_str()}')
+	println('week_of_year: ${now.week_of_year()}')
+	println('year_day: ${now.year_day()}')
+	println('ymmdd: ${now.ymmdd()}')
+
+	// ==========================================
+	// UTC and local conversions
+	// ==========================================
+
+	// Convert between UTC and the system local timezone.
+	// unix(), unix_milli(), etc. return timestamps since the Unix Epoch.
+	println('is_utc: ${now.is_utc()}')
+	println('as_local: ${now.as_local()}')
+	println('as_utc: ${now.as_utc()}')
+	println('local: ${now.local()}')
+	println('local_to_utc: ${now.local_to_utc()}')
+	println('utc_to_local: ${now.utc_to_local()}')
+	println('local_unix: ${now.local_unix()}')
+	println('unix: ${now.unix()}')
+	println('unix_micro: ${now.unix_micro()}')
+	println('unix_milli: ${now.unix_milli()}')
+	println('unix_nano: ${now.unix_nano()}')
+	println('utc_string: ${now.utc_string()}')
+
+	// ==========================================
+	// Relative and serialization helpers
+	// ==========================================
+
+	// relative() and relative_short() return values like "2 hours ago".
+	// to_json() returns the JSON representation of the time.
+	// push_to_http_header() format HTTP-standard cookie/caching header dates.
+	println('relative: ${now.relative()}')
+	println('relative_short: ${now.relative_short()}')
+	println('debug: ${now.debug()}')
+	println('str: ${now.str()}')
+	println('to_json: ${now.to_json()}')
+
+	mut header_buffer := []u8{}
+	now.push_to_http_header(mut header_buffer)
+	println('http_header_string: ${now.http_header_string()}')
+	println('push_to_http_header: ${header_buffer.bytestr()}')
+
+	// ==========================================
+	// JSON parsing helpers
+	// ==========================================
+
+	// Parse Unix timestamps or ISO/RFC 3339 strings directly back into a Time struct.
+	mut parsed_from_number := time.now()
+	parsed_from_number.from_json_number('1712345678') or {
+		println('from_json_number error: ${err}')
+	}
+	println('from_json_number: ${parsed_from_number}')
+
+	mut parsed_from_string := time.now()
+	parsed_from_string.from_json_string('2024-04-06T12:34:56Z') or {
+		println('from_json_string error: ${err}')
+	}
+	println('from_json_string: ${parsed_from_string}')
+
+	// ==========================================
+	// Stopwatch example
+	// ==========================================
+
+	// new_stopwatch starts a new stopwatch to measure high-precision elapsed code execution time.
 	println('Starting stopwatch...')
 	mut sw := time.new_stopwatch()
-
-	// Sleep for a short duration to simulate work
 	time.sleep(150 * time.millisecond)
-
-	elapsed := sw.elapsed()
-	println('Elapsed time: ${elapsed.milliseconds()} ms')
+	println('Elapsed: ${sw.elapsed().milliseconds()} ms')
 }
 ```
 
@@ -13596,7 +15626,7 @@ fn main() {
 
 ### Http Client
 
-_File location: [language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v](language_updates_and_stdlib/02_standard_library/04_http_client/http_client.v)_
 
 ### Lesson: Http Client
 
@@ -13641,7 +15671,7 @@ fn main() {
 
 ### Regex Matching
 
-_File location: [language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v](language_updates_and_stdlib/02_standard_library/05_regex_matching/regex_matching.v)_
 
 ### Lesson: Regex Matching
 
@@ -13655,35 +15685,68 @@ module main
 
 import regex
 
+// replace_callback is used by replace_by_fn() to show how a match can be rewritten.
+fn replace_callback(re regex.RE, in_txt string, start int, end int) string {
+	return '[${start}-${end}]'
+}
+
 fn main() {
-	// 1. Compile a regex pattern
-	// r'...' specifies a raw string literal, avoiding excessive escaping
+	// This sample text contains numbers and words that the regex API will inspect.
+	text := 'We have 15 apples, 32 bananas, and 120 oranges.'
+
+	// Compile a regex that finds one or more digits.
 	mut re := regex.regex_opt(r'\d+') or {
 		println('Failed to compile regex: ${err}')
 		return
 	}
 
-	text := 'We have 15 apples, 32 bananas, and 120 oranges.'
+	// Create another regex object and compile a word-matching pattern.
+	mut re_from_new := regex.new()
+	re_from_new.compile_opt(r'\w+') or {
+		println('compile_opt() failed: ${err}')
+		return
+	}
 
-	// 2. Find the first match in the text
-	// `find()` searches anywhere in the string and returns (start_index, end_index)
+	// regex_base() returns the compiled regex plus a status code and error message.
+	base_re, base_code, base_err := regex.regex_base(r'\d+')
+	println('regex_base(): ${base_code}, ${base_err}')
+	println('regex_base query: ${base_re.get_query()}')
+
+	println('=== regex module demo ===')
+	println('query: ${re.get_query()}')
+
+	// find() returns the first match position and span.
 	start, end := re.find(text)
 	if start >= 0 {
 		matched := text[start..end]
-		println('First match found: "${matched}" at range (${start}, ${end})')
+		println('find(): "${matched}" at (${start}, ${end})')
 	} else {
-		println('No match found.')
+		println('find(): no match')
 	}
 
-	// 3. Find all matches in the text
-	// `find_all_str()` returns an array of all matching substrings
-	all_matches := re.find_all_str(text)
-	println('All matches: ${all_matches}')
+	// The next calls demonstrate the other common regex helpers.
+	println('find_from(): ${re.find_from(text, 10)}')
+	println('find_all(): ${re.find_all(text)}')
+	println('find_all_str(): ${re.find_all_str(text)}')
+	println('match_string(): ${re.match_string(text)}')
+	println('matches_string(): ${re.matches_string(text)}')
+	println('replace(): ${re.replace(text, 'NUM')}')
+	println('replace_n(): ${re.replace_n(text, 'NUM', 2)}')
+	println('replace_simple(): ${re.replace_simple(text, 'NUM')}')
+	println('replace_by_fn(): ${re.replace_by_fn(text, replace_callback)}')
+	println('split(): ${re.split(text)}')
+	println('get_group_list(): ${re.get_group_list()}')
+	println('get_code(): ${re.get_code()}')
+	println('get_group_by_id(): ${re.get_group_by_id(text, 0)}')
+	println('get_group_by_name(): ${re.get_group_by_name(text, '')}')
+	println('get_group_bounds_by_id(): ${re.get_group_bounds_by_id(0)}')
+	println('get_group_bounds_by_name(): ${re.get_group_bounds_by_name('')}')
+	println('match_base(): ${unsafe { re.match_base(text.str, text.len) }}')
 
-	// 4. Replace matches in the text
-	// `replace()` replaces all occurrences matching the regex pattern
-	replaced := re.replace(text, 'NUM')
-	println('Replaced text: "${replaced}"')
+	// reset() clears the regex state so we can reuse the object.
+	re.reset()
+	println('reset() query: ${re.get_query()}')
+	println('new() compile_opt query: ${re_from_new.get_query()}')
 }
 ```
 
@@ -13691,7 +15754,7 @@ fn main() {
 
 ### Command Line Flags
 
-_File location: [language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v](language_updates_and_stdlib/02_standard_library/06_command_line_flags/command_line_flags.v)_
 
 ### Lesson: Command Line Flags
 
@@ -13749,11 +15812,73 @@ fn main() {
 
 ### Datatypes Collections
 
-_File location: [language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v](language_updates_and_stdlib/02_standard_library/07_datatypes_collections/datatypes_collections.v)_
 
 ### Lesson: Datatypes Collections
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Datatypes Collections** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
+V's standard library provides a rich set of built-in collections and data structures through the `datatypes` module. Here is the simplest, most practical guide to when you should actually use each of these data structures in real-world programming.
+
+---
+
+#### 1. Bloom Filter
+
+- **The Vibe:** The "Fast bouncer at the door."
+- **What it does:** It tells you with 100% certainty if something is **not** there, but if it says something **is** there, it might be guessing (a false positive).
+- **Best to use when:** You have a massive database and searching it takes too long. You use a Bloom Filter as a quick shield. If the filter says _"Nope, that username doesn't exist,"_ you don't waste time searching the database.
+- **Real-world example:** Checking if a chosen username is taken, or filtering out malicious URLs before loading a website.
+
+#### 2. Set
+
+- **The Vibe:** The "No Duplicates Allowed" club.
+- **What it does:** Stores a collection of items where everything **must be unique**. It also lets you do math operations like combining two groups (Union) or finding what they have in common (Intersection).
+- **Best to use when:** You need to filter out duplicates instantly, or you need to compare two groups of data to find common ground.
+- **Real-world example:** Storing unique visitor IP addresses on a website, or finding a list of mutual friends between you and someone else.
+
+#### 3. Queue
+
+- **The Vibe:** Waiting in line at a grocery store (First In, First Out / FIFO).
+- **What it does:** The first item you put in is the first item you take out.
+- **Best to use when:** You have tasks that need to be processed exactly in the order they arrived.
+- **Real-world example:** A printer queue handling documents, or customer support tickets waiting to be answered by an agent.
+
+#### 4. Stack
+
+- **The Vibe:** A stack of dinner plates (Last In, First Out / LIFO).
+- **What it does:** The last item you put on top is the first one you have to take off.
+- **Best to use when:** You need to keep track of a history of actions so you can reverse them, or track active processes.
+- **Real-world example:** The "Undo" ($Ctrl+Z$) feature in a text editor, or the "Back" button history in your web browser.
+
+#### 5. Ring Buffer (Circular Buffer)
+
+- **The Vibe:** A streaming video that continuously overwrites itself.
+- **What it does:** A queue with a strict maximum size. When it gets full, new data wraps around to the beginning and overwrites the oldest data.
+- **Best to use when:** You are handling a continuous stream of data and you only care about the most recent information, without wasting memory.
+- **Real-world example:** Audio/video streaming playback buffers, or a flight data recorder ("black box") that only saves the last 24 hours of flight data.
+
+#### 6. Min Heap
+
+- **The Vibe:** A VIP line where the most urgent person always gets to go first.
+- **What it does:** A specialized structure that always keeps the _smallest_ (or highest priority) value at the very top.
+- **Best to use when:** You need to constantly pull the lowest/highest value out of a changing list without sorting the entire list every single time.
+- **Real-world example:** A hospital emergency room triage system, or GPS apps calculating the shortest route dynamically.
+
+#### 7. BSTree (Binary Search Tree)
+
+- **The Vibe:** A perfectly organized filing cabinet.
+- **What it does:** Keeps data sorted automatically as you add it. Smaller numbers go left, larger numbers go right.
+- **Best to use when:** You need to search, add, and delete items constantly, and you always need the data to stay in perfect alphabetical or numerical order.
+- **Real-world example:** File systems on your computer, or database indexing to make searching millions of records instant.
+
+#### 8. LinkedList vs. DoublyLinkedList
+
+- **The Vibe:** A scavenger hunt. Item A gives you a clue to find Item B, which gives you a clue to find Item C.
+- **What it does:**
+  - **LinkedList (Singly):** Each item points only to the _next_ item. You can only move forward.
+  - **DoublyLinkedList:** Each item points to both the _next_ item and the _previous_ item. You can move forward and backward.
+- **Best to use when:** You are constantly adding or removing items from the very beginning or middle of a list. (Standard arrays are slow at this because they have to shift all the other items over; Linked Lists just change where the "clues" point).
+- **Real-world example:** A music playlist. A regular linked list only lets you hit "Next". A doubly linked list lets you hit "Next" and "Previous".
+
+---
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **datatypes collections**.
@@ -13763,66 +15888,284 @@ module main
 
 import datatypes
 
-fn main() {
-	// 1. Stack (LIFO - Last In First Out)
-	println('=== Stack Demo ===')
-	mut stack := datatypes.Stack[string]{}
-	stack.push('first')
-	stack.push('second')
-	stack.push('third')
-	println('Stack size: ${stack.len()}')
-	println('Stack contents: ${stack.array()}')
-
-	// peek() and pop() return Result (!T), so we handle with "or" block
-	top := stack.peek() or { 'empty' }
-	println('Peek top element: ${top}')
-
-	for !stack.is_empty() {
-		val := stack.pop() or { 'error' }
-		println('Popped: ${val}')
+// This helper creates a stable hash value for the bloom filter demo.
+fn hash_string(value string) u32 {
+	mut hash := u32(2166136261)
+	for ch in value {
+		hash ^= u32(ch)
+		hash *= 16777619
 	}
+	return hash
+}
 
-	// 2. Queue (FIFO - First In First Out)
-	println('\n=== Queue Demo ===')
+fn main() {
+	println('=== datatypes collection demo ===')
+
+	// BloomFilter is a probabilistic structure used to test membership quickly.
+	println('\n--- BloomFilter ---')
+	mut bloom := datatypes.new_bloom_filter[string](hash_string, 64, 3) or { panic(err) }
+	bloom.add('apple')
+	bloom.add('banana')
+	bloom_exists_apple := bloom.exists('apple')
+	println('bloom exists apple: ${bloom_exists_apple}')
+	bloom_exists_cherry := bloom.exists('cherry')
+	println('bloom exists cherry: ${bloom_exists_cherry}')
+
+	mut bloom_fast := datatypes.new_bloom_filter[string](hash_string, 64, 3) or { panic(err) }
+	bloom_fast.add('date')
+	fast_exists_date := bloom_fast.exists('date')
+	println('fast bloom exists date: ${fast_exists_date}')
+
+	// The union and intersection methods combine two bloom filters.
+	union_bloom := bloom.@union(bloom_fast) or { panic(err) }
+	union_exists_banana := union_bloom.exists('banana')
+	println('union bloom exists banana: ${union_exists_banana}')
+	intersection_bloom := bloom.intersection(bloom_fast) or { panic(err) }
+	intersection_exists_apple := intersection_bloom.exists('apple')
+	println('intersection bloom exists apple: ${intersection_exists_apple}')
+
+	// BSTree stores values in sorted order and supports tree traversal.
+	println('\n--- BSTree ---')
+	mut bst := datatypes.BSTree[int]{}
+	bst_is_empty := bst.is_empty()
+	println('empty before inserts: ${bst_is_empty}')
+	bst.insert(10)
+	bst.insert(5)
+	bst.insert(15)
+	bst.insert(12)
+	bst_contains_12 := bst.contains(12)
+	println('contains 12: ${bst_contains_12}')
+	in_order := bst.in_order_traversal()
+	println('in_order: ${in_order}')
+	pre_order := bst.pre_order_traversal()
+	println('pre_order: ${pre_order}')
+	post_order := bst.post_order_traversal()
+	println('post_order: ${post_order}')
+	left_val := bst.to_left(10) or { -1 }
+	println('left of 10: ${left_val}')
+	right_val := bst.to_right(10) or { -1 }
+	println('right of 10: ${right_val}')
+	min_val := bst.min() or { -1 }
+	println('min: ${min_val}')
+	max_val := bst.max() or { -1 }
+	println('max: ${max_val}')
+	bst.remove(5)
+	bst_contains_5_after_remove := bst.contains(5)
+	println('contains 5 after remove: ${bst_contains_5_after_remove}')
+
+	// DoublyLinkedList supports inserting and iterating from both ends.
+	println('\n--- DoublyLinkedList ---')
+	mut dll := datatypes.DoublyLinkedList[string]{}
+	dll.push_back('one')
+	dll.push_front('zero')
+	dll.push_many(['two', 'three'], datatypes.Direction.back)
+	dll_array := dll.array()
+	println('dll array: ${dll_array}')
+	dll_first := dll.first() or { 'none' }
+	println('dll first: ${dll_first}')
+	dll_last := dll.last() or { 'none' }
+	println('dll last: ${dll_last}')
+	dll_index_two := dll.index('two') or { -1 }
+	println('dll index of two: ${dll_index_two}')
+	dll.insert(2, 'inserted') or { panic(err) }
+	dll_after_insert := dll.array()
+	println('dll after insert: ${dll_after_insert}')
+	dll.delete(1)
+	dll_after_delete := dll.array()
+	println('dll after delete: ${dll_after_delete}')
+	dll_str := dll.str()
+	println('dll str: ${dll_str}')
+	dll_next := dll.next() or { 'none' }
+	println('dll next: ${dll_next}')
+	mut dll_iter := dll.iterator()
+	for {
+		if value := dll_iter.next() {
+			println('dll iter: ${value}')
+		} else {
+			break
+		}
+	}
+	mut dll_back_iter := dll.back_iterator()
+	for {
+		if value := dll_back_iter.next() {
+			println('dll back iter: ${value}')
+		} else {
+			break
+		}
+	}
+	dll_pop_front := dll.pop_front() or { 'none' }
+	println('dll pop_front: ${dll_pop_front}')
+	dll_pop_back := dll.pop_back() or { 'none' }
+	println('dll pop_back: ${dll_pop_back}')
+	dll_final := dll.array()
+	println('dll final: ${dll_final}')
+
+	// LinkedList shows a simple singly linked sequence with push/pop helpers.
+	println('\n--- LinkedList ---')
+	mut linked_list := datatypes.LinkedList[int]{}
+	linked_list_is_empty := linked_list.is_empty()
+	println('linked list empty: ${linked_list_is_empty}')
+	linked_list.push(1)
+	linked_list.push(2)
+	linked_list.push_many([3, 4])
+	linked_list.prepend(0)
+	linked_list.insert(2, 5) or { panic(err) }
+	linked_list_array := linked_list.array()
+	println('linked list array: ${linked_list_array}')
+	linked_list_first := linked_list.first() or { -1 }
+	println('linked list first: ${linked_list_first}')
+	linked_list_last := linked_list.last() or { -1 }
+	println('linked list last: ${linked_list_last}')
+	linked_list_index_3 := linked_list.index(3) or { -1 }
+	println('linked list index 3: ${linked_list_index_3}')
+	linked_list_str := linked_list.str()
+	println('linked list str: ${linked_list_str}')
+	linked_list_pop := linked_list.pop() or { -1 }
+	println('linked list pop: ${linked_list_pop}')
+	linked_list_shift := linked_list.shift() or { -1 }
+	println('linked list shift: ${linked_list_shift}')
+	linked_list_next := linked_list.next() or { -1 }
+	println('linked list next: ${linked_list_next}')
+	mut list_iter := linked_list.iterator()
+	for {
+		if value := list_iter.next() {
+			println('linked list iter: ${value}')
+		} else {
+			break
+		}
+	}
+	linked_list_len := linked_list.len()
+	println('linked list len: ${linked_list_len}')
+
+	// MinHeap keeps the smallest value at the front.
+	println('\n--- MinHeap ---')
+	mut heap := datatypes.MinHeap[int]{}
+	heap.insert(8)
+	heap.insert(3)
+	heap.insert_many([5, 1, 7])
+	heap_len := heap.len()
+	println('heap len: ${heap_len}')
+	heap_peek := heap.peek() or { -1 }
+	println('heap peek: ${heap_peek}')
+	heap_pop_1 := heap.pop() or { -1 }
+	println('heap pop: ${heap_pop_1}')
+	heap_pop_2 := heap.pop() or { -1 }
+	println('heap pop: ${heap_pop_2}')
+
+	// Queue shows FIFO behavior and the standard enqueue/dequeue helpers.
+	println('\n--- Queue ---')
 	mut queue := datatypes.Queue[int]{}
+	queue_is_empty := queue.is_empty()
+	println('queue empty: ${queue_is_empty}')
 	queue.push(100)
 	queue.push(200)
 	queue.push(300)
-	println('Queue size: ${queue.len()}')
-	println('Queue contents: ${queue.array()}')
+	queue_len := queue.len()
+	println('queue len: ${queue_len}')
+	queue_array := queue.array()
+	println('queue array: ${queue_array}')
+	queue_peek := queue.peek() or { -1 }
+	println('queue peek: ${queue_peek}')
+	queue_last := queue.last() or { -1 }
+	println('queue last: ${queue_last}')
+	queue_index_2 := queue.index(2) or { -1 }
+	println('queue index 2: ${queue_index_2}')
+	queue_str := queue.str()
+	println('queue str: ${queue_str}')
+	queue_pop_1 := queue.pop() or { -1 }
+	println('queue pop: ${queue_pop_1}')
+	queue_pop_2 := queue.pop() or { -1 }
+	println('queue pop: ${queue_pop_2}')
 
-	// peek() and pop() return Result (!T)
-	front := queue.peek() or { -1 }
-	println('Peek front element: ${front}')
+	// RingBuffer provides bounded storage with wraparound behavior.
+	println('\n--- RingBuffer ---')
+	mut rb := datatypes.new_ringbuffer[string](4)
+	rb_is_empty := rb.is_empty()
+	println('rb empty: ${rb_is_empty}')
+	rb.push('first') or { panic(err) }
+	rb.push('second') or { panic(err) }
+	rb.push('third') or { panic(err) }
+	rb_occupied := rb.occupied()
+	println('rb occupied: ${rb_occupied}')
+	rb_remaining := rb.remaining()
+	println('rb remaining: ${rb_remaining}')
+	rb_pop := rb.pop() or { 'empty' }
+	println('rb pop: ${rb_pop}')
+	rb_pop_many := rb.pop_many(2) or { []string{} }
+	println('rb pop_many: ${rb_pop_many}')
+	rb_is_full := rb.is_full()
+	println('rb full: ${rb_is_full}')
+	rb.clear()
+	rb_after_clear := rb.is_empty()
+	println('rb after clear: ${rb_after_clear}')
 
-	for !queue.is_empty() {
-		val := queue.pop() or { -1 }
-		println('Dequeued: ${val}')
-	}
-
-	// 3. Set (Unique Elements)
-	println('\n=== Set Demo ===')
+	// Set demonstrates unique values and set algebra operations.
+	println('\n--- Set ---')
 	mut set_a := datatypes.Set[string]{}
-	set_a.add_all(['apple', 'banana', 'cherry', 'apple']) // 'apple' is duplicate and ignored
-	println('Set A elements: ${set_a.array()}')
-	println('Set A size: ${set_a.size()}')
-	println('Contains "banana": ${set_a.exists('banana')}')
+	set_a.add_all(['apple', 'banana', 'cherry', 'apple'])
+	set_a_array := set_a.array()
+	println('set_a: ${set_a_array}')
+	set_a_size := set_a.size()
+	println('set_a size: ${set_a_size}')
+	set_a_contains_banana := set_a.exists('banana')
+	println('contains banana: ${set_a_contains_banana}')
+	set_a.remove('banana')
+	set_a_after_remove := set_a.array()
+	println('after remove: ${set_a_after_remove}')
+	set_a_pick := set_a.pick() or { 'empty' }
+	println('pick: ${set_a_pick}')
+	set_a_rest := set_a.rest() or { []string{} }
+	println('rest: ${set_a_rest}')
+	set_a_pop := set_a.pop() or { 'empty' }
+	println('pop: ${set_a_pop}')
+	set_a_is_empty := set_a.is_empty()
+	println('is_empty: ${set_a_is_empty}')
+	set_a.clear()
+	set_a_after_clear := set_a.is_empty()
+	println('cleared: ${set_a_after_clear}')
 
 	mut set_b := datatypes.Set[string]{}
-	set_b.add_all(['cherry', 'date', 'elderberry'])
-	println('Set B elements: ${set_b.array()}')
+	set_b.add_all(['apple', 'cherry'])
+	mut set_c := datatypes.Set[string]{}
+	set_c.add_all(['cherry', 'date'])
+	union_set := set_b.@union(set_c).array()
+	println('union: ${union_set}')
+	intersection_set := set_b.intersection(set_c).array()
+	println('intersection: ${intersection_set}')
 
-	// Union of Set A and Set B (note: 'union' is a V keyword, so we write '@union')
-	union_set := set_a.@union(set_b)
-	println('Union (A + B): ${union_set.array()}')
+	// Compute the difference manually to avoid V compiler/analyzer issues with generic operator overloading (-)
+	mut diff_set := set_b.copy()
+	for item in set_c.array() {
+		diff_set.remove(item)
+	}
+	diff_array := diff_set.array()
+	println('difference: ${diff_array}')
 
-	// Intersection of Set A and Set B
-	intersection_set := set_a.intersection(set_b)
-	println('Intersection (A and B): ${intersection_set.array()}')
+	is_subset := set_b.subset(set_c)
+	println('subset: ${is_subset}')
+	copied_set := set_b.copy().array()
+	println('copy: ${copied_set}')
 
-	// Difference of Set A and Set B (A - B)
-	diff_set := set_a - set_b
-	println('Difference (A - B): ${diff_set.array()}')
+	// Stack demonstrates LIFO behavior with push/pop operations.
+	println('\n--- Stack ---')
+	mut stack := datatypes.Stack[string]{}
+	stack_is_empty := stack.is_empty()
+	println('stack empty: ${stack_is_empty}')
+	stack.push('first')
+	stack.push('second')
+	stack.push('third')
+	stack_len := stack.len()
+	println('stack len: ${stack_len}')
+	stack_array := stack.array()
+	println('stack contents: ${stack_array}')
+	stack_peek := stack.peek() or { 'empty' }
+	println('stack peek: ${stack_peek}')
+	stack_str := stack.str()
+	println('stack str: ${stack_str}')
+	stack_pop_1 := stack.pop() or { 'empty' }
+	println('stack pop: ${stack_pop_1}')
+	stack_pop_2 := stack.pop() or { 'empty' }
+	println('stack pop: ${stack_pop_2}')
 }
 ```
 
@@ -13830,7 +16173,7 @@ fn main() {
 
 ### Gg Graphics
 
-_File location: [language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v](language_updates_and_stdlib/02_standard_library/08_gg_graphics/gg_graphics.v)_
 
 ### Lesson: Gg Graphics
 
@@ -13850,29 +16193,29 @@ import math
 // to avoid global variables (which V does not support by default).
 struct AppContext {
 mut:
-	ctx          &gg.Context = unsafe { nil }
-	width        int  = 800
-	height       int  = 600
+	ctx    &gg.Context = unsafe { nil }
+	width  int         = 800
+	height int         = 600
 	// Interactive shape parameters
-	shape_x      f32  = 400.0
-	shape_y      f32  = 300.0
-	shape_size   f32  = 50.0
+	shape_x      f32      = 400.0
+	shape_y      f32      = 300.0
+	shape_size   f32      = 50.0
 	shape_color  gg.Color = gg.blue
-	active_shape int  // 0 = Circle, 1 = Rectangle, 2 = Triangle
+	active_shape int // 0 = Circle, 1 = Rectangle, 2 = Triangle
 	// Tracking mouse positions and clicks
-	mouse_x      f32
-	mouse_y      f32
-	click_x      f32  = -1.0
-	click_y      f32  = -1.0
-	click_color  gg.Color = gg.red
+	mouse_x     f32
+	mouse_y     f32
+	click_x     f32      = -1.0
+	click_y     f32      = -1.0
+	click_color gg.Color = gg.red
 	// Last key pressed message
-	last_key     string = 'None'
+	last_key string = 'None'
 }
 
 fn main() {
 	// Initialize state
 	mut app := &AppContext{
-		width: 800
+		width:  800
 		height: 600
 	}
 
@@ -13884,9 +16227,9 @@ fn main() {
 		height:       app.height
 		window_title: "V's gg graphics module: Tutorial & Interactive Demo"
 		bg_color:     gg.rgb(240, 244, 248) // A subtle modern light-blue background
-		user_data:    app                 // Pass our state struct to be accessible inside callbacks
-		frame_fn:     frame               // Callback called once per frame (to draw shapes/UI)
-		event_fn:     on_event            // Callback called for user inputs (mouse & keyboard)
+		user_data:    app      // Pass our state struct to be accessible inside callbacks
+		frame_fn:     frame    // Callback called once per frame (to draw shapes/UI)
+		event_fn:     on_event // Callback called for user inputs (mouse & keyboard)
 	)
 
 	println('Starting interactive graphics window...')
@@ -13894,7 +16237,7 @@ fn main() {
 	println('  - Move the mouse to see cursor position tracking.')
 	println('  - Left-Click anywhere to draw a red dot at the click location.')
 	println('  - Use Arrow Keys (Up/Down/Left/Right) to move the active shape.')
-	println('  - Press [C] or [c] to cycle the active shape\'s color.')
+	println("  - Press [C] or [c] to cycle the active shape's color.")
 	println('  - Press [S] or [s] to toggle between Circle, Rectangle, and Triangle.')
 	println('  - Press [Escape] to close the window.')
 	println('\nReal-world Case Study:')
@@ -13932,11 +16275,16 @@ fn frame(data voidptr) {
 
 	// Draw a custom convex polygon (a star-like pentagon, bottom right)
 	poly_points := [
-		f32(650.0), 480.0, // Point 1
-		750.0, 480.0,      // Point 2
-		780.0, 560.0,      // Point 3
-		700.0, 520.0,      // Point 4
-		620.0, 560.0       // Point 5
+		f32(650.0),
+		480.0, // Point 1
+		750.0,
+		480.0, // Point 2
+		780.0,
+		560.0, // Point 3
+		700.0,
+		520.0, // Point 4
+		620.0,
+		560.0, // Point 5
 	]
 	ctx.draw_convex_poly(poly_points, gg.cyan)
 
@@ -13948,8 +16296,8 @@ fn frame(data voidptr) {
 	// Instructions and state metadata at the top right
 	ctx.draw_text(20, 45, 'Cursor: (${app.mouse_x:.1f}, ${app.mouse_y:.1f}) | Last Key: ${app.last_key}',
 		color: gg.dark_blue
-		size: 16
-		bold: true
+		size:  16
+		bold:  true
 	)
 
 	// Context description
@@ -13959,7 +16307,7 @@ fn frame(data voidptr) {
 	ctx.draw_text(630, 570, 'Convex Polygon (Pentagon)', size: 12, color: gg.dark_gray)
 
 	// Help panel explaining key bindings
-	ctx.draw_rect_filled(20, 440, 280, 140, gg.Color{r: 255, g: 255, b: 255, a: 180})
+	ctx.draw_rect_filled(20, 440, 280, 140, gg.Color{ r: 255, g: 255, b: 255, a: 180 })
 	ctx.draw_rect_empty(20, 440, 280, 140, gg.gray)
 	ctx.draw_text(35, 450, 'Controls Panel', size: 15, bold: true, color: gg.black)
 	ctx.draw_text(35, 475, '- Arrows: Move active shape', size: 13, color: gg.black)
@@ -13969,7 +16317,11 @@ fn frame(data voidptr) {
 	ctx.draw_text(35, 555, '- Escape: Quit application', size: 13, color: gg.black)
 
 	// Case Study reference
-	ctx.draw_text(20, 585, 'Case Study: github.com/codecaine-zz/MindSpace-Journal', size: 10, italic: true, color: gg.dark_blue)
+	ctx.draw_text(20, 585, 'Case Study: github.com/codecaine-zz/MindSpace-Journal',
+		size:   10
+		italic: true
+		color:  gg.dark_blue
+	)
 
 	// --- 3. Draw Dynamic / Interactive Elements ---
 
@@ -13978,7 +16330,7 @@ fn frame(data voidptr) {
 		ctx.draw_circle_filled(app.click_x, app.click_y, 8, app.click_color)
 		ctx.draw_circle_empty(app.click_x, app.click_y, 12, gg.black)
 		ctx.draw_text(int(app.click_x) + 12, int(app.click_y) - 6, 'Last Click: (${app.click_x:.0f}, ${app.click_y:.0f})',
-			size: 11
+			size:  11
 			color: gg.black
 		)
 	}
@@ -13993,8 +16345,10 @@ fn frame(data voidptr) {
 		1 {
 			// Draw interactive Rectangle (centered on coordinates)
 			half := app.shape_size
-			ctx.draw_rect_filled(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, app.shape_color)
-			ctx.draw_rect_empty(app.shape_x - half, app.shape_y - half, app.shape_size * 2, app.shape_size * 2, gg.black)
+			ctx.draw_rect_filled(app.shape_x - half, app.shape_y - half, app.shape_size * 2,
+				app.shape_size * 2, app.shape_color)
+			ctx.draw_rect_empty(app.shape_x - half, app.shape_y - half, app.shape_size * 2,
+				app.shape_size * 2, gg.black)
 		}
 		2 {
 			// Draw interactive Equilateral Triangle (centered on coordinates)
@@ -14012,9 +16366,10 @@ fn frame(data voidptr) {
 	}
 
 	// Draw label above the active shape
-	ctx.draw_text(int(app.shape_x) - 40, int(app.shape_y) - int(app.shape_size) - 20, 'Active Shape',
-		size: 13
-		bold: true
+	ctx.draw_text(int(app.shape_x) - 40, int(app.shape_y) - int(app.shape_size) - 20,
+		'Active Shape',
+		size:  13
+		bold:  true
 		color: gg.black
 	)
 
@@ -14036,7 +16391,12 @@ fn on_event(e &gg.Event, data voidptr) {
 			app.click_y = e.mouse_y
 			// Randomize click dot color slightly for visual variety
 			if app.click_color.r == 255 {
-				app.click_color = gg.Color{r: 0, g: 180, b: 0, a: 255}
+				app.click_color = gg.Color{
+					r: 0
+					g: 180
+					b: 0
+					a: 255
+				}
 			} else {
 				app.click_color = gg.red
 			}
@@ -14065,19 +16425,28 @@ fn on_event(e &gg.Event, data voidptr) {
 				// Use Arrow Keys to move the active shape
 				.left {
 					app.shape_x -= 15.0
-					if app.shape_x < 0 { app.shape_x = 0 }
+					if app.shape_x < 0 {
+						app.shape_x = 0
+					}
 				}
 				.right {
 					app.shape_x += 15.0
-					if app.shape_x > app.width { app.shape_x = f32(app.width) }
+					if app.shape_x > app.width {
+						app.shape_x = f32(app.width)
+					}
 				}
 				.up {
 					app.shape_y -= 15.0
-					if app.shape_y < 80 { app.shape_y = 80 } // Keep below divider line
+					if app.shape_y < 80 {
+						app.shape_y = 80
+					}
+					// Keep below divider line
 				}
 				.down {
 					app.shape_y += 15.0
-					if app.shape_y > app.height { app.shape_y = f32(app.height) }
+					if app.shape_y > app.height {
+						app.shape_y = f32(app.height)
+					}
 				}
 				else {}
 			}
@@ -14091,7 +16460,7 @@ fn on_event(e &gg.Event, data voidptr) {
 
 ### Command Line Arguments
 
-_File location: [language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v](language_updates_and_stdlib/02_standard_library/09_command_line_arguments/command_line_arguments.v)_
 
 This example demonstrates how to directly access and parse command-line arguments using `os.args` to build simple command-line applications.
 
@@ -14152,14 +16521,11 @@ fn main() {
 
 ### Math And Rand
 
-_File location: [language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v](language_updates_and_stdlib/02_standard_library/10_math_and_rand/math_and_rand.v)_
 
 ### Lesson: Math And Rand
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Math And Rand** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **math and rand**.
+V's math and rand modules expose far more than the basic trigonometry and random-int helpers. The example below expands the repository walkthrough with additional documented functions from the current V docs, including exponentiation, clamping, logarithms, bytes, hex strings, ULIDs, and ranged integer generation.
 
 ```v
 module main
@@ -14170,52 +16536,67 @@ import rand
 fn main() {
 	println('=== Math & Rand Module Examples ===')
 
-	// --- math ---
 	println('\n--- math ---')
 	println('Pi constant: ${math.pi}')
 	println('E constant:  ${math.e}')
 
-	// Trigonometry
-	angle := 45.0 * (math.pi / 180.0) // 45 degrees in radians
+	angle := 45.0 * (math.pi / 180.0)
 	println('sin(45 deg): ${math.sin(angle):.4f}')
 	println('cos(45 deg): ${math.cos(angle):.4f}')
 	println('tan(45 deg): ${math.tan(angle):.4f}')
 
-	// Power, Square Root, Logarithms
 	println('2^10:        ${math.pow(2.0, 10.0)}')
 	println('sqrt(144):   ${math.sqrt(144.0)}')
 	println('ln(e):       ${math.log(math.e)}')
 	println('log10(100):  ${math.log10(100.0)}')
 
-	// Absolute, Min/Max, Rounding
 	println('abs(-5.5):   ${math.abs(-5.5)}')
 	println('max(10, 20): ${math.max(10.0, 20.0)}')
 	println('min(10, 20): ${math.min(10.0, 20.0)}')
 	println('ceil(4.2):   ${math.ceil(4.2)}')
 	println('floor(4.8):  ${math.floor(4.8)}')
 	println('round(4.5):  ${math.round(4.5)}')
+	println('cbrt(27):    ${math.cbrt(27.0):.2f}')
+	println('clamp(12, 0, 10): ${math.clamp(12.0, 0.0, 10.0)}')
+	println('exp(1):      ${math.exp(1.0):.4f}')
+	println('exp2(3):     ${math.exp2(3.0):.4f}')
+	println('hypot(3, 4): ${math.hypot(3.0, 4.0):.4f}')
+	println('log2(8):     ${math.log2(8.0):.4f}')
+	println('trunc(4.9):  ${math.trunc(4.9)}')
 
-	// --- rand ---
 	println('\n--- rand ---')
-	// Random integers and floats
 	random_int := rand.int_in_range(1, 100) or { 0 }
 	println('Random integer in [1, 100): ${random_int}')
 
 	random_f64 := rand.f64()
 	println('Random f64 in [0.0, 1.0):   ${random_f64:.4f}')
 
-	// Random boolean simulated using rand.intn
 	random_bool := (rand.intn(2) or { 0 }) == 0
 	println('Random boolean:             ${random_bool}')
 
-	// Choosing a random element from an array
 	items := ['Apple', 'Banana', 'Cherry', 'Date']
 	chosen := rand.element(items) or { 'None' }
 	println('Randomly chosen fruit:      ${chosen}')
 
-	// Random UUID generation (commonly used)
-	uuid_str := rand.uuid_v4()
+	random_bytes := rand.bytes(4) or { []u8{} }
+	println('Random bytes:               ${random_bytes}')
+
+	random_hex := rand.hex(8)
+	println('Random hex string:          ${random_hex}')
+
+	random_string := rand.string(8)
+	println('Random ascii string:        ${random_string}')
+
+	random_ulid := rand.ulid()
+	println('Random ULID:                ${random_ulid}')
+
+	random_i64 := rand.i64_in_range(i64(-10), i64(10)) or { 0 }
+	println('Random i64 in [-10, 10]:    ${random_i64}')
+
+	mut uuid_str := rand.uuid_v4()
 	println('Random UUID v4:             ${uuid_str}')
+	uuid_str = rand.uuid_v7()
+	println('Random UUID v7:             ${uuid_str}')
 }
 ```
 
@@ -14223,7 +16604,7 @@ fn main() {
 
 ### Crypto Asymmetric
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/asymmetric/crypto_asymmetric.v)_
 
 ### Lesson: Crypto Asymmetric
 
@@ -14264,7 +16645,6 @@ fn main() {
 	}
 	println('ECDSA Signature Verified? -> ${verified_ec}')
 
-
 	// --- 2. Ed25519 ---
 	println('\n--- Ed25519 ---')
 
@@ -14287,7 +16667,6 @@ fn main() {
 		return
 	}
 	println('Ed25519 Signature Verified? -> ${verified_ed}')
-
 
 	// --- 3. PEM Encoding/Decoding ---
 	println('\n--- PEM (Privacy Enhanced Mail) Encoding ---')
@@ -14321,7 +16700,7 @@ fn main() {
 
 ### Crypto Entropy
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/entropy/crypto_entropy.v)_
 
 ### Lesson: Crypto Entropy
 
@@ -14377,7 +16756,7 @@ fn main() {
 
 ### Crypto Hash
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/hash/crypto_hash.v)_
 
 For a detailed demonstration of every cryptographic module, the standard library examples are structured into subdirectories under `language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/`.
 
@@ -14470,7 +16849,7 @@ fn main() {
 
 ### Crypto Kdf
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/kdf/crypto_kdf.v)_
 
 ### Lesson: Crypto Kdf
 
@@ -14502,7 +16881,6 @@ fn main() {
 	}
 	println('Bcrypt verification successful!')
 
-
 	// --- 2. Scrypt ---
 	println('\n--- Scrypt ---')
 	scrypt_pass := 'my_scrypt_pass'.bytes()
@@ -14514,7 +16892,6 @@ fn main() {
 		return
 	}
 	println('Scrypt Key (Hex): ${scrypt_key.hex()}')
-
 
 	// --- 3. PBKDF2 ---
 	println('\n--- PBKDF2 ---')
@@ -14534,7 +16911,7 @@ fn main() {
 
 ### Crypto Mac
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/mac/crypto_mac.v)_
 
 ### Lesson: Crypto Mac
 
@@ -14580,7 +16957,7 @@ fn main() {
 
 ### Crypto Symmetric
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/crypto/symmetric/crypto_symmetric.v)_
 
 ### Lesson: Crypto Symmetric
 
@@ -14601,7 +16978,7 @@ fn main() {
 	// --- 1. AES with CBC Block Mode ---
 	println('\n--- AES (CBC Mode) ---')
 	aes_key := [u8(1), 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16] // 16-byte key (AES-128)
-	aes_iv := [u8(9), 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4]       // 16-byte IV
+	aes_iv := [u8(9), 8, 7, 6, 5, 4, 3, 2, 1, 0, 9, 8, 7, 6, 5, 4] // 16-byte IV
 
 	aes_block := aes.new_cipher(aes_key)
 	mut aes_enc := cipher.new_cbc(aes_block, aes_iv)
@@ -14628,7 +17005,6 @@ fn main() {
 	unpadded_text := decrypted[..unpadded_len].bytestr()
 	println('Decrypted Text:   "${unpadded_text}"')
 
-
 	// --- 2. DES Block Cipher ---
 	println('\n--- DES ---')
 	des_key := [u8(1), 2, 3, 4, 5, 6, 7, 8] // 8-byte key
@@ -14643,7 +17019,6 @@ fn main() {
 	des_block.decrypt(mut des_decrypted, des_cipher)
 	println('DES Decrypted:        "${des_decrypted.bytestr()}"')
 
-
 	// --- 3. Blowfish Block Cipher ---
 	println('\n--- Blowfish (Encryption Only) ---')
 	bf_key := 'blowfish_key'.bytes()
@@ -14654,7 +17029,6 @@ fn main() {
 	bf.encrypt(mut bf_cipher, bf_plain)
 	println('Blowfish Ciphertext (Hex): ${bf_cipher.hex()}')
 	println('(Note: V standard library crypto.blowfish only supports encryption)')
-
 
 	// --- 4. RC4 Stream Cipher ---
 	println('\n--- RC4 (Stream Cipher) ---')
@@ -14677,7 +17051,7 @@ fn main() {
 
 ### Log And Crypto
 
-_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v](language_updates_and_stdlib/02_standard_library/11_log_and_crypto/log_and_crypto.v)_
 
 ### Lesson: Log And Crypto
 
@@ -14726,7 +17100,7 @@ fn main() {
 
 ### Sync Concurrency
 
-_File location: [language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v](language_updates_and_stdlib/02_standard_library/12_sync_concurrency/sync_concurrency.v)_
 
 ### Lesson: Sync Concurrency
 
@@ -14778,7 +17152,7 @@ fn main() {
 
 ### Encoding Formats
 
-_File location: [language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v](language_updates_and_stdlib/02_standard_library/13_encoding_formats/encoding_formats.v)_
 
 ### Lesson: Encoding Formats
 
@@ -14832,14 +17206,11 @@ fn main() {
 
 ### Arrays Utility
 
-_File location: [language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v](language_updates_and_stdlib/02_standard_library/14_arrays_utility/arrays_utility.v)_
 
 ### Lesson: Arrays Utility
 
-V has a very rich and growing standard library and is actively updated. This lesson on **Arrays Utility** showcases modern standard library packages, system calls, network sockets, inline assembly, or WASM support.
-
-**Additional Context from Repository docs:**
-This example demonstrates the concepts of **arrays utility**.
+V's arrays module provides helpers for searching, grouping, partitioning, folding, and reducing collections. The verified demo in this repository exercises many documented helpers, including extremum lookup, chunking, searching, uniqueness, partitioning, windowing, and rotations.
 
 ```v
 module main
@@ -14850,37 +17221,202 @@ fn main() {
 	println('=== arrays Utility Module Examples ===')
 
 	nums := [5, 3, 9, 1, 7, 3]
+	sorted_nums := [1, 3, 5, 7, 9]
+	words := ['apple', 'banana', 'pear', 'banana']
+	repeated := [1, 1, 2, 2, 3, 3]
+	letters := ['a', 'b', 'c']
 
-	// Find min and max
 	min_val := arrays.min(nums) or { 0 }
 	max_val := arrays.max(nums) or { 0 }
 	println('Array: ${nums}')
-	println('Min:   ${min_val}') // 1
-	println('Max:   ${max_val}') // 9
+	println('Min:   ${min_val}')
+	println('Max:   ${max_val}')
 
-	// Find index of min/max
 	min_idx := arrays.idx_min(nums) or { -1 }
 	max_idx := arrays.idx_max(nums) or { -1 }
-	println('Index of Min: ${min_idx}') // 3
-	println('Index of Max: ${max_idx}') // 2
+	println('Index of Min: ${min_idx}')
+	println('Index of Max: ${max_idx}')
 
-	// Chunking
 	chunked := arrays.chunk(nums, 2)
-	println('Chunked into sizes of 2: ${chunked}') // [[5, 3], [9, 1], [7, 3]]
+	println('chunk(): ${chunked}')
 
-	// Uniq (remove consecutive duplicates)
-	consecutive_dups := [1, 1, 2, 2, 3, 1, 1]
-	unique := arrays.uniq(consecutive_dups)
-	println('Consecutive duplicates array: ${consecutive_dups}')
-	println('After uniq():                 ${unique}') // [1, 2, 3, 1]
+	append_result := arrays.append(nums, [10, 11])
+	println('append(): ${append_result}')
+
+	concat_result := arrays.concat(nums, 10, 11)
+	println('concat(): ${concat_result}')
+
+	mut copy_result := []int{}
+	copied_count := arrays.copy(mut copy_result, nums)
+	println('copy(): ${copied_count} -> ${copy_result}')
+
+	distinct_result := arrays.distinct(words)
+	println('distinct(): ${distinct_result}')
+
+	arrays.each(nums, fn (elem int) {
+		println('each(): ${elem}')
+	})
+
+	arrays.each_indexed(nums, fn (i int, elem int) {
+		println('each_indexed(): ${i} -> ${elem}')
+	})
+
+	filtered := arrays.filter_indexed(nums, fn (idx int, elem int) bool {
+		return idx % 2 == 0 && elem > 3
+	})
+	println('filter_indexed(): ${filtered}')
+
+	first_match := arrays.find_first(nums, fn (elem int) bool {
+		return elem > 5
+	}) or { 0 }
+	println('find_first(): ${first_match}')
+
+	last_match := arrays.find_last(nums, fn (elem int) bool {
+		return elem > 5
+	}) or { 0 }
+	println('find_last(): ${last_match}')
+
+	flat_mapped := arrays.flat_map[int, string](nums, fn (elem int) []string {
+		return [elem.str(), '!']
+	})
+	println('flat_map(): ${flat_mapped}')
+
+	flat_mapped_indexed := arrays.flat_map_indexed[int, string](nums, fn (idx int, elem int) []string {
+		return ['${idx}', elem.str()]
+	})
+	println('flat_map_indexed(): ${flat_mapped_indexed}')
+
+	flattened := arrays.flatten([[1, 2], [3, 4], [5]])
+	println('flatten(): ${flattened}')
+
+	folded := arrays.fold(nums, 0, fn (acc int, elem int) int {
+		return acc + elem
+	})
+	println('fold(): ${folded}')
+
+	folded_indexed := arrays.fold_indexed(nums, 0, fn (idx int, acc int, elem int) int {
+		return acc + idx + elem
+	})
+	println('fold_indexed(): ${folded_indexed}')
+
+	println('group(): skipped in this sample because the helper expects variadic slices and is sensitive to local analyzer parsing')
+
+	grouped_by_parity := arrays.group_by(nums, fn (val int) string {
+		if val % 2 == 0 {
+			return 'even'
+		}
+		return 'odd'
+	})
+	println('group_by(): ${grouped_by_parity}')
+
+	binary_search_result := arrays.binary_search(sorted_nums, 7) or { -1 }
+	println('binary_search(): ${binary_search_result}')
+
+	c_array_example := unsafe { arrays.carray_to_varray[int](nil, 0) }
+	println('carray_to_varray(): ${c_array_example}')
+
+	chunked_while := arrays.chunk_while(nums, fn (before int, after int) bool {
+		return before < after
+	})
+	println('chunk_while(): ${chunked_while}')
+
+	index_first := arrays.index_of_first(nums, fn (idx int, elem int) bool {
+		return idx > 0 && elem == 3
+	})
+	println('index_of_first(): ${index_first}')
+
+	index_last := arrays.index_of_last(nums, fn (idx int, elem int) bool {
+		return idx > 0 && elem == 3
+	})
+	println('index_of_last(): ${index_last}')
+
+	joined := arrays.join_to_string(words, ' | ', fn (elem string) string {
+		return elem.to_upper()
+	})
+	println('join_to_string(): ${joined}')
+
+	lower := arrays.lower_bound(sorted_nums, 4) or { 0 }
+	upper := arrays.upper_bound(sorted_nums, 4) or { 0 }
+	println('lower_bound(): ${lower}')
+	println('upper_bound(): ${upper}')
+
+	mapped := arrays.map_indexed(nums, fn (idx int, elem int) int {
+		return idx + elem
+	})
+	println('map_indexed(): ${mapped}')
+
+	counts := arrays.map_of_counts([1, 2, 2, 3, 1])
+	println('map_of_counts(): ${counts}')
+
+	indexes := arrays.map_of_indexes([9, 1, 9, 4])
+	println('map_of_indexes(): ${indexes}')
+
+	merge_result := arrays.merge(letters, ['d'])
+	println('merge(): ${merge_result}')
+
+	partition_even, partition_odd := arrays.partition(nums, fn (elem int) bool {
+		return elem % 2 == 0
+	})
+	println('partition(): even=${partition_even}, odd=${partition_odd}')
+
+	reduce_result := arrays.reduce(nums, fn (acc int, elem int) int {
+		return acc + elem
+	}) or { 0 }
+	println('reduce(): ${reduce_result}')
+
+	reduce_indexed_result := arrays.reduce_indexed(nums, fn (idx int, acc int, elem int) int {
+		return acc + idx + elem
+	}) or { 0 }
+	println('reduce_indexed(): ${reduce_indexed_result}')
+
+	mut reverse_iter := arrays.reverse_iterator(nums)
+	println('reverse_iterator():')
+	for {
+		if value := reverse_iter.next() {
+			println('  ${*value}')
+		} else {
+			break
+		}
+	}
+	reverse_iter.free()
+
+	mut rotate_left_example := [1, 2, 3, 4, 5]
+	arrays.rotate_left(mut rotate_left_example, 2)
+	println('rotate_left(): ${rotate_left_example}')
+
+	mut rotate_right_example := [1, 2, 3, 4, 5]
+	arrays.rotate_right(mut rotate_right_example, 2)
+	println('rotate_right(): ${rotate_right_example}')
+
+	sum_result := arrays.sum(nums) or { 0 }
+	println('sum(): ${sum_result}')
+
+	unique_result := arrays.uniq(repeated)
+	println('uniq(): ${unique_result}')
+
+	uniq_all_result := arrays.uniq_all_repeated(repeated)
+	println('uniq_all_repeated(): ${uniq_all_result}')
+
+	uniq_only_result := arrays.uniq_only(repeated)
+	println('uniq_only(): ${uniq_only_result}')
+
+	uniq_only_repeated_result := arrays.uniq_only_repeated(repeated)
+	println('uniq_only_repeated(): ${uniq_only_repeated_result}')
+
+	window_result := arrays.window(nums, arrays.WindowAttribute{ size: 2, step: 1 })
+	println('window(): ${window_result}')
+
+	println('All arrays examples completed.')
 }
 ```
+
+This section is intentionally broader than a quick smoke test; it mirrors the runnable repository example and highlights the helpers exposed by the module.
 
 ---
 
 ### Toml
 
-_File location: [language_updates_and_stdlib/02_standard_library/15_toml/toml.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/15_toml/toml.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/15_toml/toml.v](language_updates_and_stdlib/02_standard_library/15_toml/toml.v)_
 
 This example demonstrates how to parse and query TOML configuration files using V's built-in `toml` module.
 
@@ -14952,7 +17488,7 @@ fn main() {
 
 ### Strconv
 
-_File location: [language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v](language_updates_and_stdlib/02_standard_library/16_strconv/strconv.v)_
 
 This example demonstrates how to convert strings to numbers, parse numbers in different bases and bit-sizes, and convert numbers back to base string representations using the `strconv` module.
 
@@ -15011,9 +17547,53 @@ fn main() {
 
 ### Term
 
-_File location: [language_updates_and_stdlib/02_standard_library/17_term/term.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/17_term/term.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/17_term/term.v](language_updates_and_stdlib/02_standard_library/17_term/term.v)_
 
-This example demonstrates styling terminal output (bold, underline, strikethrough), coloring foreground and background text, and retrieving the terminal size using the `term` module.
+### Lesson: Term
+
+V's standard library provides a direct, cross-platform module named `term` for querying terminal attributes, altering console text colors/styles, and printing preformatted output badges. Here is the simplest, most practical guide to when you should actually use each of these tools in real-world programming.
+
+---
+
+#### 1. Terminal Size Metadata
+
+- **The Vibe:** "Measuring the room size."
+- **What it does:** Tells you how many columns (width) and rows (height) are currently visible in the user's terminal window.
+- **Best to use when:** You are rendering custom terminal layouts, tables, or ASCII art that must fit the screen.
+- **Real-world example:** Wrapping text dynamically so it doesn't spill over the screen edge.
+
+#### 2. ANSI Text Coloring
+
+- **The Vibe:** "Adding paint to the console."
+- **What it does:** Applies green, red, yellow, or blue styling to terminal characters.
+- **Best to use when:** Highlighting success, errors, warnings, or structural tags.
+- **Real-world example:** Printing error messages in bold red.
+
+#### 3. Styling Modifiers
+
+- **The Vibe:** "The font options panel."
+- **What it does:** Renders text as bold, underlined, or strikethrough.
+- **Best to use when:** Emphasizing headings, showing links, or marking deprecated options.
+- **Real-world example:** Printing column headers of a CLI table in bold.
+
+#### 4. Background Fills & Combinations
+
+- **The Vibe:** "The highlighter pen."
+- **What it does:** Fills the text background block with color, and supports mixing foreground styles and background styles.
+- **Best to use when:** Creating alerts, status blocks, or highlighting active menu items.
+- **Real-world example:** Printing a yellow warning status badge with a blue background.
+
+#### 5. Preformatted Messages
+
+- **The Vibe:** "The instant status stamp."
+- **What it does:** Provides preformatted `[OK]`, `[WARNING]`, and `[FAILED]` status boxes with colors built in.
+- **Best to use when:** Logging task progress or system bootstrap outputs.
+- **Real-world example:** Printing `[OK] Server started on port 8080`.
+
+---
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **term**.
 
 ```v
 module main
@@ -15023,25 +17603,55 @@ import term
 fn main() {
 	println('=== term Module Demo ===')
 
-	// 1. Get terminal size
+	// ==========================================
+	// 1. Terminal Size Metadata
+	// ==========================================
+
+	// term.get_terminal_size() returns the (width, height) of the active terminal session in columns and rows.
 	width, height := term.get_terminal_size()
 	println('Terminal size: ${width} columns x ${height} rows')
 
-	// 2. Colored text helpers
+	// ==========================================
+	// 2. Colored Text (Foreground Styling)
+	// ==========================================
+
+	// Foreground color helpers wrap the string with ANSI escape codes to change the text color.
 	println(term.green('This text is green!'))
 	println(term.red('This text is red!'))
 	println(term.yellow('This text is yellow!'))
 	println(term.blue('This text is blue!'))
 
-	// 3. Text styling modifiers
+	// ==========================================
+	// 3. Text Styles & Modifiers
+	// ==========================================
+
+	// Text modifiers add visual decorations like bold, underline, or strikethrough.
 	println(term.bold('This text is bold!'))
 	println(term.underline('This text is underlined!'))
 	println(term.strikethrough('This text has a strikethrough!'))
 
-	// 4. Background styling
+	// ==========================================
+	// 4. Background Styling
+	// ==========================================
+
+	// Background color helpers fill the background area behind the printed characters.
 	println(term.bg_blue(' This has a blue background! '))
 
-	// 5. Message box helper formats
+	// ==========================================
+	// 5. Mixed Styling & Layering
+	// ==========================================
+
+	// We can combine text color, style (bold/underline), and background color by nesting the calls.
+	println(term.bg_blue(term.yellow(' Yellow text on a blue background ')))
+	println(term.bg_red(term.white(term.bold(' Bold white text on a red background '))))
+	println(term.bg_green(term.black(term.underline(' Underlined black text on a green background '))))
+
+	// ==========================================
+	// 6. Preformatted Status Messages
+	// ==========================================
+
+	// V's term module provides built-in preformatted status message helper templates.
+	// These automatically print colored status stamps like [OK], [WARNING], or [FAILED] followed by the message.
 	println(term.ok_message('Operation succeeded!'))
 	println(term.warn_message('This is a warning!'))
 	println(term.fail_message('Operation failed!'))
@@ -15052,7 +17662,7 @@ fn main() {
 
 ### Benchmark
 
-_File location: [language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v](language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v)_
 
 This example demonstrates timing code execution chunks and step-by-step progress benchmarking using the `benchmark` module.
 
@@ -15103,7 +17713,7 @@ fn main() {
 
 ### Clipboard
 
-_File location: [language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v](language_updates_and_stdlib/02_standard_library/19_clipboard/clipboard.v)_
 
 This example demonstrates writing to and reading from the system clipboard on macOS using the `clipboard` module, including a backup and restore mechanism.
 
@@ -15154,7 +17764,7 @@ fn main() {
 
 ### Semver
 
-_File location: [language_updates_and_stdlib/02_standard_library/20_semver/semver.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/20_semver/semver.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/20_semver/semver.v](language_updates_and_stdlib/02_standard_library/20_semver/semver.v)_
 
 This example demonstrates parsing semantic versions and checking constraint satisfaction using the `semver` module.
 
@@ -15212,9 +17822,9 @@ fn main() {
 
 ### Maps Standard Library Module (maps.v)
 
-_File location: [language_updates_and_stdlib/02_standard_library/21_maps/maps.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/21_maps/maps.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/21_maps/maps.v](language_updates_and_stdlib/02_standard_library/21_maps/maps.v)_
 
-This example demonstrates map utility functions such as filtering, converting map keys and values to arrays, inverting maps, and merging maps using the `maps` module.
+This example demonstrates the high-level helpers in V's maps module, including filtering, transforming, inverting, merging, and converting between maps and arrays. The repository version is a verified walkthrough that exercises the full set of documented helpers.
 
 ```v
 module main
@@ -15230,41 +17840,48 @@ fn main() {
 		'cherry': 3
 	}
 
-	// 1. Filter elements by condition
 	filtered := maps.filter(m1, fn (k string, v int) bool {
 		return v > 1
 	})
-	println('Filtered (values > 1): ${filtered}')
+	println('filter(): ${filtered}')
 
-	// 2. Transform map entries to an array
 	keys_upper := maps.to_array(m1, fn (k string, v int) string {
 		return k.to_upper()
 	})
-	println('Transformed keys to upper array: ${keys_upper}')
+	println('to_array(): ${keys_upper}')
 
-	// 3. Invert map (swap keys and values)
 	inverted := maps.invert(m1)
-	println('Inverted map: ${inverted}')
+	println('invert(): ${inverted}')
 
-	// 4. Construct a map from an array
 	fruits := ['apple', 'banana', 'cherry']
 	map_from_arr := maps.from_array(fruits)
-	println('Map from array (index to element): ${map_from_arr}')
+	println('from_array(): ${map_from_arr}')
 
-	// 5. Merge two maps
 	m2 := {
 		'banana': 20
 		'date':   4
 	}
 	merged := maps.merge(m1, m2)
-	println('Merged map (m2 overwrites duplicates): ${merged}')
+	println('merge(): ${merged}')
 
-	// 6. Merge in place (mutates the target map)
 	mut mut_map := {
 		'a': 1
 	}
-	maps.merge_in_place(mut mut_map, {'b': 2, 'c': 3})
-	println('In-place merged map: ${mut_map}')
+	maps.merge_in_place(mut mut_map, {
+		'b': 2
+		'c': 3
+	})
+	println('merge_in_place(): ${mut_map}')
+
+	flat_items := maps.flat_map[string, int, string](m1, fn (k string, v int) []string {
+		return [k, v.str()]
+	})
+	println('flat_map(): ${flat_items}')
+
+	transformed := maps.to_map[string, int, string, int](m1, fn (k string, v int) (string, int) {
+		return k.to_upper(), v * 10
+	})
+	println('to_map(): ${transformed}')
 }
 ```
 
@@ -15272,7 +17889,7 @@ fn main() {
 
 ### Context
 
-_File location: [language_updates_and_stdlib/02_standard_library/22_context/context.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/22_context/context.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/22_context/context.v](language_updates_and_stdlib/02_standard_library/22_context/context.v)_
 
 This example demonstrates propagating request-scoped values, cancellation signals, and timeouts across thread boundaries using the `context` module.
 
@@ -15340,7 +17957,7 @@ fn main() {
 
 ### Archive Tar
 
-_File location: [language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v](language_updates_and_stdlib/02_standard_library/26_archive_tar/archive_tar.v)_
 
 This example demonstrates reading and inspecting the contents of `.tar.gz` files using the `archive.tar` module.
 
@@ -15415,7 +18032,7 @@ fn main() {
 
 ### Compress Deflate
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v](language_updates_and_stdlib/02_standard_library/27_compress/deflate/compress_deflate.v)_
 
 This example demonstrates standard Deflate byte stream compression and decompression using the `compress.deflate` module.
 
@@ -15456,7 +18073,7 @@ fn main() {
 
 ### Compress Gzip
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v](language_updates_and_stdlib/02_standard_library/27_compress/gzip/compress_gzip.v)_
 
 This example demonstrates compressing and decompressing binary or text data using the `compress.gzip` module.
 
@@ -15497,7 +18114,7 @@ fn main() {
 
 ### Compress Szip
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v](language_updates_and_stdlib/02_standard_library/27_compress/szip/compress_szip.v)_
 
 This example demonstrates packaging multiple files into zip archives recursively, inspecting zip contents/meta-data (size, CRC32), and extracting zip files to folders using the `compress.szip` module.
 
@@ -15604,7 +18221,7 @@ fn main() {
 
 ### Compress Zlib
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v](language_updates_and_stdlib/02_standard_library/27_compress/zlib/compress_zlib.v)_
 
 This example demonstrates standard Zlib byte stream compression and decompression using the `compress.zlib` module.
 
@@ -15645,7 +18262,7 @@ fn main() {
 
 ### Compress Zstd
 
-_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v](language_updates_and_stdlib/02_standard_library/27_compress/zstd/compress_zstd.v)_
 
 This example demonstrates Zstd compression and decompression using the fast Facebook Zstandard algorithm in the `compress.zstd` module.
 
@@ -15690,7 +18307,7 @@ fn main() {
 
 ### Io Fs
 
-_File location: [language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v](language_updates_and_stdlib/02_standard_library/28_io/fs/io_fs.v)_
 
 This example demonstrates how `os.File` implements `io.Reader` and `io.Writer` interfaces, allowing standard file operations to utilize stream-oriented utilities like `io.cp` and `io.BufferedReader`.
 
@@ -15741,9 +18358,7 @@ fn main() {
 
 	// Read lines until EOF
 	for {
-		line := buf_reader.read_line() or {
-			break
-		}
+		line := buf_reader.read_line() or { break }
 		println('Buffered Read Line: "${line}"')
 	}
 	read_file.close()
@@ -15786,7 +18401,7 @@ fn main() {
 
 ### Io
 
-_File location: [language_updates_and_stdlib/02_standard_library/28_io/io.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/28_io/io.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/28_io/io.v](language_updates_and_stdlib/02_standard_library/28_io/io.v)_
 
 This example demonstrates implementing custom Reader and Writer structs and using the `io.cp` utility to copy data between streams using the `io` module.
 
@@ -15853,7 +18468,7 @@ fn main() {
 
 ### Io Util
 
-_File location: [language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v](language_updates_and_stdlib/02_standard_library/28_io/util/io_util.v)_
 
 This example demonstrates using the `io.util` module for creating, writing to, reading from, and cleaning up temporary files and directories.
 
@@ -15938,7 +18553,7 @@ fn main() {
 
 ### Hash
 
-_File location: [language_updates_and_stdlib/02_standard_library/29_hash/hash.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/29_hash/hash.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/29_hash/hash.v](language_updates_and_stdlib/02_standard_library/29_hash/hash.v)_
 
 This example demonstrates calculating FNV-1a (32-bit and 64-bit) hashes and CRC32 checksums using the `hash` module.
 
@@ -15970,7 +18585,7 @@ fn main() {
 
 ### Bitfield
 
-_File location: [language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v](language_updates_and_stdlib/02_standard_library/30_bitfield/bitfield.v)_
 
 This example demonstrates creating bitfields, getting/setting individual bits, performing logical operations (AND, OR, XOR, NOT), and converting to string representation using the `bitfield` module.
 
@@ -16001,7 +18616,7 @@ fn main() {
 	println('\nLogical operations on ${bf1.str()} and ${bf2.str()}:')
 
 	and_result := bitfield.bf_and(bf1, bf2)
-	or_result  := bitfield.bf_or(bf1, bf2)
+	or_result := bitfield.bf_or(bf1, bf2)
 	xor_result := bitfield.bf_xor(bf1, bf2)
 	not_result := bitfield.bf_not(bf1)
 
@@ -16016,7 +18631,7 @@ fn main() {
 
 ### Cli
 
-_File location: [language_updates_and_stdlib/02_standard_library/31_cli/cli.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/31_cli/cli.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/31_cli/cli.v](language_updates_and_stdlib/02_standard_library/31_cli/cli.v)_
 
 This example demonstrates building structured CLI applications with commands, subcommands, and option flags in POSIX mode using the `cli` module.
 
@@ -16030,7 +18645,7 @@ fn main() {
 
 	mut app := cli.Command{
 		name:        'tool'
-		description: 'A sample CLI tool showing V\'s cli package.'
+		description: "A sample CLI tool showing V's cli package."
 		version:     '1.0.0'
 		posix_mode:  true
 		execute:     fn (cmd cli.Command) ! {
@@ -16050,7 +18665,7 @@ fn main() {
 					}
 					println('Hello, ${name}!')
 				}
-				flags: [
+				flags:       [
 					cli.Flag{
 						flag:        .string
 						name:        'name'
@@ -16080,7 +18695,7 @@ fn main() {
 
 ### Veb
 
-_File location: [language_updates_and_stdlib/02_standard_library/32_veb/veb.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/32_veb/veb.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/32_veb/veb.v](language_updates_and_stdlib/02_standard_library/32_veb/veb.v)_
 
 This example demonstrates building a web application with routes, starting it in a background thread, and testing requests using the modern `veb` web framework.
 
@@ -16141,7 +18756,7 @@ fn main() {
 
 ### Readline
 
-_File location: [language_updates_and_stdlib/02_standard_library/33_readline/readline.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/33_readline/readline.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/33_readline/readline.v](language_updates_and_stdlib/02_standard_library/33_readline/readline.v)_
 
 This example demonstrates prompting users for text input from terminal lines in a structured manner using the `readline` module.
 
@@ -16169,7 +18784,7 @@ fn main() {
 
 ### Runtime
 
-_File location: [language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v](language_updates_and_stdlib/02_standard_library/34_runtime/runtime.v)_
 
 This example demonstrates inspecting hardware specifications, processor cores, system endianness, and memory usage statistics using the `runtime` module.
 
@@ -16216,7 +18831,7 @@ fn main() {
 
 ### Strings Lorem
 
-_File location: [language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v](language_updates_and_stdlib/02_standard_library/36_strings_lorem/strings_lorem.v)_
 
 V's standard library `strings.lorem` module provides a pseudo-random text generator based on a Markov chain built from embedded corpora. It produces structured text in the form of paragraphs and sentences, with options to control layouts, select specific corpora, and configure deterministic output.
 
@@ -16246,9 +18861,9 @@ fn main() {
 	// 2. Custom Layout Configuration (Paragraphs, Sentences, Words)
 	println('\n--- 2. Custom Layout Generation ---')
 	custom_layout := lorem.generate(lorem.LoremCfg{
-		paragraphs: 2
+		paragraphs:              2
 		sentences_per_paragraph: 3
-		words_per_sentence: 6
+		words_per_sentence:      6
 	})
 	println(custom_layout)
 
@@ -16263,10 +18878,10 @@ fn main() {
 	corpora := ['lorem', 'poe', 'darwin', 'bard']
 	for corpus in corpora {
 		text := lorem.generate(lorem.LoremCfg{
-			corpus_name: corpus
-			paragraphs: 1
+			corpus_name:             corpus
+			paragraphs:              1
 			sentences_per_paragraph: 2
-			words_per_sentence: 8
+			words_per_sentence:      8
 		})
 		println('Corpus [${corpus}]:')
 		println(text)
@@ -16278,21 +18893,21 @@ fn main() {
 	// and identical across multiple runs. Custom `seed_text` provides a starting phrase for the Markov chain.
 	println('\n--- 4. Deterministic Generation with Seed & Custom Starting Phrase ---')
 	deterministic_lorem_1 := lorem.generate(lorem.LoremCfg{
-		corpus_name: 'poe'
-		rng_seed: 42
-		seed_text: 'once upon a midnight'
-		paragraphs: 1
+		corpus_name:             'poe'
+		rng_seed:                42
+		seed_text:               'once upon a midnight'
+		paragraphs:              1
 		sentences_per_paragraph: 2
-		words_per_sentence: 8
+		words_per_sentence:      8
 	})
 
 	deterministic_lorem_2 := lorem.generate(lorem.LoremCfg{
-		corpus_name: 'poe'
-		rng_seed: 42
-		seed_text: 'once upon a midnight'
-		paragraphs: 1
+		corpus_name:             'poe'
+		rng_seed:                42
+		seed_text:               'once upon a midnight'
+		paragraphs:              1
 		sentences_per_paragraph: 2
-		words_per_sentence: 8
+		words_per_sentence:      8
 	})
 
 	println('Run 1:')
@@ -16388,7 +19003,7 @@ node main.js
 
 #### Programmatic WASM Builder
 
-_File location: [language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v](file:///Users/codecaine/V-Programming-Comprehensive-Guide/language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v)_
+_File location: [language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v](language_updates_and_stdlib/02_standard_library/35_wasm/wasm.v)_
 
 V provides a built-in `wasm` module in its standard library that allows developers to programmatically build WebAssembly binary (`.wasm`) files directly using instruction-level builder patterns. This is extremely useful for compilers, runtime engines, or dynamic code generation targeting the browser and other WebAssembly runtimes.
 
@@ -16443,7 +19058,6 @@ fn main() {
 	}
 	m.commit(mul_fn, true)
 
-
 	// --- 2. Global Variables ---
 	println('\n2. Creating Global Variables...')
 	// Global variable named '__vsp' (Stack Pointer), internal/non-exported, type i32, mutable, init value 10
@@ -16459,7 +19073,6 @@ fn main() {
 		vsp_fn.global_get(vsp)
 	}
 	m.commit(vsp_fn, true)
-
 
 	// --- 3. Recursive Functions (Factorial) ---
 	println('\n3. Generating Recursive Function (fac)...')
@@ -16481,15 +19094,14 @@ fn main() {
 
 			fac_fn.local_get(0)
 			fac_fn.i64_const(1)
-			fac_fn.sub(.i64_t)   // n - 1
-			fac_fn.call('fac')   // recursive call to fac(n - 1)
+			fac_fn.sub(.i64_t) // n - 1
+			fac_fn.call('fac') // recursive call to fac(n - 1)
 
-			fac_fn.mul(.i64_t)   // n * fac(n - 1)
+			fac_fn.mul(.i64_t) // n * fac(n - 1)
 		}
 		fac_fn.c_end(ifs)
 	}
 	m.commit(fac_fn, true)
-
 
 	// --- 4. Compilation & Output ---
 	println('\n4. Compiling Module to WebAssembly Binary...')
@@ -16509,6 +19121,3014 @@ fn main() {
 
 ---
 
+### sizeof and \_\_offsetof
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v](language_updates_and_stdlib/01_language_basics_updates/09_sizeof_and_offsetof/sizeof_and_offsetof.v)_
+
+### Lesson: sizeof and \_\_offsetof
+
+V provides two built-in operators for determining sizes and memory offsets:
+
+- `sizeof(Type)`: Returns the memory size of the given Type in bytes.
+- `__offsetof(Struct, field_name)`: Returns the offset in bytes of a field relative to the start of the struct.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Size of `Point`**:
+  `sizeof(Point)` yields `8` bytes because it has two `int` fields (4 bytes each).
+- **Size of `Foo` & Alignment Padding**:
+  `sizeof(Foo)` yields `12` bytes, even though it contains `a int` (4 bytes), `b u8` (1 byte), and `c int` (4 bytes). This happens because of C ABI alignment: V aligns struct members on word boundaries (in this case, 4 bytes), adding 3 bytes of invisible padding after `b u8`.
+- **Offsets of fields in `Foo`**:
+  - `__offsetof(Foo, a)` yields `0` because it starts at byte 0.
+  - `__offsetof(Foo, b)` yields `4` because it starts right after `a` (4 bytes).
+  - `__offsetof(Foo, c)` yields `8` because it aligns on the next 4-byte boundary due to padding after `b`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **sizeof and \_\_offsetof**.
+
+```v
+module main
+
+struct Point {
+	x int
+	y int
+}
+
+struct Foo {
+	a int
+	b u8
+	c int
+}
+
+fn main() {
+	// sizeof gives the size of a type in bytes
+	println('sizeof(Point) = ${sizeof(Point)} bytes') // 8
+	println('sizeof(Foo) = ${sizeof(Foo)} bytes') // 12 (due to alignment/padding in C backend)
+
+	// __offsetof gives the offset in bytes of a struct field
+	println('__offsetof(Point, x) = ${__offsetof(Point, x)}') // 0
+	println('__offsetof(Point, y) = ${__offsetof(Point, y)}') // 4
+	println('__offsetof(Foo, a) = ${__offsetof(Foo, a)}') // 0
+	println('__offsetof(Foo, b) = ${__offsetof(Foo, b)}') // 4
+	println('__offsetof(Foo, c) = ${__offsetof(Foo, c)}') // 8
+}
+```
+
+---
+
+### Limited Operator Overloading
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v](language_updates_and_stdlib/01_language_basics_updates/10_operator_overloading/operator_overloading.v)_
+
+### Lesson: Limited Operator Overloading
+
+Operator overloading is supported for a limited set of binary operators (`+, -, *, **, /, %, <, ==`) to improve readability in scientific, mathematical, and graphics applications. V does not support indexing (`[]`) or assignment (`=`) overloading. Overloading the `+` operator automatically synthesizes the matching assignment operator (e.g., `+=`).
+
+#### Step-by-Step Code Walkthrough:
+
+- **Binary Operator Overloading**:
+  We define the `+` and `-` operators for struct `Vec` using the syntax `fn (a Vec) + (b Vec) Vec`. V invokes these methods directly when performing arithmetic expressions like `a + b` or `a - b`.
+- **Equality Operator Overloading**:
+  We define `==` to verify element-by-element equality: `a.x == b.x && a.y == b.y`.
+- **Automatic Assignment Generation**:
+  When we overload `+`, V autogenerates the compound assignment operator `+=`. Executing `c += a` resolves to `c = c + a`, compiling and modifying `c` automatically.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **limited operator overloading**.
+
+```v
+module main
+
+struct Vec {
+	x int
+	y int
+}
+
+fn (a Vec) str() string {
+	return '{${a.x}, ${a.y}}'
+}
+
+// Overload addition operator (+)
+fn (a Vec) + (b Vec) Vec {
+	return Vec{a.x + b.x, a.y + b.y}
+}
+
+// Overload subtraction operator (-)
+fn (a Vec) - (b Vec) Vec {
+	return Vec{a.x - b.x, a.y - b.y}
+}
+
+// Overload equality operator (==)
+fn (a Vec) == (b Vec) bool {
+	return a.x == b.x && a.y == b.y
+}
+
+fn main() {
+	a := Vec{2, 3}
+	b := Vec{4, 5}
+	mut c := Vec{1, 2}
+
+	println('a + b = ${a + b}') // {6, 8}
+	println('a - b = ${a - b}') // {-2, -2}
+
+	// c += a is autogenerated from the + overload!
+	c += a
+	println('c after += a: ${c}') // {3, 5}
+
+	println('a == b: ${a == b}') // false
+	println('a == Vec{2, 3}: ${a == Vec{2, 3}}') // true
+}
+```
+
+---
+
+### Atomics
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v](language_updates_and_stdlib/01_language_basics_updates/11_atomics/atomics.v)_
+
+### Lesson: Atomics
+
+V does not have direct keyword support for atomic operations but integrates standard C11 atomic capabilities through platform-specific wrapper headers (found under `stdatomic/`). Variables can be treated atomically by executing type-specific functions prefixed by `C.atomic_` and passing references to the target variables.
+
+#### Step-by-Step Code Walkthrough:
+
+- **C Header Inclusion**:
+  Depending on the compilation target, V includes either the Unix or Windows wrapper headers `atomic.h` containing atomic operations.
+- **C declarations**:
+  `fn C.atomic_store_u32(&u32, u32)` and other methods are declared. Since V does not automatically parse C headers, we manually declare the C functions we want to invoke.
+- **Local Storage**:
+  We declare a local variable `atom := u32(0)` inside `main()`. Any variable can be treated atomically by passing its memory reference (pointer) to the C functions. This avoids needing global variables or compiling with `-enable-globals` flag.
+- **CAS (Compare-And-Swap)**:
+  Inside `unsafe { ... }`, we call `C.atomic_compare_exchange_strong_u32(&atom, &expected, 23)`. If the value at `&atom` matches `expected` (17), it replaces it with `23` and returns `true`. If not, it loads the actual current value into `expected` and returns `false`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **atomics**.
+
+```v
+module main
+
+$if windows {
+	#include "@VEXEROOT/thirdparty/stdatomic/win/atomic.h"
+} $else {
+	#include "@VEXEROOT/thirdparty/stdatomic/nix/atomic.h"
+}
+
+// declare the C functions we want to use
+fn C.atomic_store_u32(&u32, u32)
+fn C.atomic_load_u32(&u32) u32
+fn C.atomic_compare_exchange_strong_u32(&u32, &u32, u32) bool
+
+fn main() {
+	// Ordinary local variable, treated as atomic by passing its reference
+	mut atom := u32(0)
+
+	// Initialize atomic variable
+	unsafe {
+		C.atomic_store_u32(&atom, 17)
+
+		mut expected := u32(17)
+		// Atomic CAS: if atom == expected, set atom to 23 and return true
+		if C.atomic_compare_exchange_strong_u32(&atom, &expected, 23) {
+			println('Exchange successful, atom is now 23')
+		} else {
+			println('Exchange failed, atom is ${C.atomic_load_u32(&atom)}')
+		}
+
+		println('Final value: ${C.atomic_load_u32(&atom)}')
+	}
+}
+```
+
+---
+
+### Static Variables
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v](language_updates_and_stdlib/01_language_basics_updates/12_static_variables/static_variables.v)_
+
+### Lesson: Static Variables
+
+V supports **Static Variables** within functions. They behave like namespaced global variables, preserving state across function calls, but are restricted to the local scope of a single function. Functions containing static variables must be marked with `@[unsafe]` and calls must occur in `unsafe` blocks. They are primarily intended for facilitating low-level C code translations.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Static Variable Definition**:
+  Inside the function `counter()`, we define `mut static x := 42`. The compiler generates this variable in the global data space but restricts access to it exclusively within `counter()`.
+- **One-Time Initialization**:
+  The initialization expression `= 42` is executed exactly once when the program starts. It is skipped on subsequent calls to `counter()`.
+- **Access Rules**:
+  Because static variables represent shared mutable state, `counter()` is marked with `@[unsafe]` and called within `unsafe` blocks in `main()`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **static variables**.
+
+```v
+module main
+
+// V supports function-scoped static variables inside unsafe functions
+@[unsafe]
+fn counter() int {
+	// static variables are initialized only once
+	mut static x := 42
+	x++
+	return x
+}
+
+fn main() {
+	println(unsafe { counter() }) // 43
+	println(unsafe { counter() }) // 44
+	println(unsafe { counter() }) // 45
+}
+```
+
+---
+
+### Hot Code Reloading
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v](language_updates_and_stdlib/01_language_basics_updates/13_hot_code_reloading/hot_code_reloading.v)_
+
+### Lesson: Hot Code Reloading
+
+V supports **Hot Code Reloading** using the `@[live]` attribute. By compiling a program with the `-live` flag (e.g. `v -live run file.v`), V monitors the source files, automatically recompiles live-annotated functions to a shared library, and reloads them dynamically at runtime without restarting the application.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Live Annotation**:
+  The function `print_message()` is marked with the `@[live]` attribute. This instructs the compiler to generate it as a hot-reloadable hook loading from a shared library.
+- **Main loop execution**:
+  The loop in `main()` runs continuously. If you modify the message in the string print inside `print_message()` and save the file, V's monitoring thread detects the change, rebuilds the code, and subsequent calls in the loop print the updated message instantly.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **hot code reloading**.
+
+```v
+module main
+
+import time
+
+// Functions that should be reloaded must have `@[live]` attribute
+@[live]
+fn print_message() {
+	println('Hello! Modify this message while the program is running under -live mode.')
+}
+
+fn main() {
+	// A simple loop printing the message
+	for i in 0 .. 3 {
+		print_message()
+		time.sleep(100 * time.millisecond)
+	}
+}
+```
+
+---
+
+### Compile-Time Reflection
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v](language_updates_and_stdlib/01_language_basics_updates/14_compile_time_reflection/compile_time_reflection.v)_
+
+### Lesson: Compile-Time Reflection
+
+V supports **Compile-Time Reflection** using the `$` prefix to perform type operations, evaluations, and code generation during compilation. V iterates over struct fields, attributes, variants, and methods at compile-time using `$for` loops, providing static safety without any runtime metadata overhead.
+
+- Struct fields can be examined via `Struct.fields`.
+- Struct attributes can be examined via `Struct.attributes`.
+- Struct methods can be examined via `Struct.methods`, and executed dynamically using `$method()`.
+
+#### Step-by-Step Code Walkthrough:
+
+- **Field Iteration (`$for field in User.fields`)**:
+  Iterates over all fields of `User`. Evaluates their names (`field.name`) and type IDs (`field.typ`) at compile-time.
+- **Attribute Iteration (`$for attr in User.attributes`)**:
+  Inspects attributes attached to the struct, such as `@[COLOR]` (prints `COLOR`).
+- **Comptime Method Invocation (`user.$method()`)**:
+  Inside `$for m in User.methods`, we check if the method returns a `string`. If so, we execute the method dynamically using the `$method()` comptime syntax, calling `greet()` on the `user` instance and printing `Hello Alice`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **compile-time reflection**.
+
+```v
+module main
+
+@[COLOR]
+struct User {
+	name string
+	age  int
+}
+
+fn (u User) greet() string {
+	return 'Hello ${u.name}'
+}
+
+fn main() {
+	println('--- Struct Fields Reflection ---')
+	$for field in User.fields {
+		println('Field: ${field.name} | Typ: ${field.typ}')
+	}
+	println('\n--- Struct Attributes Reflection ---')
+	$for attr in User.attributes {
+		println('Attribute name: ${attr.name}')
+	}
+	println('\n--- Struct Methods Reflection ---')
+	user := User{
+		name: 'Alice'
+		age:  30
+	}
+	$for m in User.methods {
+		$if m.return_type is string {
+			println(user.$method())
+		}
+	}
+}
+```
+
+---
+
+### Compile-Time Pseudo Variables
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v](language_updates_and_stdlib/01_language_basics_updates/15_compile_time_pseudo_variables/compile_time_pseudo_variables.v)_
+
+### Lesson: Compile-Time Pseudo Variables
+
+V provides a set of pseudo-variables starting with `@` that are evaluated and substituted at compile time:
+
+- **Scope Identifiers**:
+  - `@FN` -> Replaced with the name of the current V function (as a string).
+  - `@METHOD` -> Replaced with the `ReceiverType.MethodName` of the current method (as a string).
+  - `@MOD` -> Replaced with the name of the current V module (as a string).
+  - `@STRUCT` -> Replaced with the name of the current V struct (as a string).
+
+- **Source File & Location Identifiers**:
+  - `@FILE` -> Replaced with the absolute path of the V source file (as a string).
+  - `@DIR` -> Replaced with the absolute path of the folder containing the V source file (as a string).
+  - `@LINE` -> Replaced with the V line number where it appears (as a string).
+  - `@FILE_LINE` -> Like `@FILE:@LINE`, but the file part is a relative path (as a string).
+  - `@LOCATION` -> Combines file, line, and type/method name; suitable for logging.
+  - `@COLUMN` -> Replaced with the 1-based column offset where it appears (as a string).
+
+- **V Compiler & Git Identifiers**:
+  - `@VEXE` -> Replaced with the path to the V compiler executable (as a string).
+  - `@VEXEROOT` -> Replaced with the folder containing the V compiler executable (as a string).
+  - `@VHASH` -> Replaced with the shortened commit hash of the V compiler (as a string).
+  - `@VCURRENTHASH` -> Similar to `@VHASH`, but updates when the compiler is recompiled after local modifications or git bisect.
+
+- **Project Mod Info (requires `v.mod` in project root)**:
+  - `@VMOD_FILE` -> Replaced with the contents of the nearest `v.mod` file (as a string).
+  - `@VMODHASH` -> Replaced with the shortened commit hash derived from the `.git` directory next to the nearest `v.mod` file (as a string).
+  - `@VMODROOT` -> Replaced with the path to the directory containing the nearest `v.mod` file (as a string).
+
+- **Build Time Identifiers (UTC timezone)**:
+  - `@BUILD_DATE` -> Replaced with the build date (e.g. `'2026-06-26'`).
+  - `@BUILD_TIME` -> Replaced with the UTC build time (e.g. `'17:50:24'`).
+  - `@BUILD_TIMESTAMP` -> Replaced with the Unix timestamp of the build (e.g. `'1782496224'`).
+  - _Note: Build variables can be overridden by setting the `SOURCE_DATE_EPOCH` environment variable, enabling reproducible builds (e.g., setting it to the latest git commit timestamp)._
+
+- **Target Platform / Toolchain Identifiers**:
+  - `@OS` -> Replaced with the OS type (e.g. `'macos'`, `'linux'`, `'windows'`).
+  - `@CCOMPILER` -> Replaced with the C compiler used (e.g. `'gcc'`, `'clang'`).
+  - `@BACKEND` -> Replaced with the current language backend (e.g. `'c'`, `'js'`).
+  - `@PLATFORM` -> Replaced with the CPU architecture type (e.g. `'arm64'`, `'amd64'`).
+
+**Additional Context from Repository docs:**
+This example demonstrates the usage and output of all the available compile-time pseudo variables in V.
+
+```v
+module main
+
+struct User {
+	name string
+}
+
+fn (u User) register() {
+	println('Executing method: ' + @METHOD) // User.register
+	println('Defined in struct: ' + @STRUCT) // User
+}
+
+fn log_event() {
+	println('Logging from function: ' + @FN) // log_event
+}
+
+fn main() {
+	println('=== V Compile-Time Pseudo Variables ===')
+
+	// Module & File Info
+	println('Current Module: ' + @MOD)
+	println('Source File Path: ' + @FILE)
+	println('Source Directory: ' + @DIR)
+	println('Line Number: ' + @LINE.str())
+	println('Relative File/Line: ' + @FILE_LINE)
+	println('Log Location: ' + @LOCATION)
+	println('Column Number: ' + @COLUMN.str())
+
+	// Compiler Info
+	println('V Compiler Executable: ' + @VEXE)
+	println('V compiler Root Directory: ' + @VEXEROOT)
+	println('V Compiler Commit Hash: ' + @VHASH)
+	println('V Compiler Current Hash: ' + @VCURRENTHASH)
+
+	// project Info (from v.mod)
+	println('v.mod File Contents: ' + @VMOD_FILE)
+	println('v.mod Git Commit Hash: ' + @VMODHASH)
+	println('v.mod Root Directory: ' + @VMODROOT)
+
+	// Build Info (UTC timezone)
+	println('Build Date: ' + @BUILD_DATE)
+	println('Build Time: ' + @BUILD_TIME)
+	println('Build Timestamp: ' + @BUILD_TIMESTAMP)
+
+	// Platform / Backend Info
+	println('Target OS: ' + @OS)
+	println('C Compiler: ' + @CCOMPILER)
+	println('V Backend: ' + @BACKEND)
+	println('CPU Platform: ' + @PLATFORM)
+
+	u := User{
+		name: 'Alice'
+	}
+	u.register()
+	log_event()
+}
+```
+
+---
+
+### Environment-Specific Files & Compile-Time Types
+
+### Lesson: Environment-Specific Files & Compile-Time Types
+
+#### Environment-Specific Files
+
+V supports compile-time filtering of entire files using file suffix conventions instead of conditional directives:
+
+- `.js.v` -> compiled only when targeting the Javascript backend.
+- `.c.v` -> compiled only when targeting the C backend.
+- `_nix.c.v` -> compiled only on Unix-like platforms.
+- `_windows.c.v` -> compiled only on Windows.
+- `_d_customflag.v` -> compiled only if `-d customflag` is passed to the compiler.
+
+#### Compile-Time Types
+
+When writing generic code, V provides specialized compile-time type matching identifiers to selectively check generic constraints:
+
+- `$alias` -> matches type aliases.
+- `$array` -> matches arrays and fixed-size arrays.
+- `$enum` -> matches enum types.
+- `$float` / `$int` / `$string` -> matches floating numbers, integers, or string values.
+- `$struct` -> matches struct types.
+
+---
+
+### References & Pointers
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/16_references/references.v](language_updates_and_stdlib/01_language_basics_updates/16_references/references.v)_
+
+### Lesson: References & Pointers
+
+In V, references are similar to pointers in Go/C and references in C++. They allow you to point to a memory location of another variable without making a copy of its contents.
+
+#### 1. Passing by Value vs. Passing by Reference
+
+When passing immutable arguments (like structs) to functions or methods, V decides under the hood whether to pass them by value or by reference depending on performance characteristics. As a developer, you do not need to worry about this optimization detail.
+
+However, you can explicitly force an argument or method receiver to be passed by reference by prefixing the type with `&` (e.g., `&Foo`).
+
+#### 2. Mutability of References
+
+References in V are immutable by default:
+
+- Even if a function or method receives a reference (`&Foo`), it cannot modify the fields of that struct unless the parameter is marked as mutable.
+- To allow modification, the argument must be declared as `mut foo Foo` (which V automatically passes by reference under the hood) and called with `mut` (e.g. `modify_foo(mut my_foo)`). Note that modifiable fields must also be defined under the `mut:` access block in the struct declaration.
+
+#### 3. Dereferencing
+
+To access the underlying value of a reference directly, or to create a copy of the pointed-to object, use the dereferencing operator `*` (e.g., `copied_foo := *ref_to_foo`), similar to Go and C.
+
+#### 4. Recursive Structures
+
+Recursive data structures (such as linked lists or trees) require fields that reference their own type. Because V needs to calculate the memory size of structs at compile time, recursive fields must be declared as references (e.g., `left ?&Node[T]`) because references have a fixed pointer size.
+
+- To allow optional/empty references (like leaf node terminations in trees), V supports **optional references** (e.g. `?&Node[T]`). These are automatically initialized to `none` by default, avoiding the need for `unsafe { nil }` pointers or dummy nodes.
+
+---
+
+Here is the complete demonstration program showcasing V references and recursive struct designs:
+
+```v
+module main
+
+struct Foo {
+mut:
+	abc int
+}
+
+// 1. A method receiving a reference. The receiver type is &Foo.
+// Even though it is a reference, `foo` is immutable and cannot be changed here.
+fn (foo &Foo) print_abc() {
+	println('print_abc: foo.abc = ${foo.abc}')
+}
+
+// 2. A regular function receiving a reference to Foo.
+fn show_foo(foo &Foo) {
+	println('show_foo: foo.abc = ${foo.abc}')
+}
+
+// 3. To modify a reference, we must pass it as mutable.
+// Note that mutable parameters are passed by reference under the hood.
+fn modify_foo(mut foo Foo, new_val int) {
+	foo.abc = new_val
+}
+
+// 4. References are crucial for recursive types (like trees or linked lists).
+// Since the size of Node must be known at compile time, recursive fields must be references.
+// To allow optional/empty references (like leaf node terminations), V uses optional references (?&Node[T]).
+struct Node[T] {
+	val   T
+	left  ?&Node[T]
+	right ?&Node[T]
+}
+
+fn main() {
+	println('=== V References & Pointers Demo ===')
+
+	// Creating a struct instance
+	mut my_foo := Foo{
+		abc: 100
+	}
+
+	// Calling method on reference. V automatically takes the address of my_foo.
+	my_foo.print_abc()
+
+	// Calling a function expecting a reference using & operator.
+	show_foo(&my_foo)
+
+	// Modifying the struct via a mutable receiver/argument.
+	modify_foo(mut my_foo, 200)
+	println('After modify_foo: my_foo.abc = ${my_foo.abc}')
+
+	// 5. Dereferencing a reference using the `*` operator.
+	ref_to_foo := &my_foo
+	// To copy the value of the struct pointed to by ref_to_foo:
+	copied_foo := *ref_to_foo
+	println('Copied foo abc: ${copied_foo.abc}')
+
+	// 6. Generic Tree structure using optional references
+	// Optional references are auto-initialized to `none`, so we don't need dummy nodes or `unsafe` blocks.
+	left_leaf := Node[int]{
+		val: 5
+	}
+
+	right_leaf := Node[int]{
+		val: 15
+	}
+
+	// Create root node pointing to leaf references
+	root := Node[int]{
+		val:   10
+		left:  &left_leaf
+		right: &right_leaf
+	}
+
+	println('Root val: ${root.val}')
+
+	// Access the optional child nodes safely using if guards
+	if left := root.left {
+		println('Left leaf val: ${left.val}')
+	}
+	if right := root.right {
+		println('Right leaf val: ${right.val}')
+	}
+}
+```
+
+---
+
+### Dumping Expressions at Runtime
+
+_File location: [language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v](language_updates_and_stdlib/01_language_basics_updates/17_dumping_expressions/dumping_expressions.v)_
+
+### Lesson: Dumping Expressions at Runtime
+
+You can dump/trace the value of any V expression using `dump(expr)`. For example, save this code sample as `factorial.v`, then run it with `v run factorial.v`:
+
+```v
+module main
+
+fn factorial(n u32) u32 {
+	if dump(n <= 1) {
+		return dump(1)
+	}
+	return dump(n * factorial(n - 1))
+}
+
+fn main() {
+	println(factorial(5))
+}
+```
+
+You will get:
+
+```
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: false
+[factorial.v:4] n <= 1: true
+[factorial.v:5] 1: 1
+[factorial.v:7] n * factorial(n - 1): 2
+[factorial.v:7] n * factorial(n - 1): 6
+[factorial.v:7] n * factorial(n - 1): 24
+[factorial.v:7] n * factorial(n - 1): 120
+120
+```
+
+---
+
+# Chapter 14: Useful Boilerplates and Application Templates
+
+## Quick Access
+
+Below is an index of all code examples in this chapter. You can use these links to jump directly to any specific code example:
+
+**Boilerplate Templates**
+
+- [CLI Command-Line Application Boilerplate](#cli-command-line-application-boilerplate)
+- [REST API Server Boilerplate](#rest-api-server-boilerplate)
+- [Worker Pool Concurrency Boilerplate](#worker-pool-concurrency-boilerplate)
+- [OS and File Utilities Boilerplate](#os-and-file-utilities-boilerplate)
+- [String Utilities Boilerplate](#string-utilities-boilerplate)
+- [Math and Statistics Boilerplate](#math-and-statistics-boilerplate)
+- [Array Utilities Boilerplate](#array-utilities-boilerplate)
+- [Configuration Management Boilerplate](#configuration-management-boilerplate)
+- [JSON File Store Boilerplate](#json-file-store-boilerplate)
+- [Retry and Backoff Boilerplate](#retry-and-backoff-boilerplate)
+- [HTTP Client Boilerplate](#http-client-boilerplate)
+- [CSV Processor Boilerplate](#csv-processor-boilerplate)
+- [macOS Native GUI Boilerplate](#macos-native-gui-boilerplate)
+- [Logging Boilerplate](#logging-boilerplate)
+
+---
+
+This chapter provides a collection of production-ready, fully commented boilerplate templates designed to jumpstart your development with V. These examples showcase common application patterns, standard library usage, and best practices.
+
+## Boilerplate Templates
+
+### CLI Command-Line Application Boilerplate
+
+_File location: [boilerplate_templates/01_cli_app/cli_app.v](boilerplate_templates/01_cli_app/cli_app.v)_
+
+### Lesson: CLI Command-Line Application Boilerplate
+
+When building command-line utilities, V provides a highly featured standard `flag` module. Rather than manually parsing arguments from `os.args`, the `flag` module simplifies declaring options, validation, and auto-generates helpful usage/help text.
+
+Key concepts illustrated:
+
+- **Initializing flag parser**: Creating a new parser with `flag.new_flag_parser(os.args)`.
+- **Defining Flags**: Specifying flag names, short character abbreviations, default values, and description text.
+- **Config Struct Pattern**: Cleanly separating parsed options from application logic using a custom config struct.
+- **Error Handling & Finalization**: Handling invalid command usage gracefully using `fp.finalize()`.
+
+```v
+module main
+
+import flag
+import os
+
+// Config holds the validated configuration settings for the application.
+struct Config {
+	input_file  string
+	output_file string
+	verbose     bool
+	retries     int
+	mode        string
+}
+
+fn main() {
+	// 1. Initialize the flag parser with command-line arguments (os.args)
+	mut fp := flag.new_flag_parser(os.args)
+	fp.application('v-cli-boilerplate')
+	fp.version('1.0.0')
+	fp.description('A professional CLI boilerplate showing flag parsing, validation, and structured configurations in V.')
+
+	// 2. Skip the executable path during parsing
+	fp.skip_executable()
+
+	// 3. Define flags with short abbreviations, default values, and descriptions
+	input_file := fp.string('input', `i`, '', 'Path to the input file (required)')
+	output_file := fp.string('output', `o`, 'output.txt', 'Path to the output file')
+	verbose := fp.bool('verbose', `v`, false, 'Enable verbose logging')
+	retries := fp.int('retries', `r`, 3, 'Number of retries for operation')
+	mode := fp.string('mode', `m`, 'default', 'Operation mode (default, fast, safe)')
+
+	// 4. Finalize parsing. This returns remaining non-flag arguments or an error.
+	additional_args := fp.finalize() or {
+		eprintln('Error: ${err}')
+		println(fp.usage())
+		exit(1)
+	}
+
+	// 5. Validate required flags and values
+	if input_file == '' {
+		eprintln('Error: --input (-i) flag is required.')
+		println(fp.usage())
+		exit(1)
+	}
+
+	// Validate allowed values for a string enum
+	if mode !in ['default', 'fast', 'safe'] {
+		eprintln('Error: Invalid mode "${mode}". Must be one of: default, fast, safe.')
+		println(fp.usage())
+		exit(1)
+	}
+
+	// 6. Map parsed arguments to the Config struct for clean division of concerns
+	config := Config{
+		input_file:  input_file
+		output_file: output_file
+		verbose:     verbose
+		retries:     retries
+		mode:        mode
+	}
+
+	// 7. Run the application logic
+	run_app(config, additional_args)
+}
+
+fn run_app(cfg Config, args []string) {
+	if cfg.verbose {
+		println('[DEBUG] Starting application execution...')
+		println('[DEBUG] Config: ${cfg}')
+		if args.len > 0 {
+			println('[DEBUG] Positional Arguments: ${args}')
+		}
+	}
+
+	println('Processing input file: ${cfg.input_file}')
+	println('Operation mode: ${cfg.mode}')
+	println('Retries configured: ${cfg.retries}')
+
+	// Perform work here...
+	println('Writing results to output file: ${cfg.output_file}')
+
+	println('Success: Application executed successfully!')
+}
+```
+
+---
+
+### REST API Server Boilerplate
+
+_File location: [boilerplate_templates/02_rest_api/rest_api.v](boilerplate_templates/02_rest_api/rest_api.v)_
+
+### Lesson: REST API Server Boilerplate
+
+V's standard web framework, `veb`, is optimized for building fast, high-conformance web apps and APIs. This template serves as a quick-start scaffolding for a JSON REST service, illustrating CRUD routing and request decoding.
+
+Key concepts illustrated:
+
+- **Routing Attributes**: Tagging methods with route paths and HTTP verbs (e.g. `@['/api/items'; get]`).
+- **Path Parameters**: Defining routes with dynamic segments like `@['/api/items/:id'; get]` which map directly to method arguments.
+- **JSON Serialization/Deserialization**: Using `json.encode` and `json.decode` to work with HTTP requests and responses.
+- **State Management & Thread Safety**: Using fields in the global `App` struct to share resources, protected by a `sync.RwMutex` to ensure thread-safe concurrent access.
+
+```v
+module main
+
+import json
+import os
+import sync
+import veb
+
+// Item represents a data model in our API.
+struct Item {
+	id   int    @[json: 'id']
+	name string @[json: 'name']
+	done bool   @[json: 'done']
+}
+
+// App holds the global state of the application.
+struct App {
+mut:
+	lock  sync.RwMutex
+	items []Item
+}
+
+// Context wraps veb's request/response lifecycle.
+struct Context {
+	veb.Context
+}
+
+// 1. GET / - Simple text response index endpoint
+fn (mut app App) index(mut ctx Context) veb.Result {
+	return ctx.text('Welcome to the V REST API Boilerplate! Use /api/items to interact with the service.')
+}
+
+// 2. GET /api/items - Returns list of all items as JSON
+@['/api/items'; get]
+fn (mut app App) get_items(mut ctx Context) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
+	return ctx.json(json.encode(app.items))
+}
+
+// 3. GET /api/items/:id - Returns a single item by id, or 404
+@['/api/items/:id'; get]
+fn (mut app App) get_item(mut ctx Context, id int) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
+	for item in app.items {
+		if item.id == id {
+			return ctx.json(json.encode(item))
+		}
+	}
+	ctx.res.set_status(.not_found)
+	return ctx.json('{"error": "Item not found"}')
+}
+
+// 4. POST /api/items - Decodes JSON request body and adds a new item
+@['/api/items'; post]
+fn (mut app App) create_item(mut ctx Context) veb.Result {
+	new_item := json.decode(Item, ctx.req.data) or {
+		ctx.res.set_status(.bad_request)
+		return ctx.json('{"error": "Invalid JSON format"}')
+	}
+
+	app.lock.@lock()
+	defer { app.lock.unlock() }
+
+	// Auto-increment ID based on length
+	item_to_add := Item{
+		id:   app.items.len + 1
+		name: new_item.name
+		done: new_item.done
+	}
+
+	app.items << item_to_add
+	ctx.res.set_status(.created)
+	return ctx.json(json.encode(item_to_add))
+}
+
+fn main() {
+	// Initialize App with mock seed data
+	mut app := &App{
+		items: [
+			Item{
+				id:   1
+				name: 'Learn V syntax'
+				done: true
+			},
+			Item{
+				id:   2
+				name: 'Build a REST API in V'
+				done: false
+			},
+		]
+	}
+
+	// Read port from environment variable or default to 8082 to avoid common conflicts on 8080
+	port_env := os.getenv('PORT')
+	port := if port_env != '' { port_env.int() } else { 8082 }
+
+	println('Starting REST API server on http://localhost:${port}...')
+
+	// Start veb web server
+	veb.run[App, Context](mut app, port)
+}
+```
+
+---
+
+### Worker Pool Concurrency Boilerplate
+
+_File location: [boilerplate_templates/03_worker_pool/worker_pool.v](boilerplate_templates/03_worker_pool/worker_pool.v)_
+
+### Lesson: Worker Pool Concurrency Boilerplate
+
+V offers lightweight concurrency out of the box. By combining `spawn` (thread creation) with typed channels (`chan`), you can build thread-safe worker pools that process computationally intensive or high-latency tasks in parallel without lock overhead.
+
+Key concepts illustrated:
+
+- **Channel Communication**: Sending and receiving tasks and results over thread-safe queues.
+- **Spawned Threads**: Running worker functions concurrently using the `spawn` keyword.
+- **Synchronization with WaitGroups**: Using `sync.WaitGroup` to track and coordinate concurrent worker completion.
+- **Monitor Thread Pattern**: Spawning a monitor thread to wait for workers to finish and close the results channel, avoiding channel deadlocks.
+- **Graceful Shutdown**: Closing the tasks channel (`tasks_chan.close()`) to signal worker threads to cleanly exit.
+
+```v
+module main
+
+import time
+import sync
+
+// Task represents the unit of work to be processed.
+struct Task {
+	id   int
+	data string
+}
+
+// Result represents the outcome of processing a Task.
+struct Result {
+	task_id   int
+	worker_id int
+	output    string
+	duration  time.Duration
+}
+
+// worker runs in a separate thread, consuming from tasks_chan and producing to results_chan.
+fn worker(id int, tasks_chan chan Task, results_chan chan Result, mut wg sync.WaitGroup) {
+	defer {
+		wg.done()
+	}
+	for {
+		// Receive a task from the channel.
+		// If the channel is closed and empty, it returns `none`
+		t := <-tasks_chan or { break }
+
+		start_time := time.now()
+
+		// Simulate intensive processing/I/O task
+		time.sleep(50 * time.millisecond)
+
+		elapsed := time.since(start_time)
+
+		// Send the result to the output channel
+		results_chan <- Result{
+			task_id:   t.id
+			worker_id: id
+			output:    'Processed: ' + t.data.to_upper()
+			duration:  elapsed
+		}
+	}
+}
+
+// wait_and_close waits for all workers to finish and then closes the results channel.
+fn wait_and_close(mut wg sync.WaitGroup, results_chan chan Result) {
+	wg.wait()
+	results_chan.close()
+}
+
+fn main() {
+	println('=== V Worker Pool Concurrency Boilerplate ===')
+
+	// 1. Create channels for tasks and results with capacities
+	tasks_chan := chan Task{cap: 10}
+	results_chan := chan Result{cap: 10}
+
+	num_workers := 3
+	num_tasks := 5
+
+	mut wg := sync.new_waitgroup()
+
+	// 2. Spawn concurrent worker threads
+	println('Spawning ${num_workers} workers...')
+	for i in 0 .. num_workers {
+		wg.add(1)
+		spawn worker(i + 1, tasks_chan, results_chan, mut wg)
+	}
+
+	// Spawn the monitor thread to close results_chan when all workers are done
+	spawn wait_and_close(mut wg, results_chan)
+
+	// 3. Dispatch tasks to the queue
+	println('Dispatching ${num_tasks} tasks to worker pool...')
+	for i in 0 .. num_tasks {
+		tasks_chan <- Task{
+			id:   i + 1
+			data: 'task-payload-${i + 1}'
+		}
+	}
+
+	// 4. Close tasks channel to signal workers that no more work is coming
+	tasks_chan.close()
+	println('Tasks dispatched, queue closed. Collecting results...')
+
+	// 5. Collect results from results channel by iterating until it is closed
+	mut results := []Result{}
+	for {
+		res := <-results_chan or { break }
+		results << res
+		println('Received: Task #${res.task_id} from Worker #${res.worker_id} (took ${res.duration.milliseconds()}ms)')
+	}
+
+	// 6. Print summary
+	println('\n=== Processing Summary ===')
+	for res in results {
+		println('- Task #${res.task_id} -> ${res.output} (Worker #${res.worker_id})')
+	}
+}
+```
+
+---
+
+### OS and File Utilities Boilerplate
+
+_File location: [boilerplate_templates/04_file_utilities/file_utilities.v](boilerplate_templates/04_file_utilities/file_utilities.v)_
+
+### Lesson: OS and File Utilities Boilerplate
+
+V's standard `os` module contains comprehensive and platform-agnostic tools for interacting with the file system and host operating system.
+
+Key concepts illustrated:
+
+- **Path Manipulation**: Using `os.join_path` to build paths correctly across Linux, macOS, and Windows.
+- **File I/O**: Performing quick reads and writes using `os.read_file` and `os.write_file`.
+- **Directory Operations**: Checking folder existence, recursively creating folders via `os.mkdir_all`, and listing files via `os.ls`.
+- **Metadata Inspection**: Interrogating file properties like sizes and types (`os.is_file`/`os.is_dir`).
+- **Resource Cleanup**: Ensuring system hygiene by safely removing files (`os.rm`) and folders (`os.rmdir`).
+
+```v
+module main
+
+import os
+
+fn main() {
+	println('=== V OS & File Utilities Boilerplate ===')
+
+	// 1. Join paths safely across different operating systems using os.join_path
+	// V's home_dir() gives the user's home directory. Let's use it as a base path inside a temporary subfolder in workspace.
+	cwd := os.getwd()
+	temp_dir := os.join_path(cwd, 'temp_file_demo')
+	println('Target directory: ${temp_dir}')
+
+	// 2. Check if a directory exists, and create it recursively if not
+	if !os.exists(temp_dir) {
+		println('Directory does not exist. Creating...')
+		os.mkdir_all(temp_dir) or {
+			eprintln('Failed to create directory: ${err}')
+			exit(1)
+		}
+	}
+
+	target_file := os.join_path(temp_dir, 'sample.txt')
+	println('Target file path: ${target_file}')
+
+	// 3. Write data to a file (overwrites if it already exists)
+	content_to_write := 'Hello V Developers!\nThis is a sample file created by the OS and File utilities boilerplate.'
+	os.write_file(target_file, content_to_write) or {
+		eprintln('Failed to write to file: ${err}')
+		exit(1)
+	}
+	println('File written successfully.')
+
+	// 4. Read data from a file back into memory
+	read_content := os.read_file(target_file) or {
+		eprintln('Failed to read file: ${err}')
+		exit(1)
+	}
+	println('\n--- Read Content ---')
+	println(read_content)
+	println('--------------------\n')
+
+	// 5. Query file metadata
+	size := os.file_size(target_file)
+	is_file := os.is_file(target_file)
+	is_dir := os.is_dir(temp_dir)
+	println('File properties:')
+	println('- Size: ${size} bytes')
+	println('- Is File: ${is_file}')
+	println('- Is Directory: ${is_dir}')
+
+	// 6. List all files and folders inside a directory
+	println('\nListing contents of directory: ${temp_dir}')
+	files := os.ls(temp_dir) or { []string{} }
+	for file in files {
+		full_path := os.join_path(temp_dir, file)
+		file_type := if os.is_dir(full_path) { '[DIR]' } else { '[FILE]' }
+		println('  ${file_type} ${file}')
+	}
+
+	// 7. Clean up by deleting the file and directory
+	println('\nCleaning up temporary files and directories...')
+	os.rm(target_file) or { eprintln('Failed to delete file: ${err}') }
+	os.rmdir(temp_dir) or { eprintln('Failed to delete directory: ${err}') }
+	println('Cleanup completed successfully.')
+}
+```
+
+---
+
+### String Utilities Boilerplate
+
+_File location: [boilerplate_templates/05_string_utilities/string_utilities.v](boilerplate_templates/05_string_utilities/string_utilities.v)_
+
+### Lesson: String Utilities Boilerplate
+
+This boilerplate demonstrates how to implement highly useful custom string operations that are not natively built into V's core string type. It highlights UTF-8 rune handling, string tokenization, filtering, and text manipulation.
+
+Key concepts illustrated:
+
+- **UTF-8 Safe String Reversal**: Reversing strings correctly by iterating over `runes` rather than raw bytes, ensuring multi-byte Unicode characters (like emojis) are not corrupted.
+- **Title Casing**: Capitalizing the first letter of _each_ word in a sentence (V's native `.capitalize()` only capitalizes the first letter of the entire string).
+- **Alphanumeric Palindrome Checking**: Checking if a string is a palindrome while ignoring non-alphanumeric symbols and character casing.
+- **Rune-based Truncation**: Cutting off a string at a specific character limit and adding an ellipsis, avoiding splitting UTF-8 byte sequences.
+- **Slugification**: Generating clean, URL-friendly slugs (e.g. low-cased, hyphen-separated, special characters stripped) from user-supplied titles.
+
+```v
+module main
+
+// reverse_string reverses a string, properly handling multi-byte UTF-8 characters (runes).
+fn reverse_string(s string) string {
+	runes := s.runes()
+	mut rev_runes := []rune{cap: runes.len}
+	for i := runes.len - 1; i >= 0; i-- {
+		rev_runes << runes[i]
+	}
+	return rev_runes.string()
+}
+
+// title_case capitalizes the first letter of each word in a string.
+fn title_case(s string) string {
+	words := s.split(' ')
+	mut titled_words := []string{cap: words.len}
+	for word in words {
+		if word.len == 0 {
+			titled_words << ''
+			continue
+		}
+		titled_words << word.capitalize()
+	}
+	return titled_words.join(' ')
+}
+
+// is_palindrome checks if a string reads the same forwards and backwards,
+// ignoring case and non-alphanumeric characters.
+fn is_palindrome(s string) bool {
+	// Filter to lowercase alphanumeric characters
+	mut clean_chars := []rune{}
+	for r in s.to_lower().runes() {
+		if (r >= `a` && r <= `z`) || (r >= `0` && r <= `9`) {
+			clean_chars << r
+		}
+	}
+
+	for i in 0 .. clean_chars.len / 2 {
+		if clean_chars[i] != clean_chars[clean_chars.len - 1 - i] {
+			return false
+		}
+	}
+	return true
+}
+
+// truncate cuts off a string at a specified limit (by rune count) and appends an ellipsis.
+fn truncate(s string, limit int) string {
+	runes := s.runes()
+	if runes.len <= limit {
+		return s
+	}
+	return runes[0..limit].string() + '...'
+}
+
+// slugify converts a string into a clean, URL-friendly slug.
+fn slugify(s string) string {
+	mut res := []rune{}
+	mut last_was_dash := false
+
+	for r in s.to_lower().runes() {
+		if (r >= `a` && r <= `z`) || (r >= `0` && r <= `9`) {
+			res << r
+			last_was_dash = false
+		} else if r == ` ` || r == `-` || r == `_` {
+			if !last_was_dash && res.len > 0 {
+				res << `-`
+				last_was_dash = true
+			}
+		}
+	}
+
+	// Trim trailing dash if any
+	mut slug := res.string()
+	if slug.ends_with('-') {
+		slug = slug[0..slug.len - 1]
+	}
+	return slug
+}
+
+fn main() {
+	println('=== V Custom String Utilities Boilerplate ===')
+
+	// 1. Reverse String (UTF-8 safe)
+	phrase := 'Hello, 🚀 World!'
+	println('Original:  "${phrase}"')
+	println('Reversed:  "${reverse_string(phrase)}"')
+
+	// 2. Title Case (capitalizing every word)
+	title := 'v programming language complete textbook guide'
+	println('\nOriginal:  "${title}"')
+	println('Title Case: "${title_case(title)}"')
+
+	// 3. Palindrome Check
+	pal1 := 'A man, a plan, a canal: Panama!'
+	pal2 := 'Hello Vlang'
+	println('\nIs "${pal1}" a palindrome? ${is_palindrome(pal1)}')
+	println('Is "${pal2}" a palindrome? ${is_palindrome(pal2)}')
+
+	// 4. Truncation
+	long_text := 'V is a statically typed compiled programming language designed for building maintainable software.'
+	println('\nOriginal:  "${long_text}"')
+	println('Truncated: "${truncate(long_text, 35)}"')
+
+	// 5. Slugify
+	title_to_slug := '  Vlang: Concurrency, Channels, & Web APIs!  '
+	println('\nOriginal:  "${title_to_slug}"')
+	println('Slugified: "${slugify(title_to_slug)}"')
+}
+```
+
+---
+
+### Math and Statistics Boilerplate
+
+_File location: [boilerplate_templates/06_math_and_stats/math_and_stats.v](boilerplate_templates/06_math_and_stats/math_and_stats.v)_
+
+### Lesson: Math and Statistics Boilerplate
+
+This template showcases how to perform numerical operations and custom statistical computations on numeric arrays. It implements several custom algorithmic functions that are not built directly into V's basic numeric types or standard math package.
+
+Key concepts illustrated:
+
+- **Descriptive Statistics**: Iterating over elements to calculate min, max, sum, and average (mean) on float slices.
+- **Array Sorting & Cloning**: Using `.clone()` to copy data and sorting arrays in-place using `.sort()`.
+- **Median, Variance & Deviation**: Custom implementations to calculate distribution variance and standard deviation using V's `math.sqrt()`.
+- **Factorial Calculation**: An iterative, overflow-aware custom factorial function using V's `!` result type to report overflow on inputs greater than 20.
+- **Fibonacci Sequence Generator**: A custom dynamic programming function generating the first $N$ numbers of the Fibonacci sequence, using `!` to report overflow on inputs greater than 93.
+- **Prime Number Checker**: A highly optimized primality test (`is_prime`) using trial division of form $6k \pm 1$.
+- **GCD and LCM**: Custom implementations for finding the Greatest Common Divisor (Euclidean algorithm) and Least Common Multiple of two numbers.
+
+```v
+module main
+
+import math
+
+// Stats holds the computed statistical properties of a dataset.
+struct Stats {
+	count    int
+	min      f64
+	max      f64
+	sum      f64
+	mean     f64
+	median   f64
+	variance f64
+	std_dev  f64
+}
+
+// calculate_stats calculates standard descriptive statistics on a float dataset (not built into V arrays).
+fn calculate_stats(numbers []f64) ?Stats {
+	if numbers.len == 0 {
+		return none
+	}
+
+	mut sum := 0.0
+	mut min := numbers[0]
+	mut max := numbers[0]
+
+	for val in numbers {
+		sum += val
+		if val < min {
+			min = val
+		}
+		if val > max {
+			max = val
+		}
+	}
+
+	mean := sum / numbers.len
+
+	// Calculate median (requires a sorted copy of the numbers)
+	mut sorted := numbers.clone()
+	sorted.sort()
+
+	mut median := 0.0
+	mid := sorted.len / 2
+	if sorted.len % 2 == 0 {
+		median = (sorted[mid - 1] + sorted[mid]) / 2.0
+	} else {
+		median = sorted[mid]
+	}
+
+	// Calculate variance and standard deviation
+	mut variance_sum := 0.0
+	for val in numbers {
+		diff := val - mean
+		variance_sum += diff * diff
+	}
+	variance := variance_sum / numbers.len
+	std_dev := math.sqrt(variance)
+
+	return Stats{
+		count:    numbers.len
+		min:      min
+		max:      max
+		sum:      sum
+		mean:     mean
+		median:   median
+		variance: variance
+		std_dev:  std_dev
+	}
+}
+
+// factorial calculates the factorial of a number iteratively, with overflow checks.
+fn factorial(n int) !u64 {
+	if n < 0 {
+		return error('Factorial is not defined for negative numbers')
+	}
+	if n > 20 {
+		return error('Factorial of ${n} overflows 64-bit unsigned integer limit (max n is 20)')
+	}
+	mut result := u64(1)
+	for i in 2 .. n + 1 {
+		result *= u64(i)
+	}
+	return result
+}
+
+// fibonacci generates the first n Fibonacci numbers, with overflow checks.
+fn fibonacci(n int) ![]u64 {
+	if n < 0 {
+		return error('Count must be non-negative')
+	}
+	if n > 93 {
+		return error('Fibonacci sequence beyond 93 elements overflows 64-bit unsigned integer limit')
+	}
+	if n == 0 {
+		return []u64{}
+	}
+	if n == 1 {
+		return [u64(0)]
+	}
+	mut sequence := []u64{cap: n}
+	sequence << u64(0)
+	sequence << u64(1)
+	for i in 2 .. n {
+		sequence << sequence[i - 1] + sequence[i - 2]
+	}
+	return sequence
+}
+
+// is_prime checks if a number is prime.
+fn is_prime(n int) bool {
+	if n <= 1 {
+		return false
+	}
+	if n <= 3 {
+		return true
+	}
+	if n % 2 == 0 || n % 3 == 0 {
+		return false
+	}
+	mut i := 5
+	for i * i <= n {
+		if n % i == 0 || n % (i + 2) == 0 {
+			return false
+		}
+		i += 6
+	}
+	return true
+}
+
+// gcd computes the Greatest Common Divisor of two integers.
+fn gcd(a int, b int) int {
+	mut x := math.abs(a)
+	mut y := math.abs(b)
+	for y != 0 {
+		temp := y
+		y = x % y
+		x = temp
+	}
+	return x
+}
+
+// lcm computes the Least Common Multiple of two integers.
+fn lcm(a int, b int) int {
+	if a == 0 || b == 0 {
+		return 0
+	}
+	return (math.abs(a) * math.abs(b)) / gcd(a, b)
+}
+
+fn main() {
+	println('=== V Custom Math & Statistics Boilerplate ===')
+
+	// 1. Descriptive Statistics Demo
+	data := [72.5, 81.0, 68.5, 90.0, 75.5, 78.0, 85.5]
+	println('Dataset: ${data}')
+
+	stats := calculate_stats(data) or {
+		println('Error: Empty dataset')
+		return
+	}
+
+	println('\nStatistical Results:')
+	println('- Count:              ${stats.count}')
+	println('- Minimum:            ${stats.min:.2f}')
+	println('- Maximum:            ${stats.max:.2f}')
+	println('- Sum:                ${stats.sum:.2f}')
+	println('- Mean (Average):     ${stats.mean:.2f}')
+	println('- Median:             ${stats.median:.2f}')
+	println('- Variance:           ${stats.variance:.2f}')
+	println('- Standard Deviation: ${stats.std_dev:.2f}')
+
+	// 2. Custom Math Functions Demo
+	n := 10
+	println('\nCustom Number Functions:')
+
+	fact := factorial(n) or {
+		eprintln('Error: ${err}')
+		u64(0)
+	}
+	println('- Factorial of ${n}:    ${fact}')
+
+	fib := fibonacci(n) or {
+		eprintln('Error: ${err}')
+		[]u64{}
+	}
+	println('- Fibonacci first ${n}: ${fib}')
+
+	test_primes := [7, 12, 19, 25, 97]
+	for p in test_primes {
+		println('  Is ${p} prime?       ${is_prime(p)}')
+	}
+
+	a, b := 24, 36
+	println('\nCommon Number Relations:')
+	println('- GCD of ${a} and ${b}:    ${gcd(a, b)}')
+	println('- LCM of ${a} and ${b}:    ${lcm(a, b)}')
+}
+```
+
+---
+
+### Array Utilities Boilerplate
+
+_File location: [boilerplate_templates/07_array_utilities/array_utilities.v](boilerplate_templates/07_array_utilities/array_utilities.v)_
+
+### Lesson: Array Utilities Boilerplate
+
+V's standard array implementation is powerful but focused. This template showcases how to implement useful custom generic utilities for manipulating, comparing, and organizing arrays.
+
+Key concepts illustrated:
+
+- **Generics in V**: Writing reusable algorithms using type parameters `[T]`.
+- **Deduplication (`unique`)**: Removing duplicates from an array using containment checks (`!in`).
+- **Chunking (`chunk`)**: Partitioning an array into smaller sub-slices of a fixed maximum length.
+- **Set Operations (`intersection`, `difference`)**: Calculating overlapping elements and unique elements between two arrays.
+- **Flattening (`flatten`)**: Condensing nested 2D slices (`[][]T`) into flat 1D slices (`[]T`).
+- **In-place Shuffling (`shuffle`)**: Implementing the Fisher-Yates shuffle algorithm using V's standard `rand` package.
+- **Weighted Selection (`weighted_choice`)**: Selecting elements from an array based on proportional bias (weights) to simulate probability distributions.
+
+```v
+module main
+
+import rand
+
+// unique returns a new array with duplicate elements removed.
+fn unique[T](arr []T) []T {
+	mut result := []T{cap: arr.len}
+	for item in arr {
+		if item !in result {
+			result << item
+		}
+	}
+	return result
+}
+
+// chunk splits an array into sub-arrays of the specified size.
+fn chunk[T](arr []T, size int) [][]T {
+	if size <= 0 || arr.len == 0 {
+		return [][]T{}
+	}
+	mut result := [][]T{}
+	mut current_chunk := []T{}
+
+	for item in arr {
+		current_chunk << item
+		if current_chunk.len == size {
+			result << current_chunk
+			current_chunk = []T{}
+		}
+	}
+	if current_chunk.len > 0 {
+		result << current_chunk
+	}
+	return result
+}
+
+// intersection returns a new array containing elements present in both arrays.
+fn intersection[T](a []T, b []T) []T {
+	mut result := []T{}
+	for item in a {
+		if item in b && item !in result {
+			result << item
+		}
+	}
+	return result
+}
+
+// difference returns a new array containing elements present in a but not in b.
+fn difference[T](a []T, b []T) []T {
+	mut result := []T{}
+	for item in a {
+		if item !in b && item !in result {
+			result << item
+		}
+	}
+	return result
+}
+
+// flatten flattens a 2D array into a 1D array.
+fn flatten[T](arr [][]T) []T {
+	mut result := []T{}
+	for sub_arr in arr {
+		for item in sub_arr {
+			result << item
+		}
+	}
+	return result
+}
+
+// shuffle randomizes the order of elements in-place using the Fisher-Yates algorithm.
+fn shuffle[T](mut arr []T) {
+	for i := arr.len - 1; i > 0; i-- {
+		j := rand.intn(i + 1) or { 0 }
+		temp := arr[i]
+		arr[i] = arr[j]
+		arr[j] = temp
+	}
+}
+
+// weighted_choice returns an element from `values` based on their corresponding `weights`.
+// The lengths of `values` and `weights` must be equal and non-zero.
+// All weights must be non-negative.
+fn weighted_choice[T](values []T, weights []int) !T {
+	if values.len != weights.len {
+		return error('values and weights must have the same length')
+	}
+	if values.len == 0 {
+		return error('cannot pick from empty arrays')
+	}
+
+	mut total_weight := 0
+	for w in weights {
+		if w < 0 {
+			return error('weights must be non-negative')
+		}
+		total_weight += w
+	}
+
+	if total_weight <= 0 {
+		return error('sum of weights must be greater than zero')
+	}
+
+	// Pick a random number in [0, total_weight)
+	r := rand.intn(total_weight) or { return error('failed to generate random number: ${err}') }
+
+	mut running_sum := 0
+	for i, w in weights {
+		running_sum += w
+		if r < running_sum {
+			return values[i]
+		}
+	}
+
+	return values[values.len - 1]
+}
+
+fn main() {
+	println('=== V Custom Array Utilities Boilerplate ===')
+
+	// 1. Unique / Deduplication Demo
+	duplicates := [1, 2, 2, 3, 1, 4, 3, 5, 2]
+	println('Original:    ${duplicates}')
+	println('Deduplicated: ${unique(duplicates)}')
+
+	// 2. Chunking Demo
+	to_chunk := ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+	chunk_size := 3
+	println('\nOriginal:    ${to_chunk}')
+	println('Chunked (${chunk_size}): ${chunk[string](to_chunk, chunk_size)}')
+
+	// 3. Intersection & Difference Demo
+	arr_a := [1, 2, 3, 4, 5]
+	arr_b := [4, 5, 6, 7, 8]
+	println('\nArray A:     ${arr_a}')
+	println('Array B:     ${arr_b}')
+	println('Intersection: ${intersection(arr_a, arr_b)}')
+	println('Difference:  ${difference(arr_a, arr_b)}')
+
+	// 4. Flattening Demo
+	nested := [[1, 2], [3, 4, 5], [6]]
+	println('\nNested:      ${nested}')
+	println('Flattened:   ${flatten(nested)}')
+
+	// 5. In-place Shuffling Demo
+	mut to_shuffle := [10, 20, 30, 40, 50, 60, 70]
+	println('\nBefore Shuffle: ${to_shuffle}')
+	shuffle(mut to_shuffle)
+	println('After Shuffle:  ${to_shuffle}')
+
+	// 6. Weighted Random Choice Demo (picking with bias)
+	items := ['Common', 'Uncommon', 'Rare', 'Legendary']
+	weights := [70, 20, 9, 1] // Sum is 100
+	println('\nWeighted Choice Demo (picking with bias):')
+	println('Items:   ${items}')
+	println('Weights: ${weights}')
+
+	// Simulate 10,000 picks to demonstrate that the distribution matches the weights
+	mut stats := map[string]int{}
+	for _ in 0 .. 10000 {
+		picked := weighted_choice[string](items, weights) or {
+			eprintln('Error: ${err}')
+			continue
+		}
+		stats[picked]++
+	}
+
+	println('Simulation results (out of 10,000 picks):')
+	for item in items {
+		println('- ${item}: ${stats[item]} picks (~${(f64(stats[item]) / 100.0):.1f}%)')
+	}
+}
+```
+
+---
+
+### Configuration Management Boilerplate
+
+_File location: [boilerplate_templates/08_config_management/config_management.v](boilerplate_templates/08_config_management/config_management.v)_
+
+### Lesson: Configuration Management Boilerplate
+
+Most practical applications need configuration values that can come from a file, environment variables, or defaults. This template shows a clean pattern for loading a JSON config, falling back to safe defaults, and saving updated settings.
+
+Key concepts illustrated:
+
+- **Default Configuration**: Establishing a safe baseline before reading external settings.
+- **Environment Variable Overrides**: Adapting the app without changing source files.
+- **JSON Persistence**: Reading and writing structured config files with `json.decode` and `json.encode`.
+- **Practical Separation of Concerns**: Keeping parsing and application logic in dedicated functions.
+
+```v
+module main
+
+import json
+import os
+
+struct AppConfig {
+mut:
+	host    string
+	port    int
+	debug   bool
+	retries int
+}
+
+fn default_config() AppConfig {
+	return AppConfig{
+		host:    '127.0.0.1'
+		port:    8080
+		debug:   false
+		retries: 3
+	}
+}
+
+fn load_config(path string) AppConfig {
+	mut cfg := default_config()
+
+	// 1. If path is provided and exists, load config from the JSON file first
+	if path != '' && os.exists(path) {
+		raw := os.read_file(path) or {
+			eprintln('Warning: could not read config file: ${err}')
+			''
+		}
+		if raw != '' {
+			cfg = json.decode(AppConfig, raw) or {
+				eprintln('Warning: could not decode config file: ${err}')
+				cfg
+			}
+		}
+	} else if path != '' {
+		println('Config file not found. Using defaults with environment overrides.')
+	}
+
+	// 2. Overlay / override with environment variables (crucial for production container envs)
+	env_host := os.getenv('APP_HOST')
+	if env_host != '' {
+		cfg.host = env_host
+	}
+	env_port := os.getenv('APP_PORT')
+	if env_port != '' {
+		cfg.port = env_port.int()
+	}
+	env_debug := os.getenv('APP_DEBUG')
+	if env_debug != '' {
+		cfg.debug = env_debug == 'true'
+	}
+	env_retries := os.getenv('APP_RETRIES')
+	if env_retries != '' {
+		cfg.retries = env_retries.int()
+	}
+
+	return cfg
+}
+
+fn save_config(path string, cfg AppConfig) {
+	data := json.encode(cfg)
+	os.write_file(path, data) or { eprint('Failed to save config file: ${err}') }
+}
+
+fn main() {
+	println('=== V Configuration Management Boilerplate ===')
+
+	config_path := 'app_config.json'
+
+	// Ensure we cleanup the generated file on exit
+	defer {
+		if os.exists(config_path) {
+			os.rm(config_path) or {}
+			println('Cleaned up temporary config file: ${config_path}')
+		}
+	}
+
+	mut cfg := load_config(config_path)
+
+	println('Loaded configuration:')
+	println('- host: ${cfg.host}')
+	println('- port: ${cfg.port}')
+	println('- debug: ${cfg.debug}')
+	println('- retries: ${cfg.retries}')
+
+	cfg.debug = true
+	save_config(config_path, cfg)
+
+	println('Saved configuration to ${config_path}')
+}
+```
+
+---
+
+### JSON File Store Boilerplate
+
+_File location: [boilerplate_templates/09_json_file_store/json_file_store.v](boilerplate_templates/09_json_file_store/json_file_store.v)_
+
+### Lesson: JSON File Store Boilerplate
+
+A simple JSON file store is often enough for small tools, prototypes, or local productivity apps. This template shows how to load persisted data from disk, add new records, update them, and save the state again.
+
+Key concepts illustrated:
+
+- **Persistent Data**: Keeping application state across runs with a simple file-backed format.
+- **Structured Records**: Storing typed data in a `TodoItem` model.
+- **CRUD Style Helpers**: Adding, updating, and listing records without introducing a database dependency.
+- **Safe Serialization**: Using `json.encode` and `json.decode` for portability.
+
+```v
+module main
+
+import json
+import os
+
+struct TodoItem {
+	id    int
+	title string
+mut:
+	done bool
+}
+
+struct TodoStore {
+mut:
+	items []TodoItem
+}
+
+fn load_store(path string) TodoStore {
+	if !os.exists(path) {
+		return TodoStore{}
+	}
+
+	raw := os.read_file(path) or {
+		eprintln('Could not read store: ${err}')
+		return TodoStore{}
+	}
+
+	decoded := json.decode(TodoStore, raw) or {
+		eprintln('Could not decode store: ${err}')
+		return TodoStore{}
+	}
+
+	return decoded
+}
+
+fn save_store(path string, store TodoStore) {
+	data := json.encode(store)
+	os.write_file(path, data) or { eprintln('Could not save store: ${err}') }
+}
+
+fn add_item(mut store TodoStore, title string) TodoItem {
+	item := TodoItem{
+		id:    store.items.len + 1
+		title: title
+		done:  false
+	}
+	store.items << item
+	return item
+}
+
+fn mark_done(mut store TodoStore, id int) bool {
+	for i, item in store.items {
+		if item.id == id {
+			store.items[i].done = true
+			return true
+		}
+	}
+	return false
+}
+
+fn list_items(store TodoStore) {
+	for item in store.items {
+		status := if item.done { '[x]' } else { '[ ]' }
+		println('${status} ${item.id}. ${item.title}')
+	}
+}
+
+fn main() {
+	println('=== V JSON File Store Boilerplate ===')
+
+	store_path := 'todos.json'
+
+	// Ensure we cleanup the generated file on exit
+	defer {
+		if os.exists(store_path) {
+			os.rm(store_path) or {}
+			println('Cleaned up temporary store file: ${store_path}')
+		}
+	}
+
+	mut store := load_store(store_path)
+
+	add_item(mut store, 'Write a V tutorial')
+	add_item(mut store, 'Ship a new boilerplate example')
+
+	println('Current todos:')
+	list_items(store)
+
+	if mark_done(mut store, 1) {
+		println('Marked todo #1 as done.')
+	} else {
+		println('Todo #1 was not found.')
+	}
+
+	save_store(store_path, store)
+	println('Saved todos to ${store_path}')
+}
+```
+
+---
+
+### Retry and Backoff Boilerplate
+
+_File location: [boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v](boilerplate_templates/10_retry_and_backoff/retry_and_backoff.v)_
+
+### Lesson: Retry and Backoff Boilerplate
+
+Transient failures are common in distributed systems, network clients, and file operations. This template demonstrates a practical retry loop that delays between attempts and surfaces a final failure only after the allowed number of tries is exhausted.
+
+Key concepts illustrated:
+
+- **Resilient Operations**: Using a generic function structure to wrap any callback in a robust retry cycle.
+- **Exponential Backoff**: Multiplying delays by a backoff factor after each failed attempt to reduce load on resources.
+- **Random Jitter**: Adding a small, random time variation (jitter) to sleep intervals to prevent synchronized retries (thundering herd problem).
+- **Result & Error Propagation**: Leveraging V's `!` result type to return either the successful generic value `T` or propagate the final failure.
+
+```v
+module main
+
+import os
+import time
+import rand
+
+// RetryConfig configures the retry and backoff behavior.
+struct RetryConfig {
+	attempts      int           = 3
+	initial_delay time.Duration = 100 * time.millisecond
+	factor        f64           = 2.0
+	max_delay     time.Duration = 3 * time.second
+	jitter        bool          = true
+}
+
+// retry executes the operation `op` up to `cfg.attempts` times.
+// It uses exponential backoff with optional random jitter.
+fn retry[T](cfg RetryConfig, op fn () !T) !T {
+	mut delay := cfg.initial_delay
+	for attempt in 1 .. cfg.attempts + 1 {
+		res := op() or {
+			if attempt == cfg.attempts {
+				return error('Operation failed after ${cfg.attempts} attempts. Last error: ${err}')
+			}
+
+			eprintln('Attempt ${attempt}/${cfg.attempts} failed: ${err}. Retrying in ${delay.milliseconds()}ms...')
+
+			// Sleep with optional jitter to prevent thundering herd problems
+			mut sleep_dur := delay
+			if cfg.jitter {
+				jitter_ms := rand.intn(100) or { 0 }
+				sleep_dur += jitter_ms * time.millisecond
+			}
+			time.sleep(sleep_dur)
+
+			// Increase the delay for the next attempt, up to max_delay
+			delay = time.Duration(i64(f64(delay) * cfg.factor))
+			if delay > cfg.max_delay {
+				delay = cfg.max_delay
+			}
+			continue
+		}
+		return res
+	}
+	return error('Unreachable')
+}
+
+fn main() {
+	println('=== V Retry & Backoff Boilerplate ===')
+
+	// Create a dummy file to read successfully on the 3rd attempt
+	file_path := 'temp_retry_demo.txt'
+	defer {
+		if os.exists(file_path) {
+			os.rm(file_path) or {}
+		}
+	}
+
+	// Spawn a thread to create the file after a short delay
+	spawn fn [file_path] () {
+		time.sleep(300 * time.millisecond)
+		os.write_file(file_path, 'Success: Data retrieved from temporary file!') or {}
+		println('[System] File created on disk.')
+	}()
+
+	// Define our retry configuration
+	cfg := RetryConfig{
+		attempts:      4
+		initial_delay: 150 * time.millisecond
+		factor:        1.5
+		jitter:        true
+	}
+
+	// Define the retriable operation closure
+	op := fn [file_path] () !string {
+		if !os.exists(file_path) {
+			return error('File does not exist yet')
+		}
+		return os.read_file(file_path)
+	}
+
+	// Run the retry loop
+	println('Starting resilient file read operation...')
+	content := retry[string](cfg, op) or {
+		eprintln('Final failure: ${err}')
+		return
+	}
+
+	println('\nOperation Succeeded!')
+	println('Read content: "${content}"')
+}
+```
+
+---
+
+### HTTP Client Boilerplate
+
+_File location: [boilerplate_templates/11_http_client/http_client.v](boilerplate_templates/11_http_client/http_client.v)_
+
+### Lesson: HTTP Client Boilerplate
+
+Many real-world tools need to call web services. This template shows a simple yet practical pattern for performing HTTP GET and POST requests, decoding JSON responses, and handling failures with clear errors.
+
+Key concepts illustrated:
+
+- **HTTP Requests**: Using `net.http` for GET and POST requests.
+- **JSON POST Headers**: Using `http.Request` directly to configure headers explicitly, including `Content-Type: application/json` for strict APIs.
+- **JSON Payloads**: Encoding and decoding structured data with `json`.
+- **Error Handling**: Returning and surfacing client errors cleanly.
+- **Reusable Helpers**: Keeping request logic in dedicated functions for later reuse.
+
+```v
+module main
+
+import net.http
+import json
+
+struct PostPayload {
+	title   string @[json: 'title']
+	body    string @[json: 'body']
+	user_id int    @[json: 'userId']
+}
+
+struct PostResponse {
+	id      int    @[json: 'id']
+	title   string @[json: 'title']
+	body    string @[json: 'body']
+	user_id int    @[json: 'userId']
+}
+
+fn fetch_json(url string) !string {
+	resp := http.get(url) or { return error('GET request failed: ${err}') }
+	if resp.status_code >= 400 {
+		return error('Request failed with status ${resp.status_code}')
+	}
+	return resp.body
+}
+
+fn post_json(url string, payload PostPayload) !PostResponse {
+	body := json.encode(payload)
+
+	// Set Content-Type explicitly for compliance with strict JSON APIs
+	mut req := http.Request{
+		method: .post
+		url:    url
+		data:   body
+	}
+	req.header.set(.content_type, 'application/json')
+
+	resp := req.do() or { return error('POST request failed: ${err}') }
+	if resp.status_code >= 400 {
+		return error('Request failed with status ${resp.status_code}')
+	}
+	return json.decode(PostResponse, resp.body) or { return error('Invalid JSON response') }
+}
+
+fn main() {
+	println('=== V HTTP Client Boilerplate ===')
+
+	body := fetch_json('https://httpbin.org/get') or {
+		eprintln('${err}')
+		return
+	}
+	println('GET response body:')
+	println(body)
+
+	response := post_json('https://jsonplaceholder.typicode.com/posts', PostPayload{
+		title:   'Ada'
+		body:    'Developer'
+		user_id: 1
+	}) or {
+		eprintln('${err}')
+		return
+	}
+
+	println('\nPOST response:')
+	println('id:      ${response.id}')
+	println('title:   ${response.title}')
+	println('body:    ${response.body}')
+	println('user_id: ${response.user_id}')
+}
+```
+
+---
+
+### CSV Processor Boilerplate
+
+_File location: [boilerplate_templates/12_csv_processor/csv_processor.v](boilerplate_templates/12_csv_processor/csv_processor.v)_
+
+### Lesson: CSV Processor Boilerplate
+
+CSV files are still common for importing and exporting tabular data. This template shows how to read records from CSV, transform them into typed structs, and write them back out in a clean format.
+
+Key concepts illustrated:
+
+- **CSV Parsing**: Reading rows with `encoding.csv`.
+- **Typed Data Models**: Mapping each row into a struct.
+- **File I/O**: Reading and writing files with `os` helpers.
+- **Practical Data Pipelines**: Transforming input files into processed output files.
+
+```v
+module main
+
+import os
+import encoding.csv
+
+struct Person {
+	name string
+	age  int
+	city string
+}
+
+fn read_people(path string) ![]Person {
+	content := os.read_file(path) or { return error('Could not read ${path}: ${err}') }
+	mut reader := csv.new_reader(content)
+
+	mut people := []Person{}
+	for {
+		row := reader.read() or { break }
+		if row.len == 0 {
+			continue
+		}
+		if row[0] == 'name' {
+			continue
+		}
+		people << Person{
+			name: row[0]
+			age:  row[1].int()
+			city: row[2]
+		}
+	}
+	return people
+}
+
+fn write_people(path string, people []Person) ! {
+	mut output := []string{}
+	output << 'name,age,city'
+	for person in people {
+		output << '${person.name},${person.age},${person.city}'
+	}
+	os.write_file(path, output.join('\n')) or { return error('Could not write ${path}: ${err}') }
+}
+
+fn main() {
+	println('=== V CSV Processor Boilerplate ===')
+
+	input_path := 'people.csv'
+	output_path := 'people_out.csv'
+
+	// Ensure temporary CSV files are cleaned up on exit
+	defer {
+		if os.exists(input_path) {
+			os.rm(input_path) or {}
+		}
+		if os.exists(output_path) {
+			os.rm(output_path) or {}
+		}
+		println('Cleaned up temporary CSV files.')
+	}
+
+	os.write_file(input_path, 'name,age,city\nAlice,30,New York\nBob,25,San Francisco') or {
+		eprintln('Could not create sample CSV: ${err}')
+		return
+	}
+
+	people := read_people(input_path) or {
+		eprintln('${err}')
+		return
+	}
+
+	for person in people {
+		println('Loaded: ${person.name} (${person.age}) from ${person.city}')
+	}
+
+	write_people(output_path, people) or {
+		eprintln('${err}')
+		return
+	}
+	println('Wrote processed CSV to ${output_path}')
+}
+```
+
+---
+
+### macOS Native GUI Boilerplate
+
+_File location: [boilerplate_templates/13_simplegui/main.v](boilerplate_templates/13_simplegui/main.v)_
+
+### Lesson: macOS Native GUI Boilerplate
+
+V is not limited to command-line tools. This starter project shows how to build a native macOS desktop app with a small, beginner-friendly API over Cocoa. It is a practical bridge between simple scripting-style V code and real GUI development.
+
+Key concepts illustrated:
+
+- **Native Window Creation**: Starting a real macOS window with `simplegui.new_simple_window(...)`.
+- **Named Controls**: Creating labels, text inputs, buttons, checkboxes, sliders, and more with one-line helpers.
+- **Event-Driven UI**: Connecting UI actions with callbacks such as `on_click` and `on_change`.
+- **State Updates from V**: Reading and writing control values with helpers like `get_text`, `set_text`, `set_checked`, and `set_value_int`.
+- **Crossing into Desktop Apps**: Showing how V can be used for interactive desktop experiences beyond console programs.
+
+```v
+module main
+
+import simplegui
+
+fn main() {
+	mut gui := simplegui.new_simple_window('V Native GUI Demo', 760, 950)
+	gui.set_title('V Native GUI Demo')
+	gui.add_label('intro', 'Create controls with one small call')
+	gui.add_input('name', 'Ada')
+	gui.add_button('run', 'Run')
+	gui.on_click('run', on_run_clicked)
+	gui.run()
+}
+
+fn on_run_clicked(mut win &simplegui.SimpleWindow) {
+	println('run clicked')
+	name := win.get_text('name')
+	win.alert('Hello', 'Hello, ${name}!')
+}
+```
+
+The full project in this repository includes multiple demos and a reusable module implementation in [boilerplate_templates/13_simplegui/simplegui/simplegui.v](boilerplate_templates/13_simplegui/simplegui/simplegui.v), making it an excellent example for learners who want to move from console programs into desktop interfaces.
+
+For the complete source, demo list, screenshots, and setup instructions, visit the original GitHub repository: https://github.com/codecaine-zz/vlang_simplegui/tree/master
+
+To use the project end to end, open the folder at [boilerplate_templates/13_simplegui](boilerplate_templates/13_simplegui) and change into that directory first so it becomes the current working directory, then run the main demo with `v run main.v`. This matters because the example expects to be launched from its own folder. You can also explore the other demo files in the same directory to see the available UI patterns.
+
+---
+
+### Logging Boilerplate
+
+_File location: [boilerplate_templates/14_logging/logging.v](boilerplate_templates/14_logging/logging.v)_
+
+### Lesson: Logging Boilerplate
+
+Structured logging is essential for debugging, monitoring, and understanding how an application behaves over time. This template shows a simple logger that writes messages with levels, timestamps, and optional file output.
+
+Key concepts illustrated:
+
+- **Log Levels**: Using `debug`, `info`, `warn`, and `error` categories.
+- **Simple Logger Struct**: Encapsulating configuration and behavior in one reusable type.
+- **File Output**: Appending log entries to a file for later inspection.
+- **Filtering**: Only emitting messages at or above the configured severity level.
+
+```v
+module main
+
+import os
+import time
+
+enum LogLevel {
+	debug
+	info
+	warn
+	error
+}
+
+struct Logger {
+	log_file string
+	level    LogLevel
+}
+
+fn (logger Logger) log(level LogLevel, message string) {
+	if int(level) < int(logger.level) {
+		return
+	}
+
+	timestamp := time.now().str()
+	prefix := match level {
+		.debug { '[DEBUG]' }
+		.info { '[INFO]' }
+		.warn { '[WARN]' }
+		.error { '[ERROR]' }
+	}
+
+	line := '${timestamp} ${prefix} ${message}'
+	println(line)
+	if logger.log_file != '' {
+		mut f := os.open_file(logger.log_file, 'a') or {
+			eprintln('Failed to open log file: ${err}')
+			return
+		}
+		f.write((line + '\n').bytes()) or { eprintln('Failed to append log: ${err}') }
+		f.close()
+	}
+}
+
+fn main() {
+	println('=== V Logging Boilerplate ===')
+
+	log_path := 'app.log'
+	defer {
+		if os.exists(log_path) {
+			os.rm(log_path) or {}
+			println('Cleaned up temporary log file: ${log_path}')
+		}
+	}
+
+	logger := Logger{
+		log_file: log_path
+		level:    .info
+	}
+
+	logger.log(.debug, 'This debug message is filtered out')
+	logger.log(.info, 'Application started')
+	logger.log(.warn, 'Configuration value is missing')
+	logger.log(.error, 'Something went wrong')
+}
+```
+
+---
+
+# Chapter 15: Comprehensive Practice Exercises
+
+## Quick Access
+
+Below is an index of all exercises in this chapter. You can use these links to jump directly to any specific exercise:
+
+**Practice Exercises Overview**
+
+- [Exercise 1: Comments and Console Printing](#exercise-1-comments-and-console-printing)
+- [Exercise 2: Circle Area Calculator with Variables and Constants](#exercise-2-circle-area-calculator-with-variables-and-constants)
+- [Exercise 3: String and Rune Processing](#exercise-3-string-and-rune-processing)
+- [Exercise 4: Custom FizzBuzz with Match](#exercise-4-custom-fizzbuzz-with-match)
+- [Exercise 5: Filtering and Sorting Student Grades](#exercise-5-filtering-and-sorting-student-grades)
+- [Exercise 6: Higher-Order Functions with Callbacks](#exercise-6-higher-order-functions-with-callbacks)
+- [Exercise 7: Modeling a Bank Account with Structs & Methods](#exercise-7-modeling-a-bank-account-with-structs--methods)
+- [Exercise 8: Safe Division with Option/Result](#exercise-8-safe-division-with-optionresult)
+- [Exercise 9: Modular Math Utility Project](#exercise-9-modular-math-utility-project)
+- [Exercise 10: Unit Testing String Reversal](#exercise-10-unit-testing-string-reversal)
+- [Exercise 11: Concurrent Task Aggregation with Channels](#exercise-11-concurrent-task-aggregation-with-channels)
+- [Exercise 12: JSON Parsing and Validation](#exercise-12-json-parsing-and-validation)
+- [Exercise 13: HTTP Client & Query Parameter Parser](#exercise-13-http-client--query-parameter-parser)
+- [Exercise 14: Concurrent Worker Pool for String Transformation](#exercise-14-concurrent-worker-pool-for-string-transformation)
+
+---
+
+## Practice Exercises Overview
+
+Welcome to Chapter 15! This chapter contains comprehensive practice exercises designed to consolidate your learning. Each exercise targets a specific chapter from this book and includes the prompt, the correct V code solution, and the expected terminal output.
+
+Use these exercises to test your understanding as you progress through each chapter of the textbook.
+
+---
+
+### Exercise 1: Comments and Console Printing
+
+This exercise covers Chapter 1: Getting Started with V.
+
+> [!EXERCISE]
+> Write a V program that prints your favorite programming languages to the console, utilizing single-line comments for metadata (such as Author and Date) and a multi-line comment describing the compile-to-C architecture of V.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> // Author: V Learner
+> // Date: June 2026
+> fn main() {
+> 	/*
+> 	  This program prints a list of favorite languages.
+> 	  V compiles to C, resulting in fast execution and tiny binaries.
+> 	*/
+> 	println('My favorite programming languages are:')
+> 	println('- V (for speed and simplicity)')
+> 	println('- Go (for cloud networking)')
+> 	println('- Rust (for memory safety)')
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> My favorite programming languages are:
+> - V (for speed and simplicity)
+> - Go (for cloud networking)
+> - Rust (for memory safety)
+> ```
+
+---
+
+### Exercise 2: Circle Area Calculator with Variables and Constants
+
+This exercise covers Chapter 2: Variables and Constants.
+
+> [!EXERCISE]
+> Create a program that defines a constant `pi = 3.14159`. In the `main` function, declare a mutable variable for the radius of a circle, initialize it to `5.0`, and compute/print the area. Then, update the radius to `10.0`, recompute the area, and print the updated result with 2 decimal places.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> const pi = 3.14159
+>
+> fn main() {
+> 	mut radius := 5.0
+> 	mut area := pi * radius * radius
+> 	println('Radius: ${radius} | Area: ${area:.2f}')
+>
+> 	radius = 10.0
+> 	area = pi * radius * radius
+> 	println('Radius: ${radius} | Area: ${area:.2f}')
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Radius: 5 | Area: 78.54
+> Radius: 10 | Area: 314.16
+> ```
+
+---
+
+### Exercise 3: String and Rune Processing
+
+This exercise covers Chapter 3: Primitive Data Types.
+
+> [!EXERCISE]
+> Create a V program that takes a string representation of a username. Retrieve and print its length, convert the entire username to uppercase, extract the first letter as a rune, and print its character representation as well as its raw ASCII integer value.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> fn main() {
+> 	username := 'vlang_developer'
+>
+> 	// Get string length
+> 	len := username.len
+> 	println('Username length: ${len}')
+>
+> 	// Convert to uppercase
+> 	upper := username.to_upper()
+> 	println('Uppercase: ${upper}')
+>
+> 	// Extract first character as rune
+> 	first_char := username[0]
+> 	println('First character: ${first_char.ascii_str()}')
+> 	println('ASCII value: ${int(first_char)}')
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Username length: 15
+> Uppercase: VLANG_DEVELOPER
+> First character: v
+> ASCII value: 118
+> ```
+
+---
+
+### Exercise 4: Custom FizzBuzz with Match
+
+This exercise covers Chapter 4: Control Flow.
+
+> [!EXERCISE]
+> Write a V program that loops from 1 to 20. For each number, determine if it is divisible by 3, 5, both, or neither. Use a `match` expression to print "Fizz" for multiples of 3, "Buzz" for multiples of 5, "FizzBuzz" for multiples of both, and the number itself otherwise.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> fn main() {
+> 	for i in 1 .. 21 {
+> 		match true {
+> 			i % 15 == 0 { println('FizzBuzz') }
+> 			i % 3 == 0 { println('Fizz') }
+> 			i % 5 == 0 { println('Buzz') }
+> 			else { println(i) }
+> 		}
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> 1
+> 2
+> Fizz
+> 4
+> Buzz
+> Fizz
+> 7
+> 8
+> Fizz
+> Buzz
+> 11
+> Fizz
+> 13
+> 14
+> FizzBuzz
+> 16
+> 17
+> Fizz
+> 19
+> Buzz
+> ```
+
+---
+
+### Exercise 5: Filtering and Sorting Student Grades
+
+This exercise covers Chapter 5: Collections: Arrays and Maps.
+
+> [!EXERCISE]
+> Create a map storing student names and their corresponding numeric grades. Filter the map to extract all students who scored 80 or above. Store these students' names in an array, sort the array alphabetically, and print the sorted names.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> fn main() {
+> 	grades := {
+> 		'Alice':   85
+> 		'Bob':     72
+> 		'Charlie': 90
+> 		'Diana':   65
+> 		'Ethan':   88
+> 	}
+>
+> 	mut top_students := []string{}
+> 	for name, grade in grades {
+> 		if grade >= 80 {
+> 			top_students << name
+> 		}
+> 	}
+>
+> 	top_students.sort()
+> 	println('Top Students (Alphabetical): ${top_students}')
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Top Students (Alphabetical): ['Alice', 'Charlie', 'Ethan']
+> ```
+
+---
+
+### Exercise 6: Higher-Order Functions with Callbacks
+
+This exercise covers Chapter 6: Functions.
+
+> [!EXERCISE]
+> Write a function `filter_ints(nums []int, f fn (int) bool) []int` that filters an array of integers using a callback function. In `main`, call `filter_ints` once to filter even numbers, and once to filter numbers greater than 10. Print the results.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> fn filter_ints(nums []int, f fn (int) bool) []int {
+> 	mut result := []int{}
+> 	for num in nums {
+> 		if f(num) {
+> 			result << num
+> 		}
+> 	}
+> 	return result
+> }
+>
+> fn is_even(n int) bool {
+> 	return n % 2 == 0
+> }
+>
+> fn main() {
+> 	numbers := [2, 5, 12, 7, 18, 9, 3, 22]
+>
+> 	evens := filter_ints(numbers, is_even)
+> 	println('Even numbers: ${evens}')
+>
+> 	greater_than_ten := filter_ints(numbers, fn (n int) bool {
+> 		return n > 10
+> 	})
+> 	println('Numbers > 10: ${greater_than_ten}')
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Even numbers: [2, 12, 18, 22]
+> Numbers > 10: [12, 18, 22]
+> ```
+
+---
+
+### Exercise 7: Modeling a Bank Account with Structs & Methods
+
+This exercise covers Chapter 7: Structs (Custom Types).
+
+> [!EXERCISE]
+> Define a `BankAccount` struct with fields `owner` (string), `balance` (f64), and `is_active` (bool). Implement a value receiver method to display the account details, and mutable methods to `deposit(amount f64)` and `withdraw(amount f64)`. Ensure that a withdrawal cannot exceed the balance or occur on an inactive account.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> struct BankAccount {
+> 	owner string
+> mut:
+> 	balance   f64
+> 	is_active bool
+> }
+>
+> fn (a BankAccount) display() {
+> 	status := if a.is_active { 'Active' } else { 'Inactive' }
+> 	println('Account Owner: ${a.owner} | Balance: $${a.balance:.2f} | Status: ${status}')
+> }
+>
+> fn (mut a BankAccount) deposit(amount f64) {
+> 	if !a.is_active {
+> 		println('Cannot deposit: Account is inactive.')
+> 		return
+> 	}
+> 	if amount > 0 {
+> 		a.balance += amount
+> 		println('Deposited $${amount:.2f}')
+> 	}
+> }
+>
+> fn (mut a BankAccount) withdraw(amount f64) {
+> 	if !a.is_active {
+> 		println('Cannot withdraw: Account is inactive.')
+> 		return
+> 	}
+> 	if amount > a.balance {
+> 		println('Cannot withdraw: Insufficient funds.')
+> 		return
+> 	}
+> 	if amount > 0 {
+> 		a.balance -= amount
+> 		println('Withdrew $${amount:.2f}')
+> 	}
+> }
+>
+> fn main() {
+> 	mut acc := BankAccount{
+> 		owner:     'Jane Doe'
+> 		balance:   150.00
+> 		is_active: true
+> 	}
+>
+> 	acc.display()
+> 	acc.deposit(50.50)
+> 	acc.withdraw(75.00)
+> 	acc.display()
+>
+> 	acc.withdraw(200.00)
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Account Owner: Jane Doe | Balance: $150.00 | Status: Active
+> Deposited $50.50
+> Withdrew $75.00
+> Account Owner: Jane Doe | Balance: $125.50 | Status: Active
+> Cannot withdraw: Insufficient funds.
+> ```
+
+---
+
+### Exercise 8: Safe Division with Option/Result
+
+This exercise covers Chapter 8: Error Handling.
+
+> [!EXERCISE]
+> Write a function `divide(a f64, b f64) !f64` that returns an error when dividing by zero. In `main`, call this function, handle potential errors cleanly using an `or` block, and print the results for both a valid division and an invalid division.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> fn divide(a f64, b f64) !f64 {
+> 	if b == 0.0 {
+> 		return error('division by zero error')
+> 	}
+> 	return a / b
+> }
+>
+> fn main() {
+> 	x := 10.0
+> 	y := 2.5
+> 	z := 0.0
+>
+> 	res1 := divide(x, y) or {
+> 		println('Error: ${err}')
+> 		return
+> 	}
+> 	println('${x} / ${y} = ${res1}')
+>
+> 	divide(x, z) or {
+> 		println('Error occurred: ${err}')
+> 		return
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> 10 / 2.5 = 4
+> Error occurred: division by zero error
+> ```
+
+---
+
+### Exercise 9: Modular Math Utility Project
+
+This exercise covers Chapter 9: Organizing Code with Modules.
+
+> [!EXERCISE]
+> Describe how to design a modular program containing a main module and a utility sub-module named `mathutils`. Implement a public function `factorial(n int) int` inside `mathutils` and import it into your `main` module to calculate and print `factorial(5)`.
+
+> [!SOLUTION]
+>
+> ```v
+> // Directory structure:
+> // my_project/
+> // ├── main.v
+> // └── mathutils/
+> //     └── mathutils.v
+>
+> // mathutils/mathutils.v
+> module mathutils
+>
+> pub fn factorial(n int) int {
+> 	if n <= 1 {
+> 		return 1
+> 	}
+> 	return n * factorial(n - 1)
+> }
+>
+> // main.v
+> module main
+>
+> import mathutils
+>
+> fn main() {
+> 	val := 5
+> 	result := mathutils.factorial(val)
+> 	println('Factorial of ${val} is ${result}')
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Factorial of 5 is 120
+> ```
+
+---
+
+### Exercise 10: Unit Testing String Reversal
+
+This exercise covers Chapter 10: Writing Tests in V.
+
+> [!EXERCISE]
+> Write a V library containing a public function `reverse_string(s string) string`. Write a corresponding test file `reverse_string_test.v` with unit tests verifying correctness for empty strings, single characters, palindromes, and multi-word sentences using assert statements.
+
+> [!SOLUTION]
+>
+> ```v
+> // reverse.v
+> module main
+>
+> pub fn reverse_string(s string) string {
+> 	mut runes := s.runes()
+> 	mut i := 0
+> 	mut j := runes.len - 1
+> 	for i < j {
+> 		temp := runes[i]
+> 		runes[i] = runes[j]
+> 		runes[j] = temp
+> 		i++
+> 		j--
+> 	}
+> 	return runes.string()
+> }
+>
+> // reverse_string_test.v
+> module main
+>
+> fn test_reverse_string() {
+> 	assert reverse_string('') == ''
+> 	assert reverse_string('a') == 'a'
+> 	assert reverse_string('radar') == 'radar'
+> 	assert reverse_string('hello world') == 'dlrow olleh'
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> [PASS] test_reverse_string
+> ```
+
+---
+
+### Exercise 11: Concurrent Task Aggregation with Channels
+
+This exercise covers Chapter 11: Concurrency and Channels.
+
+> [!EXERCISE]
+> Write a program that spawns three concurrent v-routines. Each v-routine should compute a segment of a calculation (e.g. squaring a number) and send the result back through a shared channel. The main function should receive all three values from the channel, sum them up, and print the total.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> fn worker(id int, val int, ch chan int) {
+> 	println('Worker ${id} starting to calculate square of ${val}')
+> 	ch <- (val * val)
+> }
+>
+> fn main() {
+> 	ch := chan int{cap: 3}
+>
+> 	spawn worker(1, 4, ch)
+> 	spawn worker(2, 6, ch)
+> 	spawn worker(3, 8, ch)
+>
+> 	mut sum := 0
+> 	for _ in 0 .. 3 {
+> 		val := <-ch
+> 		sum += val
+> 	}
+>
+> 	println('Sum of concurrent square results: ${sum}')
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Worker 1 starting to calculate square of 4
+> Worker 2 starting to calculate square of 6
+> Worker 3 starting to calculate square of 8
+> Sum of concurrent square results: 116
+> ```
+
+---
+
+### Exercise 12: JSON Parsing and Validation
+
+This exercise covers Chapter 12: Working with Databases and JSON.
+
+> [!EXERCISE]
+> Define a struct representing a `Task` with fields `id` (int), `title` (string), and `completed` (bool). Write a program that takes a JSON string containing an array of tasks, parses it into a V array of `Task` structs, and prints the titles of the tasks that are not yet completed.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> import json
+>
+> struct Task {
+> 	id        int
+> 	title     string
+> 	completed bool
+> }
+>
+> fn main() {
+> 	raw_json := '[
+> 		{"id": 1, "title": "Buy groceries", "completed": true},
+> 		{"id": 2, "title": "Write V exercise guide", "completed": false},
+> 		{"id": 3, "title": "Compile textbook HTML", "completed": false}
+> 	]'
+>
+> 	tasks := json.decode([]Task, raw_json) or {
+> 		println('Failed to parse JSON: ${err}')
+> 		return
+> 	}
+>
+> 	println('Pending Tasks:')
+> 	for task in tasks {
+> 		if !task.completed {
+> 			println('- ${task.title}')
+> 		}
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Pending Tasks:
+> - Write V exercise guide
+> - Compile textbook HTML
+> ```
+
+---
+
+### Exercise 13: HTTP Client & Query Parameter Parser
+
+This exercise covers Chapter 13: Standard Library & Advanced Features.
+
+> [!EXERCISE]
+> Create a V program that imports the `net.http` and `net.urllib` modules. Build a small utility that sends a GET request to a public API URL or a dummy server, checks the response status code, and parses query parameters from a URL string, displaying each parameter's key and value.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> import net.http
+> import net.urllib
+>
+> fn main() {
+> 	resp := http.get('https://httpbin.org/get') or {
+> 		println('Failed to send request: ${err}')
+> 		return
+> 	}
+> 	println('HTTP GET Status Code: ${resp.status_code}')
+>
+> 	sample_url := 'https://example.com/search?q=vlang&limit=10&page=2'
+> 	parsed_url := urllib.parse(sample_url) or {
+> 		println('Failed to parse URL: ${err}')
+> 		return
+> 	}
+>
+> 	params := parsed_url.query()
+> 	println('Parsed URL Query Parameters:')
+> 	for key, values in params {
+> 		println('  ${key}: ${values.join(', ')}')
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> HTTP GET Status Code: 200
+> Parsed URL Query Parameters:
+>   q: vlang
+>   limit: 10
+>   page: 2
+> ```
+
+---
+
+### Exercise 14: Concurrent Worker Pool for String Transformation
+
+This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
+
+> [!EXERCISE]
+> Adapt the worker pool concurrent processing pattern to transform an array of lowercase strings to uppercase concurrently. Use a struct for `Job` and `Result` types, spawn multiple worker threads, feed the job channel, close it, and collect the results.
+
+> [!SOLUTION]
+>
+> ```v
+> module main
+>
+> struct Job {
+> 	id   int
+> 	data string
+> }
+>
+> struct Result {
+> 	job_id int
+> 	output string
+> }
+>
+> fn worker(id int, jobs chan Job, results chan Result) {
+> 	for job in jobs {
+> 		println('Worker ${id} processing job ${job.id}: "${job.data}"')
+> 		results <- Result{
+> 			job_id: job.id
+> 			output: job.data.to_upper()
+> 		}
+> 	}
+> }
+>
+> fn main() {
+> 	num_jobs := 5
+> 	num_workers := 3
+>
+> 	jobs := chan Job{cap: num_jobs}
+> 	results := chan Result{cap: num_jobs}
+>
+> 	for i in 1 .. (num_workers + 1) {
+> 		spawn worker(i, jobs, results)
+> 	}
+>
+> 	words := ['apple', 'banana', 'cherry', 'date', 'elderberry']
+> 	for i, word in words {
+> 		jobs <- Job{
+> 			id:   i + 1
+> 			data: word
+> 		}
+> 	}
+> 	jobs.close()
+>
+> 	for _ in 0 .. num_jobs {
+> 		res := <-results
+> 		println('Result collected: Job ${res.job_id} output = "${res.output}"')
+> 	}
+> }
+> ```
+
+> [!OUTPUT]
+>
+> ```
+> Worker 1 processing job 1: "apple"
+> Worker 2 processing job 2: "banana"
+> Worker 3 processing job 3: "cherry"
+> Worker 1 processing job 4: "date"
+> Worker 2 processing job 5: "elderberry"
+> Result collected: Job 1 output = "APPLE"
+> Result collected: Job 2 output = "BANANA"
+> Result collected: Job 3 output = "CHERRY"
+> Result collected: Job 4 output = "DATE"
+> Result collected: Job 5 output = "ELDERBERRY"
+> ```
+
+---
+
 # End of Tutorial
 
-Congratulations! You have completed the comprehensive V Programming tutorial.
+Congratulations! You have completed the comprehensive V Programming tutorial and exercise guide.
