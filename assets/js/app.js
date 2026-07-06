@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const el = getAnchorTarget(id);
                 if (el) {
                     window.__lastAnchorScrollY = window.scrollY;
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    scrollToElement(el);
                     showInlinePreviousButton(el);
                     if (history.pushState) history.pushState(null, '', `#${id}`);
                 }
@@ -356,6 +356,43 @@ document.addEventListener('DOMContentLoaded', function() {
         return null;
     }
 
+    // Helper to scroll to a Y position or element, bypassing smooth scrolling if behavior is 'auto'
+    function scrollToPosition(target, behavior = 'smooth') {
+        const isElement = target instanceof Element;
+        if (behavior === 'auto') {
+            const docEl = document.documentElement;
+            const originalScrollBehavior = docEl.style.scrollBehavior;
+            docEl.style.scrollBehavior = 'auto';
+            if (isElement) {
+                target.scrollIntoView({ behavior: 'auto', block: 'start' });
+            } else {
+                window.scrollTo({ top: target, behavior: 'auto' });
+            }
+            docEl.offsetHeight; // force reflow
+            docEl.style.scrollBehavior = originalScrollBehavior;
+        } else {
+            if (isElement) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                window.scrollTo({ top: target, behavior: 'smooth' });
+            }
+        }
+    }
+
+    // Optimized scroll handler checking scroll distance
+    function scrollToElement(el) {
+        if (!el) return;
+        const targetY = window.scrollY + el.getBoundingClientRect().top;
+        const distance = Math.abs(window.scrollY - targetY);
+        // If distance is large, jump instantly to avoid rendering lag in Chrome.
+        // Otherwise, use a smooth scroll for a premium visual transition.
+        if (distance > 2000) {
+            scrollToPosition(el, 'auto');
+        } else {
+            scrollToPosition(el, 'smooth');
+        }
+    }
+
     // Function to scroll to an anchor if present in the URL
     function scrollToAnchor() {
         const hash = decodeURIComponent(window.location.hash || '');
@@ -365,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const element = getAnchorTarget(id);
             if (element) {
                 window.__lastAnchorScrollY = before;
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                scrollToElement(element);
                 showInlinePreviousButton(element);
             }
         }
@@ -391,11 +428,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add click handler that removes the button after use
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            if (window.__lastAnchorScrollY !== undefined && window.__lastAnchorScrollY !== null) {
-                window.scrollTo({ top: window.__lastAnchorScrollY, behavior: 'smooth' });
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            const targetY = (window.__lastAnchorScrollY !== undefined && window.__lastAnchorScrollY !== null) 
+                ? window.__lastAnchorScrollY 
+                : 0;
+            const distance = Math.abs(window.scrollY - targetY);
+            const behavior = distance > 2000 ? 'auto' : 'smooth';
+            scrollToPosition(targetY, behavior);
             // Remove button after it's been used
             btn.remove();
         });
@@ -424,7 +462,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (window.location.hash !== `#${id}`) {
                             history.pushState(null, '', `#${id}`);
                         }
-                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        scrollToElement(el);
                         showInlinePreviousButton(el);
                     } else {
                         history.pushState(null, '', `#${id}`);
@@ -1336,7 +1374,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const id = decodeURIComponent((a.getAttribute('href') || '').replace('#', ''));
                         const el = document.getElementById(id) || document.getElementById(`user-content-${id}`);
                         if (el) {
-                            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            scrollToElement(el);
                             floatingMenu.classList.remove('open');
                         }
                     });
