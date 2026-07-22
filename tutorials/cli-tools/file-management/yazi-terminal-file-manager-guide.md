@@ -5,9 +5,9 @@
 1. [What is `yazi`?](#1-what-is-yazi)
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
-4. [Basic Navigation & Controls](#4-basic-navigation--controls)
-5. [Key Features & Practical Examples](#5-key-features--practical-examples)
-6. [Image & Media Preview Setup](#6-image--media-preview-setup)
+4. [Basic Navigation & Controls](#4-basic-navigation-controls)
+5. [Key Features & Practical Examples](#5-key-features-practical-examples)
+6. [Image & Media Preview Setup](#6-image-media-preview-setup)
 7. [Customizing Configuration (`yazi.toml`)](#7-customizing-configuration-yazitoml)
 8. [Uninstallation](#8-uninstallation)
 

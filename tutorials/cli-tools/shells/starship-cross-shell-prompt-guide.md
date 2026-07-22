@@ -6,7 +6,7 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Shell Configuration (`.zshrc`)](#4-shell-configuration-zshrc)
-5. [Basic Features & Visual Examples](#5-basic-features--visual-examples)
+5. [Basic Features & Visual Examples](#5-basic-features-visual-examples)
 6. [Configuring Starship (`starship.toml`)](#6-configuring-starship-starshiptoml)
 7. [Preset Themes](#7-preset-themes)
 8. [Uninstallation](#8-uninstallation)

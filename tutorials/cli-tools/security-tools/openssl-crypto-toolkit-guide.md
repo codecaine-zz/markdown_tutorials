@@ -11,9 +11,9 @@ OpenSSL is a robust, commercial-grade toolkit for Transport Layer Security (TLS)
 3. [Generating Keys](#generating-keys)
 4. [Certificate Management](#certificate-management)
 5. [Encryption/Decryption](#encryptiondecryption)
-6. [Hashing and Digital Signatures](#hashing-and-digital-signatures)
-7. [SSL/TLS Configuration](#ssltls-configuration)
-8. [Advanced Topics](#advanced-topics)
+6. [Hashing and Digital Signatures](#digital-signatures)
+7. [SSL/TLS Configuration](#check-openssl-version)
+8. [Advanced Topics](#list-available-algorithms)
 
 ## Installation
 

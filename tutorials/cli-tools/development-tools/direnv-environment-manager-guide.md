@@ -6,9 +6,9 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Shell Integration (`.zshrc`)](#4-shell-integration-zshrc)
-5. [Basic Usage & Practical Examples](#5-basic-usage--practical-examples)
-6. [Security & `.envrc` Approvals](#6-security--envrc-approvals)
-7. [Integration with `.env` Files & Python Virtual Environments](#7-integration-with-env-files--python-virtual-environments)
+5. [Basic Usage & Practical Examples](#5-basic-usage-practical-examples)
+6. [Security & `.envrc` Approvals](#6-security-envrc-approvals)
+7. [Integration with `.env` Files & Python Virtual Environments](#7-integration-with-env-files-python-virtual-environments)
 8. [Uninstallation](#8-uninstallation)
 
 ---

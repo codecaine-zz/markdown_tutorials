@@ -5,7 +5,7 @@ Copy‑pasteable guide to build a fast, tiny REST API using Express.js on Bun an
 ## Table of Contents
 
 - [Overview](#overview)
-- [Why Bun + Database Wrappers](#why-bun--database-wrappers)
+- [Why Bun + Database Wrappers](#why-bun-database-wrappers)
 - [Prerequisites (ARM Mac)](#prerequisites-arm-mac)
 - [Project Setup](#project-setup)
 - [App Structure](#app-structure)

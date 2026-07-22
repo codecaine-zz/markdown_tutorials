@@ -11,59 +11,26 @@ This comprehensive tutorial teaches you Google Docs automation using Google Apps
    - [Your First Document Script](#your-first-document-script)
    - [Understanding Google Apps Script for Docs](#understanding-google-apps-script-for-docs)
 
-2. [Basic Document Operations](#2-basic-document-operations)
-   - [Creating and Opening Documents](#creating-and-opening-documents)
-   - [Reading Document Content](#reading-document-content)
-   - [Writing Simple Text](#writing-simple-text)
+2. [Text Manipulation Functions](#2-text-manipulation-functions)
+   - [Inserting and Formatting Text](#inserting-and-formatting-text)
+   - [Text Formatting Functions](#text-formatting-functions)
 
-3. [Working with Text](#3-working-with-text)
-   - [Text Manipulation Basics](#text-manipulation-basics)
-   - [Finding and Replacing Text](#finding-and-replacing-text)
-   - [Basic Text Formatting](#basic-text-formatting)
+3. [Table Operations](#3-table-operations)
 
 ### 🟡 **INTERMEDIATE LEVEL**
-4. [Document Structure Management](#4-document-structure-management)
-   - [Paragraphs and Headings](#paragraphs-and-headings)
-   - [Lists and Bullets](#lists-and-bullets)
-   - [Page Breaks and Sections](#page-breaks-and-sections)
+4. [Document Structure Operations](#4-document-structure-operations)
+5. [Advanced Text Processing](#5-advanced-text-processing)
+6. [Document Management Functions](#6-document-management-functions)
+7. [Utility Functions](#7-utility-functions)
 
-5. [Advanced Formatting](#5-advanced-formatting)
-   - [Styles and Themes](#styles-and-themes)
-   - [Tables and Data](#tables-and-data)
-   - [Images and Media](#images-and-media)
+### 🔴 **ADVANCED LEVEL & PROJECTS**
+8. [Complete Project Examples](#10-complete-project-examples)
+   - [Report Generator](#report-generator)
+   - [Contract Management System](#contract-management-system)
+   - [Automated Letter Writer](#automated-letter-writer)
 
-6. [Document Navigation](#6-document-navigation)
-   - [Bookmarks and Cross-References](#bookmarks-and-cross-references)
-   - [Table of Contents](#table-of-contents)
-   - [Headers and Footers](#headers-and-footers)
-
-### 🔴 **ADVANCED LEVEL**
-7. [Advanced Text Processing](#7-advanced-text-processing)
-   - [Regular Expressions](#regular-expressions)
-   - [Pattern Matching](#pattern-matching)
-   - [Content Analysis](#content-analysis)
-
-8. [Document Integration](#8-document-integration)
-   - [Merging Documents](#merging-documents)
-   - [Template Systems](#template-systems)
-   - [External Data Sources](#external-data-sources)
-
-9. [Automation and Workflows](#9-automation-and-workflows)
-   - [Batch Processing](#batch-processing)
-   - [Document Generation](#document-generation)
-   - [Custom Functions](#custom-functions)
-
-### 🎯 **REAL-WORLD PROJECTS**
-10. [Complete Project Examples](#10-complete-project-examples)
-    - [Report Generator](#report-generator)
-    - [Contract Management System](#contract-management-system)
-    - [Document Analytics Dashboard](#document-analytics-dashboard)
-    - [Automated Letter Writer](#automated-letter-writer)
-
-11. [Best Practices and Optimization](#11-best-practices-and-optimization)
-    - [Performance Optimization](#performance-optimization)
-    - [Error Handling Patterns](#error-handling-patterns)
-    - [Security and Permissions](#security-and-permissions)
+9. [Best Practices and Optimization](#11-best-practices-and-optimization)
+   - [Performance Optimization](#performance-optimization)
 
 ---
 

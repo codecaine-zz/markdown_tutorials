@@ -20,7 +20,7 @@ A concise, copy‑pasteable guide to [Pydantic](https://docs.pydantic.dev/latest
 - [JSON Schema](#json-schema)
 - [Error Handling](#error-handling)
 - [Common Patterns](#common-patterns)
-- [v1 → v2 Notes](#v1--v2-notes)
+- [v1 → v2 Notes](#v1-v2-notes)
 - [Troubleshooting](#troubleshooting)
 
 ---

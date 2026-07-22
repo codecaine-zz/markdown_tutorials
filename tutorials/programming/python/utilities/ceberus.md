@@ -11,14 +11,14 @@ Official documentation links are added as foot‑note references – click the n
 > The sections that follow walk you through each step, show real‑world patterns, and give you production‑ready helper utilities.
 
 ## Table of Contents
-1. [Introduction to Cerberus](#introduction-to-cerberus)  
-2. [Installation](#installation)  
-3. [Basic Validation Concepts](#basic-validation-concepts)  
-4. [Core Features](#core-features)  
-5. [Advanced Usage](#advanced-usage)  
-6. [Error Handling & Customisation](#error-handling--customisation)  
-7. [Best Practices & Performance Tips](#best-practices--performance-tips)  
-8. [Reusable Helper Library (copy‑paste ready)](#reusable-helper-library)  
+1. [Introduction to Cerberus](#1-introduction-to-cerberus)  
+2. [Installation](#2-installation)  
+3. [Basic Validation Concepts](#3-basic-validation-concepts)  
+4. [Core Features](#4-core-features)  
+5. [Advanced Usage](#5-advanced-usage)  
+6. [Error Handling & Customisation](#6-error-handling-customisation)  
+7. [Best Practices & Performance Tips](#7-best-practices-performance-tips)  
+8. [Reusable Helper Library (copy‑paste ready)](#8-reusable-helper-library-copypaste-ready)  
 
 ---
 

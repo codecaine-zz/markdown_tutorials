@@ -1,15 +1,15 @@
 ## Table of Contents
 
 1. [Basic Navigation Shortcuts](#basic-navigation-shortcuts)
-2. [App Switching & Window Management](#app-switching--window-management)
+2. [App Switching & Window Management](#app-switching-window-management)
 3. [Finder Shortcuts](#finder-shortcuts)
 4. [Text Editing Shortcuts](#text-editing-shortcuts)
 5. [System-Level Shortcuts](#system-level-shortcuts)
 6. [Developer Tools Shortcuts](#developer-tools-shortcuts)
-7. [Accessibility & Voice Control](#accessibility--voice-control)
-8. [Safari & Web Browsing](#safari--web-browsing)
-9. [Productivity & Office Apps](#productivity--office-apps)
-10. [Troubleshooting Tips](#troubleshooting-tips)
+7. [Accessibility & Voice Control](#accessibility-voice-control)
+8. [Safari & Web Browsing](#safari-web-browsing)
+9. [Productivity & Office Apps](#finder-shortcuts)
+10. [Troubleshooting Tips](#essential-finder-navigation)
 
 ## Basic Navigation Shortcuts
 

@@ -9,7 +9,7 @@
 5. [Executing Commands on Found Files (`-x` vs `-X`)](#5-executing-commands-on-found-files--x-vs--x)
    - [Single File Execution (`-x` / `--exec`)](#single-file-execution--x---exec)
    - [Batch File Execution (`-X` / `--exec-batch`)](#batch-file-execution--x---exec-batch)
-6. [macOS Finder & `mdfind` CLI Search Commands](#6-macos-finder--mdfind-cli-search-commands)
+6. [macOS Finder & `mdfind` CLI Search Commands](#6-macos-finder-mdfind-cli-search-commands)
    - [Search by Extension with Spotlight (`mdfind`)](#search-by-extension-with-spotlight-mdfind)
    - [Opening Search Results in Program of Choice (`open -a`)](#opening-search-results-in-program-of-choice-open--a)
 7. [Comparison: `fd` vs `find` vs `mdfind`](#7-comparison-fd-vs-find-vs-mdfind)

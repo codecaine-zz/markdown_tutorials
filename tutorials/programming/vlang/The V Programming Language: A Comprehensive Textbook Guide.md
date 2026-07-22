@@ -314,8 +314,8 @@ To get the most from this book:
 - [Chapter 1: Getting Started with V](#chapter-1-getting-started-with-v)
   - [Code Comments](#code-comments)
 - [Chapter 2: Variables and Constants](#chapter-2-variables-and-constants)
-  - [Constants](#chapter-2-variables-and-constants)
-  - [Variables](#chapter-2-variables-and-constants)
+  - [Constants](#constants)
+  - [Variables](#variables)
 - [Chapter 3: Primitive Data Types](#chapter-3-primitive-data-types)
   - [Primitive Types Demo](#primitive-types-demo)
   - [Boolean Type](#boolean-type)
@@ -325,31 +325,31 @@ To get the most from this book:
 - [Chapter 4: Control Flow](#chapter-4-control-flow)
   - [Control Flow Extras](#control-flow-extras)
 - [Chapter 5: Collections: Arrays and Maps](#chapter-5-collections-arrays-and-maps)
-  - [Arrays](#for-on-arrays)
-  - [Maps](#for-on-maps)
+  - [Arrays](#arrays)
+  - [Maps](#maps)
 - [Chapter 6: Functions](#chapter-6-functions)
   - [Advanced Function Features](#advanced-function-features)
   - [Function Extras](#function-extras)
 - [Chapter 7: Structs (Custom Types)](#chapter-7-structs-custom-types)
-  - [Struct Basics & Fields](#struct-basics-fields)
+  - [Struct Basics & Fields](#struct-basics--fields)
 - [Chapter 8: Error Handling](#chapter-8-error-handling)
-  - [Option & Result Types](#option-result-types)
+  - [Option & Result Types](#option--result-types)
 - [Chapter 9: Organizing Code with Modules](#chapter-9-organizing-code-with-modules)
-  - [Modules & Project Structure](#modules-project-structure)
+  - [Modules & Project Structure](#modules--project-structure)
   - [Installing External Packages](#installing-external-packages)
 - [Chapter 10: Writing Tests in V](#chapter-10-writing-tests-in-v)
-  - [Assertions & Unit Testing](#assertions-unit-testing)
+  - [Assertions & Unit Testing](#assertions--unit-testing)
 - [Chapter 11: Concurrency and Channels](#chapter-11-concurrency-and-channels)
-  - [Channels & Communication](#channels-communication)
-  - [V-Routines & Concurrency](#v-routines-concurrency)
+  - [Channels & Communication](#channels--communication)
+  - [V-Routines & Concurrency](#v-routines--concurrency)
 - [Chapter 12: Working with Databases and JSON](#chapter-12-working-with-databases-and-json)
   - [Case Study: Notes API](#case-study-notes-api)
-  - [JSON & ORM](#json-orm)
+  - [JSON & ORM](#json--orm)
   - [SQLite Integration](#sqlite-integration)
   - [SQLite CRUD Helper](#sqlite-crud-helper)
   - [Sqlite Raw Crud](#sqlite-raw-crud)
-- [Chapter 13: Standard Library & Advanced Features](#chapter-13-standard-library-advanced-features)
-  - [Inline Assembly & C Interop](#inline-assembly-c-interop)
+- [Chapter 13: Standard Library & Advanced Features](#chapter-13-standard-library--advanced-features)
+  - [Inline Assembly & C Interop](#inline-assembly--c-interop)
   - [Networking (TCP, UDP, SSL, WebSockets)](#networking-tcp-udp-ssl-websockets)
   - [Other Stdlib Updates](#other-stdlib-updates)
   - [Strings.Lorem Helper](#stringslorem-helper)
@@ -936,13 +936,16 @@ _File location: [variables_and_constants/01_variables/02_variable_features/01_mu
 
 ### Lesson: Declare Immutable Variable
 
-Variables and constants store state in V programs. This lesson on **Declare Immutable Variable** covers declaration rules, default values, scopes, or constant naming conventions.
+In V, variables are immutable by default. This design choice prevents accidental state mutation bugs, making code easier to reason about and safer for concurrency. When you declare a variable using the declaration operator `:=`, you are creating a read-only variable. If you try to reassign this variable later, the compilation will fail. This approach is similar to declaring constants in other languages, but it operates at the local scope level.
+
+This example demonstrates how to declare an immutable variable and print its value.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare immutable variable**.
 
 ```v
 fn main() {
+	// 'msg' is initialized as an immutable string variable using :=
 	msg := 'Hello'
 	println(msg)
 }
@@ -1128,7 +1131,9 @@ _File location: [variables_and_constants/01_variables/03_limitations/02_variable
 
 ### Lesson: Variable Scope For Same Variable Names
 
-Variables and constants store state in V programs. This lesson on **Variable Scope For Same Variable Names** covers declaration rules, default values, scopes, or constant naming conventions.
+In V, variables are strictly scoped to the function or block in which they are declared. This lexical scoping means that two different functions can declare variables with the exact same name (e.g., `msg`) without any collision or interference. The compiler guarantees that these variables occupy separate locations in memory and are completely isolated from one another. This allows developers to use common, context-appropriate names like `temp`, `id`, or `msg` locally inside individual functions without worrying about global or cross-functional namespace pollution.
+
+This program illustrates how `msg` is declared separately in both `method1` and `method2`, showing scope isolation in action.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **variable scope for same variable names**.
@@ -1137,11 +1142,13 @@ This example demonstrates the concepts of **variable scope for same variable nam
 module main
 
 fn method1() {
+	// 'msg' is local only to method1
 	msg := 'Hello from Method1'
 	println(msg)
 }
 
 fn method2() {
+	// 'msg' is local only to method2; does not conflict with method1's 'msg'
 	msg := 'Hello from Method2'
 	println(msg)
 }
@@ -1160,9 +1167,9 @@ _File location: [variables_and_constants/01_variables/03_limitations/03_variable
 
 ### Lesson: Variable Shadowing Not Allowed
 
-**Variable shadowing** happens when a variable declared within an inner scope (like a loop or a function block) has the same name as a variable in an outer scope. V strictly forbids variable shadowing to prevent confusion and accidental bugs where a developer modifies the wrong variable.
+**Variable shadowing** happens when a variable declared within an inner scope (like an `if` block, a loop, or a function body) has the same name as a variable in an outer scope. V strictly forbids variable shadowing at the compiler level. Prohibiting shadowing prevents a class of common bugs where a developer accidentally updates a local inner variable instead of the intended outer variable, or vice versa.
 
-This example shows how V rejects shadowed variable declarations.
+This example demonstrates how V rejects shadowed variable declarations.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **variable shadowing not allowed**.
@@ -1171,10 +1178,13 @@ This example demonstrates the concepts of **variable shadowing not allowed**.
 module main
 
 fn scope_demo() {
+	// 'x' is declared in the function's main scope
 	x := 10
 	println(x)
 	if true {
-		x := 20 // throws error as shadowing is not allowed
+		// ERROR: Declaring another variable named 'x' in an inner block is forbidden.
+		// To fix this, you must name the inner variable something else.
+		x := 20 
 		println(x)
 	}
 	println(x)
@@ -1934,7 +1944,9 @@ _File location: [primitive_types/04_rune_type/02_rune_operations_with_strings/02
 
 ### Lesson: Rune Operations With Strings
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Rune Operations With Strings** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+Since strings in V are arrays of UTF-8 encoded bytes, you cannot directly check for a `rune` inside a `string` using string operations unless the rune is first converted to a string. V provides `.str()` on the `rune` type to easily convert a rune to a 1-character string, allowing you to use string methods like `.count()`, `.contains()`, etc.
+
+This example shows how to count occurrences of a Unicode rune in a string.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **rune operations with strings**.
@@ -1942,10 +1954,11 @@ This example demonstrates the concepts of **rune operations with strings**.
 ```v
 fn main() {
 	beverage := 'café'
+	// 's' is a rune representing the Unicode character 'é'
 	s := `é`
-	// declare rune
+	// Since .count() expects a string argument, we convert the rune 's' using .str()
 	println(beverage.count(s.str()))
-	// 1
+	// Outputs: 1
 }
 ```
 
@@ -1957,7 +1970,9 @@ _File location: [primitive_types/04_rune_type/03_rune_methods/01_rune_methods.v]
 
 ### Lesson: Rune Methods
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Rune Methods** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+Runes in V are not just raw numbers; they are full-fledged Unicode characters that support several built-in methods. You can convert their case, check their byte length (which can range from 1 to 4 bytes depending on the character, such as emojis), obtain their byte array representation, or convert them to hexadecimal code points.
+
+This lesson demonstrates common helper methods on the `rune` type.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **rune methods**.
@@ -2012,7 +2027,9 @@ _File location: [primitive_types/03_string_type/01_declare_string/01_declare_str
 
 ### Lesson: Declare String
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **Declare String** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+In V, strings are representing read-only arrays of bytes, encoded natively in UTF-8. You can declare string variables using single quotes (`'hello'`) or double quotes (`"hello"`), though single quotes are preferred in idiomatic V. The string type in V comes with built-in metadata, such as the `.len` field, which returns the total number of bytes in the string (not necessarily the number of Unicode characters/runes). You can inspect the runtime type of any variable using V's built-in `typeof()` function.
+
+This example illustrates how to declare string variables, concatenate them, check string lengths, and query variable types at runtime.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **declare string**.
@@ -2021,12 +2038,17 @@ This example demonstrates the concepts of **declare string**.
 module main
 
 fn main() {
+	// Strings can be declared using single quotes
 	greeting := 'hello'
 	name := 'Ada'
+	
+	// String concatenation using the '+' operator
 	message := greeting + ', ' + name + '!'
 
 	println(message)
+	// Access the length (in bytes) of the string using the .len field
 	println('Length: ${message.len}')
+	// Inspect the variable type at runtime using typeof()
 	println('Type: ${typeof(message).name}')
 }
 ```
@@ -2039,9 +2061,9 @@ _File location: [primitive_types/03_string_type/01_working_with_strings/01_strin
 
 ### Lesson: String Read Only Array Of Bytes
 
-In V, a string is internally represented as a read-only array of bytes (`u8`). This means you can access individual bytes of a string using array indexing (`str[index]`), but you cannot change them.
+In V, strings are represented internally as read-only arrays of UTF-8 encoded bytes (`u8`). This means you can index into a string using bracket notation (`str[index]`) to extract the raw byte value at that position. The type returned from indexing a string is always `byte` (an alias for `u8` in V), not a string or rune.
 
-This example shows how to read bytes from a string and print their values.
+This example shows how to read raw bytes from a string and prints the byte value and its type name.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string read only array of bytes**.
@@ -2049,10 +2071,13 @@ This example demonstrates the concepts of **string read only array of bytes**.
 ```v
 fn main() {
 	fruit := 'Orange'
+	// Accessing the first byte of the string 'Orange'.
+	// This returns the ASCII value of 'O' (which is 79), and its type is 'byte'.
 	println(typeof(fruit[0]).name)
-	// byte
+	// Outputs: byte
+	
 	println(fruit[0])
-	// 79
+	// Outputs: 79
 }
 ```
 
@@ -2115,7 +2140,7 @@ _File location: [primitive_types/03_string_type/01_working_with_strings/04_canno
 
 ### Lesson: Cannot Mutate String Elements
 
-Even if a string variable is declared with `mut`, you cannot mutate its individual characters or bytes directly via index assignment (e.g., `s[0] = \`a\``). The compiler will throw an error to protect string integrity.
+Although declaring a string variable with `mut` lets you reassign the variable to reference a completely different string, it does NOT let you mutate individual characters or bytes within the existing string (e.g. `s[0] = \`G\``). String data elements are strictly read-only arrays of bytes, and attempting to mutate them will fail compilation.
 
 This program shows that element mutation is strictly forbidden.
 
@@ -2126,7 +2151,9 @@ This example demonstrates the concepts of **cannot mutate string elements**.
 fn main() {
 	mut greet := 'good Day'
 
-	greet[0] = 'G' // this results in error
+	// ERROR: Cannot assign directly to string indices.
+	// Strings in V are read-only byte arrays and their contents cannot be mutated.
+	greet[0] = 'G' 
 }
 ```
 
@@ -2222,7 +2249,9 @@ _File location: [primitive_types/03_string_type/02_operations_on_string_types/02
 
 ### Lesson: String Concatenation Using Plus Sign
 
-In V, primitive data types are the core building blocks of the language. This section details how to declare and use **String Concatenation Using Plus Sign** in a simple, straightforward manner. Beginners should pay close attention to how variables of this type are initialized and how built-in methods are called on them.
+In V, joining strings together is performed using the `+` operator. Since strings are immutable byte arrays, each concatenation creates a brand-new string in memory and copies the contents of both source strings. While the `+` operator is extremely convenient and clear for joining a few strings, doing this in loops or performance-critical code paths is discouraged because it leads to excessive memory allocations. For high-performance string building, V offers the `strings.Builder` module.
+
+This example illustrates the direct concatenation of two string variables.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **string concatenation using plus sign**.
@@ -2233,6 +2262,7 @@ module main
 fn main() {
 	a := 'con'
 	b := 'cat'
+	// Concatenate a and b, creating a new string 'concat' in memory
 	println(a + b)
 	// concat
 }
@@ -2545,7 +2575,9 @@ _File location: [control_flow/01_If_Statement/chaining_else_if/chaining_else_if.
 
 ### Lesson: Chaining Else If
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Chaining Else If** in V, showing how to control execution paths cleanly and safely.
+When your program must choose between multiple mutually exclusive paths, you can chain multiple `else if` blocks together. V evaluates these conditions sequentially from top to bottom. As soon as one condition evaluates to `true`, the corresponding block of code is executed, and all remaining branches (including any final fallback `else` block) are skipped entirely. Like single `if` statements, parentheses are not required around the condition expressions in V.
+
+This example defines a helper function that takes a weekday string and prints a corresponding breakfast menu using a chained conditional statement.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **chaining else if**.
@@ -2555,6 +2587,7 @@ module main
 
 // This helper chooses a meal plan based on the weekday.
 fn breakfast_menu(day string) {
+	// Cascading conditional checks
 	if day == 'Monday' {
 		println('Bread, Jam, Half boiled Egg')
 	} else if day == 'Tuesday' {
@@ -2570,6 +2603,7 @@ fn breakfast_menu(day string) {
 	} else if day == 'Sunday' {
 		println('Cereals, Bread, Jam, Half boiled Egg')
 	} else {
+		// Fallback block executed if no prior conditions match
 		println('invalid input')
 	}
 }
@@ -2686,7 +2720,9 @@ _File location: [control_flow/02_Match/match_as_switch_case/match_as_switch_case
 
 ### Lesson: Match As Switch Case
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Match As Switch Case** in V, showing how to control execution paths cleanly and safely.
+In V, there is no `switch` statement. Instead, the `match` keyword is used for branching on values. The `match` statement is highly readable and type-safe. Each branch is evaluated in order, and unlike in C/Java/Javascript, there is no "fall-through" behavior—the matching block executes and the statement completes immediately. This eliminates bugs caused by forgetting `break` statements. V also enforces that a `match` must cover all possible cases or provide an `else` block.
+
+This example shows how to use `match` on string values.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match as switch case**.
@@ -2695,6 +2731,8 @@ This example demonstrates the concepts of **match as switch case**.
 module main
 
 fn breakfast_menu(day string) {
+	// A match block branches on the value of 'day'.
+	// In V, match is an expression and can also return values.
 	match day {
 		'Monday' { println('Bread, Jam, Half boiled Egg') }
 		'Tuesday' { println('Bread, Jam, Juice') }
@@ -2703,7 +2741,7 @@ fn breakfast_menu(day string) {
 		'Friday' { println('Cereals, Bread, Jam, Half boiled Egg') }
 		'Saturday' { println('Milk, Bread, Fruit Bowl') }
 		'Sunday' { println('Cereals, Bread, Jam, Half boiled Egg') }
-		else { println('invalid input') }
+		else { println('invalid input') } // Exhaustive match requirement handled by 'else'
 	}
 }
 
@@ -2747,7 +2785,9 @@ _File location: [control_flow/02_Match/match_with_enum/match_with_enum.v](contro
 
 ### Lesson: Match With Enum
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Match With Enum** in V, showing how to control execution paths cleanly and safely.
+One of V's strongest safety guarantees is **exhaustive enum matching**. When you match on an enum value, V requires you to handle every single enum member. If you miss one, the compiler will refuse to compile the program. This ensures that when new items are added to an enum in the future, the compiler will automatically guide you to update all match expressions across your codebase. Additionally, V supports shorthand syntax where you can write `.member_name` instead of `EnumName.member_name` inside the match arms.
+
+This example illustrates matching over an enum to return a string menu item.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **match with enum**.
@@ -2755,6 +2795,7 @@ This example demonstrates the concepts of **match with enum**.
 ```v
 module main
 
+// Define a Days-of-the-week enum
 enum Day {
 	sunday
 	monday
@@ -2766,12 +2807,14 @@ enum Day {
 }
 
 fn breakfast_menu(day Day) string {
+	// The match statement returns the value of the matching block.
+	// Notice we use the shorthand dot syntax (.monday) since 'day' is known to be of type 'Day'.
 	return match day {
 		.monday {
 			'Bread, Jam, Half boiled Egg'
 		}
 		.tuesday, .thursday {
-			'Bread, Jam, Juice'
+			'Bread, Jam, Juice' // Grouping multiple enum members using comma
 		}
 		.wednesday {
 			'Milk, Bread, Fruit Bowl'
@@ -2782,7 +2825,7 @@ fn breakfast_menu(day Day) string {
 		.saturday {
 			'Milk, Bread, Fruit Bowl'
 		}
-	}
+	} // No else block is needed because all enum members are exhaustively handled.
 }
 
 fn main() {
@@ -2857,7 +2900,9 @@ _File location: [control_flow/03_Iterative_statements/bare_for/bare_for.v](contr
 
 ### Lesson: Bare For
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **Bare For** in V, showing how to control execution paths cleanly and safely.
+V simplifies iteration by only offering a single keyword for loops: `for`. There is no `while` keyword in V. A "bare" `for` (a loop declaration without any conditions or loop ranges) represents an **infinite loop**, which behaves exactly like `while true` in other languages. To exit a bare for loop, you must use a `break` statement inside the loop body, or exit the function using `return`.
+
+This example shows how to declare a bare infinite loop.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **bare for**.
@@ -2867,9 +2912,16 @@ module main
 
 fn main() {
 	mut count := 1
+	// Bare for starts an infinite loop.
+	// WARNING: Running this without a break condition will loop forever.
 	for {
 		println('Hi ${count} times')
 		count += 1
+		
+		// To break out, a developer would normally add:
+		if count > 5 {
+			break
+		}
 	}
 }
 ```
@@ -2993,7 +3045,9 @@ _File location: [control_flow/03_Iterative_statements/for_on_arrays/for_on_array
 
 ### Lesson: For On Arrays
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For On Arrays** in V, showing how to control execution paths cleanly and safely.
+Iterating over arrays is a very common requirement. In V, you can iterate over both the index and value of each element using the `for index, value in array` syntax. During each iteration, the index variable (e.g., `idx`) contains the zero-based array index, and the element variable (e.g., `ele`) contains a read-only copy of the item. Both variables are scoped exclusively to the body of the loop and cannot be mutated. If you only need the element values and not their indices, V allows you to omit the index variable (e.g. `for value in array`).
+
+This example declares a list of fruits and iterates over them, printing each fruit alongside its corresponding index.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on arrays**.
@@ -3003,6 +3057,8 @@ module main
 
 fn main() {
 	fruits := ['apple', 'banana', 'coconut']
+	
+	// Loop over the indices (idx) and elements (ele) of the fruits array
 	for idx, ele in fruits {
 		println('idx: ${idx} \t fruit: ${ele}')
 	}
@@ -3017,7 +3073,9 @@ _File location: [control_flow/03_Iterative_statements/for_on_maps/for_on_maps.v]
 
 ### Lesson: For On Maps
 
-Control flow structures allow your program to decide which path of execution to take. This example demonstrates the usage of **For On Maps** in V, showing how to control execution paths cleanly and safely.
+V makes iterating over key-value collections (maps) straightforward. By using the syntax `for key, value in map`, you can access both the key and the value of each entry directly during each iteration. Like arrays, the iteration variables (`key` and `value`) are local to the loop scope and are immutable. Note that iteration order over maps is not guaranteed to be stable or sorted, matching standard hash map behavior in other systems languages.
+
+This example demonstrates how to declare a map and iterate over its key-value pairs.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **for on maps**.
@@ -3026,12 +3084,14 @@ This example demonstrates the concepts of **for on maps**.
 module main
 
 fn main() {
+	// Initialize a map with string keys and integer values
 	lottery := {
 		'First':       1000
 		'Second':      700
 		'Consolation': 200
 	}
 
+	// Loop over keys (k) and values (v) in the 'lottery' map.
 	for k, v in lottery {
 		println('${k} prize lottery amount: ${v}')
 	}
@@ -4230,6 +4290,43 @@ fn main() {
 }
 ```
 
+### Array Update Syntax
+
+_File location: [arrays_and_maps/01_arrays/09_array_update_syntax/array_update_syntax.v](arrays_and_maps/01_arrays/09_array_update_syntax/array_update_syntax.v)_
+
+### Lesson: Array Update Syntax
+
+V lets you initialise an array by spreading an existing array (using ellipsis spread syntax `...`), optionally followed by additional elements. 
+
+> [!NOTE]
+> In the official V specification, spreading is written as `[...base, 3, 4]`. This creates a copy/modified version of the array without mutating the original variable. In version 0.5.1, you can achieve the equivalent functionality by cloning the array and appending elements.
+
+```v
+module main
+
+fn main() {
+	println('=== Array Update Syntax ===')
+	
+	// NOTE: Array spread update syntax `[...base, 3, 4]` is defined in the V language specification (docs.md)
+	// but is not fully supported in V 0.5.1 parser.
+	// Below is the specification representation:
+	/*
+	base := [1, 2]
+	a := [...base, 3, 4]
+	assert a == [1, 2, 3, 4]
+	*/
+	
+	// Equivalent cloning & appending representation for V 0.5.1:
+	base := [1, 2]
+	mut a := base.clone()
+	a << 3
+	a << 4
+	println('base: ${base}') // [1, 2]
+	println('a: ${a}')       // [1, 2, 3, 4]
+	assert a == [1, 2, 3, 4]
+}
+```
+
 ---
 
 ## Maps
@@ -4611,6 +4708,42 @@ fn main() {
 }
 ```
 
+### Map Update Syntax
+
+_File location: [arrays_and_maps/02_maps/10_map_update_syntax/map_update_syntax.v](arrays_and_maps/02_maps/10_map_update_syntax/map_update_syntax.v)_
+
+### Lesson: Map Update Syntax
+
+Similar to structs, V lets you initialise a new map with updates applied on top of an existing map using the spread syntax `...`. This is functionally equivalent to cloning the map and updating it, except that it avoids declaring a mutable intermediate variable and allows inlining elements.
+
+```v
+module main
+
+fn main() {
+	println('=== Map Update Syntax ===')
+
+	base_map := {
+		'a': 4
+		'b': 5
+	}
+
+	// Create a new map by updating elements of base_map
+	foo := {
+		...base_map
+		'b': 88
+		'c': 99
+	}
+
+	println('base_map: ${base_map}') // {'a': 4, 'b': 5}
+	println('foo: ${foo}')           // {'a': 4, 'b': 88, 'c': 99}
+	
+	assert base_map['b'] == 5
+	assert foo['a'] == 4
+	assert foo['b'] == 88
+	assert foo['c'] == 99
+}
+```
+
 ---
 
 # Chapter 6: Functions
@@ -4623,15 +4756,15 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 - [Function Returns Value Example 1](#function-returns-value-example-1)
 - [Function Returns Value Example 2](#function-returns-value-example-2)
-- [Functions Without Return Type](#functions-without-return-type)
+- [Funtions Without Return Type](#funtions-without-return-type)
 - [Function With Input Arguments](#function-with-input-arguments)
 - [Function Return Multiple Values](#function-return-multiple-values)
 - [Ignore Function Return Value](#ignore-function-return-value)
 - [Function Calls Other Function](#function-calls-other-function)
-- [Example 1](#function-returns-value-example-1)
-- [Example 2](#function-returns-value-example-2)
+- [Example 1](#example-1)
+- [Example 2](#example-2)
 - [Error Script Functions](#error-script-functions)
-- [Script Functions](#error-script-functions)
+- [Script Functions](#script-functions)
 - [Functions Module Variables - Main (main.v)](#functions-module-variables---main-mainv)
 - [Mymod](#mymod)
 - [Functions With Optional Return Types Example 1](#functions-with-optional-return-types-example-1)
@@ -4763,21 +4896,26 @@ _File location: [functions/02_understanding_funtion_features/03_function_return_
 
 ### Lesson: Function Return Multiple Values
 
-A function can return more than one value when those values belong together. A common pattern is returning both the main result and a related detail, such as a length or status. Here, `greet_and_message_length` returns both the greeting and its length.
+In V, functions are not limited to returning a single value. A function can return a tuple containing two or more values when they logically belong together. A very common pattern in systems programming is returning both the main result of an operation and a secondary value (such as status flags, byte counts, or errors). Returning multiple values is clean, avoids wrapping results in temporary struct containers, and is assigned using parallel declaration at the call site.
+
+This example shows how a function computes a string greeting and returns both the greeting string and its length as an integer.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function return multiple values**.
 
 ```v
+// The return types are declared within parentheses: (string, int)
 fn greet_and_message_length(name string) (string, int) {
 	mut greeting := 'Hello, ' + name + '!'
+	// Multiple values are returned as a comma-separated list
 	return greeting, greeting.len
 }
 
 fn main() {
+	// Receive multiple return values using parallel assignment
 	i, j := greet_and_message_length('Navule')
-	println(i)
-	println(j)
+	println(i) // Prints: Hello, Navule!
+	println(j) // Prints the length: 14
 }
 ```
 
@@ -5248,7 +5386,9 @@ _File location: [functions/02_understanding_funtion_features/11_functions_with_d
 
 ### Lesson: Function With Defer Block
 
-`defer` is useful when a function needs to clean up something before it exits, such as closing a file or releasing a resource. The deferred block runs automatically at the end of the function.
+The `defer` keyword is a crucial feature for resource safety and cleanups. A `defer` block schedules a block of code to run automatically right before the containing function exits, regardless of which return path is taken. If there are multiple `defer` blocks in a function, they are executed in reverse order of their declaration (Last-In, First-Out). This ensures resources (like file descriptors, database connections, or socket connections) are closed safely without duplicating cleanup code across every return statement.
+
+This example illustrates the execution sequence of statements inside a function containing a `defer` block.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **function with defer block**.
@@ -5258,12 +5398,14 @@ module main
 
 fn void_func_defer() {
 	println('Hello')
+	
+	// This block is scheduled to execute at the very end of the function scope.
 	defer {
 		println('Hi from defer block')
 	}
+	
 	println('How are you?')
-
-	// the defer block will be executed when the execution control reaches here
+	// The function ends here, triggering the deferred block execution automatically.
 }
 
 fn main() {
@@ -5379,7 +5521,9 @@ _File location: [functions/01_function_types/02_anonymous_functions/anonymous_fu
 
 ### Lesson: Anonymous Functions
 
-Anonymous functions are defined inline and are useful for short, one-off behavior. They are handy when you want a quick callback without creating a named function.
+Anonymous functions (also known as lambda functions or function literals) are functions that are defined inline without a name. In V, functions are first-class citizens, meaning they can be assigned to variables, passed as arguments to other functions, or returned from functions. Anonymous functions are highly useful for short-lived, one-off operations such as custom sort criteria, filter callbacks, or event handlers.
+
+This example shows how to declare an anonymous function, assign it to a variable, and call it.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **anonymous functions**.
@@ -5388,12 +5532,13 @@ This example demonstrates the concepts of **anonymous functions**.
 module main
 
 fn main() {
-	// Create an anonymous function and assign it to a variable.
+	// Define an anonymous function using the 'fn' keyword without a name.
+	// Assign it directly to the local variable 'greet'.
 	greet := fn (name string) {
 		println('Hello, ${name}')
 	}
 
-	// Invoke the function twice with different names.
+	// Invoke the anonymous function by calling the variable as if it were a named function.
 	greet('Pavan')
 	greet('Sahithi')
 }
@@ -5407,7 +5552,9 @@ _File location: [functions/01_function_types/03_higher_order_functions/01_functi
 
 ### Lesson: Functions As Input Arguments
 
-Functions are reusable blocks of logic. This lesson on **Functions As Input Arguments** explains functional syntax, arguments, returns, or functional capabilities in V.
+In V, functions are first-class types. This means that a function signature can be used as a parameter type for another function, allowing you to pass functional logic as an argument (a pattern known as a higher-order function). The type syntax for a function parameter matches its signature, such as `f fn () string`, representing a function `f` that takes no parameters and returns a `string`. You can pass named functions or anonymous functions inline directly.
+
+This example declares multiple greeting helpers and a higher-order function `greet` that takes a greeting function and a name to construct a message.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **functions as input arguments**.
@@ -5427,17 +5574,22 @@ fn greet_evening() string {
 	return 'Good Evening'
 }
 
+// 'greet' is a higher-order function accepting 'f' (a function returning a string)
 fn greet(f fn () string, name string) string {
+	// Call the passed function 'f' dynamically and interpolate the result
 	return '${f()}, ${name}!'
 }
 
 fn main() {
+	// Pass a named function 'greet_morning' directly
 	mut res := greet(greet_morning, 'Pavan')
 	println(res)
 
+	// Pass another named function 'greet_evening'
 	res = greet(greet_evening, 'Sahithi')
 	println(res)
 
+	// Pass an anonymous function inline directly as the argument
 	res = greet(fn () string {
 		return 'New year greetings to you'
 	}, 'Sahithi')
@@ -5774,9 +5926,9 @@ _File location: [structs/01_introducing_structs/03_heap_structs/01_heap_structs.
 
 ### Lesson: Heap Structs
 
-A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
+By default, V allocates struct instances on the stack, which is fast and manages memory automatically when variables go out of scope. However, for large structures or instances that must survive beyond the current function scope, you should allocate them on the heap. In V, you allocate a struct on the heap by prepending the initialization literal with the reference operator `&` (e.g., `&MyStruct{}`). The type of a heap-allocated struct is a pointer type, represented as `&MyStruct` (read-only reference).
 
-These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
+This example demonstrates declaring a heap-allocated struct instance and printing its type name.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **heap structs**.
@@ -5788,7 +5940,11 @@ struct Note {
 }
 
 fn main() {
+	// Prepending & allocates the Note instance on the heap rather than the stack.
+	// 'n1' holds a reference (pointer) to the heap-allocated note.
 	n1 := &Note{1, 'this note will be allocated on heap'}
+	
+	// Prints the type of n1, which is &Note (pointer/reference type)
 	println(typeof(n1).name) // &Note
 }
 ```
@@ -5833,9 +5989,9 @@ _File location: [structs/02_updating_fields_of_struct/02_updating_mutable_fields
 
 ### Lesson: Updating Mutable Fields Of Struct
 
-A **struct** is a user-defined custom type that groups related variables (called fields) together. Structs are fundamental to V's object-oriented programming model. By default, struct fields are private and immutable. V provides access modifiers like `mut:`, `pub:`, and `pub mut:` to control field access and mutability.
+In V, struct fields are read-only (immutable) by default. To make specific fields mutable, you must group them under the `mut:` access modifier within the struct definition. However, defining a field as mutable only makes it eligible for mutation; to actually modify the field on a struct instance at runtime, the instance itself must be declared as a mutable variable using the `mut` keyword (e.g., `mut my_instance := MyStruct{}`). If the instance is declared as immutable, the compiler will reject any attempt to modify its fields even if they are defined under `mut:`.
 
-These examples demonstrate defining structs, updating fields, required fields, default values, and struct methods.
+This example defines a `Note` struct with a mutable `message` field, initializes a mutable instance, and updates its value.
 
 **Additional Context from Repository docs:**
 This example demonstrates the concepts of **updating mutable fields of struct**.
@@ -5844,16 +6000,20 @@ This example demonstrates the concepts of **updating mutable fields of struct**.
 module main
 
 struct Note {
+	// 'id' is immutable by default and cannot be updated.
 	id int
 mut:
+	// 'message' is declared mutable, allowing updates if the struct instance is mutable.
 	message string
 }
 
 fn main() {
+	// Declare the struct instance 'n' as mutable using the 'mut' keyword
 	mut n := Note{1, 'a simple struct demo'}
 	println('before update')
 	println(n)
 
+	// Modify the mutable field message
 	n.message = 'a simple struct updated'
 	println('after update')
 	println(n)
@@ -5932,6 +6092,51 @@ fn main() {
 		message: 'updating struct fields demo 2'
 	}
 	println(n)
+}
+```
+
+### Struct Update Syntax
+
+_File location: [structs/02_updating_fields_of_struct/05_struct_update_syntax/struct_update_syntax.v](structs/02_updating_fields_of_struct/05_struct_update_syntax/struct_update_syntax.v)_
+
+### Lesson: Struct Update Syntax
+
+V provides a convenient syntax to create and return a modified copy of a struct instance by spreading the original fields using `...` and overwriting specific ones:
+
+```v
+module main
+
+struct User {
+	name          string
+	age           int
+	is_registered bool
+}
+
+fn register(u User) User {
+	// Returns a modified copy using the struct update syntax
+	return User{
+		...u
+		is_registered: true
+	}
+}
+
+fn main() {
+	println('=== Struct Update Syntax ===')
+
+	user1 := User{
+		name: 'Ada'
+		age:  36
+	}
+
+	user2 := register(user1)
+
+	println('user1: ${user1}') // User{name: 'Ada', age: 36, is_registered: false}
+	println('user2: ${user2}') // User{name: 'Ada', age: 36, is_registered: true}
+
+	assert user1.is_registered == false
+	assert user2.is_registered == true
+	assert user2.name == 'Ada'
+	assert user2.age == 36
 }
 ```
 
@@ -6244,7 +6449,12 @@ _File location: [structs/04_methods_for_struct/03_printing_custom_types/03_print
 
 ### Lesson: Printing Custom Types
 
-If you want to define a custom print value for your type, simply define a `str()` string method:
+By default, passing a struct instance to functions like `println` will print its fields in a default format (e.g., `Color{r: 255, g: 0, b: 0}`). However, if you want a custom, human-readable string representation of your struct type, you can define a `str() string` method on it. V's runtime automatically checks for this method when converting values to strings or when outputting using printing functions.
+
+This example illustrates defining a `str() string` method on a custom `Color` struct to format it as `{r, g, b}`.
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **printing custom types**.
 
 ```v
 module main
@@ -6255,6 +6465,7 @@ struct Color {
 	b int
 }
 
+// By defining a method named str() returning a string, we customize how Color is printed.
 pub fn (c Color) str() string {
 	return '{${c.r}, ${c.g}, ${c.b}}'
 }
@@ -6265,6 +6476,7 @@ fn main() {
 		g: 0
 		b: 0
 	}
+	// println automatically detects and calls the custom .str() method on Color
 	println(red)
 }
 ```
@@ -6432,6 +6644,50 @@ fn main() {
 	n := extend_due_by_a_day(g)
 	println('After extending due date by a day')
 	println('${n.message} is due by ${n.due}')
+}
+```
+
+### Trailing Struct Literal Arguments
+
+_File location: [structs/06_struct_as_trailing_literal_arguments_to_function/02_trailing_struct_literal_arguments/trailing_struct_literal_arguments.v](structs/06_struct_as_trailing_literal_arguments_to_function/02_trailing_struct_literal_arguments/trailing_struct_literal_arguments.v)_
+
+### Lesson: Trailing Struct Literal Arguments
+
+V does not support default function arguments or named arguments. Instead, you can use trailing struct literal arguments. By tagging a configuration struct with the `@[params]` attribute, V allows you to omit both the struct name and the curly braces when calling the function if it is the final argument.
+
+```v
+module main
+
+@[params]
+struct ButtonConfig {
+	text        string
+	is_disabled bool
+	width       int = 70
+	height      int = 20
+}
+
+struct Button {
+	text   string
+	width  int
+	height int
+}
+
+fn new_button(c ButtonConfig) &Button {
+	return &Button{
+		width:  c.width
+		height: c.height
+		text:   c.text
+	}
+}
+
+fn main() {
+	println('=== Trailing Struct Literal Arguments ===')
+	// Omitting both the struct name and braces
+	button := new_button(text: 'Click me', width: 100)
+	println('button: width=${button.width}, height=${button.height}, text="${button.text}"')
+	assert button.height == 20
+	assert button.width == 100
+	assert button.text == 'Click me'
 }
 ```
 
@@ -6643,6 +6899,36 @@ fn main() {
 }
 ```
 
+### Structs with Reference Fields
+
+_File location: [structs/11_structs_with_reference_fields/structs_with_reference_fields.v](structs/11_structs_with_reference_fields/structs_with_reference_fields.v)_
+
+### Lesson: Structs with Reference Fields
+
+Structs can store reference fields/pointers (prefixed with `&`). Reference fields must be initialized to a valid address or explicitly auto-initialized using `= unsafe { nil }` (use with caution, as nil pointer dereferences will crash/panic).
+
+```v
+module main
+
+struct Node {
+	a &Node
+	b &Node = unsafe { nil } // Auto-initialized to nil
+}
+
+fn main() {
+	println('=== Struct Reference Fields ===')
+	foo := Node{
+		a: unsafe { nil }
+	}
+	bar := Node{
+		a: &foo
+	}
+	println('foo: ${foo}')
+	println('bar: ${bar}')
+	assert bar.a == &foo
+}
+```
+
 ---
 
 # Chapter 8: Error Handling
@@ -6653,7 +6939,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 **Option & Result Types**
 
-- [Error Handling](#chapter-8-error-handling)
+- [Error Handling](#error-handling)
 
 ---
 
@@ -6961,9 +7247,9 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Cyclic Imports - Module 1 Helper (file1.v)](#cyclic-imports---module-1-helper-file1v)
 - [Cyclic Imports - Module 2 Helper (file1.v)](#cyclic-imports---module-2-helper-file1v)
 - [Cyclic Imports - Main (modulebasics.v)](#cyclic-imports---main-modulebasicsv)
-- [Module Init & Cleanup Functions - Config (config.v)](#module-init-cleanup-functions---config-configv)
-- [Module Init & Cleanup Functions - Helper (file1.v)](#module-init-cleanup-functions---helper-file1v)
-- [Module Init & Cleanup Functions - Main (modulebasics.v)](#module-init-cleanup-functions---main-modulebasicsv)
+- [Module Init & Cleanup Functions - Config (config.v)](#module-init--cleanup-functions---config-configv)
+- [Module Init & Cleanup Functions - Helper (file1.v)](#module-init--cleanup-functions---helper-file1v)
+- [Module Init & Cleanup Functions - Main (modulebasics.v)](#module-init--cleanup-functions---main-modulebasicsv)
 - [Accessing Module Constants - Helper (file1.v)](#accessing-module-constants---helper-file1v)
 - [Accessing Module Constants - Main (modulebasics.v)](#accessing-module-constants---main-modulebasicsv)
 - [Accessing Module Structs - Helper (file1.v)](#accessing-module-structs---helper-file1v)
@@ -6975,11 +7261,11 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Common vpm Commands](#common-vpm-commands)
 - [Importing and Using External Packages](#importing-and-using-external-packages)
 - [Redis Console Demo](#redis-console-demo)
-- [Redis Console Demo - Helper (redis_helper.v)](#redis-console-demo---helper-redishelperv)
-- [Redis Namespaced Demo - Helper (redis_helper.v)](#redis-namespaced-demo---helper-redishelperv)
-- [Redis Namespaced Demo](#redis-namespaced-demo---helper-redishelperv)
+- [Redis Console Demo - Helper (redis_helper.v)](#redis-console-demo---helper-redis_helperv)
+- [Redis Namespaced Demo - Helper (redis_helper.v)](#redis-namespaced-demo---helper-redis_helperv)
+- [Redis Namespaced Demo](#redis-namespaced-demo)
 - [Redis Webview Demo](#redis-webview-demo)
-- [Webview Demo](#redis-webview-demo)
+- [Webview Demo](#webview-demo)
 - [Packaging Webview as macOS Binaries](#packaging-webview-as-macos-binaries)
 
 ---
@@ -8724,6 +9010,114 @@ Using premium templates like this ensures your compiled V webview apps have zero
 
 ---
 
+### Selective Imports
+
+_File location: [modules/ch12_selective_imports/selective_imports.v](modules/ch12_selective_imports/selective_imports.v)_
+
+### Lesson: Selective Imports
+
+V permits you to selectively import specific public functions and types directly from a module by using the syntax `import module_name { symbol1, symbol2 }`. This allows calling those symbols directly without the module prefix. Note that selective imports are not permitted for module constants, which must always be prefixed.
+
+```v
+module main
+
+import os { input, user_os }
+
+fn main() {
+	println('=== Selective Imports ===')
+	// We can use the imported functions directly without os. prefix:
+	name := 'Ada'
+	println('Hello, ${name}!')
+	current_os := user_os()
+	println('Your OS is ${current_os}.')
+	assert current_os.len > 0
+}
+```
+
+---
+
+### Module Hierarchy
+
+_File locations: [modules/ch13_module_hierarchy/abc/file1.v](modules/ch13_module_hierarchy/abc/file1.v), [modules/ch13_module_hierarchy/abc/def/file2.v](modules/ch13_module_hierarchy/abc/def/file2.v), [modules/ch13_module_hierarchy/modulebasics.v](modules/ch13_module_hierarchy/modulebasics.v)_
+
+### Lesson: Module Hierarchy
+
+Modules in V map directly to the directory hierarchy. However, nested directory hierarchies are resolved in a flattened namespace. A submodule located in `abc/def/source.v` is declared with `module def` (not `module abc.def`), but must be imported via `import abc.def` and its public symbols are called using a single prefix: `def.func()`.
+
+#### Module Helper (`abc/file1.v`):
+```v
+module abc
+
+pub fn hello_abc() {
+	println('Hello from abc!')
+}
+```
+
+#### Submodule Helper (`abc/def/file2.v`):
+```v
+module def
+
+pub fn hello_def() {
+	println('Hello from def!')
+}
+```
+
+#### Main Entry (`modulebasics.v`):
+```v
+module main
+
+import abc
+import abc.def
+
+fn main() {
+	println('=== Module Hierarchy ===')
+	abc.hello_abc()
+	def.hello_def() // Call with def, not abc.def
+}
+```
+
+---
+
+### Module Import Aliasing
+
+_File locations: [modules/ch14_module_import_aliasing/mymod/sha256/sha256.v](modules/ch14_module_import_aliasing/mymod/sha256/sha256.v), [modules/ch14_module_import_aliasing/modulebasics.v](modules/ch14_module_import_aliasing/modulebasics.v)_
+
+### Lesson: Module Import Aliasing
+
+When you have module naming conflicts (for example, importing two different modules named `sha256`), you can resolve them by aliasing one or both using the `as` keyword:
+
+#### Custom SHA256 Helper (`mymod/sha256/sha256.v`):
+```v
+module sha256
+
+pub fn sum(data []u8) string {
+	return 'mock_sha256_sum_for_aliasing_demo'
+}
+```
+
+#### Main Entry (`modulebasics.v`):
+```v
+module main
+
+import crypto.sha256
+import mymod.sha256 as mysha256
+
+fn main() {
+	println('=== Module Import Aliasing ===')
+	// Use the standard crypto.sha256:
+	v_hash := sha256.sum('hi'.bytes()).hex()
+	// Use our aliased mymod.sha256:
+	my_hash := mysha256.sum('hi'.bytes())
+	
+	println('Standard hash: ${v_hash}')
+	println('Aliased mymod hash: ${my_hash}')
+	
+	assert my_hash == 'mock_sha256_sum_for_aliasing_demo'
+}
+```
+
+---
+
 # Chapter 10: Writing Tests in V
 
 ## Quick Access
@@ -8733,16 +9127,16 @@ Below is an index of all code examples in this chapter. You can use these links 
 **Assertions & Unit Testing**
 
 - [Assert Demo](#assert-demo)
-- [Simple Test - Before (demo_test.v)](#simple-test---before-demotestv)
-- [Simple Test - After (demo_test.v)](#simple-test---after-demotestv)
+- [Simple Test - Before (demo_test.v)](#simple-test---before-demo_testv)
+- [Simple Test - After (demo_test.v)](#simple-test---after-demo_testv)
 - [Testsuite Demo Test](#testsuite-demo-test)
-- [Testing Optional Return Functions (demo_test.v)](#testing-optional-return-functions-demotestv)
-- [Greet](#your-first-project-a-tiny-cli-greeting-app)
+- [Testing Optional Return Functions (demo_test.v)](#testing-optional-return-functions-demo_testv)
+- [Greet](#greet)
 - [Greet Test](#greet-test)
 - [Main Test](#main-test)
 - [Testing Program Modules - Helper (file1.v)](#testing-program-modules---helper-file1v)
 - [Mod1 Test](#mod1-test)
-- [Modulebasics](#creating-a-simple-v-project---main-modulebasicsv)
+- [Modulebasics](#modulebasics)
 
 ---
 
@@ -8773,6 +9167,56 @@ fn main() {
 	println('2nd assert')
 	assert 'apple' == 'orange' // stops execution
 	println('done')
+}
+```
+
+---
+
+### Asserts with an Extra Message
+
+_File location: [testing/01_assert/02_assert_with_message/assert_with_message.v](testing/01_assert/02_assert_with_message/assert_with_message.v)_
+
+### Lesson: Asserts with an Extra Message
+
+V allows appending a custom error message to `assert` statements using a comma: `assert condition, 'custom error message'`. When the assertion fails, this message will be printed to help troubleshoot the failure.
+
+```v
+module main
+
+fn main() {
+	println('=== Assert with Message ===')
+	for i in 0 .. 5 {
+		// This assertion is true for all i < 5, but demonstrates how to supply a message
+		assert i * 2 < 10, 'assertion failed for i: ${i}'
+	}
+	println('All assertions passed!')
+}
+```
+
+---
+
+### Asserts That Do Not Abort Your Program
+
+_File location: [testing/01_assert/03_assert_continues/assert_continues.v](testing/01_assert/03_assert_continues/assert_continues.v)_
+
+### Lesson: Asserts That Do Not Abort Your Program
+
+By default, an assertion failure immediately terminates the running program. If you are prototyping or running tests where you want all assertion failures to be reported without halting execution, you can tag the containing function with the `@[assert_continues]` attribute:
+
+```v
+module main
+
+@[assert_continues]
+fn check_value(ii int) {
+	assert ii == 2
+}
+
+fn main() {
+	println('=== Assert Continues ===')
+	for i in 0 .. 4 {
+		check_value(i)
+	}
+	println('Finished running!')
 }
 ```
 
@@ -9083,7 +9527,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 **Channels & Communication**
 
 - [Unbuffered Channel](#unbuffered-channel)
-- [Define Buffered Channel (buffered_channel.v)](#define-buffered-channel-bufferedchannelv)
+- [Define Buffered Channel (buffered_channel.v)](#define-buffered-channel-buffered_channelv)
 - [Push Buffered](#push-buffered)
 - [Push Unbuffered](#push-unbuffered)
 - [Pop](#pop)
@@ -9096,14 +9540,14 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Blocking Channels](#blocking-channels)
 - [Dealing Before](#dealing-before)
 - [Dealing After](#dealing-after)
-- [Unbuffered Sync Before (sync_before.v)](#unbuffered-sync-before-syncbeforev)
-- [Unbuffered Sync After (sync_after.v)](#unbuffered-sync-after-syncafterv)
-- [Understanding Buffered Channel (buffered_channel.v)](#understanding-buffered-channel-bufferedchannelv)
+- [Unbuffered Sync Before (sync_before.v)](#unbuffered-sync-before-sync_beforev)
+- [Unbuffered Sync After (sync_after.v)](#unbuffered-sync-after-sync_afterv)
+- [Understanding Buffered Channel (buffered_channel.v)](#understanding-buffered-channel-buffered_channelv)
 - [Coroutines Communication](#coroutines-communication)
-- [Buffered Sync Before (sync_before.v)](#unbuffered-sync-before-syncbeforev)
-- [Buffered Sync After (sync_after.v)](#unbuffered-sync-after-syncafterv)
+- [Buffered Sync Before (sync_before.v)](#buffered-sync-before-sync_beforev)
+- [Buffered Sync After (sync_after.v)](#buffered-sync-after-sync_afterv)
 - [Channel Select Before](#channel-select-before)
-- [Channel Select](#channel-select-before)
+- [Channel Select](#channel-select)
 
 **V-Routines & Concurrency**
 
@@ -10392,7 +10836,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 **Case Study: Notes API**
 
 - [Notes API Case Study - Main (main.v)](#notes-api-case-study---main-mainv)
-- [Note](#case-study-notes-api)
+- [Note](#note)
 - [Util](#util)
 
 **JSON & ORM**
@@ -10407,7 +10851,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 **SQLite Integration**
 
-- [Sqlite](#sqlite-integration)
+- [Sqlite](#sqlite)
 
 **Sqlite Raw Crud**
 
@@ -11542,8 +11986,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 **Inline Assembly & C Interop**
 
-- [Inline Assembly](#inline-assembly-c-interop)
-- [C Interop](#inline-assembly-c-interop)
+- [Inline Assembly](#inline-assembly)
+- [C Interop](#c-interop)
 
 **Networking (TCP, UDP, SSL, WebSockets)**
 
@@ -11568,8 +12012,8 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Generics](#generics)
 - [Interfaces](#interfaces)
 - [Sum Types](#sum-types)
-- [Attributes](#2-struct-attributes-for-orm-schema-design)
-- [Compile-Time Directives](#compile-time-directives-compile-time-code)
+- [Attributes](#attributes)
+- [Compile-Time Directives](#compile-time-directives--compile-time-code)
 - [Strings Builder](#strings-builder)
 - [Os Advanced Io](#os-advanced-io)
 - [Os Operations](#os-operations)
@@ -11595,7 +12039,7 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Arrays Utility](#arrays-utility)
 - [Toml](#toml)
 - [Strconv](#strconv)
-- [Term](#determining-type-of-fixed-array)
+- [Term](#term)
 - [Benchmark](#benchmark)
 - [Clipboard](#clipboard)
 - [Semver](#semver)
@@ -11608,11 +12052,11 @@ Below is an index of all code examples in this chapter. You can use these links 
 - [Compress Zlib](#compress-zlib)
 - [Compress Zstd](#compress-zstd)
 - [Io Fs](#io-fs)
-- [Io](#step-1-start-with-a-simple-main-function)
+- [Io](#io)
 - [Io Util](#io-util)
-- [Hash](#crypto-hash)
+- [Hash](#hash)
 - [Bitfield](#bitfield)
-- [Cli](#your-first-project-a-tiny-cli-greeting-app)
+- [Cli](#cli)
 - [Veb](#veb)
 - [Readline](#readline)
 - [Runtime](#runtime)
@@ -11628,14 +12072,14 @@ Below is an index of all code examples in this chapter. You can use these links 
 
 **Language Updates & Low-Level Features**
 
-- [sizeof and \_\_offsetof](#sizeof-and-offsetof)
+- [sizeof and \_\_offsetof](#sizeof-and-__offsetof)
 - [Limited Operator Overloading](#limited-operator-overloading)
 - [Atomics](#atomics)
 - [Static Variables](#static-variables)
 - [Hot Code Reloading](#hot-code-reloading)
 - [Compile-Time Reflection](#compile-time-reflection)
-- [Environment-Specific Files & Compile-Time Types](#environment-specific-files-compile-time-types)
-- [References & Pointers](#references-pointers)
+- [Environment-Specific Files & Compile-Time Types](#environment-specific-files--compile-time-types)
+- [References & Pointers](#references--pointers)
 - [Dumping Expressions at Runtime](#dumping-expressions-at-runtime)
 
 ---
@@ -11807,6 +12251,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v](language_updates_and_stdlib/02_standard_library/23_net_urllib/net_urllib.v)_
 
+### Lesson: Net Urllib
+
+The `net.urllib` standard library module provides utilities for parsing, analyzing, and constructing Uniform Resource Locators (URLs). When working with remote HTTP APIs, you frequently need to break URLs down into constituent components (like schemes, hosts, ports, paths, credentials, and parameters) or perform URL-encoding/decoding on query strings so they are transmitted safely across network interfaces. V uses the option type pattern (`or { ... }`) on methods like `parse` to ensure that malformed URLs are caught cleanly without crashing the program.
+
+This example illustrates parsing URLs, escaping special string characters, and creating encoded query objects.
+
+**Additional Context from Repository docs:**
 This example demonstrates parsing URLs into components, escaping and unescaping query parameters, and encoding query parameters using the `net.urllib` module.
 
 ```v
@@ -11868,6 +12319,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v](language_updates_and_stdlib/02_standard_library/24_net_websocket/net_websocket.v)_
 
+### Lesson: Net Websocket
+
+The `net.websocket` module provides robust client and server APIs for real-time bidirectional communication over WebSockets. Under the hood, V's WebSocket implementation supports both unencrypted (`ws://`) and encrypted (`wss://`) sockets, complete with connection event handling, payload framing, and callback registers. Since networking functions block execution, WebSocket servers are typically run concurrently (e.g. using V's coroutines/threads via the `go` keyword) to handle incoming messages in the background while keeping the main loop responsive.
+
+This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly.
+
+**Additional Context from Repository docs:**
 This example demonstrates spinning up a local WebSocket server, connecting a WebSocket client to it, exchanging messages, and closing the connection cleanly using the `net.websocket` module.
 
 ```v
@@ -12157,6 +12615,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v](language_updates_and_stdlib/02_standard_library/25_net/html/net_html.v)_
 
+### Lesson: Net Html
+
+The standard library `net.html` module provides light-weight parsing and querying APIs for HTML documents. It parses an HTML raw string into a structured hierarchical Document Object Model (DOM) tree of nodes. Developers can query this parsed DOM tree using methods to find tags by element name, filter by specific CSS class names, or read attributes (e.g. `href` inside `<a>` tags). This is extremely useful for building web scrapers, crawler services, or content extractors without needing external dependencies.
+
+This example illustrates parsing an HTML string, navigating node structures, filtering tags by attributes, and printing text values.
+
+**Additional Context from Repository docs:**
 This example demonstrates parsing HTML strings, querying tags by class name and attribute values, and extracting node text and properties using the `net.html` module.
 
 ```v
@@ -12883,6 +13348,13 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v](language_updates_and_stdlib/02_standard_library/25_net/tcp/net_tcp.v)_
 
+### Lesson: Net Tcp
+
+The `net` standard library module provides full support for TCP (Transmission Control Protocol) stream networking. TCP is a connection-oriented, reliable transport protocol that guarantees ordered, error-checked delivery of streams of octets between hosts. In V, you construct a TCP server using `net.listen_tcp` which binds to an IP address and port, returning a listener instance. Calling `accept()` on the listener blocks execution until an incoming client initiates a connection. Communication is performed via stream reading and writing operations directly on the connection sockets.
+
+This example illustrates creating a TCP server and client, opening socket connections, sending payload data, and handling connection cleanup blocks.
+
+**Additional Context from Repository docs:**
 This example demonstrates how to create a simple TCP server and client in V. The server listens on a local port, accepts an incoming client connection, receives data, sends a response, and closes the connection.
 
 ```v
@@ -13238,6 +13710,13 @@ Production socket servers must defend against malicious input and network timeou
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v](language_updates_and_stdlib/02_standard_library/25_net/udp/net_udp.v)_
 
+### Lesson: Net Udp
+
+UDP (User Datagram Protocol) is a connectionless, unreliable transport protocol that sends independent packets (datagrams) without establishing a dedicated channel. Unlike TCP, UDP has no handshakes, retry logic, or packet ordering guarantees, which makes it highly lightweight and perfect for low-latency tasks like real-time gaming, video streams, or DNS queries. In V, you open a UDP socket using `net.listen_udp`. Incoming datagrams are read along with their sender IP/port address (using `read` or `recvfrom`), and replies are routed back using the connectionless `write_to` method.
+
+This example illustrates opening a UDP socket listener, sending datagram packets, extracting sender details, and replying to a dynamic port.
+
+**Additional Context from Repository docs:**
 This example demonstrates sending and receiving connectionless UDP packets. The server binds to a local port and receives a message along with the sender's address, and responds to it using `write_to`.
 
 ```v
@@ -13739,6 +14218,13 @@ Because UDP does not guarantee packet delivery order, packets can arrive out of 
 
 _File location: [language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v](language_updates_and_stdlib/02_standard_library/25_net/unix/net_unix.v)_
 
+### Lesson: Net Unix
+
+Unix Domain Sockets (UDS) provide a high-performance inter-process communication (IPC) channel on POSIX systems. Unlike standard TCP/UDP networking sockets which transmit data over the network stack (loopback interface), UDS transmits data directly inside the OS kernel, bypassing the IP protocol stack overhead completely. UDS endpoints are bound to filesystem paths (e.g., `/tmp/mysocket`). V's `net.unix` module provides `listen_stream` and `connect` functions that mimic standard TCP stream sockets, making it easy to build fast local microservices.
+
+This example illustrates cleaning up stale socket files, launching a Unix domain socket listener/server, connecting a client to it, and exchanging messages.
+
+**Additional Context from Repository docs:**
 This example demonstrates Unix domain socket client-server communication using the `net.unix` module.
 
 ```v
@@ -14092,8 +14578,8 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 - [Generics](#generics)
 - [Interfaces](#interfaces)
 - [Sum Types](#sum-types)
-- [Attributes](#2-struct-attributes-for-orm-schema-design)
-- [Compile-Time Directives](#compile-time-directives-compile-time-code)
+- [Attributes](#attributes)
+- [Compile-Time Directives](#compile-time-directives--compile-time-code)
 
 ### Standard Library and OS Modules
 
@@ -14132,13 +14618,13 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 - [Compress Szip](#compress-szip)
 - [Compress Zlib](#compress-zlib)
 - [Compress Zstd](#compress-zstd)
-- [Hash](#crypto-hash)
+- [Hash](#hash)
 - [Bitfield](#bitfield)
 
 ### Concurrency, CLI, and App Development
 
 - [Sync Concurrency](#sync-concurrency)
-- [Cli](#your-first-project-a-tiny-cli-greeting-app)
+- [Cli](#cli)
 - [Veb](#veb)
 - [Readline](#readline)
 - [Runtime](#runtime)
@@ -14146,9 +14632,9 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 ### I/O, Streams, and Terminal
 
 - [Io Fs](#io-fs)
-- [Io](#step-1-start-with-a-simple-main-function)
+- [Io](#io)
 - [Io Util](#io-util)
-- [Term](#determining-type-of-fixed-array)
+- [Term](#term)
 - [Benchmark](#benchmark)
 - [Clipboard](#clipboard)
 - [Context](#context)
@@ -21422,13 +21908,13 @@ Below is an index of all exercises in this chapter. You can use these links to j
 - [Exercise 4: Custom FizzBuzz with Match](#exercise-4-custom-fizzbuzz-with-match)
 - [Exercise 5: Filtering and Sorting Student Grades](#exercise-5-filtering-and-sorting-student-grades)
 - [Exercise 6: Higher-Order Functions with Callbacks](#exercise-6-higher-order-functions-with-callbacks)
-- [Exercise 7: Modeling a Bank Account with Structs & Methods](#exercise-7-modeling-a-bank-account-with-structs-methods)
+- [Exercise 7: Modeling a Bank Account with Structs & Methods](#exercise-7-modeling-a-bank-account-with-structs--methods)
 - [Exercise 8: Safe Division with Option/Result](#exercise-8-safe-division-with-optionresult)
 - [Exercise 9: Modular Math Utility Project](#exercise-9-modular-math-utility-project)
 - [Exercise 10: Unit Testing String Reversal](#exercise-10-unit-testing-string-reversal)
 - [Exercise 11: Concurrent Task Aggregation with Channels](#exercise-11-concurrent-task-aggregation-with-channels)
 - [Exercise 12: JSON Parsing and Validation](#exercise-12-json-parsing-and-validation)
-- [Exercise 13: HTTP Client & Query Parameter Parser](#exercise-13-http-client-query-parameter-parser)
+- [Exercise 13: HTTP Client & Query Parameter Parser](#exercise-13-http-client--query-parameter-parser)
 - [Exercise 14: Concurrent Worker Pool for String Transformation](#exercise-14-concurrent-worker-pool-for-string-transformation)
 
 ---

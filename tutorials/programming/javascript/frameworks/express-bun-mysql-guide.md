@@ -5,7 +5,7 @@ Copy‑pasteable guide to build a robust, scalable REST API using Express.js on 
 ## Table of Contents
 
 - [Overview](#overview)
-- [Why Bun + MySQL + Database Wrapper](#why-bun--mysql--database-wrapper)
+- [Why Bun + MySQL + Database Wrapper](#why-bun-mysql-database-wrapper)
 - [Prerequisites (ARM Mac)](#prerequisites-arm-mac)
 - [Project Setup](#project-setup)
 - [App Structure](#app-structure)

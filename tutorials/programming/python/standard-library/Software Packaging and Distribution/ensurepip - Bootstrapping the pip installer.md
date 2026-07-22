@@ -9,7 +9,7 @@ Here are correct and working code examples demonstrating how to use `ensurepip` 
 1. [Basic Bootstrapping (Default installation)](#1-basic-bootstrapping-default-installation)
 2. [Upgrading pip during Bootstrap](#2-upgrading-pip-during-bootstrap)
 3. [Bootstrapping with Altinstall (Version-specific executable only)](#3-bootstrapping-with-altinstall-version-specific-executable-only)
-4. [Installing to a Custom Root Directory](#4-installing-to-custom-root-directory)
+4. [Installing to a Custom Root Directory](#4-installing-to-a-custom-root-directory)
 5. [Verifying standard installation and Handling exceptions](#5-verifying-standard-installation-and-handling-exceptions)
 
 ### 1. Basic Bootstrapping (Default installation)

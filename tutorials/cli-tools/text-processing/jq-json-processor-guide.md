@@ -13,8 +13,8 @@ jq is a powerful command-line JSON processor that allows you to filter, transfor
 5. [Transforming Data](#transforming-data)
 6. [Working with Arrays](#working-with-arrays)
 7. [Advanced Operations](#advanced-operations)
-8. [String Manipulation](#string-manipulation)
-9. [Error Handling and Debugging](#error-handling-and-debugging)
+8. [String Manipulation](#basic-operations)
+9. [Error Handling and Debugging](#or)
 
 ## Installation
 

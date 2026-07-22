@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Installation](#overview--installation)
-2. [Basic Usage & Depth Control](#basic-usage--depth-control)
-3. [Hidden Files & Directory Filtering](#hidden-files--directory-filtering)
-4. [File Permissions & Size Displays](#file-permissions--size-displays)
-5. [Pattern Matching & Excluding Folders](#pattern-matching--excluding-folders)
+1. [Overview & Installation](#overview-installation)
+2. [Basic Usage & Depth Control](#basic-usage-depth-control)
+3. [Hidden Files & Directory Filtering](#hidden-files-directory-filtering)
+4. [File Permissions & Size Displays](#file-permissions-size-displays)
+5. [Pattern Matching & Excluding Folders](#pattern-matching-excluding-folders)
 6. [Gitignore Integration](#gitignore-integration)
-7. [HTML & JSON Output Export](#html--json-output-export)
+7. [HTML & JSON Output Export](#html-json-output-export)
 8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

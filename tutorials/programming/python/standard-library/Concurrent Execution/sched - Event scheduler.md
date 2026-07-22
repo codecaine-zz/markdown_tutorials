@@ -4,7 +4,7 @@ The `sched` module in Python is a simple event scheduler that allows you to sche
 
 ## Table of Contents
 
-1. [Basic Event Scheduling](#basic-event-scheduling)
+1. [Basic Event Scheduling](#table-of-contents)
 
 ```python
 import sched

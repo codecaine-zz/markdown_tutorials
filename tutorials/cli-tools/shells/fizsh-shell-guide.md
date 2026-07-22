@@ -6,11 +6,11 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & How Fizsh Works](#overview--how-fizsh-works)
+1. [Overview & How Fizsh Works](#overview-how-fizsh-works)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Key Interactive Features](#key-interactive-features)
-4. [💡 Practical Examples & Configuration](#-practical-examples--configuration)
-5. [Fizsh vs Native Zsh + Plugins](#fizsh-vs-native-zsh--plugins)
+4. [💡 Practical Examples & Configuration](#practical-examples-configuration)
+5. [Fizsh vs Native Zsh + Plugins](#fizsh-vs-native-zsh-plugins)
 6. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

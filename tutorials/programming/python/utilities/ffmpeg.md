@@ -16,22 +16,22 @@ If you spot a typo or a missing import, the fix is included in the snippet.
 
 ## Table of Contents  
 
-1. [What is FFmpeg?](#what-is-ffmpeg)  
-2. [Prerequisites](#prereqs)  
+1. [What is FFmpeg?](#1-what-is-ffmpeg)  
+2. [Prerequisites](#2-prerequisites)  
 3. [System‑wide FFmpeg installation](#install-ffmpeg)  
 4. [Python package installation](#install-py)  
-5. [Verify everything works](#verify)  
-6. [Helper module – `ffmpeg_helpers.py`](#helpers)  
+5. [Verify everything works](#5-verify-everything-works)  
+6. [Helper module – `ffmpeg_helpers.py`](#6-helper-module--ffmpeg_helperspy)  
    - 6.1 Core validators  
    - 6.2 Video helpers  
    - 6.3 Audio helpers  
    - 6.4 Info & quality checks  
    - 6.5 Batch processing  
-7. [Demo script – `demo_ffmpeg.py`](#demo)  
-8. [Testing with **pytest**](#testing)  
+7. [Demo script – `demo_ffmpeg.py`](#7-demo-script--demo_ffmpegpy)  
+8. [Testing with **pytest**](#8-testing-with-pytest)  
 9. [Troubleshooting common errors](#troubleshoot)  
-10. [Security & best‑practice checklist](#best‑practices)  
-11. [Next steps & official docs](#next-steps)  
+10. [Security & best‑practice checklist](#10-security-bestpractice-checklist)  
+11. [Next steps & official docs](#11-next-steps-official-docs)  
 
 ---  
 

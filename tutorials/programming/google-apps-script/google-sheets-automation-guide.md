@@ -30,23 +30,13 @@ This comprehensive tutorial teaches you Google Sheets automation using Google Ap
 1. [Formatting and Styling](#5-formatting-and-styling)
    - [Cell Formatting](#cell-formatting)
 
-### 🔴 **ADVANCED LEVEL**
-1. [Complete Project Example: Employee Management System](#complete-project-example-employee-management-system)
-
-### ⚡ **PERFORMANCE OPTIMIZATION**
-
-1. [Performance Best Practices](#performance-best-practices)
-   - [Batch Operations](#batch-operations)
-   - [Caching Strategies](#caching-strategies)
-   - [Avoiding Common Bottlenecks](#avoiding-common-bottlenecks)
-
-### 🎯 **REAL-WORLD PROJECTS**
-
+### 🔴 **ADVANCED LEVEL & PROJECTS**
 1. [Complete Project Example: Employee Management System](#complete-project-example-employee-management-system)
 
 ### ✅ **GUIDES AND REFERENCES**
-
 1. [Best Practices and Error Handling](#11-best-practices-and-error-handling)
+   - [Error Handling Patterns](#error-handling-patterns)
+2. [Conclusion](#conclusion)
 
   - [Error Handling Patterns](#error-handling-patterns)
 

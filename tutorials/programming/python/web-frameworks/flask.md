@@ -8,12 +8,10 @@ This comprehensive tutorial will guide you through building web applications wit
 3. [Routing and URL Building](#routing-and-url-building)
 4. [Request Handling](#request-handling)
 5. [Templates and Jinja2](#templates-and-jinja2)
-6. [Forms and Form Validation](#forms-and-form-validation)
-7. [Database Integration with SQLAlchemy](#database-integration-with-sqlalchemy)
-8. [Sessions and Authentication](#sessions-and-authentication)
-9. [File Uploads](#file-uploads)
-10. [API Development](#api-development)
-11. [Error Handling](#error-handling)
+6. [Forms and Form Handling](#forms-and-form-handling)
+7. [Database Integration (SQLAlchemy)](#database-integration-sqlalchemy)
+8. [User Authentication & Sessions](#user-authentication-sessions)
+9. [Complete Flask Application](#complete-flask-application)
 
 ---
 

@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Prerequisites](#overview--prerequisites)
+1. [Overview & Prerequisites](#overview-prerequisites)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Supported Document Formats](#supported-document-formats)
 4. [Basic Conversion Commands](#basic-conversion-commands)
 5. [Markdown to PDF Conversion Engines](#markdown-to-pdf-conversion-engines)
-6. [YAML Metadata & Templates](#yaml-metadata--templates)
-7. [💡 Practical Real-World Examples](#-practical-real-world-examples)
+6. [YAML Metadata & Templates](#yaml-metadata-templates)
+7. [💡 Practical Real-World Examples](#practical-real-world-examples)
 8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

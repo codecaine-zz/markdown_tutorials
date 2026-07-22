@@ -13,7 +13,7 @@ Wget is a powerful command-line utility for downloading files from the web. This
 7. [Scheduling Downloads](#scheduling-downloads)
 8. [Resume Downloads](#resume-downloads)
 9. [HTTP Headers and Cookies](#http-headers-and-cookies)
-10. [File Filtering and Patterns](#file-filtering-and-patterns)
+10. [File Filtering and Patterns](#simple-file-downloads)
 
 ## Basic Installation
 

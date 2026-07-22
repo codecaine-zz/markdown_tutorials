@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `du` vs `dust` Comparison](#overview--du-vs-dust-comparison)
+1. [Overview & `du` vs `dust` Comparison](#overview-du-vs-dust-comparison)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Usage & Terminal Output](#basic-usage--terminal-output)
-4. [Depth Control & Appending Limits](#depth-control--appending-limits)
-5. [Filtering by File Type & Extensions](#filtering-by-file-type--extensions)
-6. [Sorting & Color Options](#sorting--color-options)
+3. [Basic Usage & Terminal Output](#basic-usage-terminal-output)
+4. [Depth Control & Appending Limits](#depth-control-appending-limits)
+5. [Filtering by File Type & Extensions](#filtering-by-file-type-extensions)
+6. [Sorting & Color Options](#sorting-color-options)
 7. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

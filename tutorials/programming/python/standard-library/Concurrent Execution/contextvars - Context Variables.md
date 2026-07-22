@@ -4,7 +4,7 @@ The `contextvars` module is a part of Python's standard library that provides su
 
 ## Table of Contents
 
-1. [Creating and Using Context Variables](#creating-and-using-context-variables)
+1. [Creating and Using Context Variables](#table-of-contents)
 
 Here are some comprehensive examples demonstrating various functionalities provided by the `contextvars` module:
 

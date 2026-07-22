@@ -15,9 +15,9 @@
 2. [The biggest word‑lists you can actually download](#2)  
 3. [Grab a dictionary (quick‑start list)](#3)  
 4. [Create sample hash files](#4)  
-5. [Run basic cracking commands](#5)  
-6. [More powerful attacks](#6)  
-7. [One‑click demo script (zsh)](#7)  
+5. [Run basic cracking commands](#5-run-basic-cracking-commands)  
+6. [More powerful attacks](#6-more-powerful-attacks)  
+7. [One‑click demo script (zsh)](#7-oneclick-demo-script-zsh)  
 8. [Tips, common errors & Gotchas](#8)  
 
 ---  

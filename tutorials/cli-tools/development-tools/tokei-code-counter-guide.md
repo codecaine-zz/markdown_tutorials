@@ -5,10 +5,10 @@
 1. [What is `tokei`?](#1-what-is-tokei)
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
-4. [Basic Usage & Output](#4-basic-usage--output)
-5. [Filtering Languages & Excluding Directories](#5-filtering-languages--excluding-directories)
-6. [Advanced Features & Output Formats](#6-advanced-features--output-formats)
-7. [Uninstallation](#8-uninstallation)
+4. [Basic Usage & Output](#4-basic-usage-output)
+5. [Filtering Languages & Excluding Directories](#5-filtering-languages-excluding-directories)
+6. [Advanced Features & Output Formats](#6-advanced-features-output-formats)
+7. [Uninstallation](#7-uninstallation)
 
 ---
 

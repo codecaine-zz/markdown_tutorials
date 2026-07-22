@@ -9,7 +9,7 @@ The `subprocess` module in Python provides a way to spawn new processes, connect
 3. [Handling Subprocess Input](#example-3-handling-subprocess-input)
 4. [Running Commands with Environment Variables](#example-4-running-commands-with-environment-variables)
 5. [Running Commands in Parallel](#example-5-running-commands-in-parallel)
-6. [Using `check_output()` for Simple Operations](#example-6-using-check_output-for-simple-operations)
+6. [Using `check_output()` for Simple Operations](#example-6-using-checkoutput-for-simple-operations)
 7. [Using `run()` with Timeout](#example-7-using-run-with-timeout)
 8. [Using `run()` with Custom Signal Handling](#example-8-using-run-with-custom-signal-handling)
 9. [Using `run()` with Background Execution](#example-9-using-run-with-background-execution)

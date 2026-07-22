@@ -5,8 +5,8 @@
 1.  [What is `httpie`?](#1-what-is-httpie)
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
-4.  [Basic Usage & Output](#4-basic-usage--output)
-5.  [Key Features & Examples](#5-key-features--examples)
+4.  [Basic Usage & Output](#4-basic-usage-output)
+5.  [Key Features & Examples](#5-key-features-examples)
 6.  [Uninstallation](#6-uninstallation)
 
 -----

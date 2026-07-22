@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Adapters](#overview--adapters)
+1. [Overview & Adapters](#overview-adapters)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Supported File Formats](#supported-file-formats)
 4. [Basic Universal Searching](#basic-universal-searching)
-5. [PDF & Office Document Search](#pdf--office-document-search)
-6. [Searching Inside Archives & SQLite](#searching-inside-archives--sqlite)
+5. [PDF & Office Document Search](#pdf-office-document-search)
+6. [Searching Inside Archives & SQLite](#searching-inside-archives-sqlite)
 7. [FZF Interactive Integration (`rga-fzf`)](#fzf-interactive-integration-rga-fzf)
-8. [Advanced Adapter Flags & Caching](#advanced-adapter-flags--caching)
+8. [Advanced Adapter Flags & Caching](#advanced-adapter-flags-caching)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

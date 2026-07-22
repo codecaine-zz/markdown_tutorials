@@ -5,17 +5,17 @@
 
 ## 📚 Table of Contents  
 
-1️⃣ [Introduction](#introduction)  
-2️⃣ [Setup](#setup)  
-3️⃣ [Your First API – “Hello World”](#hello-world)  
+1️⃣ [Introduction](#1-introduction)  
+2️⃣ [Setup](#2-setup)  
+3️⃣ [Your First API – “Hello World”](#3-your-first-api---hello-world)  
 4️⃣ [Organising a Real‑World Project](#organising)  
-5️⃣ [CRUD Example (in‑memory)](#crud)  
-6️⃣ [Error Handling & Custom Responses](#errors)  
-7️⃣ [Background Tasks](#background)  
+5️⃣ [CRUD Example (in‑memory)](#5-crud-example-inmemory)  
+6️⃣ [Error Handling & Custom Responses](#6-error-handling-custom-responses)  
+7️⃣ [Background Tasks](#7-background-tasks)  
 8️⃣ [Authentication (API‑Key & JWT)](#auth)  
-9️⃣ [Testing with **pytest**](#testing)  
-🔟 [Extras – WebSockets, Static Files, Docker, Production Tips](#extras)  
-↪️ [Copy‑Paste Snippets](#snippets)  
+9️⃣ [Testing with **pytest**](#9-testing-with-pytest)  
+🔟 [Extras – WebSockets, Static Files, Docker, Production Tips](#websockets)  
+↪️ [Copy‑Paste Snippets](#reusable-copypaste-snippets)  
 
 ---
 

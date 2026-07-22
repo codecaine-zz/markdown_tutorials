@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Key Features](#overview--key-features)
-2. [Installation & Setting Default Shell](#installation--setting-default-shell)
-3. [Environment Variables (`set -gx` / `set -U`)](#environment-variables-set--gx--set--u)
+1. [Overview & Key Features](#overview-key-features)
+2. [Installation & Setting Default Shell](#installation-setting-default-shell)
+3. [Environment Variables (`set -gx` / `set -U`)](#environment-variables-set--gx-set--u)
 4. [Abbreviations (`abbr`) vs Aliases](#abbreviations-abbr-vs-aliases)
 5. [Writing Custom Fish Functions](#writing-custom-fish-functions)
-6. [Starship Prompt & Colors](#starship-prompt--colors)
+6. [Starship Prompt & Colors](#starship-prompt-colors)
 7. [Fisher Plugin Manager](#fisher-plugin-manager)
 8. [Configuration File (`config.fish`)](#configuration-file-configfish)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)

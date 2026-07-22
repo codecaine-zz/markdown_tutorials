@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Benefits](#overview--benefits)
+1. [Overview & Benefits](#overview-benefits)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Session Management](#session-management)
-4. [Windows & Panes Operations](#windows--panes-operations)
+4. [Windows & Panes Operations](#windows-panes-operations)
 5. [Keybindings Reference (Prefix: `Ctrl+b`)](#keybindings-reference-prefix-ctrlb)
-6. [Copy Mode & Vim Keybindings](#copy-mode--vim-keybindings)
+6. [Copy Mode & Vim Keybindings](#copy-mode-vim-keybindings)
 7. [Customizing Configuration (`~/.tmux.conf`)](#customizing-configuration-tmuxconf)
-8. [Tmux Plugin Manager (TPM) & Persistence](#tmux-plugin-manager-tpm--persistence)
+8. [Tmux Plugin Manager (TPM) & Persistence](#tmux-plugin-manager-tpm-persistence)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

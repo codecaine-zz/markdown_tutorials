@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Features](#overview--features)
+1. [Overview & Features](#overview-features)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Multi-Connection Segmented Downloads](#multi-connection-segmented-downloads)
-4. [Downloading Multiple Files & Input Lists](#downloading-multiple-files--input-lists)
-5. [BitTorrent & Magnet Links](#bittorrent--magnet-links)
-6. [Resuming & Speed Limits](#resuming--speed-limits)
+4. [Downloading Multiple Files & Input Lists](#downloading-multiple-files-input-lists)
+5. [BitTorrent & Magnet Links](#bittorrent-magnet-links)
+6. [Resuming & Speed Limits](#resuming-speed-limits)
 7. [RPC Server Daemon Setup](#rpc-server-daemon-setup)
 8. [Configuration File (`aria2.conf`)](#configuration-file-aria2conf)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)

@@ -7,10 +7,10 @@
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Service Management (`brew services`)](#4-service-management-brew-services)
 5. [Connecting with `redis-cli`](#5-connecting-with-redis-cli)
-6. [Core Data Types & Examples](#6-core-data-types--examples)
-7. [Key Expiration & TTL (Time-To-Live)](#7-key-expiration--ttl-time-to-live)
+6. [Core Data Types & Examples](#6-core-data-types-examples)
+7. [Key Expiration & TTL (Time-To-Live)](#7-key-expiration-ttl-time-to-live)
 8. [Pub/Sub Messaging Features](#8-pubsub-messaging-features)
-9. [Server Monitoring & Benchmarking](#9-server-monitoring--benchmarking)
+9. [Server Monitoring & Benchmarking](#9-server-monitoring-benchmarking)
 10. [Uninstallation](#10-uninstallation)
 
 ---

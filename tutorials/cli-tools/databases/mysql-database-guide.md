@@ -6,11 +6,11 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Service Management (`brew services`)](#4-service-management-brew-services)
-5. [Basic Connection & Security Setup](#5-basic-connection--security-setup)
-6. [Database & Table Operations](#6-database--table-operations)
-7. [CRUD SQL Examples & Output](#7-crud-sql-examples--output)
-8. [User Management & Privileges](#8-user-management--privileges)
-9. [Backups & Database Restores (`mysqldump`)](#9-backups--database-restores-mysqldump)
+5. [Basic Connection & Security Setup](#5-basic-connection-security-setup)
+6. [Database & Table Operations](#6-database-table-operations)
+7. [CRUD SQL Examples & Output](#7-crud-sql-examples-output)
+8. [User Management & Privileges](#8-user-management-privileges)
+9. [Backups & Database Restores (`mysqldump`)](#9-backups-database-restores-mysqldump)
 10. [Uninstallation](#10-uninstallation)
 
 ---

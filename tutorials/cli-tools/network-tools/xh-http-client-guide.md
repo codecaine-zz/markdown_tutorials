@@ -5,10 +5,10 @@
 1. [What is `xh`?](#1-what-is-xh)
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
-4. [Basic Syntax & GET Requests](#4-basic-syntax--get-requests)
-5. [POST Requests & JSON Payloads](#5-post-requests--json-payloads)
+4. [Basic Syntax & GET Requests](#4-basic-syntax-get-requests)
+5. [POST Requests & JSON Payloads](#5-post-requests-json-payloads)
 6. [Downloading Files (`wget` mode)](#6-downloading-files-wget-mode)
-7. [Headers, Authentication & Cookies](#7-headers-authentication--cookies)
+7. [Headers, Authentication & Cookies](#7-headers-authentication-cookies)
 8. [Uninstallation](#8-uninstallation)
 
 ---

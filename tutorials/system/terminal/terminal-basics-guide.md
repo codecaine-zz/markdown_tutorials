@@ -1,10 +1,10 @@
 ## Table of Contents
-1. [Basic Navigation & Commands](#basic-navigation--commands)
+1. [Basic Navigation & Commands](#basic-navigation-commands)
 2. [File and Directory Operations](#file-and-directory-operations)
 3. [Text Processing](#text-processing)
 4. [Process Management](#process-management)
-5. [Networking & System Information](#networking--system-information)
-6. [Advanced Shell Features](#advanced-shell-features)
+5. [Networking & System Information](#networking-system-information)
+6. [Advanced Shell Features](#clearing-screen-and-history)
 
 ## Basic Navigation & Commands
 

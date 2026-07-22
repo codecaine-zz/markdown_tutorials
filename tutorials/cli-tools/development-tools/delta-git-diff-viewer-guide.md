@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Features](#overview--features)
+1. [Overview & Features](#overview-features)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Configuring Git Integration (`.gitconfig`)](#configuring-git-integration-gitconfig)
 4. [Side-by-Side vs Unified Diff Views](#side-by-side-vs-unified-diff-views)
-5. [Custom Themes & Color Schemes](#custom-themes--color-schemes)
-6. [Using Delta with `diff` & `grep`](#using-delta-with-diff--grep)
+5. [Custom Themes & Color Schemes](#custom-themes-color-schemes)
+6. [Using Delta with `diff` & `grep`](#using-delta-with-diff-grep)
 7. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

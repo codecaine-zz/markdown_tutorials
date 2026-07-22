@@ -6,7 +6,7 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation](#3-installation)
 4. [Shell Configuration (Crucial Step)](#4-shell-configuration-crucial-step)
-5. [Default Keybindings & Output](#5-default-keybindings--output)
+5. [Default Keybindings & Output](#5-default-keybindings-output)
 6. [Usage with Pipes (Advanced Power)](#6-usage-with-pipes-advanced-power)
 7. [Uninstallation](#7-uninstallation)
 

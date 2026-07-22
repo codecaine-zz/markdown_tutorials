@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Neofetch Comparison](#overview--neofetch-comparison)
+1. [Overview & Neofetch Comparison](#overview-neofetch-comparison)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Usage & Terminal Output](#basic-usage--terminal-output)
-4. [Custom Logos & ASCII Art](#custom-logos--ascii-art)
+3. [Basic Usage & Terminal Output](#basic-usage-terminal-output)
+4. [Custom Logos & ASCII Art](#custom-logos-ascii-art)
 5. [Configuration File Setup (`config.jsonc`)](#configuration-file-setup-configjsonc)
-6. [Preset Themes & Formats](#preset-themes--formats)
+6. [Preset Themes & Formats](#preset-themes-formats)
 7. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

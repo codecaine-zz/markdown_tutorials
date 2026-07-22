@@ -5,9 +5,9 @@
 1.  [What is `shellcheck`?](#1-what-is-shellcheck)
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
-4.  [Basic Usage & Output](#4-basic-usage--output)
+4.  [Basic Usage & Output](#4-basic-usage-output)
 5.  [Understanding the Output](#5-understanding-the-output)
-6.  [Key Features & Examples](#6-key-features--examples)
+6.  [Key Features & Examples](#6-key-features-examples)
 7.  [A Note on Editor Integration](#7-a-note-on-editor-integration)
 8.  [Uninstallation](#8-uninstallation)
 

@@ -5,9 +5,9 @@
 4. [Battery Life Management](#battery-life-management)
 5. [Keyboard and Input Tips](#keyboard-and-input-tips)
 6. [Software Optimization](#software-optimization)
-7. [Developer Tools & Terminal Commands](#developer-tools--terminal-commands)
+7. [Developer Tools & Terminal Commands](#developer-tools-terminal-commands)
 8. [Productivity Hacks](#productivity-hacks)
-9. [Troubleshooting Solutions](#troubleshooting-solutions)
+9. [Troubleshooting Solutions](#display-preferences)
 
 ## Hardware Optimization
 

@@ -5,14 +5,14 @@ Every function and class is linked to the **official Matplotlib documentation**,
 ---
 
 ## Table of Contents
-1. [What is Matplotlib?](#what-is-matplotlib)  
-2. [Prerequisites & Installation](#prerequisites)  
-3. [Quick‑Start: a “Hello‑World” Plot](#quick-start)  
-4. [Core Plot Types (Line, Scatter, Bar, Histograms, etc.)](#core‑plots)  
-5. [Customising Axes, Ticks & Layout](#customising)  
-6. [Sub‑plots & Shared Axes](#subplots)  
-7. [3‑D Visualisations](#3d)  
-8. [Styling, Themes & Colour Maps](#styles)  
+1. [What is Matplotlib?](#1-what-is-matplotlib)  
+2. [Prerequisites & Installation](#2-prerequisites-installation)  
+3. [Quick‑Start: a “Hello‑World” Plot](#3-quickstart-a-helloworld-plot)  
+4. [Core Plot Types (Line, Scatter, Bar, Histograms, etc.)](#plot)  
+5. [Customising Axes, Ticks & Layout](#5-customising-axes-ticks-layout)  
+6. [Sub‑plots & Shared Axes](#6-subplots-shared-axes)  
+7. [3‑D Visualisations](#7-3d-visualisations)  
+8. [Styling, Themes & Colour Maps](#8-styling-themes-colour-maps)  
 9. **Reusable Helper Module – `mpl_helpers.py`**  
    - Figure & Axes helpers  
    - Styling & theme helpers  
@@ -21,12 +21,12 @@ Every function and class is linked to the **official Matplotlib documentation**,
    - Layout, saving & export utilities  
    - Performance helpers for large data  
    - Miscellaneous one‑liners  
-10. [Interactive Widgets (Jupyter) & Simple Animation](#interactive)  
-11. [Performance Tips for Very Large Datasets](#performance)  
-12. [Publication‑Ready Plots – Best Practices](#publication)  
-13. [Common Errors & How to Fix Them](#common-errors)  
-14. [FAQ](#faq)  
-15. [Next Steps & Further Reading](#next-steps)  
+10. [Interactive Widgets (Jupyter) & Simple Animation](#10-interactive-widgets-jupyter-simple-animation)  
+11. [Performance Tips for Very Large Datasets](#data)  
+12. [Publication‑Ready Plots – Best Practices](#plot)  
+13. [Common Errors & How to Fix Them](#13-common-errors-how-to-fix-them)  
+14. [FAQ](#14-faq)  
+15. [Next Steps & Further Reading](#15-next-steps-further-reading)  
 
 ---  
 

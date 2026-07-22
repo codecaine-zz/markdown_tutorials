@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Comparison](#overview--comparison)
+1. [Overview & Comparison](#overview-comparison)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Usage & Essential Commands](#basic-usage--essential-commands)
-4. [Tealdeer (Rust Client) Setup & Config](#tealdeer-rust-client-setup--config)
+3. [Basic Usage & Essential Commands](#basic-usage-essential-commands)
+4. [Tealdeer (Rust Client) Setup & Config](#tealdeer-rust-client-setup-config)
 5. [Platform-Specific Searches](#platform-specific-searches)
 6. [Updating Offline Page Cache](#updating-offline-page-cache)
 7. [FZF Fuzzy Integration](#fzf-fuzzy-integration)
-8. [Custom Pages & Aliases](#custom-pages--aliases)
+8. [Custom Pages & Aliases](#custom-pages-aliases)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

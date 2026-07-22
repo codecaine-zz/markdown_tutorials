@@ -6,11 +6,11 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Comparison (`htop` / `top` vs `btm`)](#overview--comparison-htop--top-vs-btm)
+1. [Overview & Comparison (`htop` / `top` vs `btm`)](#overview-comparison-htop-top-vs-btm)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Usage & Keyboard Shortcuts](#basic-usage--keyboard-shortcuts)
-4. [Process Filtering & Sorting](#process-filtering--sorting)
-5. [Terminating & Signals (`SIGTERM` / `SIGKILL`)](#terminating--signals-sigterm--sigkill)
+3. [Basic Usage & Keyboard Shortcuts](#basic-usage-keyboard-shortcuts)
+4. [Process Filtering & Sorting](#process-filtering-sorting)
+5. [Terminating & Signals (`SIGTERM` / `SIGKILL`)](#terminating-signals-sigterm-sigkill)
 6. [Custom Configuration (`bottom.toml`)](#custom-configuration-bottomtoml)
 7. [Cheat Sheet Summary](#cheat-sheet-summary)
 

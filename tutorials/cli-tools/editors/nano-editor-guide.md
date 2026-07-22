@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Prerequisites](#overview--prerequisites)
+1. [Overview & Prerequisites](#overview-prerequisites)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Usage & Essential Keybindings](#basic-usage--essential-keybindings)
-4. [Search & Replace Operations](#search--replace-operations)
-5. [Line Numbers, Soft Wrapping & Mouse Support](#line-numbers-soft-wrapping--mouse-support)
+3. [Basic Usage & Essential Keybindings](#basic-usage-essential-keybindings)
+4. [Search & Replace Operations](#search-replace-operations)
+5. [Line Numbers, Soft Wrapping & Mouse Support](#line-numbers-soft-wrapping-mouse-support)
 6. [Multi-File Editing (Buffers)](#multi-file-editing-buffers)
-7. [Customizing `~/.nanorc` & Syntax Highlighting](#customizing-nanorc--syntax-highlighting)
+7. [Customizing `~/.nanorc` & Syntax Highlighting](#customizing-nanorc-syntax-highlighting)
 8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

@@ -6,11 +6,11 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `just` vs `make` Comparison](#overview--just-vs-make-comparison)
+1. [Overview & `just` vs `make` Comparison](#overview-just-vs-make-comparison)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Creating a `justfile`](#creating-a-justfile)
-4. [Recipes with Arguments & Variables](#recipes-with-arguments--variables)
-5. [Listing & Self-Documenting Recipes](#listing--self-documenting-recipes)
+4. [Recipes with Arguments & Variables](#recipes-with-arguments-variables)
+5. [Listing & Self-Documenting Recipes](#listing-self-documenting-recipes)
 6. [Cross-Language Recipes (Python, Node, Bash)](#cross-language-recipes-python-node-bash)
 7. [Cheat Sheet Summary](#cheat-sheet-summary)
 

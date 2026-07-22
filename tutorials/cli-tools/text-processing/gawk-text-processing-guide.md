@@ -11,11 +11,11 @@ brew install gawk
 3. [Built-in Variables and Functions](#built-in-variables-and-functions)
 4. [Field Processing and Regular Expressions](#field-processing-and-regular-expressions)
 5. [Advanced Pattern Matching](#advanced-pattern-matching)
-6. [Functions and User-defined Functions](#functions-and-user-defined-functions)
-7. [Arrays in GAWK](#arrays-in-gawk)
-8. [File Handling and I/O Operations](#file-handling-and-io-operations)
-9. [Practical Examples and Use Cases](#practical-examples-and-use-cases)
-10. [Performance Optimization Techniques](#performance-optimization-techniques)
+6. [Functions and User-defined Functions](#the-fundamental-structure)
+7. [Arrays in GAWK](#pattern-types)
+8. [File Handling and I/O Operations](#simple-pattern-matching-examples)
+9. [Practical Examples and Use Cases](#built-in-variables-and-functions)
+10. [Performance Optimization Techniques](#essential-awk-variables)
 
 ## Introduction to GAWK
 

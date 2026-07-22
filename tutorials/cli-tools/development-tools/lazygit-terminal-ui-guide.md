@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Interface Layout](#overview--interface-layout)
+1. [Overview & Interface Layout](#overview-interface-layout)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Keyboard Navigation & Panels](#keyboard-navigation--panes)
-4. [Interactive Staging & Hunk Splitting](#interactive-staging--hunk-splitting)
-5. [Branching, Stashing & Merging](#branching-stashing--merging)
-6. [Interactive Rebasing & Commit Squashing](#interactive-rebasing--commit-squashing)
+3. [Keyboard Navigation & Panels](#keyboard-navigation-panels)
+4. [Interactive Staging & Hunk Splitting](#interactive-staging-hunk-splitting)
+5. [Branching, Stashing & Merging](#branching-stashing-merging)
+6. [Interactive Rebasing & Commit Squashing](#interactive-rebasing-commit-squashing)
 7. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

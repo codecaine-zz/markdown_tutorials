@@ -12,17 +12,17 @@
 
 ## 📋 Table of Contents
 
-- [✨ Features](#-features)
-- [📋 Prerequisites Installation](#-prerequisites-installation)
-- [🚀 Quick Start](#-quick-start)
-- [📖 Commands Reference](#-commands-reference)
-- [⚙️ Configuration](#%EF%B8%8F-configuration)
-- [💾 Data Persistence](#-data-persistence)
-- [🔧 Advanced Usage](#-advanced-usage)
-- [🏃‍♂️ Real-World Examples](#%EF%B8%8F-real-world-examples)
-- [🐛 Troubleshooting](#-troubleshooting)
-- [📁 Project Structure](#-project-structure)
-- [🚀 What's New](#-whats-new)
+- [✨ Features](#features)
+- [📋 Prerequisites Installation](#prerequisites-installation)
+- [🚀 Quick Start](#quick-start)
+- [📖 Commands Reference](#commands-reference)
+- [⚙️ Configuration](#configuration)
+- [💾 Data Persistence](#data-persistence)
+- [🔧 Advanced Usage](#advanced-usage)
+- [🏃‍♂️ Real-World Examples](#real-world-examples)
+- [🐛 Troubleshooting](#troubleshooting)
+- [📁 Project Structure](#project-structure)
+- [🚀 What's New](#whats-new)
 
 ---
 

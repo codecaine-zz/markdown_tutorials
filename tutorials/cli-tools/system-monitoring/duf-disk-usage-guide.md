@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Features](#overview--features)
+1. [Overview & Features](#overview-features)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Usage & Output Layout](#basic-usage--output-layout)
-4. [Device & Filesystem Filtering](#device--filesystem-filtering)
-5. [Sorting & Column Customization](#sorting--column-customization)
-6. [Themes & Terminal Display Options](#themes--terminal-display-options)
-7. [JSON Export & Automation (`jq`)](#json-export--automation-jq)
+3. [Basic Usage & Output Layout](#basic-usage-output-layout)
+4. [Device & Filesystem Filtering](#device-filesystem-filtering)
+5. [Sorting & Column Customization](#sorting-column-customization)
+6. [Themes & Terminal Display Options](#themes-terminal-display-options)
+7. [JSON Export & Automation (`jq`)](#json-export-automation-jq)
 8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

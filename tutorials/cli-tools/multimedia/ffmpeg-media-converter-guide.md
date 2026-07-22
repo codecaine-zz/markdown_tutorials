@@ -15,9 +15,9 @@ This comprehensive guide covers everything from basic FFmpeg commands to advance
 5. [Audio Processing](#audio-processing)
 6. [Format Conversion](#format-conversion)
 7. [Advanced Video Manipulation](#advanced-video-manipulation)
-8. [Streaming and Network Operations](#streaming-and-network-operations)
-9. [Filtering and Effects](#filtering-and-effects)
-10. [Performance Optimization](#performance-optimization)
+8. [Streaming and Network Operations](#understanding-ffmpeg-options)
+9. [Filtering and Effects](#basic-command-structure-examples)
+10. [Performance Optimization](#video-processing-basics)
 
 ## Introduction to FFmpeg
 

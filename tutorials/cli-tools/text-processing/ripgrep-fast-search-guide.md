@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Performance Benefits](#overview--performance-benefits)
+1. [Overview & Performance Benefits](#overview-performance-benefits)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Searching & Smart Case](#basic-searching--smart-case)
-4. [File Type Filtering (`-t` / `-T`)](#file-type-filtering--t---t)
-5. [Regex, Multiline & Replacement Options](#regex-multiline--replacement-options)
-6. [Context Control & Match Limits](#context-control--match-limits)
+3. [Basic Searching & Smart Case](#basic-searching-smart-case)
+4. [File Type Filtering (`-t` / `-T`)](#file-type-filtering--t--t)
+5. [Regex, Multiline & Replacement Options](#regex-multiline-replacement-options)
+6. [Context Control & Match Limits](#context-control-match-limits)
 7. [FZF Interactive Integration](#fzf-interactive-integration)
 8. [Configuration File (`RIPGREP_CONFIG_PATH`)](#configuration-file-ripgrep_config_path)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)

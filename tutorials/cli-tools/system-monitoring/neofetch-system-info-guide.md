@@ -9,7 +9,7 @@
 1.  [What is `neofetch`?](#1-what-is-neofetch)
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
-4.  [Basic Usage & The Interface](#4-basic-usage--the-interface)
+4.  [Basic Usage & The Interface](#4-basic-usage-the-interface)
 5.  [Customizing `neofetch`](#5-customizing-neofetch)
 6.  [Pro-Tip: Run `neofetch` on Terminal Startup](#6-pro-tip-run-neofetch-on-terminal-startup)
 7.  [Uninstallation](#7-uninstallation)

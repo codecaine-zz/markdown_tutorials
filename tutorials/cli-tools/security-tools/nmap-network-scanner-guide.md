@@ -14,9 +14,9 @@ Nmap (Network Mapper) is a free and open-source utility for network discovery an
 7. [OS Detection](#os-detection)
 8. [Advanced Scanning Methods](#advanced-scanning-methods)
 9. [Scripting Engine (NSE)](#scripting-engine-nse)
-10. [Output and Reporting](#output-and-reporting)
-11. [Security Considerations](#security-considerations)
-12. [Real-world Examples](#real-world-examples)
+10. [Output and Reporting](#common-command-line-options)
+11. [Security Considerations](#host-discovery)
+12. [Real-world Examples](#ping-scan)
 
 ## Introduction to Nmap
 

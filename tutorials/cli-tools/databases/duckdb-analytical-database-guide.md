@@ -6,8 +6,8 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Basic Interactive CLI Usage](#4-basic-interactive-cli-usage)
-5. [Querying CSV, Parquet & JSON Directly](#5-querying-csv-parquet--json-directly)
-6. [Exporting & Transforming Data](#6-exporting--transforming-data)
+5. [Querying CSV, Parquet & JSON Directly](#5-querying-csv-parquet-json-directly)
+6. [Exporting & Transforming Data](#6-exporting-transforming-data)
 7. [Persistent Database Files](#7-persistent-database-files)
 8. [Uninstallation](#8-uninstallation)
 

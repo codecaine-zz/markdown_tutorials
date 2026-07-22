@@ -56,8 +56,8 @@ Curl is a powerful command-line tool for transferring data with URLs. This compr
 6. [File Uploads](#file-uploads)
 7. [Response Handling](#response-handling)
 8. [Timeout and Retry Options](#timeout-and-retry-options)
-9. [Advanced Features](#advanced-features)
-10. [Useful Examples](#useful-examples)
+9. [Advanced Features](#setting-custom-headers)
+10. [Useful Examples](#header-manipulation)
 
 ## Basic Usage
 

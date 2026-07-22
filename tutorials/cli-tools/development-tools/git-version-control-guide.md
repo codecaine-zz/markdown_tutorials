@@ -6,20 +6,20 @@
 ---  
 
 ## Table of Contents
-1. [Prerequisites – Homebrew](#1‑prereqs)  
-2. [Install Git (brew)](#2‑install)  
-3. [Where Homebrew puts Git (paths & binaries)](#3‑locations)  
-4. [Basic global configuration (`~/.gitconfig`)](#4‑global‑config)  
+1. [Prerequisites – Homebrew](#1-prerequisites---homebrew)  
+2. [Install Git (brew)](#2-install-git-brew)  
+3. [Where Homebrew puts Git (paths & binaries)](#3-where-homebrew-puts-git-paths-binaries)  
+4. [Basic global configuration (`~/.gitconfig`)](#4-basic-global-configuration-gitconfig)  
 5. [Create a repository & basic workflow (`git init` / `git clone`)](#5‑workflow)  
 6. **[Git cheat‑sheet – init / add / commit / push / pull / branch / merge / rebase / stash / tag / worktree](#6‑cheatsheet)** ← **copy‑paste ready**  
 7. [Working with remotes (fetch / pull / push / remote)](#7‑remotes)  
 8. [History inspection (`log`, `show`, `diff`, `blame`)](#8‑history)  
-9. [Branch & tag management (list, delete, rename)](#9‑branch‑tag)  
+9. [Branch & tag management (list, delete, rename)](#9-branch-tag-management-list-delete-rename)  
 10. [Advanced tooling – `git rebase -i`, `git bisect`, `git submodule`] #10‑advanced)  
 11. [Security – signing commits & GPG, credential helpers](#11‑security)  
 12. [Performance & housekeeping (`gc`, `fsck`, `reflog prune`)](#12‑maintenance)  
-13. [Common pitfalls & troubleshooting](#13‑mistakes)  
-14. [Uninstall / clean‑up](#14‑uninstall)  
+13. [Common pitfalls & troubleshooting](#13-common-pitfalls-troubleshooting)  
+14. [Uninstall / clean‑up](#14-uninstall-cleanup)  
 
 ---  
 

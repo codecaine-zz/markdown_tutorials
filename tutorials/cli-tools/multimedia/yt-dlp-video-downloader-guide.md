@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Prerequisites](#overview--prerequisites)
+1. [Overview & Prerequisites](#overview-prerequisites)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Downloading & Output Templates](#basic-downloading--output-templates)
-4. [Format Selection & Resolution Limits](#format-selection--resolution-limits)
-5. [Audio Extraction & Transcoding](#audio-extraction--transcoding)
-6. [Playlist & Channel Downloads](#playlist--channel-downloads)
-7. [Subtitles, Thumbnails & Metadata](#subtitles-thumbnails--metadata)
-8. [Browser Cookies & Authentication](#browser-cookies--authentication)
+3. [Basic Downloading & Output Templates](#basic-downloading-output-templates)
+4. [Format Selection & Resolution Limits](#format-selection-resolution-limits)
+5. [Audio Extraction & Transcoding](#audio-extraction-transcoding)
+6. [Playlist & Channel Downloads](#playlist-channel-downloads)
+7. [Subtitles, Thumbnails & Metadata](#subtitles-thumbnails-metadata)
+8. [Browser Cookies & Authentication](#browser-cookies-authentication)
 9. [Configuration File (`config`)](#configuration-file-config)
 10. [Prevent Re-Downloading (Archive File)](#prevent-re-downloading-archive-file)
 11. [Cheat Sheet Summary](#cheat-sheet-summary)

@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Prerequisites](#overview--prerequisites)
+1. [Overview & Prerequisites](#overview-prerequisites)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Authentication (`gh auth`)](#authentication-gh-auth)
 4. [Pull Request Operations (`gh pr`)](#pull-request-operations-gh-pr)
 5. [Issue Management (`gh issue`)](#issue-management-gh-issue)
-6. [Repository & Forking (`gh repo`)](#repository--forking-gh-repo)
-7. [GitHub Actions Workflow Monitoring (`gh run` / `gh workflow`)](#github-actions-workflow-monitoring-gh-run--gh-workflow)
-8. [Gists & Raw API Integration (`gh gist` / `gh api`)](#gists--raw-api-integration-gh-gist--gh-api)
+6. [Repository & Forking (`gh repo`)](#repository-forking-gh-repo)
+7. [GitHub Actions Workflow Monitoring (`gh run` / `gh workflow`)](#github-actions-workflow-monitoring-gh-run-gh-workflow)
+8. [Gists & Raw API Integration (`gh gist` / `gh api`)](#gists-raw-api-integration-gh-gist-gh-api)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

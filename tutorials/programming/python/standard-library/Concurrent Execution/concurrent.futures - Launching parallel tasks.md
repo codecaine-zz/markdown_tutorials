@@ -6,7 +6,7 @@ Below are comprehensive code examples for the `concurrent.futures` module, which
 
 1. [Using ThreadPoolExecutor](#1-using-threadpoolexecutor)
 2. [Using ProcessPoolExecutor](#2-using-processpoolexecutor)
-3. [Using ThreadPoolExecutor for I/O-bound Tasks](#3-using-threadpoolexecutor-for-i-o-bound-tasks)
+3. [Using ThreadPoolExecutor for I/O-bound Tasks](#3-using-threadpoolexecutor-for-io-bound-tasks)
 4. [Using ProcessPoolExecutor for CPU-bound Tasks](#4-using-processpoolexecutor-for-cpu-bound-tasks)
 5. [Using ThreadPoolExecutor and Future Objects](#5-using-threadpoolexecutor-and-future-objects)
 

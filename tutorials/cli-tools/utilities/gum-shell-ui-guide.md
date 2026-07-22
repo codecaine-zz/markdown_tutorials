@@ -6,7 +6,7 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Prerequisites](#overview--prerequisites)
+1. [Overview & Prerequisites](#overview-prerequisites)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Core UI Primitives](#core-ui-primitives)
    - [Interactive Inputs (`gum input`)](#1-interactive-inputs-gum-input)
@@ -14,9 +14,9 @@
    - [Fuzzy Search Filter (`gum filter`)](#3-fuzzy-search-filter-gum-filter)
    - [Yes/No Confirmations (`gum confirm`)](#4-yesno-confirmations-gum-confirm)
    - [Multi-line Text Editor (`gum write`)](#5-multi-line-text-editor-gum-write)
-   - [Spinners & Task Progress (`gum spin`)](#6-spinners--task-progress-gum-spin)
-   - [Styling & Borders (`gum style`)](#7-styling--borders-gum-style)
-4. [💡 Practical Real-World Example: Interactive Git Commit Script](#-practical-real-world-example-interactive-git-commit-script)
+   - [Spinners & Task Progress (`gum spin`)](#6-spinners-task-progress-gum-spin)
+   - [Styling & Borders (`gum style`)](#7-styling-borders-gum-style)
+4. [💡 Practical Real-World Example: Interactive Git Commit Script](#practical-real-world-example-interactive-git-commit-script)
 5. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

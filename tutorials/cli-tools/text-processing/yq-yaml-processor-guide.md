@@ -6,11 +6,11 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Prerequisites](#overview--prerequisites)
+1. [Overview & Prerequisites](#overview-prerequisites)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Querying YAML Files](#querying-yaml-files)
 4. [In-Place Value Modification (`-i`)](#in-place-value-modification--i)
-5. [Format Conversion (YAML $\leftrightarrow$ JSON $\leftrightarrow$ TOML $\leftrightarrow$ XML)](#format-conversion-yaml-%E2%86%94-json-%E2%86%94-toml-%E2%86%94-xml)
+5. [Format Conversion (YAML $\leftrightarrow$ JSON $\leftrightarrow$ TOML $\leftrightarrow$ XML)](#format-conversion-yaml-leftrightarrow-json-leftrightarrow-toml-leftrightarrow-xml)
 6. [Merging YAML Documents](#merging-yaml-documents)
 7. [Cheat Sheet Summary](#cheat-sheet-summary)
 

@@ -6,7 +6,7 @@
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
 4.  [Shell Configuration (Crucial Step)](#4-shell-configuration-crucial-step)
-5.  [Basic Usage & Output](#5-basic-usage--output)
+5.  [Basic Usage & Output](#5-basic-usage-output)
 6.  [Interactive Mode with `fzf`](#6-interactive-mode-with-fzf)
 7.  [Managing the Database](#7-managing-the-database)
 8.  [Uninstallation](#8-uninstallation)

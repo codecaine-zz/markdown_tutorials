@@ -6,8 +6,8 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Core Philosophy: Selection-First Modal Editing](#4-core-philosophy-selection-first-modal-editing)
-5. [Basic Editing Commands & Keybindings](#5-basic-editing-commands--keybindings)
-6. [LSP & Syntax Highlighting Out-of-the-Box](#6-lsp--syntax-highlighting-out-of-the-box)
+5. [Basic Editing Commands & Keybindings](#5-basic-editing-commands-keybindings)
+6. [LSP & Syntax Highlighting Out-of-the-Box](#6-lsp-syntax-highlighting-out-of-the-box)
 7. [Configuring Helix (`config.toml`)](#7-configuring-helix-configtoml)
 8. [Uninstallation](#8-uninstallation)
 

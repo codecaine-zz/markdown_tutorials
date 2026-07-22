@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Comparison (`dig` vs `dog` / `doggo`)](#overview--comparison-dig-vs-dog--doggo)
+1. [Overview & Comparison (`dig` vs `dog` / `doggo`)](#overview-comparison-dig-vs-dog-doggo)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Basic DNS Record Queries](#basic-dns-record-queries)
 4. [Querying Custom DNS Resolvers](#querying-custom-dns-resolvers)
-5. [Secure DNS: DoH (HTTPS) & DoT (TLS)](#secure-dns-doh-https--dot-tls)
-6. [JSON Output & Scripting (`jq`)](#json-output--scripting-jq)
-7. [Reverse Lookups & Common Diagnostics](#reverse-lookups--common-diagnostics)
+5. [Secure DNS: DoH (HTTPS) & DoT (TLS)](#secure-dns-doh-https-dot-tls)
+6. [JSON Output & Scripting (`jq`)](#json-output-scripting-jq)
+7. [Reverse Lookups & Common Diagnostics](#reverse-lookups-common-diagnostics)
 8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

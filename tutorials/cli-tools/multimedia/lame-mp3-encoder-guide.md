@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Encoding Modes](#overview--encoding-modes)
+1. [Overview & Encoding Modes](#overview-encoding-modes)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Variable Bitrate (VBR) Encoding](#variable-bitrate-vbr-encoding)
 4. [Constant Bitrate (CBR) Encoding](#constant-bitrate-cbr-encoding)
-5. [Average Bitrate (ABR) & Mono Voice Encoding](#average-bitrate-abr--mono-voice-encoding)
-6. [ID3 Tagging & Album Metadata](#id3-tagging--album-metadata)
-7. [Batch Directory Conversion Script](#batch-directory-conversion-script)
+5. [Average Bitrate (ABR) & Mono Voice Encoding](#average-bitrate-abr-mono-voice-encoding)
+6. [ID3 Tagging & Album Metadata](#id3-tagging-album-metadata)
+7. [Batch Directory Conversion Script](#constant-bitrate-cbr-encoding)
 8. [Integration with FFmpeg](#integration-with-ffmpeg)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)
 

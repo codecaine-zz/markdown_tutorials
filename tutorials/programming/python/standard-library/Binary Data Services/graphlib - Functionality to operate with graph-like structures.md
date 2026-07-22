@@ -115,6 +115,6 @@ These examples provide a basic understanding of how to use the `graphlib` module
 
 ## Table of Contents
 
-1. [Creating and manipulating a DirectedGraph](#example-1-creating-and-manipulating-a-directedgraph)
+1. [Creating and manipulating a DirectedGraph](#table-of-contents)
 2. [Topological Sorting](#example-2-topological-sorting)
 3. [Finding Strongly Connected Components](#example-3-finding-strongly-connected-components)

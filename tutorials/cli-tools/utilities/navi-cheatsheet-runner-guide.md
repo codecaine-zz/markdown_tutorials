@@ -5,7 +5,7 @@
 1. [What is `navi`?](#1-what-is-navi)
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
-4. [Basic Usage & Interactive Search](#4-basic-usage--interactive-search)
+4. [Basic Usage & Interactive Search](#4-basic-usage-interactive-search)
 5. [Writing Custom Cheatsheets (`.cheat` files)](#5-writing-custom-cheatsheets-cheat-files)
 6. [Importing Community Cheatsheet Repositories](#6-importing-community-cheatsheet-repositories)
 7. [Shell Widget Integration (`Ctrl+G`)](#7-shell-widget-integration-ctrlg)

@@ -5,11 +5,11 @@
 1. [What is `sqlite`?](#1-what-is-sqlite)
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
-4. [Creating & Opening Databases](#4-creating--opening-databases)
+4. [Creating & Opening Databases](#4-creating-opening-databases)
 5. [Essential Dot Commands (`.help`, `.mode`, `.schema`)](#5-essential-dot-commands-help-mode-schema)
-6. [Practical SQL Examples & Formatted Output](#6-practical-sql-examples--formatted-output)
-7. [Importing & Exporting Data (`.import`, `.dump`)](#7-importing--exporting-data-import-dump)
-8. [Database Backup & Vacuuming](#8-database-backup--vacuuming)
+6. [Practical SQL Examples & Formatted Output](#6-practical-sql-examples-formatted-output)
+7. [Importing & Exporting Data (`.import`, `.dump`)](#7-importing-exporting-data-import-dump)
+8. [Database Backup & Vacuuming](#8-database-backup-vacuuming)
 9. [Uninstallation](#9-uninstallation)
 
 ---

@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `sd` vs `sed` Comparison](#overview--sd-vs-sed-comparison)
+1. [Overview & `sd` vs `sed` Comparison](#overview-sd-vs-sed-comparison)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Basic String Replacement](#basic-string-replacement)
 4. [In-Place File Replacements](#in-place-file-replacements)
-5. [Regex Capture Groups & Variables](#regex-capture-groups--variables)
-6. [Literal Mode (`-s`) & Multi-Line Mode (`-m`)](#literal-mode--s--multi-line-mode--m)
-7. [💡 Practical Real-World Examples](#-practical-real-world-examples)
-8. [Pipeline Integration with `fd` & `find`](#pipeline-integration-with-fd--find)
+5. [Regex Capture Groups & Variables](#regex-capture-groups-variables)
+6. [Literal Mode (`-s`) & Multi-Line Mode (`-m`)](#literal-mode--s-multi-line-mode--m)
+7. [💡 Practical Real-World Examples](#practical-real-world-examples)
+8. [Pipeline Integration with `fd` & `find`](#pipeline-integration-with-fd-find)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

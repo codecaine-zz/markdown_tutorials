@@ -13,9 +13,9 @@ ImageMagick is a powerful command-line utility suite for creating, editing, comp
 5. [Cropping and Cropping Tools](#cropping-and-cropping-tools)
 6. [Color Manipulation](#color-manipulation)
 7. [Filters and Effects](#filters-and-effects)
-8. [Text Overlay](#text-overlay)
-9. [Batch Processing](#batch-processing)
-10. [Advanced Techniques](#advanced-techniques)
+8. [Text Overlay](#add-simple-text-overlay)
+9. [Batch Processing](#batch-processing-bulk-conversion-examples)
+10. [Advanced Techniques](#image-information)
 
 ## Installation
 
