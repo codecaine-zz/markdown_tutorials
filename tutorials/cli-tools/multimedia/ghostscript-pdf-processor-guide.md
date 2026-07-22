@@ -1,3 +1,5 @@
+# Ghostscript PDF Processor Guide
+
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
 2. [Installing Ghostscript via Homebrew](#installing-ghostscript-via-homebrew)

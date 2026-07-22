@@ -1,3 +1,5 @@
+# Gobuster Directory Scanner Guide
+
 Below is a **complete cheat‑sheet** for using **Gobuster** after you have installed it with Homebrew (`brew install gobuster`).  
 It covers the most common modes, the key flags, useful tip‑sets and ready‑to‑run one‑liners that you can copy‑paste into a terminal.
 

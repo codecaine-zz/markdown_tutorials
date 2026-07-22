@@ -1,274 +1,160 @@
-# 1.  What is Pandoc?
+# Pandoc Document Converter Guide
 
-Pandoc is a “Swiss‑army knife” for converting between over 45 markup and word‑processing formats (Markdown, LaTeX, DOCX, ePub, HTML, man pages, etc.).  
-It runs on macOS, Linux, and Windows and is heavily scriptable from the command line.
-
-> **Why use it?**  
-> - One command converts to multiple targets.  
-> - You can mix styles, templates, and filters without leaving the shell.  
-> - It is fully open source and community‑maintained.
+`pandoc` is the universal document converter—a "Swiss-army knife" for converting text between over 40 markup formats, including **Markdown, HTML, PDF, Microsoft Word (.docx), EPUB ebooks, LaTeX, Jupyter Notebooks (.ipynb), and presentation slides**.
 
 ---
 
-## 2.  Prerequisites
+## 📚 Table of Contents
 
-### 2.1  Install Homebrew (macOS & Linux)
-
-If you don’t have Homebrew, install it by pasting the following into a terminal:
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-*For more details see <https://brew.sh/>.*
+1. [Overview & Prerequisites](#overview--prerequisites)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [Supported Document Formats](#supported-document-formats)
+4. [Basic Conversion Commands](#basic-conversion-commands)
+5. [Markdown to PDF Conversion Engines](#markdown-to-pdf-conversion-engines)
+6. [YAML Metadata & Templates](#yaml-metadata--templates)
+7. [💡 Practical Real-World Examples](#-practical-real-world-examples)
+8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---
 
-## 3.  Installing Pandoc
+## 🔍 Overview & Prerequisites
+
+`pandoc` parses document structures into a clean intermediate abstract syntax tree (AST) and serializes it into the target format.
+
+- **Standalone Output (`-s`)**: Generates complete HTML/PDF files including headers, CSS, and footers.
+- **Table of Contents (`--toc`)**: Automatically extracts headings into a TOC.
+
+---
+
+## ⚙️ Installation via Homebrew
 
 ```bash
-brew install pandoc
-```
+# Install pandoc on macOS
+brew install pandoc librsvg
 
-*The Homebrew formula shows the same command*【1†L4-L8】.
+# Optional: Install PDF engine tools
+brew install --cask wkhtmltopdf
 
-After installation:
-
-```bash
+# Verify installation
 pandoc --version
 ```
 
-You should see something like:
+---
 
-```
-pandoc 3.8
-Compiled with pandoc-types 1.22.0, cmark 0.29.0
-```
+## 📁 Supported Document Formats
+
+| Source Format | Target Formats | Common Command Flag |
+| --- | --- | --- |
+| **Markdown (`.md`)** | HTML, PDF, DOCX, EPUB, LaTeX | `pandoc -s input.md -o output.html` |
+| **Microsoft Word (`.docx`)**| Markdown, HTML, PDF | `pandoc input.docx -o output.md` |
+| **HTML (`.html`)** | Markdown, DOCX | `pandoc input.html -o output.md` |
+| **LaTeX (`.tex`)** | Markdown, PDF | `pandoc input.tex -o output.md` |
 
 ---
 
-## 4.  Basic Conversion
+## 🚀 Basic Conversion Commands
 
-All conversions are invoked with the pattern  
-
-```
-pandoc [options] -o output_file input_file
-```
-
-| Example | Command | Result |
-|---------|---------|--------|
-| Markdown → HTML fragment | `pandoc sample.md -o sample-fragment.html` | `sample-fragment.html` |
-| Markdown → PDF (via XeLaTeX) | `pandoc sample.md --pdf-engine=xelatex -o sample.pdf` | `sample.pdf` |
-
-*The first example mimics the official demo*【3†L18-L22】.
-
-> **Tip:** Use `-s` (stand‑alone) when you need a complete document (with `\documentclass` for LaTeX or a full `<html>` block for HTML).  
->  
-> `pandoc -s sample.md -o sample.pdf`
-
----
-
-## 5.  Common Use‑Case Conversions
-
-Below is a quick‑reference list of the most frequent conversions.  
-Feel free to copy & paste into your terminal.
-
-| Input | Target | Command |
-|-------|--------|---------|
-| Markdown → HTML | `pandoc -s -o out.html in.md` |
-| Markdown → DOCX | `pandoc -o out.docx in.md` |
-| Markdown → ePub | `pandoc -o out.epub in.md` |
-| DOCX → Markdown | `pandoc -o out.md in.docx` |
-| LaTeX → Markdown | `pandoc -s -o out.md in.tex` |
-| Markdown → PDF (Table of contents) | `pandoc --toc --pdf-engine=xelatex -o out.pdf in.md` |
-| Markdown → Beamer (slides) | `pandoc -t beamer -s in.md -o slides.pdf` |
-
----
-
-## 6.  Enhancing Output with Options
-
-### 6.1  Stand‑alone and Table of Contents
-
+### 1. Markdown to HTML (`.html`)
 ```bash
-pandoc -s --toc -o mydoc.pdf mydoc.md
+# Generate standalone HTML document with Table of Contents
+pandoc -s --toc input.md -o output.html
+
+# Include custom external CSS stylesheet
+pandoc -s -c styles.css input.md -o output.html
 ```
 
-### 6.2  CSS, Headers, and Footers (for HTML)
-
+### 2. Markdown to Microsoft Word (`.docx`)
 ```bash
-pandoc -s --toc -c style.css -H header.html -F footer.html mydoc.md -o mydoc.html
+# Convert Markdown to Word document
+pandoc input.md -o output.docx
 ```
 
-*See the official demo for the same pattern*【3†L30-L35】.
-
-### 6.3  Custom PDF Layout
-
+### 3. Markdown to EPUB Ebook (`.epub`)
 ```bash
-pandoc -N \
-  -V geometry=margin=1.2in \
-  -V mainfont="Palatino" \
-  -V sansfont="Helvetica" \
-  -V monofont="Menlo" \
-  -V fontsize=12pt \
-  -V version=2.0 \
-  --include-in-header fancyheaders.tex \
-  --pdf-engine=lualatex \
-  --toc \
-  -o fancy.pdf \
-  source.md
+# Convert Markdown to EPUB ebook with cover image
+pandoc input.md --epub-cover-image=cover.jpg -o book.epub
 ```
-
-**Explanation**
-
-- `-N` → number sections.  
-- `-V` → LaTeX variables that the template can use.  
-- `--include-in-header` → adds raw LaTeX to `<head>`.  
-- `--pdf-engine` chooses the LaTeX engine (XeLaTeX, LuaLaTeX, or pdflatex).
 
 ---
 
-## 7.  Metadata & YAML Front Matter
+## 📄 Markdown to PDF Conversion Engines
 
-Pandoc can ingest metadata directly at the start of a document using YAML.  
+Generating PDF documents requires specifying a rendering engine (`--pdf-engine`).
+
+### 1. Using `wkhtmltopdf` (HTML/CSS Based - Recommended)
+```bash
+# Render PDF using HTML+CSS layout
+pandoc input.md --pdf-engine=wkhtmltopdf -o output.pdf
+```
+
+### 2. Using `XeLaTeX` (Academic / Math Papers)
+```bash
+# Render PDF via XeLaTeX (requires MacTeX or BasicTeX)
+pandoc input.md --pdf-engine=xelatex --toc -o paper.pdf
+```
+
+---
+
+## 📝 YAML Metadata & Templates
+
+Pass title, author, date, and document variables via a YAML metadata block at the top of your Markdown file:
 
 ```markdown
 ---
-title: “My Great Document”
-author: “Jane Doe”
-date: 2025-10-15
+title: "Technical System Architecture"
+author: "Engineering Team"
+date: "2026-07-22"
 toc: true
----
-```
-
-Or via the command line:
-
-```bash
-pandoc -M title="My Great Document" -M author="Jane Doe" -M toc=true -o out.pdf in.md
-```
-
-For large metadata files, place them in a separate `.yaml` file:
-
-```bash
-pandoc --metadata-file meta.yaml -o out.pdf in.md
-```
-
+toc-depth: 2
+geometry: margin=1in
+fontsize: 11pt
 ---
 
-## 8.  Templates
-
-Pandoc ships with generic templates; you can override them with your own.  
-
-```bash
-pandoc -t markdown -o out.md in.docx --template=mydoctemplate.tex
+# 1. Introduction
+System overview text goes here...
 ```
 
-To see the default templates:
-
+Run conversion command:
 ```bash
-pandoc --verbose
-```
-
-*(The default template files accompany the Pandoc source; you can copy them for editing.)*
-
----
-
-## 9.  Filters & Extensions
-
-Pandoc supports Lua filters (`--lua-filter`) and other extensions.  
-A **citation filter** (`citeproc`) is built‑in, but you can add custom ones.
-
-> **Example: add numbers to footnotes using Lua.**
-
-Create `footnote.lua`:
-
-```lua
--- footnote.lua
-function Footnote(el)
-  el.number = nil
-  return el
-end
-```
-
-Run:
-
-```bash
-pandoc -o out.pdf in.md --lua-filter footnote.lua
-```
-
-> **Tip:** Install more filters via Homebrew if needed:
-
-```bash
-brew install pandoc-crossref   # for cross‑references
-brew install pandoc-include   # for including external files
+pandoc -s architecture.md -o architecture.pdf
 ```
 
 ---
 
-## 10.  Batch Conversion Scripts
+## 💡 Practical Real-World Examples
 
-### 10.1  Bash: Convert all Markdown files in a folder to PDF
-
+### Example 1: Creating a Styled HTML Documentation Page
 ```bash
-#!/usr/bin/env bash
-mkdir -p pdf
-for md in *.md; do
-  base=${md%.md}
-  pandoc -s --toc --pdf-engine=xelatex -o pdf/"$base".pdf "$md"
+pandoc -s \
+  --toc \
+  --metadata title="API Reference Documentation" \
+  -c https://cdn.jsdelivr.net/npm/water.css@2/out/water.css \
+  api-guide.md \
+  -o api-guide.html
+```
+
+### Example 2: Batch Converting `.docx` Files to Markdown
+```bash
+#!/bin/bash
+# Convert all Word documents in current folder to Markdown
+for doc in *.docx; do
+  if [ -f "$doc" ]; then
+    base_name="${doc%.*}"
+    echo "Converting $doc -> ${base_name}.md..."
+    pandoc "$doc" -t markdown -o "${base_name}.md"
+  fi
 done
 ```
 
-```bash
-chmod +x convert_all.sh
-./convert_all.sh
-```
-
-### 10.2  Makefile: Document pipeline
-
-```makefile
-SRCS := $(wildcard *.md)
-PDFS := $(SRCS:.md=.pdf)
-
-.PHONY: all clean
-
-all: $(PDFS)
-
-%.pdf: %.md
-        pandoc -s --toc --pdf-engine=xelatex -o "$@" "$<"
-
-clean:
-        rm -f $(PDFS)
-```
-
-Run `make` and `make clean`.
-
 ---
 
-## 11.  Common Pitfalls and Fixes
+## 📋 Cheat Sheet Summary
 
-| Symptom | Likely Cause | Fix |
-|---------|--------------|-----|
-| PDF contains garbled text or missing fonts | Missing LaTeX engine | `brew install --cask mactex` (macOS) or `sudo apt install texlive-full` (Linux). |
-| “Error: No engine specified” | Not specifying `--pdf-engine` | Add `--pdf-engine=xelatex` (or `lualatex`/`pdflatex`). |
-| “Unknown metadata field” | Using metadata names not recognized | Use correct YAML keys (`title`, `author`, `date`, `toc`). |
-| “Cannot find filter” | Filter not installed | `brew install pandoc-crossref` etc., or ensure filters are on `$PATH`. |
-
----
-
-## 12.  Wrap‑up
-
-You’ve just:
-
-1. Installed Pandoc with Homebrew.  
-2. Learned how to convert between many formats.  
-3. Taught Pandoc to apply templates, metadata, and filters.  
-4. Built simple scripts to automate bulk conversion.
-
-**Next steps**
-
-- Explore the full list of command‑line options:  
-  `pandoc --help` or <https://pandoc.org/MANUAL.html>.
-- Look at the official “Demos” page for more advanced examples: <https://pandoc.org/demos.html>【3†L0-L31】.
-- Dive into the Lua filter documentation: <https://pandoc.org/lua-filters.html>.
-- Add Pandoc to your static‑site generator workflow (Hugo, Jekyll, etc.) for perfect Markdown → HTML conversion.
-
-Enjoy converting your documents with the power of one command!
+| Task | Command |
+| --- | --- |
+| Markdown to HTML | `pandoc -s -o file.html file.md` |
+| Markdown to Word | `pandoc -o file.docx file.md` |
+| Markdown to PDF | `pandoc --pdf-engine=wkhtmltopdf -o file.pdf file.md` |
+| Word to Markdown | `pandoc -o file.md file.docx` |
+| Include Table of Contents | `pandoc -s --toc -o file.html file.md` |
+| Apply Custom CSS | `pandoc -s -c style.css -o file.html file.md` |

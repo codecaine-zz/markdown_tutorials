@@ -1,198 +1,193 @@
-# fish: Friendly Interactive Shell with Homebrew
+# Fish Shell (Friendly Interactive Shell) Guide
 
-## Table of Contents
+`fish` (Friendly Interactive Shell) is a modern, user-centric command-line shell for macOS and Linux. It comes out-of-the-box with **auto-suggestions based on history, syntax highlighting, man-page completion generation, and tab completion without needing complex zsh/bash configurations**.
 
-1. [What is fish?](#1-what-is-fish)
-2. [Install with Homebrew](#2-install-with-homebrew)
-3. [Make fish your default shell](#3-make-fish-your-default-shell)
-4. [Basics: config.fish, aliases, and variables](#4-basics-configfish-aliases-and-variables)
-5. [Completions and prompt](#5-completions-and-prompt)
-6. [Beginner examples](#6-beginner-examples)
-7. [Intermediate: functions, abbreviations, and fzf](#7-intermediate-functions-abbreviations-and-fzf)
-8. [Advanced: plugin manager, direnv, and performance](#8-advanced-plugin-manager-direnv-and-performance)
-9. [Troubleshooting](#9-troubleshooting)
-10. [Uninstall](#10-uninstall)
+---
 
------
+## 📚 Table of Contents
 
-### 1. What is fish?
+1. [Overview & Key Features](#overview--key-features)
+2. [Installation & Setting Default Shell](#installation--setting-default-shell)
+3. [Environment Variables (`set -gx` / `set -U`)](#environment-variables-set--gx--set--u)
+4. [Abbreviations (`abbr`) vs Aliases](#abbreviations-abbr-vs-aliases)
+5. [Writing Custom Fish Functions](#writing-custom-fish-functions)
+6. [Starship Prompt & Colors](#starship-prompt--colors)
+7. [Fisher Plugin Manager](#fisher-plugin-manager)
+8. [Configuration File (`config.fish`)](#configuration-file-configfish)
+9. [Cheat Sheet Summary](#cheat-sheet-summary)
 
-fish is a user-friendly shell with smart suggestions, autosuggestions, syntax highlighting, and great defaults—no need for complex configuration.
+---
 
-### 2. Install with Homebrew
+## 🔍 Overview & Key Features
+
+- **Auto-Suggestions**: Suggests command completions inline as you type based on your execution history (press Right-Arrow `→` to accept).
+- **Tab Completion**: Tab completion parses command `--help` and `man` pages automatically.
+- **Clean Syntax**: Clean control flow syntax (`if`, `for`, `switch`) replacing cryptic bash syntax.
+
+---
+
+## ⚙️ Installation & Setting Default Shell
 
 ```bash
+# Install fish via Homebrew on macOS
 brew install fish
-```
 
-Check path:
-
-```bash
-brew --prefix fish
-```
-
-Example:
-
-```text
-/opt/homebrew/opt/fish
-```
-
-### 3. Make fish your default shell
-
-```bash
-FISH_PATH="$(brew --prefix)/bin/fish"
-grep -qx "$FISH_PATH" /etc/shells || echo "$FISH_PATH" | sudo tee -a /etc/shells
-chsh -s "$FISH_PATH"
-```
-
-Verify:
-
-```bash
-echo $SHELL
+# Verify installation
 fish --version
+
+# Add fish to allowed system shells in /etc/shells
+echo "$(brew --prefix)/bin/fish" | sudo tee -a /etc/shells
+
+# Set fish as default login shell for current user
+chsh -s "$(brew --prefix)/bin/fish"
 ```
 
-### 4. Basics: config.fish, aliases, and variables
+---
 
-fish keeps config in `~/.config/fish/config.fish`.
+## 🌐 Environment Variables (`set -gx` / `set -U`)
 
-Create it:
+In `fish`, variables are set using the `set` command instead of `export VAR=val`.
+
+### 1. Global Exported Variables (`set -gx`)
+```fish
+# Export PATH and EDITOR variables globally
+set -gx PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
+set -gx EDITOR neovim
+```
+
+### 2. Universal Variables (`set -U`)
+Universal variables are saved across shell restarts and synced across all running terminal sessions automatically without needing to edit config files!
 
 ```fish
-# ~/.config/fish/config.fish
-set -gx PATH (brew --prefix)/bin (brew --prefix)/sbin $PATH
-
-# Colorful, sane defaults
-set -g fish_greeting ""
-
-# Aliases (use functions for args)
-alias ll='eza -lah --git'
-alias gs='git status'
-
-# Environment
-set -gx EDITOR micro
+# Set universal variable (persisted across restarts)
+set -U GOPATH $HOME/go
 ```
 
-Reload:
+---
 
-```bash
-exec fish -l
+## ⚡ Abbreviations (`abbr`) vs Aliases
+
+Fish introduces **Abbreviations** (`abbr`). When you type an abbreviation and hit `Space` or `Enter`, it expands into the full target command on your screen, keeping your command history clean and explicit.
+
+```fish
+# Create abbreviations in fish
+abbr -a g git
+abbr -a gs git status
+abbr -a gc git commit -m
+abbr -a gp git push
+abbr -a l eza -la --git
 ```
 
-### 5. Completions and prompt
+---
 
-fish ships rich completions. To add more from Homebrew packages, ensure `$PATH` is correct; fish auto-discovers completions under share directories.
+## 🧩 Writing Custom Fish Functions
 
-Prompt: fish includes the "fish_default" theme. For a fancier prompt, install Starship or Tide.
+Custom functions in `fish` are stored as individual `.fish` files in `~/.config/fish/functions/` and are lazily loaded on demand.
+
+Create `~/.config/fish/functions/mkcd.fish`:
+```fish
+function mkcd --description "Create a directory and enter it"
+    mkdir -p $argv[1]
+    and cd $argv[1]
+end
+```
+
+Create `~/.config/fish/functions/take.fish`:
+```fish
+function take
+    mkdir -p $argv; and cd $argv[-1]
+end
+```
+
+---
+
+## 🎨 Starship Prompt & Colors
+
+Pair `fish` with the `starship` cross-shell prompt for a fast, informative prompt.
 
 ```bash
+# Install starship prompt
 brew install starship
 ```
 
-Add to `config.fish`:
-
+Configure interactive web color picker for fish:
 ```fish
-starship init fish | source
+# Open web-based GUI to customize fish colors and prompt
+fish_config
 ```
 
-### 6. Beginner examples
+---
 
-- Autosuggestions: start typing a previous command; press right-arrow to accept.
-- Globbing and wildcard examples:
+## 🔌 Fisher Plugin Manager
 
+`fisher` is the premier plugin manager for fish shell.
+
+### 1. Install Fisher
 ```fish
-ls **/*.md
-grep -R "brew install" tutorials/**.md
+curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher
 ```
 
-Output excerpt:
+### 2. Useful Fisher Plugins
+```fish
+# Install FZF integration for fish
+fisher install jethrokuan/fzf
 
-```text
-tutorials/homebrew/cli-tools/fzf.md
-tutorials/homebrew/cli-tools/jq.md
-...
+# Install Z-like directory navigation for fish
+fisher install jethrokuan/z
+
+# Install nvm node manager wrapper for fish
+fisher install jorgebucaran/nvm.fish
 ```
 
-### 7. Intermediate: functions, abbreviations, and fzf
+---
 
-Create a function with completion:
+## ⚙️ Configuration File (`config.fish`)
 
-```fish
-function mkcd --description 'make directory and cd into it'
-  test (count $argv) -eq 0; and echo 'usage: mkcd <dir>' >&2; and return 1
-  mkdir -p $argv[1]; and cd $argv[1]
+Create a clean `~/.config/fish/config.fish` file:
+
+```bash
+mkdir -p ~/.config/fish
+cat << 'EOF' > ~/.config/fish/config.fish
+# Disable greeting text
+set -g fish_greeting ""
+
+# Homebrew environment paths
+if test -d /opt/homebrew/bin
+    fish_add_path /opt/homebrew/bin
+    fish_add_path /opt/homebrew/sbin
 end
-functions -c mkcd mkcd --save
+
+# Default Editor
+set -gx EDITOR nvim
+
+# Abbreviations
+abbr -a g git
+abbr -a gs git status
+abbr -a gd git diff
+abbr -a ll eza -la --git --icons
+
+# Initialize Starship prompt if installed
+if type -q starship
+    starship init fish | source
+end
+EOF
 ```
 
-Abbreviations auto-expand as you type:
-
+Reload fish configuration:
 ```fish
-abbr -a gs 'git status'
-abbr -a gco 'git checkout'
+source ~/.config/fish/config.fish
 ```
 
-fzf integration:
+---
 
-```bash
-brew install fzf fd
-"$(brew --prefix)"/opt/fzf/install
-```
+## 📋 Cheat Sheet Summary
 
-Connect keybindings in `config.fish`:
-
-```fish
-set -l fzf_dir (brew --prefix)/opt/fzf
-source $fzf_dir/shell/key-bindings.fish
-```
-
-Example interaction (history search):
-
-```text
-> brew install fish
-  git status
-  npm run dev
-
-3/1021
-> brew
-```
-
-### 8. Advanced: plugin manager, direnv, and performance
-
-Popular manager: fisher
-
-```bash
-brew install fisher direnv
-fish -c 'curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher'
-```
-
-Install useful plugins:
-
-```fish
-fisher install jorgebucaran/nvm.fish jethrokuan/z rafaelrinaldi/pure
-```
-
-Enable direnv:
-
-```fish
-direnv hook fish | source
-```
-
-Performance tips:
-
-- Minimize heavy prompts; Starship is fast.
-- Avoid starting nvm/sdkman on every shell; lazy-load when needed.
-
-### 9. Troubleshooting
-
-- If `chsh` fails, log out/in and retry.
-- Ensure `(brew --prefix)/bin` is in `PATH`.
-- For slow startup, comment out plugins to bisect.
-
-### 10. Uninstall
-
-```bash
-brew uninstall starship fish
-sudo sed -i '' '/\/opt\/homebrew\/bin\/fish/d' /etc/shells
-chsh -s /bin/zsh
-```
+| Task | Command |
+| --- | --- |
+| Set Exported Var | `set -gx VAR value` |
+| Set Universal Var | `set -U VAR value` |
+| Add Path | `fish_add_path /path/to/bin` |
+| Add Abbreviation | `abbr -a gs "git status"` |
+| Launch GUI Config | `fish_config` |
+| Install Fisher | `curl -sL https://git.io/fisher \| source ...` |
+| Reload Configuration| `source ~/.config/fish/config.fish` |

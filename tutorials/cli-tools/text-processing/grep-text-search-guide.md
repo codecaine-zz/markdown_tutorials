@@ -1,3 +1,5 @@
+# Grep Text Search Guide
+
 ## Table of Contents
 1. [Introduction to Grep](#introduction-to-grep)
 2. [Basic Grep Syntax](#basic-grep-syntax)

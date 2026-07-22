@@ -1,3 +1,5 @@
+# Micro Terminal Text Editor Guide
+
 **Micro – A Fast, Friendly Terminal‑Editor**  
 *(Updated 2025‑10‑16 – includes macOS ARM tips & full plugin workflow)*  
 

@@ -29,7 +29,9 @@ brew install sqlite
 
 ---
 
-## 🚀 Using SQLite CLI
+## 💡 Practical Examples
+
+### 🚀 Using SQLite CLI
 
 ### 1. Create/Open a Database
 

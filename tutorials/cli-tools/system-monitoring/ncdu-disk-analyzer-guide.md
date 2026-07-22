@@ -1,3 +1,5 @@
+# NCDU Disk Usage Analyzer Guide
+
 ### Table of Contents
 
 1.  [What is `ncdu`?](https://www.google.com/search?q=%231-what-is-ncdu)

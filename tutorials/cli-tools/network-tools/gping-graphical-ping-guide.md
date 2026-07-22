@@ -1,3 +1,5 @@
+# gping Graphical Ping Guide
+
 ### Table of Contents
 
 1.  [What is `gping`?](https://www.google.com/search?q=%231-what-is-gping)

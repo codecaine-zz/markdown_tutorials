@@ -1,3 +1,5 @@
+# Atuin Shell History Guide
+
 ### Table of Contents
 
 1.  [What is `atuin`?](https://www.google.com/search?q=%231-what-is-atuin)

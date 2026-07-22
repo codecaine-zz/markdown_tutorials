@@ -1,287 +1,154 @@
-# `sd` CLI Tutorial for Beginners (ARM Mac + VSCode + Brew)
+# sd (Intuitive Find & Replace) Guide
 
-This tutorial teaches you how to use the `sd` command-line tool - a modern, intuitive find-and-replace utility that's simpler than `sed`. We'll cover installation, basic commands, and practical examples.
-
----
-
-## 🧰 Prerequisites
-
-### 1. Install Homebrew (if not installed)
-Homebrew is a package manager for macOS that makes installing software easy.
-
-```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-🔗 [Homebrew Documentation](https://brew.sh/)
+`sd` is an intuitive, high-performance find-and-replace command-line tool. Designed as a modern replacement for `sed`, `sd` uses standard regex syntax (JavaScript/Python regex format), modifies files in-place by default without needing `sed -i ""` quirks on macOS, and runs significantly faster.
 
 ---
 
-### 2. Install `sd` Using Brew
+## 📚 Table of Contents
+
+1. [Overview & `sd` vs `sed` Comparison](#overview--sd-vs-sed-comparison)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [Basic String Replacement](#basic-string-replacement)
+4. [In-Place File Replacements](#in-place-file-replacements)
+5. [Regex Capture Groups & Variables](#regex-capture-groups--variables)
+6. [Literal Mode (`-s`) & Multi-Line Mode (`-m`)](#literal-mode--s--multi-line-mode--m)
+7. [💡 Practical Real-World Examples](#-practical-real-world-examples)
+8. [Pipeline Integration with `fd` & `find`](#pipeline-integration-with-fd--find)
+9. [Cheat Sheet Summary](#cheat-sheet-summary)
+
+---
+
+## 🔍 Overview & `sd` vs `sed` Comparison
+
+Comparing `sd` with traditional `sed`:
+
+| Feature | `sed` (BSD macOS) | `sd` |
+| --- | --- | --- |
+| **In-place Syntax** | `sed -i "" 's/old/new/g' file` | `sd 'old' 'new' file` |
+| **Regex Engine** | POSIX ERE/BRE (escaping issues) | PCRE2 / Rust Regex (Standard `\d`, `\w`) |
+| **Capture Groups** | `\1`, `\2` (or `\\1`) | `$1`, `$2` |
+| **Speed** | Moderate | Ultra-Fast (SIMD accelerated) |
+
+---
+
+## ⚙️ Installation via Homebrew
 
 ```bash
-# Install sd
+# Install sd via Homebrew on macOS
 brew install sd
-```
 
-🔗 [`sd` Installation via Brew](https://formulae.brew.sh/formula/sd)
-
----
-
-## 🚀 Using `sd` CLI
-
-### 1. Basic Find and Replace in a String
-
-```bash
-# Replace text in a string
-echo "Hello world" | sd "world" "universe"
-```
-
-Output:
-```
-Hello universe
+# Verify installation
+sd --version
 ```
 
 ---
 
-### 2. Replace Text in a File
+## 🚀 Basic String Replacement
+
+By default, `sd` matches patterns globally across all occurrences without requiring a `/g` flag.
 
 ```bash
-# Replace text in a file (creates a backup)
-sd "old_text" "new_text" file.txt
-```
+# Replace 'foo' with 'bar' in piped stdin text
+echo "foo bar foo" | sd "foo" "bar"
+# Output: bar bar bar
 
-This modifies the file in place. To create a backup before modifying:
-
-```bash
-# Replace with backup
-sd -p ".bak" "old_text" "new_text" file.txt
-```
-
----
-
-## 🔤 Basic Commands
-
-### 1. Simple Text Replacement
-
-```bash
-# Replace all occurrences of a word
-echo "The cat sat on the cat" | sd "cat" "dog"
-```
-
-Output:
-```
-The dog sat on the dog
-```
-
----
-
-### 2. Using Regular Expressions
-
-```bash
 # Replace digits with 'X'
-echo "My phone is 123-456-7890" | sd "\d" "X"
-```
-
-Output:
-```
-My phone is XXX-XXX-XXXX
+echo "Order 12345 confirmed" | sd "\d+" "XXXXX"
+# Output: Order XXXXX confirmed
 ```
 
 ---
 
-### 3. Case-Insensitive Replacement
+## 📝 In-Place File Replacements
+
+`sd` edits files in place safely.
 
 ```bash
-# Case-insensitive replacement
-echo "Hello World" | sd -f "(?i)world" "universe"
-```
+# Replace all instances of 'http://' with 'https://' in config.json
+sd "http://" "https://" config.json
 
-Output:
-```
-Hello universe
+# Modify multiple files in place
+sd "v1/api" "v2/api" src/*.js
 ```
 
 ---
 
-### 4. Replace Multiple Files
+## 🎛️ Regex Capture Groups & Variables
+
+Use `$1`, `$2`, `$3` in the replacement string to refer to captured regex groups.
 
 ```bash
-# Replace text in multiple files
-sd "old_text" "new_text" file1.txt file2.txt file3.txt
+# Swap 'First Last' names into 'Last, First'
+echo "John Doe" | sd "(\w+)\s+(\w+)" "$2, $1"
+# Output: Doe, John
+
+# Reformat dates from YYYY-MM-DD to DD/MM/YYYY
+echo "Event on 2025-12-31" | sd "(\d{4})-(\d{2})-(\d{2})" "$3/$2/$1"
+# Output: Event on 31/12/2025
+
+# Wrap JSON keys in quotes
+echo "name: Alice" | sd "(\w+):" "\"$1\":"
+# Output: "name": Alice
 ```
 
 ---
 
-## 📦 Advanced Features
+## 🔤 Literal Mode (`-s`) & Multi-Line Mode (`-m`)
 
-### 1. Capture Groups
+### 1. Literal Mode (`-s` / `--string-mode`)
+Disables regex interpretation so special characters like `[`, `]`, `*`, `$`, `.` are matched strictly as plain text.
 
 ```bash
-# Use capture groups to reorganize text
-echo "John Doe, 30" | sd "(\w+) (\w+), (\d+)" "Age: $3, Name: $1 $2"
+# Replace literal '$var[0]' without escaping regex symbols
+sd -s '$var[0]' '$item' script.php
 ```
 
-Output:
-```
-Age: 30, Name: John Doe
+### 2. Multi-Line Mode (`-m` / `--flags m`)
+Allows matching across newline boundaries.
+
+```bash
+# Match multi-line XML tags
+sd -m "<note>.*?</note>" "<note>CLEARED</note>" document.xml
 ```
 
 ---
 
-### 2. Multi-line Replacement
+## 💡 Practical Real-World Examples
 
+### Example 1: Mass Updating Environment Variables
 ```bash
-# Replace across multiple lines
-sd '(?s)start(.*)end' 'start-replacement-end' file.txt
+# Replace localhost database host with production endpoint in .env
+sd "DB_HOST=localhost" "DB_HOST=db.internal.company.com" .env
+```
+
+### Example 2: Renaming React / JS Import Paths
+```bash
+# Update component imports across src directory
+sd "import Button from '\./Button';" "import { Button } from '@ui/components';" src/*.tsx
 ```
 
 ---
 
-### 3. Replace with File Contents
+## 🔗 Pipeline Integration with `fd` & `find`
+
+Combine `fd` or `find` with `sd` to perform bulk replacements across entire project codebases.
 
 ```bash
-# Replace a pattern with contents from another file
-sd "PATTERN" "$(cat replacement.txt)" file.txt
+# Use fd to find all Python files and replace 'python2' with 'python3'
+fd -e py -x sd "python2" "python3" {}
+
+# Update deprecation notices across all Markdown docs
+fd -e md -x sd "v1.0-deprecated" "v2.0-stable" {}
 ```
 
 ---
 
-### 4. Preview Changes Without Applying
-
-```bash
-# Preview changes without modifying files
-sd -n "old_text" "new_text" file.txt
-```
-
----
-
-## 🛠️ VSCode Integration Tips
-
-### 1. Using `sd` in VSCode Terminal
-
-You can use `sd` directly in VSCode's integrated terminal:
-- Open VSCode terminal (`Ctrl + `` ` or `View > Terminal`)
-- Run `sd` commands as shown above
-
-### 2. Create a Script for Complex Replacements
-
-Create a file named `replace.sh`:
-
-```bash
-#!/bin/bash
-# replace.sh - Batch replacement script
-
-# Replace version numbers
-sd "version: 1\.0" "version: 1.1" config.yaml
-
-# Update copyright year
-sd "Copyright 2023" "Copyright 2024" *.md
-
-# Replace deprecated function calls
-sd "oldFunction\(" "newFunction(" *.js
-```
-
-Make it executable and run:
-
-```bash
-chmod +x replace.sh
-./replace.sh
-```
-
----
-
-## 🧹 Useful CLI Options
-
-### 1. Help Command
-
-```bash
-# Show help
-sd --help
-```
-
----
-
-### 2. Verbose Mode
-
-```bash
-# Show what files are being processed
-sd -v "old_text" "new_text" *.txt
-```
-
----
-
-### 3. Limit Replacements
-
-```bash
-# Replace only the first occurrence
-sd -c 1 "pattern" "replacement" file.txt
-```
-
----
-
-### 4. Fixed Strings (No Regex)
-
-```bash
-# Treat pattern as literal string, not regex
-sd -s "special[chars]" "replacement" file.txt
-```
-
----
-
-## 📚 Common Use Cases
-
-### 1. Update Configuration Files
-
-```bash
-# Update URL in config
-sd "http://old-domain.com" "https://new-domain.com" config.json
-```
-
----
-
-### 2. Refactor Code
-
-```bash
-# Rename a variable across files
-sd "oldVariableName" "newVariableName" *.js
-```
-
----
-
-### 3. Update Version Numbers
-
-```bash
-# Update version in package files
-sd '"version": "1\.0\.0"' '"version": "1.0.1"' package.json
-```
-
----
-
-### 4. Clean Up Text Files
-
-```bash
-# Remove extra whitespace
-sd "\s+" " " file.txt
-
-# Remove empty lines
-sd "^\s*\n" "" file.txt
-```
-
----
-
-## ✅ Summary
+## 📋 Cheat Sheet Summary
 
 | Task | Command |
-|------|---------|
-| Install | `brew install sd` |
-| Simple Replace | `sd "find" "replace" file.txt` |
-| Pipe Replace | `echo "text" | sd "find" "replace"` |
-| Regex Replace | `sd "\d+" "number" file.txt` |
-| Case-insensitive | `sd -f "(?i)word" "replacement" file.txt` |
-| Preview Changes | `sd -n "find" "replace" file.txt` |
-| Backup Before Replace | `sd -p ".bak" "find" "replace" file.txt` |
-| Multiple Files | `sd "find" "replace" *.txt` |
-
-You're now ready to use `sd` confidently for all your find-and-replace needs! It's especially useful for batch text processing, refactoring code, and updating configuration files.
+| --- | --- |
+| Pipe replacement | `echo "text" \| sd "old" "new"` |
+| File in-place | `sd "old" "new" file.txt` |
+| Regex capture group | `sd "(\w+) (\w+)" "$2 $1" file.txt` |
+| Literal string match | `sd -s "$100" "$200" file.txt` |
+| Bulk replace with `fd` | `fd -e js -x sd "old" "new" {}` |

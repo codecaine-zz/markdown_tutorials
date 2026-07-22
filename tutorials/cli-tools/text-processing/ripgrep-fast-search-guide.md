@@ -1,201 +1,176 @@
-# ripgrep (rg) with Homebrew: Fast Searching
+# Ripgrep (rg) Ultra-Fast Search Guide
 
-## Table of Contents
+`ripgrep` (`rg`) is an ultra-fast line-oriented search tool that recursively searches your current directory for regex patterns. Written in Rust, it respects `.gitignore` rules automatically and outperforms tools like `grep`, `ack`, and `ag`.
 
-1. [Installation](#installation-with-homebrew)
-2. [Command Examples](#ripgrep-rg-command-examples-with-output)
-  - [Basic Search](#1-basic-search)
-  - [Case-Insensitive Search](#2-case-insensitive-search)
-  - [Search by File Type](#3-search-by-file-type)
-  - [List Files with Matches](#4-list-files-with-matches)
-  - [Invert Search Results](#5-invert-search-results)
-  - [Search Ignored Files](#6-search-ignored-files)
-  - [Show Context](#7-show-context)
-  - [Count Matches](#8-count-matches)
+---
 
-### Installation with Homebrew
+## 📚 Table of Contents
 
-```sh
+1. [Overview & Performance Benefits](#overview--performance-benefits)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [Basic Searching & Smart Case](#basic-searching--smart-case)
+4. [File Type Filtering (`-t` / `-T`)](#file-type-filtering--t---t)
+5. [Regex, Multiline & Replacement Options](#regex-multiline--replacement-options)
+6. [Context Control & Match Limits](#context-control--match-limits)
+7. [FZF Interactive Integration](#fzf-interactive-integration)
+8. [Configuration File (`RIPGREP_CONFIG_PATH`)](#configuration-file-ripgrep_config_path)
+9. [Cheat Sheet Summary](#cheat-sheet-summary)
+
+---
+
+## 🔍 Overview & Performance Benefits
+
+- **Gitignore Respect**: Skips hidden files, binary files, and `.gitignore` matches by default.
+- **Parallel Scanning**: Uses lock-free parallel directory walking.
+- **PCRE2 & SIMD**: Hardware-accelerated regex matching.
+
+---
+
+## ⚙️ Installation via Homebrew
+
+```bash
+# Install ripgrep on macOS
 brew install ripgrep
+
+# Verify installation
+rg --version
 ```
 
------
+---
 
-### ripgrep (`rg`) Command Examples with Output
+## 🚀 Basic Searching & Smart Case
 
-All examples below are based on a sample directory with the following file contents:
+### 1. Basic Recursive Search
+```bash
+# Search for keyword 'auth' recursively across all un-ignored files
+rg "auth"
 
-**Sample Structure (`search_project/`)**
-
-  * `README.md`:
-    ```
-    Project setup and configuration.
-    ```
-  * `.gitignore`:
-    ```
-    node_modules
-    ```
-  * `src/app.js`:
-    ```javascript
-    const config = require('./config');
-    function start() {
-      // start server
-    }
-    ```
-  * `src/config.js`:
-    ```javascript
-    const config = { port: 3000 };
-    module.exports = config;
-    ```
-  * `node_modules/some_lib/index.js`:
-    ```javascript
-    console.log('library code');
-    ```
-
------
-
-#### 1\. Basic Search
-
-Recursively search for a pattern. `rg` automatically respects `.gitignore`.
-
-**Command:**
-
-```sh
-rg config
+# Fixed string match (treat pattern as literal string, not regex)
+rg -F "user.getName()"
 ```
 
-**Output:**
+### 2. Smart Case & Case Insensitivity
+```bash
+# Smart case (-S): case-insensitive if pattern is all lowercase, case-sensitive if uppercase exists
+rg -S "user"
 
-```
-src/config.js
-1:const config = { port: 3000 };
-2:module.exports = config;
-
-src/app.js
-1:const config = require('./config');
+# Force case-insensitive match (-i)
+rg -i "token"
 ```
 
-#### 2\. Case-Insensitive Search
+---
 
-Use the `-i` flag to match case-insensitively.
+## 🎯 File Type Filtering (`-t` / `-T`)
 
-**Command:**
+Limit searches to specific programming languages or file types without using complex shell find pipelines.
 
-```sh
-rg -i project
+```bash
+# Search only Python files (-t py)
+rg "import os" -t py
+
+# Search only JavaScript / TypeScript files (-t js -t ts)
+rg "async function" -t js -t ts
+
+# Exclude HTML files (-T html)
+rg "styles" -T html
+
+# List all built-in supported file types
+rg --type-list
 ```
 
-**Output:**
+---
 
-```
-README.md
-1:Project setup and configuration.
-```
+## 🎛️ Regex, Multiline & Replacement Options
 
-#### 3\. Search by File Type
+### 1. Multiline Search (`-U`)
+Search for patterns spanning across line breaks:
 
-Use the `-t` flag to limit the search to specific file types (e.g., `js`, `py`, `md`).
-
-**Command:**
-
-```sh
-rg -tjs 'start'
+```bash
+# Match multi-line blocks where try is followed by catch
+rg -U "try \{[\s\S]*?\} catch" -t js
 ```
 
-**Output:**
+### 2. Replace Output Matches (`-r`)
+Preview regex string substitutions in terminal output without mutating files:
 
-```
-src/app.js
-2:function start() {
-3:  // start server
-```
-
-#### 4\. List Files with Matches
-
-Use the `-l` flag to print only the names of files containing matches.
-
-**Command:**
-
-```sh
-rg -l config
+```bash
+# Replace http:// with https:// in matched output preview
+rg "http://example.com" -r "https://example.com"
 ```
 
-**Output:**
+---
 
-```
-src/config.js
-src/app.js
-```
+## 📋 Context Control & Match Limits
 
-#### 5\. Invert Search Results
+Show lines surrounding matching results to understand function contexts.
 
-Use the `-v` flag to show lines that **do not** match a pattern.
+```bash
+# Show 2 lines before and 2 lines after match (-C 2)
+rg "handleError" -C 2 -t py
 
-**Command:**
+# Show 3 lines after match (-A 3)
+rg "function connect" -A 3
 
-```sh
-rg -v 'start' src/app.js
-```
+# Show 3 lines before match (-B 3)
+rg "return res.status" -B 3
 
-**Output:**
-
-```
-src/app.js
-1:const config = require('./config');
-4:}
+# Display matching file paths only (-l)
+rg -l "TODO:"
 ```
 
-#### 6\. Search Ignored Files
+---
 
-Use the `-u` flag to disable ignore rules (`.gitignore`, etc.). Use it twice (`-uu`) to also include hidden files.
+## 🎯 FZF Interactive Integration
 
-**Command:**
+Pair `ripgrep` with `fzf` to create an interactive fuzzy line finder.
 
-```sh
-rg -uu 'library'
+```bash
+# Interactive ripgrep with fzf preview
+rg --line-number --no-heading --color=always "." | fzf --ansi --preview 'bat --style=numbers --color=always --highlight-line {2} {1}'
 ```
 
-**Output:**
+Add to `~/.zshrc`:
 
-```
-node_modules/some_lib/index.js
-1:console.log('library code');
-```
-
-#### 7\. Show Context
-
-Use the `-C` (or `--context`) flag to show lines before and after the match.
-
-**Command:**
-
-```sh
-rg -C 1 'start()'
+```bash
+# Interactive file content search function
+fif() {
+  if [ ! "$#" -gt 0 ]; then echo "Need a search term."; return 1; fi
+  rg --files-with-matches --no-messages "$1" | fzf --preview "rg --ignore-case --pretty --context 5 '$1' {}"
+}
 ```
 
-**Output:**
+---
 
-```
-src/app.js
-1:const config = require('./config');
-2:function start() {
-3:  // start server
-```
+## ⚙️ Configuration File (`RIPGREP_CONFIG_PATH`)
 
-#### 8\. Count Matches
+Configure default search preferences via `~/.ripgreprc`.
 
-Use the `-c` flag to get a count of matches per file.
+```bash
+cat << 'EOF' > ~/.ripgreprc
+--smart-case
+--colors=path:fg:magenta
+--colors=line:fg:green
+--colors=match:fg:yellow
+--colors=match:style:bold
+--type-add
+web:*.{html,css,js,ts,jsx,tsx}*
+EOF
 
-**Command:**
-
-```sh
-rg -c config
-```
-
-**Output:**
-
-```
-src/config.js:2
-src/app.js:1
+# Add environment variable to ~/.zshrc
+echo 'export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"' >> ~/.zshrc
 ```
 
-For a complete list of all options, run `man rg` or `rg --help`.
+---
+
+## 📋 Cheat Sheet Summary
+
+| Task | Command |
+| --- | --- |
+| Recursive search | `rg "pattern"` |
+| Literal string search | `rg -F "literal.string"` |
+| Case insensitive | `rg -i "pattern"` |
+| Filter by file type | `rg "pattern" -t py` |
+| Exclude file type | `rg "pattern" -T html` |
+| Show 2 context lines | `rg "pattern" -C 2` |
+| Multiline search | `rg -U "pattern\nsecond"` |
+| File paths only | `rg -l "pattern"` |

@@ -1,8 +1,10 @@
+# Neovim Advanced Text Editor Guide
+
 ## Mastering Neovim on Your ARM MacBook: A Comprehensive Tutorial
 
 Welcome to your complete guide to installing, configuring, and mastering Neovim on an ARM-based MacBook Pro. This tutorial will take you from a novice to an advanced user, leveraging the power of Homebrew for a clean installation and Lua for a modern, extensible configuration.
 
-### Table of Contents
+### 💡 Practical Examples & Table of Contents
 
   * **Part 1: The Foundation - Beginner**
       * [1.1. Why Neovim?](https://www.google.com/search?q=%231.1.-why-neovim%3F)

@@ -1,9 +1,13 @@
-**⚡️ Cracking Passwords with Hashcat on Apple‑Silicon Macs – zsh‑only, macOS 14 (Sonoma) + latest word‑lists**  
+# Hashcat Password Cracking Guide
+
+> **⚡️ Cracking Passwords with Hashcat on Apple-Silicon Macs – zsh-only, macOS 14+ with latest word-lists**
 
 > This guide is copy‑and‑paste ready for the **default zsh shell** that ships with macOS 14 (and all recent macOS releases).  
 > It walks you through installing Homebrew & hashcat, getting the biggest public password dictionaries, creating a few sample hashes, and running a variety of attacks – all on Apple‑Silicon (M1/M2/M3 …).  
 
 ---
+
+## 💡 Practical Examples
 
 ## 📚 Table of Contents  
 

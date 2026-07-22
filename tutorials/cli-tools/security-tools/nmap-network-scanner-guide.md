@@ -1,3 +1,9 @@
+# Nmap Network Scanner Guide
+
+Nmap (Network Mapper) is a free and open-source utility for network discovery and vulnerability auditing.
+
+---
+
 ## Table of Contents
 1. [Introduction to Nmap](#introduction-to-nmap)
 2. [Installation](#installation)
@@ -413,5 +419,4 @@ nmap -sn localhost
 5. **Monitor Performance**: Watch for network impact during large-scale scans.
 
 The above examples demonstrate various use cases from basic reconnaissance to comprehensive security assessments using nmap's extensive feature set.
-```
 

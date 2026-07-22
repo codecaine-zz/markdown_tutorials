@@ -58,7 +58,9 @@ Follow the prompts to set root password and security options.
 
 ---
 
-## 🚀 Using MySQL CLI
+## 💡 Practical Examples
+
+### 🚀 Using MySQL CLI
 
 ### 1. Connect to MySQL as Root
 

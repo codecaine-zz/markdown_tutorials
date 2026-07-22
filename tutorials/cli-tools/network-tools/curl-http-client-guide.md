@@ -1,3 +1,10 @@
+# cURL HTTP & API Client Guide
+
+
+### Install via Homebrew on macOS
+```bash
+brew install curl
+```
 ## Key Features Covered
 
 **Basic Operations:**

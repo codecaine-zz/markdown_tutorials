@@ -1,6 +1,10 @@
 # Neofetch: System Info in Your Terminal
 
+> [!WARNING]
+> **Project Archival Notice**: As of 2024, the official `neofetch` repository has been archived and is no longer maintained by its author. For active development, Apple Silicon hardware detection, and 10x-100x faster execution speeds, check out **[Fastfetch](file:///Users/codecaine/markdown_tutorials/tutorials/cli-tools/system-monitoring/fastfetch-system-info-guide.md)** (`brew install fastfetch`).
+
 ## Table of Contents
+
 
 1.  [What is `neofetch`?](#1-what-is-neofetch)
 2.  [Prerequisites](#2-prerequisites)

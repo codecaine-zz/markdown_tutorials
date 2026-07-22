@@ -1,3 +1,5 @@
+# Trash Safe Delete CLI Guide
+
 ### Table of Contents
 
 1.  [What is `trash`?](https://www.google.com/search?q=%231-what-is-trash)

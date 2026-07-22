@@ -1,3 +1,5 @@
+# Glow Terminal Markdown Reader Guide
+
 ### Part 1: Introduction & Installation
 
 **What is `glow`?**

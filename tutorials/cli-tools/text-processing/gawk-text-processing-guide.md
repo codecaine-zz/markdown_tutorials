@@ -1,3 +1,10 @@
+# GAWK Text Processing Guide
+
+
+### Install via Homebrew on macOS
+```bash
+brew install gawk
+```
 ## Table of Contents
 1. [Introduction to GAWK](#introduction-to-gawk)
 2. [Basic Syntax and Patterns](#basic-syntax-and-patterns)

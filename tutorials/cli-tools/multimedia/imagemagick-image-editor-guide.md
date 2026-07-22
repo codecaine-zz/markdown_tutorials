@@ -1,3 +1,9 @@
+# ImageMagick Image Editor Guide
+
+ImageMagick is a powerful command-line utility suite for creating, editing, composing, or converting digital images on macOS, Linux, and Windows.
+
+---
+
 ## Table of Contents
 
 1. [Installation](#installation)
@@ -527,5 +533,4 @@ montage image1.jpg image2.jpg image3.jpg -geometry +4+4 collage.jpg
 ```
 
 This comprehensive guide covers basic and advanced ImageMagick operations, from simple transformations to complex batch processing and automation tasks. The examples provide practical starting points for implementing these workflows in real-world scenarios.
-```
 

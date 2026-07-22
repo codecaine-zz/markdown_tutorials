@@ -1,5 +1,10 @@
 # Complete Docker Guide for Beginners
 
+
+### Install via Homebrew on macOS
+```bash
+brew install --cask docker
+```
 Docker is a platform that allows you to develop, deploy, and run applications inside containers. Containers are lightweight, portable, and self-sufficient environments that can run applications consistently across different computing environments.
 
 ## Table of Contents

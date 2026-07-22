@@ -1,133 +1,158 @@
-# duf: Disk Usage/Free Viewer
+# Duf Modern Disk Usage & Free Utility Guide
 
-## Table of Contents
+`duf` (Disk Usage/Free) is a modern, feature-packed command-line utility for viewing mounted filesystem disk usage. Written in Go, it serves as a colorful, intuitive replacement for traditional `df`.
 
-1. [Overview](#1-overview)
-2. [Install](#2-install)
-3. [Beginner: Basic views](#3-beginner-basic-views)
-4. [Intermediate: Filtering and sorting](#4-intermediate-filtering-and-sorting)
-5. [Advanced: JSON output, scripting, and TUI tips](#5-advanced-json-output-scripting-and-tui-tips)
-6. [Compare with df](#6-compare-with-df)
-7. [Uninstall](#7-uninstall)
+---
 
------
+## 📚 Table of Contents
 
-### 1\. Overview
+1. [Overview & Features](#overview--features)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [Basic Usage & Output Layout](#basic-usage--output-layout)
+4. [Device & Filesystem Filtering](#device--filesystem-filtering)
+5. [Sorting & Column Customization](#sorting--column-customization)
+6. [Themes & Terminal Display Options](#themes--terminal-display-options)
+7. [JSON Export & Automation (`jq`)](#json-export--automation-jq)
+8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
-`duf` is a modern, colorful replacement for `df -h`. It shows mounted filesystems and usage with optional JSON output for automation.
+---
 
-### 2\. Install
+## 🔍 Overview & Features
+
+- **Visual Progress Bars**: Displays colored progress bars for disk usage percentage.
+- **Auto-Grouping**: Automatically categorizes mounts into local storage, network shares, fuse mounts, and special devices.
+- **Smart Formatting**: Dynamically scales byte units (GB, TB) and auto-detects terminal width.
+- **JSON Export**: Provides structured JSON outputs for system scripts and monitoring dashboards.
+
+---
+
+## ⚙️ Installation via Homebrew
 
 ```bash
+# Install duf on macOS
 brew install duf
-```
 
-Check version:
-
-```bash
+# Verify installation
 duf --version
 ```
 
-Example output:
+---
 
-```text
-duf 0.8.1
-```
-
-### 3\. Beginner: Basic views
-
-Human-friendly summary:
+## 🚀 Basic Usage & Output Layout
 
 ```bash
+# View disk usage for all mounted volumes
 duf
+
+# Check disk usage for a specific path or volume
+duf /
+duf /System/Volumes/Data
 ```
 
-Sample output:
+---
 
-```text
-╭────────────────────────────────────────────────────────────────────────────╮
-│ 1 local device                                                             │
-│ Filesystem   Type  Size  Used  Avail  Use%  Mounted on                     │
-│ /dev/disk3s5 apfs  466G   75G   391G   16%  /                              │
-╰────────────────────────────────────────────────────────────────────────────╯
-```
+## 🎯 Device & Filesystem Filtering
 
-Only local disks:
+Filter out virtual filesystems (devfs, autofs) or restrict output to specific categories.
 
+### 1. Filter by Devices (`--only` / `--hide`)
 ```bash
+# Show local physical disks only (APFS, HFS+, ext4)
 duf --only local
-```
 
-### 4\. Intermediate: Filtering and sorting
-
-- Exclude virtual and small mounts:
-
-```bash
-duf --hide-fs=autofs,devfs,overlay --min-size=1G
-```
-
-- Show network mounts only:
-
-```bash
+# Show network mounts only (SMB, NFS)
 duf --only network
+
+# Hide specific filesystems (e.g. devfs, autofs)
+duf --hide-fs devfs,autofs,tmpfs
 ```
 
-- Sort by usage descending:
+### 2. Filter by Mount Points (`--only-mp` / `--hide-mp`)
+```bash
+# Show root and home directory mounts only
+duf --only-mp /,/System/Volumes/Data
+
+# Hide specific mount paths
+duf --hide-mp /Volumes/TimeMachine
+```
+
+---
+
+## 📊 Sorting & Column Customization
+
+### 1. Sort Mounts (`--sort`)
+Sort output by `mountpoint`, `size`, `used`, `avail`, `usage`, or `filesystem`:
 
 ```bash
+# Sort filesystems by total capacity (descending)
+duf --sort size
+
+# Sort by percentage used
 duf --sort usage
 ```
 
-### 5\. Advanced: JSON output, scripting, and TUI tips
-
-Machine-readable JSON:
+### 2. Customize Columns (`--output`)
+Specify which columns to display:
 
 ```bash
+# Display only filesystem, size, usage, and mount point
+duf --output filesystem,size,usage,mountpoint
+```
+
+---
+
+## 🎨 Themes & Terminal Display Options
+
+```bash
+# Force dark color theme
+duf --theme dark
+
+# Force light color theme (for light terminal backgrounds)
+duf --theme light
+
+# Disable color output (plain text mode)
+duf --theme highlight
+
+# Set explicit terminal width
+duf --width 120
+```
+
+---
+
+## 🤖 JSON Export & Automation (`jq`)
+
+Generate structured JSON data to check available disk space programmatically.
+
+```bash
+# Raw JSON output
 duf --json
+
+# Extract mount point and free space in GB using jq
+duf --json | jq -r '.[] | "\(.mountpoint): \(.avail / 1073741824 | round) GB available"'
 ```
 
-Example JSON snippet:
-
-```json
-{
-  "mountpoints": [
-    {
-      "filesystem": "/dev/disk3s5",
-      "mountpoint": "/",
-      "size": 500107862016,
-      "used": 80425852928,
-      "available": 419682009088,
-      "usage": 0.16,
-      "type": "apfs"
-    }
-  ]
-}
-```
-
-Use JSON in scripts (jq required):
+Example shell warning script if root usage exceeds 85%:
 
 ```bash
-duf --json | jq -r '.mountpoints[] | select(.usage > 0.8) | "\(.mountpoint) \(.usage*100|floor)%"'
+#!/bin/bash
+usage=$(duf --json / | jq -r '.[0].usage')
+usage_percent=$(python3 -c "print(int(${usage} * 100))")
+
+if [ "$usage_percent" -gt 85 ]; then
+  echo "WARNING: Low disk space on /! Usage at ${usage_percent}%"
+fi
 ```
 
-TUI tips:
+---
 
-- Resize terminal for better tables.
-- Use `--theme=light` or `--theme=dark` to match your terminal.
+## 📋 Cheat Sheet Summary
 
-### 6\. Compare with df
-
-`df -h` rough equivalent:
-
-```bash
-df -h
-duf
-```
-
-`duf` provides clearer columns, filtering, and JSON output out of the box.
-
-### 7\. Uninstall
-
-```bash
-brew uninstall duf
-```
+| Task | Command |
+| --- | --- |
+| Default Overview | `duf` |
+| Local Disks Only | `duf --only local` |
+| Sort by Capacity | `duf --sort size` |
+| Hide System Mounts | `duf --hide-fs devfs,autofs` |
+| Light Theme Mode | `duf --theme light` |
+| Specific Path Usage | `duf /System/Volumes/Data` |
+| Output JSON | `duf --json` |

@@ -1,3 +1,5 @@
+# Mac App Store CLI (mas) Guide
+
 ### Table of Contents
 
 1.  [What is `mas`?](https://www.google.com/search?q=%231-what-is-mas)

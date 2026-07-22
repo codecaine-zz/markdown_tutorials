@@ -1,3 +1,5 @@
+# CAVA Audio Visualizer Guide
+
 ### Table of Contents
 
 1.  [What is `cava`?](https://www.google.com/search?q=%231-what-is-cava)

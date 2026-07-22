@@ -1,7 +1,9 @@
+# CA-Certificates SSL Toolkit Guide
+
 ### Installation with Homebrew
 # CA Certificates with Homebrew: Using the Trust Store
 
-## Table of Contents
+## 💡 Practical Examples & Table of Contents
 
 1. [Install](#install)
 2. [What the Package Provides](#what-the-package-provides)

@@ -1,216 +1,148 @@
-### Installation with Homebrew
+# Tree Directory Viewer Guide
 
-```sh
+`tree` is a recursive directory listing program that produces a depth-indented listing of files and directories in your terminal. It is invaluable for understanding project layouts, generating documentation, and inspecting folder hierarchies.
+
+---
+
+## 📚 Table of Contents
+
+1. [Overview & Installation](#overview--installation)
+2. [Basic Usage & Depth Control](#basic-usage--depth-control)
+3. [Hidden Files & Directory Filtering](#hidden-files--directory-filtering)
+4. [File Permissions & Size Displays](#file-permissions--size-displays)
+5. [Pattern Matching & Excluding Folders](#pattern-matching--excluding-folders)
+6. [Gitignore Integration](#gitignore-integration)
+7. [HTML & JSON Output Export](#html--json-output-export)
+8. [Cheat Sheet Summary](#cheat-sheet-summary)
+
+---
+
+## 🔍 Overview & Installation
+
+### Install via Homebrew on macOS
+```bash
+# Install tree on macOS
 brew install tree
+
+# Verify installation
+tree --version
 ```
 
------
+---
 
-### `tree` Command Examples with Output
+## 🚀 Basic Usage & Depth Control
 
-All examples below are based on this sample directory structure:
-
-**Sample Structure (`my_project/`)**
-
-```
-.
-├── .env
-├── dist
-│   └── bundle.js
-├── node_modules
-│   └── some_lib
-│       └── index.js
-└── src
-    ├── app.js
-    └── styles.css
-```
-
------
-
-#### 1\. Basic Usage
-
-Show the tree structure of the current directory.
-
-**Command:**
-
-```sh
+```bash
+# Show complete recursive directory tree
 tree
+
+# Limit recursion depth to 1 level (immediate children only)
+tree -L 1
+
+# Limit recursion depth to 2 levels
+tree -L 2 /Users/username/Projects
 ```
 
-**Output:**
+---
 
-```shell
-.
-├── dist
-│   └── bundle.js
-├── node_modules
-│   └── some_lib
-│       └── index.js
-└── src
-    ├── app.js
-    └── styles.css
+## 📁 Hidden Files & Directory Filtering
 
-4 directories, 5 files
+### 1. Include Hidden Files (`-a`)
+```bash
+# Show hidden files and dotfiles (.env, .gitignore, .github)
+tree -a -L 2
 ```
 
-#### 2\. Control Depth
-
-Limit the directory depth to 2 levels.
-
-**Command:**
-
-```sh
-tree -L 2
+### 2. Directories Only (`-d`)
+```bash
+# List directory structures only (suppress file listings)
+tree -d
 ```
 
-**Output:**
+---
 
-```shell
-.
-├── dist
-│   └── bundle.js
-├── node_modules
-│   └── some_lib
-└── src
-    ├── app.js
-    └── styles.css
+## 📊 File Permissions & Size Displays
 
-3 directories, 3 files
+### 1. Human-Readable File Sizes (`-h`)
+```bash
+# Display file size next to each item (e.g. 4.2K, 12M)
+tree -h -L 2
 ```
 
-#### 3\. Display Options
-
-Include hidden files (like `.env`).
-
-**Command:**
-
-```sh
-tree -a
+### 2. File Permissions & Ownership (`-p` / `-u` / `-g`)
+```bash
+# Show file permissions, owner username, and group
+tree -p -u -g -h -L 2
 ```
 
-**Output:**
-
-```shell
-.
-├── .env
-├── dist
-│   └── bundle.js
-├── node_modules
-│   └── some_lib
-│       └── index.js
-└── src
-    ├── app.js
-    └── styles.css
-
-4 directories, 6 files
+### 3. Print Full Path Prefix (`-f`)
+```bash
+# Print relative or absolute path prefix for each file
+tree -f -L 2
 ```
 
-#### 4\. File Information
+---
 
-Show permissions and human-readable file sizes.
+## 🎯 Pattern Matching & Excluding Folders
 
-**Command:**
+### 1. Exclude Folders or Wildcards (`-I`)
+Exclude massive vendor folders like `node_modules`, `.git`, or build outputs:
 
-```sh
-tree -h -p
+```bash
+# Exclude node_modules, .git, and dist folders
+tree -I "node_modules|.git|dist|vendor" -L 3
 ```
 
-**Output:**
-
-```shell
-.
-├── [drwxr-xr-x]  dist
-│   └── [-rw-r--r--       512K]  bundle.js
-├── [drwxr-xr-x]  node_modules
-│   └── [drwxr-xr-x]  some_lib
-│       └── [-rw-r--r--       1.2K]  index.js
-└── [drwxr-xr-x]  src
-    ├── [-rw-r--r--       2.1K]  app.js
-    └── [-rw-r--r--        834]  styles.css
-
-4 directories, 5 files
+### 2. Include Matching Wildcard Patterns (`-P`)
+```bash
+# Show directory tree containing only TypeScript and JSON files
+tree -P "*.ts|*.json" --prune
 ```
 
-#### 5\. Filtering
+---
 
-Ignore a specific directory by name.
+## 🐙 Gitignore Integration
 
-**Command:**
+Automatically respect `.gitignore` rules so untracked node_modules or build artifacts do not clutter your directory output.
 
-```sh
-tree -I 'node_modules'
+```bash
+# Ignore files listed in .gitignore
+tree --gitignore
+
+# Combine gitignore filtering with hidden files
+tree -a --gitignore -L 3
 ```
 
-**Output:**
+---
 
-```shell
-.
-├── dist
-│   └── bundle.js
-└── src
-    ├── app.js
-    └── styles.css
+## 📄 HTML & JSON Output Export
 
-2 directories, 3 files
+Export directory structure diagrams directly into HTML or JSON for web documentation or programmatic analysis.
+
+### 1. Export as HTML Page (`-H`)
+```bash
+# Generate clean interactive HTML file tree with clickable links
+tree -H . -o project_structure.html
 ```
 
-Show only files matching a pattern.
-
-**Command:**
-
-```sh
-tree -P '*.js'
+### 2. Export as JSON (`-J`)
+```bash
+# Output directory hierarchy as JSON
+tree -J -L 2
 ```
 
-**Output:**
+---
 
-```shell
-.
-├── dist
-│   └── bundle.js
-├── node_modules
-│   └── some_lib
-│       └── index.js
-└── src
-    └── app.js
+## 📋 Cheat Sheet Summary
 
-3 directories, 3 files
-```
-
-#### 6\. Output Formats
-
-Output the tree structure as JSON.
-
-**Command:**
-
-```sh
-tree -J
-```
-
-**Output:**
-
-```json
-[
-  {"type":"directory","name":".",
-   "contents":[
-    {"type":"directory","name":"dist",
-     "contents":[
-      {"type":"file","name":"bundle.js"}
-    ]},
-    {"type":"directory","name":"node_modules",
-     "contents":[
-      {"type":"directory","name":"some_lib",
-       "contents":[
-        {"type":"file","name":"index.js"}
-      ]}
-    ]},
-    {"type":"directory","name":"src",
-     "contents":[
-      {"type":"file","name":"app.js"},
-      {"type":"file","name":"styles.css"}
-    ]}
-  ]}
-]
-```
-
-For a complete list of all options, run `man tree`.
+| Task | Command |
+| --- | --- |
+| Default tree view | `tree` |
+| Max depth 2 levels | `tree -L 2` |
+| Include hidden dotfiles | `tree -a` |
+| Directories only | `tree -d` |
+| Human-readable sizes | `tree -h` |
+| Ignore node_modules & git | `tree -I "node_modules\|.git"` |
+| Respect `.gitignore` | `tree --gitignore` |
+| Export HTML diagram | `tree -H . -o output.html` |
+| Export JSON | `tree -J` |

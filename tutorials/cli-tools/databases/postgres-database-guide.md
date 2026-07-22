@@ -60,7 +60,9 @@ You'll see a prompt like `postgres=#` — that means you're connected!
 
 ---
 
-## 🚀 Using PostgreSQL CLI (psql)
+## 💡 Practical Examples
+
+### 🚀 Using PostgreSQL CLI (psql)
 
 ### 1. Connect to PostgreSQL
 

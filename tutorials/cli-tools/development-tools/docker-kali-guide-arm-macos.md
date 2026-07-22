@@ -1,3 +1,5 @@
+# Docker Kali Linux ARM macOS Guide
+
 Below is a **single‑click Bash script** that does everything needed to run a persistent Kali‑Linux Docker container on an Apple‑silicon (M4) Mac.  
 It:
 

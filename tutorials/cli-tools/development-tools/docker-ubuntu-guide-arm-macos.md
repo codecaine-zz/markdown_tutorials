@@ -1,3 +1,7 @@
+# Docker Ubuntu ARM macOS Guide
+
+## 💡 Practical Examples
+
 ## 🎯 Goal  
 Create a **portable, persistent Ubuntu‑Linux development / testing environment** on an Apple‑silicon (M4) Mac using Docker.  
 Everything – the Docker engine, the Ubuntu image and all of the container’s data – lives on an external SSD/HDD, so you can unplug the drive, move it to another Mac, or free up internal space.
