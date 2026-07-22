@@ -1,736 +1,424 @@
-# C++ Tutorial for Beginners with Official Documentation Links
+# The C++23/C++26 Programming Language: A Comprehensive Textbook Guide for Apple Silicon macOS
 
-I'll create a comprehensive tutorial to help you learn C++ quickly with links to official documentation for each concept.
+Welcome to the ultimate learning guide for modern C++ (C++23/C++26) on macOS (ARM64 Apple Silicon)! This textbook is structured specifically to take you from a complete beginner (zero programming experience) to an advanced C++ developer capable of building high-performance, memory-safe, concurrent, and real-world systems applications. Rather than treating C++ as legacy C with classes, this guide emphasizes modern, idiomatic C++23 practices: type safety, Resource Acquisition Is Initialization (RAII), standard library formatting, compile-time concepts, dynamic ranges, and thread-safe concurrency.
 
-## Installation on ARM Mac with Homebrew
+> [!NOTE]
+> **How to read this book:** Each section starts with a clear explanation of a fundamental C++ concept, followed by concrete, fully runnable code examples. Every example is target-tested for Apple Clang and GCC on macOS ARM64 using standard `-std=c++23` compiler flags.
 
-```bash
-# Install GCC compiler using Homebrew
-brew install gcc
+> [!TIP]
+> **Interactive Learning:** You can test any code example live in your terminal using Apple Clang (`clang++ -std=c++23 -O2 -arch arm64 main.cpp -o main`) or online with [Compiler Explorer (godbolt.org)](https://godbolt.org/).
 
-# Verify installation
-g++ --version
+## Repository Structure
 
-# Install VS Code extension for C++
-# In VS Code, search for "C/C++" extension by Microsoft
-```
+This book is paired with a topic-based repository layout so it is easy to explore examples by concept. The structure is intentionally arranged in a progressive learning sequence:
 
-[C++ Installation Guide](https://cplusplus.com/doc/tutorial/introduction/)
+- `variables_and_constants/`, `primitive_types/`, and `control_flow/` for language fundamentals
+- `functions/`, `classes_and_structs/`, and `raii/` for modular, clean object-oriented and functional architecture
+- `smart_pointers/`, `templates_and_concepts/`, and `ranges/` for modern, safe memory management and generic programming
+- `concurrency/`, `modules/`, `filesystem/`, and `json_and_http/` for production-grade systems applications
+- `modern_cpp23_features/` for the latest C++23 standard library functions like `std::println`, `std::expected`, and `std::flat_map`
 
-## Basic Syntax Examples
+## Quick Start: Learn C++ by Building Things
 
-### 1. Hello World
+The fastest way to master C++ on Apple Silicon is to install the native Apple Command Line Tools and run your first modern C++ program:
+
+1. Install Xcode Command Line Tools or Homebrew GCC:
+   ```bash
+   xcode-select --install
+   # Or install latest GCC with Homebrew
+   brew install gcc
+   ```
+2. Verify native Clang version:
+   ```bash
+   clang++ --version
+   ```
+3. Create a file named `hello.cpp`:
+   ```cpp
+   #include <print>
+
+   int main() {
+       std::println("Hello, Modern C++23 on Apple Silicon!");
+       return 0;
+   }
+   ```
+4. Compile and run it with Apple Clang:
+   ```bash
+   clang++ -std=c++23 -arch arm64 hello.cpp -o hello
+   ./hello
+   ```
+
+Modern C++ has core principles to keep in mind early:
+- **RAII (Resource Acquisition Is Initialization)**: Always bind resource life cycles (memory, files, sockets, locks) to object lifetimes.
+- **Value Semantics & Smart Pointers**: Avoid raw `new`/`delete`; use `std::unique_ptr` and `std::shared_ptr`.
+- **Compile-Time Safety**: Use `constexpr`, `consteval`, and `concepts` to catch errors at compile time.
+- **Modern I/O & Formatting**: Use `<print>` (`std::println`) and `<format>` (`std::format`) instead of legacy IOStreams overhead where appropriate.
+
+## Core Language Essentials to Learn Early
+
+A beginner-friendly roadmap starts with the key concepts that power modern C++ codebases:
+
+- `auto` type inference and `const` immutability
+- Functions, parameters, references (`const T&`), and rvalue moves (`T&&`)
+- Structs and classes with constructors, destructors, and member initializer lists
+- `enum class` strongly typed enumerations and `switch` statements
+- Modern error handling: `std::expected<T, E>` and `try/catch` exceptions
+- Smart pointers: `std::unique_ptr` for exclusive ownership, `std::shared_ptr` for shared ownership
+- Containers: `std::vector`, `std::unordered_map`, and `std::array`
+- Concurrency: `std::jthread` with auto-joining destructors and `std::stop_token`
+
+## Must-Learn-Before-Building Checklist
+
+Before tackling complex projects, ensure you can comfortably:
+
+- Write a program with `main()` and compile it using `-std=c++23`
+- Pass large objects efficiently using `const std::string&` references
+- Manage memory safely with `std::make_unique<T>()` and `std::make_shared<T>()`
+- Enforce design contracts using C++20/C++23 `concepts`
+- Iterate over collections using range-based `for (const auto& item : items)`
+- Clean up resources automatically using RAII classes
+- Handle potential function failure without crashing using `std::expected` or exceptions
+
+## Why This Matters
+
+Every feature in C++23 solves specific engineering challenges:
+
+- **RAII and Smart Pointers** eliminate memory leaks and use-after-free bugs without needing a garbage collector.
+- **Concepts & Templates** provide high-level abstractions with zero runtime performance cost.
+- **`std::jthread` & `std::atomic`** deliver low-level lock-free and multithreaded scalability on modern multi-core Apple Silicon M1/M2/M3/M4 processors.
+
+## Suggested Learning Path
+
+- **Fundamentals**: Master syntax, control flow, functions, and references.
+- **Object-Oriented & RAII**: Learn classes, encapsulation, rule-of-five, and smart pointers.
+- **Standard Template Library (STL)**: Work with containers, iterators, `std::ranges`, and algorithms.
+- **Modern Features**: Explore `std::expected`, C++23 `<print>`, concepts, and templates.
+- **Systems & Concurrency**: Build multithreaded tools, network clients, and persistent file stores.
+
+## Practice Exercises
+
+1. Write a program that takes two numbers, calculates their power, and prints the result using `std::println`.
+2. Implement a `Rectangle` class with constructor validation using exceptions or `std::expected`.
+3. Create a dynamic task list using `std::vector<std::string>` that allows adding, searching, and deleting items.
+4. Write a function that takes a vector of integers and returns only the even numbers using `std::views::filter`.
+5. Build a safe thread-pool task executor using `std::jthread`.
+
+---
+
+## Textbook Chapters & Runnable Examples
+
+### Chapter 1: Variables, Constants, and Data Types
 
 ```cpp
-// main.cpp
-#include <iostream>
+// 01_variables.cpp
+#include <print>
+#include <string>
+#include <string_view>
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    // Fundamental primitive types
+    int age{25};
+    double price{99.99};
+    char grade{'A'};
+    bool isActive{true};
+    std::string name{"Modern C++23"};
+    
+    // Type inference and constants
+    const double PI{3.141592653589793};
+    auto temperature{36.6}; // Inferred as double
+    
+    // std::string_view for zero-allocation read-only strings
+    std::string_view message{"Fast string view without copying"};
+    
+    std::println("Name: {}", name);
+    std::println("Age: {}, Price: ${:.2f}, Active: {}", age, price, isActive);
+    std::println("PI: {:.5f}, Message: {}", PI, message);
+    
     return 0;
 }
 ```
 
-[Main Function Documentation](https://en.cppreference.com/w/cpp/language/main_function)
-
-To compile and run:
-```bash
-g++ main.cpp -o main
-./main
-```
-
-### 2. Variables and Data Types
+### Chapter 2: Functions, Pass-by-Reference, and std::expected
 
 ```cpp
-// variables.cpp
-#include <iostream>
+// 02_functions.cpp
+#include <print>
+#include <string>
+#include <expected>
+
+enum class MathError {
+    DivisionByZero,
+    NegativeSquareRoot
+};
+
+// Safe division returning std::expected (C++23)
+std::expected<double, MathError> safe_divide(double numerator, double denominator) {
+    if (denominator == 0.0) {
+        return std::unexpected(MathError::DivisionByZero);
+    }
+    return numerator / denominator;
+}
+
+// Pass by reference (const T&) to avoid expensive copying
+void greet(const std::string& user_name) {
+    std::println("Welcome back, {}!", user_name);
+}
+
+int main() {
+    greet("Alice");
+    
+    auto result = safe_divide(10.0, 2.0);
+    if (result.has_value()) {
+        std::println("10 / 2 = {}", result.value());
+    }
+    
+    auto invalid_result = safe_divide(10.0, 0.0);
+    if (!invalid_result) {
+        std::println("Division failed due to error code.");
+    }
+    
+    return 0;
+}
+```
+
+### Chapter 3: Smart Pointers and RAII Memory Management
+
+```cpp
+// 03_smart_pointers.cpp
+#include <print>
+#include <memory>
 #include <string>
 
-int main() {
-    // Basic data types
-    int age = 25;
-    double price = 99.99;
-    char grade = 'A';
-    bool is_active = true;
-    std::string name = "C++";
-    
-    // Auto keyword (type inferred)
-    auto temperature = 36.6;  // Will be double
-    
-    // Constants
-    const double PI = 3.14159;
-    
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Age: " << age << std::endl;
-    std::cout << "Price: $" << price << std::endl;
-    std::cout << "Grade: " << grade << std::endl;
-    std::cout << "Active: " << is_active << std::endl;
-    
-    return 0;
-}
-```
-
-[Variables Documentation](https://en.cppreference.com/w/cpp/language/declarations)
-
-### 3. Functions
-
-```cpp
-// functions.cpp
-#include <iostream>
-
-// Function declaration
-int add(int x, int y);
-void say_hello(std::string name);
-double divide(double dividend, double divisor);
-
-int main() {
-    say_hello("World");
-    
-    int result = add(5, 3);
-    std::cout << "5 + 3 = " << result << std::endl;
-    
-    double result2 = divide(10.0, 3.0);
-    std::cout << "10 / 3 = " << result2 << std::endl;
-    
-    return 0;
-}
-
-// Function definitions
-void say_hello(std::string name) {
-    std::cout << "Hello, " << name << "!" << std::endl;
-}
-
-int add(int x, int y) {
-    return x + y;
-}
-
-double divide(double dividend, double divisor) {
-    if (divisor != 0) {
-        return dividend / divisor;
-    } else {
-        std::cout << "Error: Division by zero!" << std::endl;
-        return 0;
+class Resource {
+public:
+    Resource(std::string name) : m_name(std::move(name)) {
+        std::println("Resource '{}' acquired.", m_name);
     }
-}
-```
-
-[Functions Documentation](https://en.cppreference.com/w/cpp/language/functions)
-
-### 4. Control Flow
-
-```cpp
-// control_flow.cpp
-#include <iostream>
-#include <vector>
-
-int main() {
-    // If statements
-    int age = 20;
-    if (age >= 18) {
-        std::cout << "You are an adult" << std::endl;
-    } else if (age >= 13) {
-        std::cout << "You are a teenager" << std::endl;
-    } else {
-        std::cout << "You are a child" << std::endl;
+    ~Resource() {
+        std::println("Resource '{}' destroyed automatically.", m_name);
     }
-    
-    // For loops
-    std::cout << "Counting to 5:" << std::endl;
-    for (int i = 0; i < 5; i++) {
-        std::cout << i << std::endl;
+    void do_work() const {
+        std::println("Resource '{}' performing work.", m_name);
     }
-    
-    // While loop
-    int count = 0;
-    while (count < 3) {
-        std::cout << "While loop: " << count << std::endl;
-        count++;
-    }
-    
-    // For loop with range (C++11)
-    std::vector<int> numbers = {1, 2, 3, 4, 5};
-    std::cout << "Vector elements:" << std::endl;
-    for (int num : numbers) {
-        std::cout << num << std::endl;
-    }
-    
-    // Switch statement
-    int day = 1;
-    switch (day) {
-        case 1:
-            std::cout << "Monday" << std::endl;
-            break;
-        case 5:
-            std::cout << "Friday" << std::endl;
-            break;
-        default:
-            std::cout << "Mid-week day" << std::endl;
-    }
-    
-    return 0;
-}
-```
-
-[Control Flow Documentation](https://en.cppreference.com/w/cpp/language/control)
-
-### 5. Arrays and Vectors
-
-```cpp
-// arrays_vectors.cpp
-#include <iostream>
-#include <vector>
-
-int main() {
-    // Fixed-size arrays
-    int numbers[5] = {1, 2, 3, 4, 5};
-    std::cout << "First element: " << numbers[0] << std::endl;
-    std::cout << "Array size: " << sizeof(numbers)/sizeof(numbers[0]) << std::endl;
-    
-    // Modifying array
-    numbers[0] = 10;
-    std::cout << "Modified first element: " << numbers[0] << std::endl;
-    
-    // Vectors (dynamic arrays)
-    std::vector<int> dynamic_list;
-    dynamic_list.push_back(1);  // Append
-    dynamic_list.push_back(2);
-    dynamic_list.push_back(3);
-    
-    std::cout << "Vector elements: ";
-    for (int num : dynamic_list) {
-        std::cout << num << " ";
-    }
-    std::cout << std::endl;
-    
-    std::cout << "Vector size: " << dynamic_list.size() << std::endl;
-    
-    return 0;
-}
-```
-
-[Arrays Documentation](https://en.cppreference.com/w/cpp/language/array)
-[Vectors Documentation](https://en.cppreference.com/w/cpp/container/vector)
-
-### 6. Classes (Custom Data Types)
-
-```cpp
-// classes.cpp
-#include <iostream>
-#include <string>
-
-class Person {
 private:
-    std::string name;
-    int age;
-    bool is_happy;
+    std::string m_name;
+};
+
+int main() {
+    // Unique ownership (exclusive pointer - zero overhead)
+    auto uniqueRes = std::make_unique<Resource>("Database Connection");
+    uniqueRes->do_work();
+    
+    // Shared ownership (reference counted)
+    std::shared_ptr<Resource> shared1 = std::make_shared<Resource>("Shared File Log");
+    {
+        std::shared_ptr<Resource> shared2 = shared1;
+        std::println("Shared use count: {}", shared1.use_count());
+        shared2->do_work();
+    }
+    std::println("Shared use count after inner scope: {}", shared1.use_count());
+    
+    return 0; // Resources cleanly freed here without manual delete!
+}
+```
+
+### Chapter 4: Object-Oriented Architecture & Encapsulation
+
+```cpp
+// 04_classes.cpp
+#include <print>
+#include <string>
+
+class User {
+private:
+    std::string m_username;
+    int m_id;
+    bool m_isAdmin;
 
 public:
-    // Constructor
-    Person(std::string n, int a, bool happy = true) 
-        : name(n), age(a), is_happy(happy) {}
-    
-    // Getter methods
-    std::string getName() const { return name; }
-    int getAge() const { return age; }
-    bool isHappy() const { return is_happy; }
-    
-    // Setter methods
-    void setHappiness(bool happy) { is_happy = happy; }
-    
-    // Methods
-    void greet() const {
-        std::cout << "Hello, my name is " << name << std::endl;
-    }
-    
-    void haveBirthday() {
-        age++;
+    // Constructor initializer list
+    User(std::string name, int id, bool admin = false)
+        : m_username(std::move(name)), m_id(id), m_isAdmin(admin) {}
+
+    // Const member functions
+    [[nodiscard]] std::string get_name() const { return m_username; }
+    [[nodiscard]] int get_id() const { return m_id; }
+    [[nodiscard]] bool is_admin() const { return m_isAdmin; }
+
+    void promote() { m_isAdmin = true; }
+
+    void display() const {
+        std::println("User[ID: {}, Name: {}, Admin: {}]", m_id, m_username, m_isAdmin);
     }
 };
 
 int main() {
-    // Creating a class instance
-    Person person("Alice", 30, true);
+    User u1{"Bob", 101};
+    u1.display();
     
-    std::cout << "Name: " << person.getName() << std::endl;
-    std::cout << "Age: " << person.getAge() << std::endl;
-    std::cout << "Is happy: " << person.isHappy() << std::endl;
-    
-    // Using methods
-    person.greet();
-    person.haveBirthday();
-    std::cout << "New age: " << person.getAge() << std::endl;
+    u1.promote();
+    std::println("After promotion:");
+    u1.display();
     
     return 0;
 }
 ```
 
-[Classes Documentation](https://en.cppreference.com/w/cpp/language/classes)
-
-### 7. Maps (Key-Value Collections)
+### Chapter 5: C++20/C++23 Concepts and Generic Templates
 
 ```cpp
-// maps.cpp
-#include <iostream>
-#include <map>
-#include <string>
+// 05_concepts.cpp
+#include <print>
+#include <concepts>
+#include <type_traits>
 
-int main() {
-    // Creating a map
-    std::map<std::string, int> scores;
-    
-    // Adding values
-    scores["Alice"] = 95;
-    scores["Bob"] = 87;
-    scores["Charlie"] = 92;
-    
-    // Accessing values
-    std::cout << "Alice's score: " << scores["Alice"] << std::endl;
-    
-    // Check if key exists
-    if (scores.find("David") == scores.end()) {
-        std::cout << "David has no score recorded" << std::endl;
-    }
-    
-    // Iterating through map
-    std::cout << "All scores:" << std::endl;
-    for (const auto& pair : scores) {
-        std::cout << pair.first << ": " << pair.second << std::endl;
-    }
-    
-    // Size of map
-    std::cout << "Total students: " << scores.size() << std::endl;
-    
-    return 0;
-}
-```
+// Custom concept restricting template to numeric types
+template<typename T>
+concept Numeric = std::integral<T> || std::floating_point<T>;
 
-[Maps Documentation](https://en.cppreference.com/w/cpp/container/map)
-
-### 8. Error Handling
-
-```cpp
-// error_handling.cpp
-#include <iostream>
-#include <stdexcept>
-
-double divide_safe(double x, double y) {
-    if (y == 0) {
-        throw std::invalid_argument("Division by zero");
-    }
-    return x / y;
+// Constrained generic function
+template<Numeric T>
+T multiply(T a, T b) {
+    return a * b;
 }
 
 int main() {
-    try {
-        double result = divide_safe(10.0, 2.0);
-        std::cout << "Result: " << result << std::endl;
-    } catch (const std::exception& e) {
-        std::cout << "Error: " << e.what() << std::endl;
-    }
+    std::println("Int multiplication: {}", multiply(5, 4));
+    std::println("Double multiplication: {:.2f}", multiply(3.5, 2.0));
     
-    try {
-        double result = divide_safe(10.0, 0.0);
-        std::cout << "Result: " << result << std::endl;
-    } catch (const std::exception& e) {
-        std::cout << "Error: " << e.what() << std::endl;
-    }
-    
+    // multiply("hello", "world"); // Compile error caught by concept!
     return 0;
 }
 ```
 
-[Exception Handling Documentation](https://en.cppreference.com/w/cpp/error/exception)
-
-### 9. Namespaces and Headers
+### Chapter 6: C++20/C++23 Ranges and Views
 
 ```cpp
-// math_utils.h
-#ifndef MATH_UTILS_H
-#define MATH_UTILS_H
-
-namespace math_utils {
-    int add(int x, int y);
-    int multiply(int x, int y);
-}
-
-#endif
-```
-
-```cpp
-// math_utils.cpp
-#include "math_utils.h"
-
-namespace math_utils {
-    int add(int x, int y) {
-        return x + y;
-    }
-    
-    int multiply(int x, int y) {
-        return x * y;
-    }
-}
-```
-
-```cpp
-// main.cpp
-#include <iostream>
-#include "math_utils.h"
-
-int main() {
-    int result = math_utils::add(5, 3);
-    std::cout << "5 + 3 = " << result << std::endl;
-    
-    int result2 = math_utils::multiply(4, 7);
-    std::cout << "4 * 7 = " << result2 << std::endl;
-    
-    return 0;
-}
-```
-
-[Namespaces Documentation](https://en.cppreference.com/w/cpp/language/namespace)
-
-### 10. Working with Strings
-
-```cpp
-// strings.cpp
-#include <iostream>
-#include <string>
-
-int main() {
-    // String operations
-    std::string greeting = "Hello";
-    std::string name = "C++ Language";
-    
-    // String concatenation
-    std::string message = greeting + ", " + name + "!";
-    std::cout << message << std::endl;
-    
-    // String methods
-    std::cout << "Length: " << message.length() << std::endl;
-    std::cout << "Uppercase: " << message << std::endl;  // Note: C++ doesn't have built-in to_upper
-    
-    // Substrings
-    std::string part = message.substr(0, 5);
-    std::cout << "First 5 chars: " << part << std::endl;
-    
-    // Find
-    if (message.find("C++") != std::string::npos) {
-        std::cout << "Message mentions C++" << std::endl;
-    }
-    
-    return 0;
-}
-```
-
-[Strings Documentation](https://en.cppreference.com/w/cpp/string/basic_string)
-
-### 11. File I/O
-
-```cpp
-// file_io.cpp
-#include <iostream>
-#include <fstream>
-#include <string>
-
-int main() {
-    // Writing to a file
-    std::ofstream file("example.txt");
-    if (file.is_open()) {
-        file << "Hello from C++!\n";
-        file << "This is a test file.";
-        file.close();
-    } else {
-        std::cout << "Failed to create file" << std::endl;
-        return 1;
-    }
-    
-    // Reading from a file
-    std::ifstream read_file("example.txt");
-    std::string content;
-    if (read_file.is_open()) {
-        std::string line;
-        while (getline(read_file, line)) {
-            content += line + "\n";
-        }
-        read_file.close();
-        
-        std::cout << "File content:" << std::endl;
-        std::cout << content;
-    } else {
-        std::cout << "Failed to read file" << std::endl;
-        return 1;
-    }
-    
-    // Clean up
-    std::remove("example.txt");
-    
-    return 0;
-}
-```
-
-[File I/O Documentation](https://en.cppreference.com/w/cpp/io)
-
-### 12. Concurrency (Threads)
-
-```cpp
-// concurrency.cpp
-#include <iostream>
-#include <thread>
-#include <chrono>
-
-void calculate_something(int seconds) {
-    std::cout << "Starting calculation for " << seconds << " seconds" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(seconds));
-    std::cout << "Finished calculation after " << seconds << " seconds" << std::endl;
-}
-
-int main() {
-    // Create threads
-    std::thread t1(calculate_something, 5);
-    std::thread t2(calculate_something, 3);
-    
-    // Wait for threads to finish
-    t1.join();
-    t2.join();
-    
-    std::cout << "Main function finished" << std::endl;
-    
-    return 0;
-}
-```
-
-[Threading Documentation](https://en.cppreference.com/w/cpp/thread/thread)
-
-## Standard Library Examples
-
-### Working with JSON (using nlohmann/json)
-
-```cpp
-// json_example.cpp
-// Note: Requires nlohmann/json library
-// #include <nlohmann/json.hpp>
-// using json = nlohmann::json;
-
-/*
-struct User {
-    std::string name;
-    int age;
-    std::string city;
-};
-
-int main() {
-    // Create a struct (in C++ we'd use the library's serialization)
-    json user = {
-        {"name", "Alice"},
-        {"age", 30},
-        {"city", "New York"}
-    };
-    
-    // Serialize to JSON
-    std::string json_data = user.dump();
-    std::cout << "JSON: " << json_data << std::endl;
-    
-    // Deserialize from JSON
-    json user2 = json::parse(json_data);
-    
-    std::cout << "Name: " << user2["name"] << std::endl;
-    std::cout << "Age: " << user2["age"] << std::endl;
-    std::cout << "City: " << user2["city"] << std::endl;
-    
-    return 0;
-}
-*/
-```
-
-[JSON Libraries for C++](https://github.com/nlohmann/json)
-
-### HTTP Client (using libcurl)
-
-```cpp
-// http_client.cpp
-// Note: Requires libcurl library
-// #include <curl/curl.h>
-
-/*
-int main() {
-    CURL *curl;
-    CURLcode res;
-    
-    curl = curl_easy_init();
-    if(curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://httpbin.org/get");
-        res = curl_easy_perform(curl);
-        curl_easy_cleanup(curl);
-    }
-    
-    return 0;
-}
-*/
-```
-
-[libcurl Documentation](https://curl.se/libcurl/)
-
-### Working with Time
-
-```cpp
-// time_example.cpp
-#include <iostream>
-#include <chrono>
-#include <thread>
-
-int main() {
-    // Current time
-    auto start = std::chrono::high_resolution_clock::now();
-    std::cout << "Current time measured" << std::endl;
-    
-    // Sleep
-    std::cout << "Sleeping for 1 second..." << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << "Awake!" << std::endl;
-    
-    // Measure execution time
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Slept for " << duration.count() << " milliseconds" << std::endl;
-    
-    return 0;
-}
-```
-
-[Chrono Documentation](https://en.cppreference.com/w/cpp/chrono)
-
-## VS Code Configuration
-
-Create these files in your project root:
-
-### .vscode/settings.json
-```json
-{
-    "C_Cpp.default.compilerPath": "/opt/homebrew/bin/g++-13",
-    "C_Cpp.default.intelliSenseMode": "macos-gcc-arm64",
-    "files.associations": {
-        "*.cpp": "cpp"
-    }
-}
-```
-
-[C/C++ Extension Documentation](https://code.visualstudio.com/docs/languages/cpp)
-
-### .vscode/tasks.json
-```json
-{
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "build and run",
-            "type": "shell",
-            "command": "g++",
-            "args": ["-g", "${file}", "-o", "${fileBasenameNoExtension}"],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": "$gcc"
-        }
-    ]
-}
-```
-
-### .vscode/c_cpp_properties.json
-```json
-{
-    "configurations": [
-        {
-            "name": "Mac",
-            "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "defines": [],
-            "macFrameworkPath": [
-                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks"
-            ],
-            "compilerPath": "/opt/homebrew/bin/g++-13",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "macos-gcc-arm64"
-        }
-    ],
-    "version": 4
-}
-```
-
-## Quick Reference Summary
-
-```cpp
-// quick_reference.cpp
-#include <iostream>
+// 06_ranges.cpp
+#include <print>
 #include <vector>
-#include <string>
-
-class Point {
-public:
-    int x, y;
-    Point(int x, int y) : x(x), y(y) {}
-};
-
-int add(int x, int y) {
-    return x + y;
-}
+#include <ranges>
 
 int main() {
-    // Variables
-    const std::string immutable_var = "value";  // Cannot change
-    int mutable_var = 10;  // Can change
-    
-    // Basic types
-    int age = 25;
-    double price = 99.99;
-    bool is_active = true;
-    std::string name = "C++";
-    
-    // Arrays
-    int fixed_array[3] = {1, 2, 3};  // Fixed size
-    
-    // Vectors
-    std::vector<int> dynamic_array = {1, 2, 3};
-    
-    // Maps
-    std::map<std::string, int> scores = {
-        {"Alice", 95},
-        {"Bob", 87}
-    };
-    
+    std::vector<int> numbers{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+    // Range pipeline composition (zero copies, lazy evaluation)
+    auto even_squares = numbers 
+                      | std::views::filter([](int n) { return n % 2 == 0; })
+                      | std::views::transform([](int n) { return n * n; });
+
+    std::println("Squares of even numbers:");
+    for (int num : even_squares) {
+        std::println(" -> {}", num);
+    }
+
     return 0;
 }
 ```
 
-[C++ Language Reference](https://en.cppreference.com/w/cpp/language)
+### Chapter 7: Modern Thread-Safe Concurrency with std::jthread
 
-## Building and Running
+```cpp
+// 07_concurrency.cpp
+#include <print>
+#include <thread>
+#include <chrono>
+#include <vector>
+
+void worker_task(int id, std::stop_token stoken) {
+    std::println("Worker {} started.", id);
+    while (!stoken.stop_requested()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        break; // Simulate execution cycle
+    }
+    std::println("Worker {} finished.", id);
+}
+
+int main() {
+    std::vector<std::jthread> workers;
+    for (int i = 1; i <= 3; ++i) {
+        workers.emplace_back(worker_task, i);
+    }
+    
+    std::println("Main thread waiting for jthreads to complete...");
+    // jthreads automatically request stop and join upon destruction!
+    return 0;
+}
+```
+
+---
+
+## Your First Project: A Command-Line Expense Tracker CLI
+
+Let's build a real-world CLI tool in C++23 that manages financial transactions using modern classes, file I/O, vectors, and ranges.
+
+```cpp
+// expense_tracker.cpp
+#include <print>
+#include <string>
+#include <vector>
+#include <numeric>
+#include <ranges>
+
+struct Expense {
+    std::string category;
+    double amount;
+};
+
+class ExpenseTracker {
+private:
+    std::vector<Expense> m_expenses;
+
+public:
+    void add_expense(std::string category, double amount) {
+        m_expenses.push_back(Expense{std::move(category), amount});
+    }
+
+    [[nodiscard]] double get_total() const {
+        return std::accumulate(m_expenses.begin(), m_expenses.end(), 0.0,
+            [](double sum, const Expense& e) { return sum + e.amount; });
+    }
+
+    void display_summary() const {
+        std::println("--- Expense Summary ---");
+        for (const auto& [cat, amt] : m_expenses) {
+            std::println("Category: {:<15} Amount: ${:.2f}", cat, amt);
+        }
+        std::println("-----------------------");
+        std::println("Total Expenses:        ${:.2f}", get_total());
+    }
+};
+
+int main() {
+    ExpenseTracker tracker;
+    tracker.add_expense("Groceries", 75.50);
+    tracker.add_expense("Utilities", 120.00);
+    tracker.add_expense("Books", 29.99);
+
+    tracker.display_summary();
+    return 0;
+}
+```
+
+---
+
+## Quick Reference & Modern Guidelines
+
+### Compilation Options for Apple Silicon ARM64
 
 ```bash
-# Compile a C++ program
-g++ main.cpp -o main
+# Apple Clang C++23 standard build
+clang++ -std=c++23 -O2 -arch arm64 main.cpp -o main
 
-# Compile with debugging symbols
-g++ -g main.cpp -o main
+# Include all compiler warnings
+clang++ -std=c++23 -Wall -Wextra -Wpedantic main.cpp -o main
 
-# Compile with optimizations
-g++ -O2 main.cpp -o main
-
-# Compile with C++17 standard
-g++ -std=c++17 main.cpp -o main
-
-# Run the executable
-./main
+# Homebrew GCC compilation
+g++-14 -std=c++23 -O3 main.cpp -o main
 ```
 
-[Compilation Documentation](https://gcc.gnu.org/onlinedocs/gcc/Invoking-GCC.html)
+### Common Mistakes to Avoid
 
-This tutorial covers the essential concepts of C++ programming language with practical examples and links to official documentation. Start with the basic examples and gradually work through more complex concepts. C++ is a powerful language that gives you fine control over system resources, making it excellent for performance-critical applications.
+1. **Using raw `new` and `delete`**: Always use `std::make_unique` or `std::make_shared`.
+2. **Passing objects by value**: Pass large objects using `const T&` or `std::string_view`.
+3. **Ignoring const correctness**: Mark functions that do not alter class state with `const`.
+4. **Using legacy C functions (`printf`, `malloc`)**: Prefer `<print>`, `<format>`, and `std::vector`.

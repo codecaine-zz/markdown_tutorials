@@ -1,7 +1,5 @@
-Below is a **refreshed, beginner‑friendly version** of the tutorial you posted.  
-All the code has been run (or type‑checked) against the latest FastAPI 0.112 + Pydantic 2.7 stack, and a few subtle bugs / missing pieces have been fixed.
+# Modern FastAPI & Pydantic v2: A Comprehensive Textbook Guide
 
-You’ll also see **official documentation links** after every major concept so a new user can jump straight to the reference they need.
 
 ---
 
