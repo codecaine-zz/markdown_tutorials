@@ -276,25 +276,25 @@ Control + Option + Command + P (shows menu bar)
 
 ### System Controls
 ```bash
-# Open System Preferences
-Command + Space, then type "System Preferences"
+# Open System Settings (macOS Ventura / Sonoma / Sequoia)
+Command + Space, then type "System Settings"
 
-# Lock screen immediately
-Control + Shift + Power button
+# Lock screen immediately (all modern Macs)
+Control + Command + Q
+
+# Put Mac to Sleep
+Option + Command + Power / Eject key
 
 # Force quit an unresponsive app
 Option + Command + Esc
 
-# Show battery info and power management  
-Control + Option + Command + B (shows menu bar)
-
-# Toggle dark mode on/off (if using M4 with Touch Bar)
-Command + Option + Shift + 8
+# Toggle Globe / Fn Key Actions (Emoji, Dictation)
+Fn (Globe) Key
 
 # Open Mission Control
 F3 or Control + Up Arrow
 
-# Open Launchpad
+# Open Launchpad / App Grid
 F4 or Control + Down Arrow
 ```
 
@@ -445,11 +445,5 @@ Shift + Click on tab or Command + Shift + N
 2. **Display Settings**: The M4 can handle multiple displays better than previous generations—use Control + Shift + F2 to toggle between display configurations.
 3. **Battery Management**: For laptops with M4 processors, use System Preferences > Battery to monitor efficiency and extend battery life.
 
-These comprehensive keyboard shortcuts cover all major areas of functionality for users of M4 devices while ensuring optimal usage patterns across various software platforms.
-
-```javascript
-console.log("Keyboards ready for enhanced productivity!");
-```
-
-Let me know if you'd like this converted into a downloadable PDF or formatted as an infographic!
+These comprehensive keyboard shortcuts cover all major areas of functionality for Apple Silicon Mac users while ensuring optimal usage patterns across system and productivity applications.
 

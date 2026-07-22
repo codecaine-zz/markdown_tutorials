@@ -13,13 +13,13 @@
 ## 📋 Table of Contents
 
 - [✨ Features](#-features)
-- [� Prerequisites Installation](#-prerequisites-installation)
-- [�🚀 Quick Start](#-quick-start)
+- [📋 Prerequisites Installation](#-prerequisites-installation)
+- [🚀 Quick Start](#-quick-start)
 - [📖 Commands Reference](#-commands-reference)
-- [⚙️ Configuration](#️-configuration)
+- [⚙️ Configuration](#%EF%B8%8F-configuration)
 - [💾 Data Persistence](#-data-persistence)
 - [🔧 Advanced Usage](#-advanced-usage)
-- [🏃‍♂️ Real-World Examples](#️-real-world-examples)
+- [🏃‍♂️ Real-World Examples](#%EF%B8%8F-real-world-examples)
 - [🐛 Troubleshooting](#-troubleshooting)
 - [📁 Project Structure](#-project-structure)
 - [🚀 What's New](#-whats-new)
@@ -55,7 +55,7 @@
 
 ---
 
-## � Prerequisites Installation
+## 📋 Prerequisites Installation
 
 ### Installing on ARM Mac (Apple Silicon)
 
@@ -139,7 +139,7 @@ echo "=== All set! 🎉 ==="
 
 ---
 
-## �🚀 Quick Start
+## ⚡ Quick Start
 
 ### Final Prerequisites Check
 
@@ -641,7 +641,7 @@ bun run setup
 ## 📁 Project Structure
 
 ```
-bun_auto_linux_bsd_docker_for_mac_arm/
+bun_ubuntu_docker_manager_for_arm_mac/
 ├── index.ts                    # Main command router
 ├── package.json               # Bun scripts and dependencies
 ├── tsconfig.json              # TypeScript configuration

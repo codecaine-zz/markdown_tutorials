@@ -344,8 +344,9 @@ speedtest-cli --simple
 # Show system information (CPU, memory, OS version)  
 uname -a
 
-# Display memory usage
-free -h
+# Display memory usage (Linux: free -h | macOS: vm_stat)
+free -h        # Linux
+vm_stat        # macOS (shows memory pages)
 
 # Show disk space usage in human-readable format  
 df -h
@@ -486,11 +487,31 @@ if [ $? -ne 0 ]; then echo "Command failed"; fi
 # Use trap for error handling in scripts 
 trap 'echo "Error occurred at line $LINENO"' ERR
 
-# Verify if file exists before operating on it
-if [ -f filename.txt ]; then cat filename.txt; fi
+### Modern CLI Alternatives
+
+Enhance your terminal productivity with modern, blazing-fast tools:
+
+```bash
+# eza / lsd - Modern replacement for 'ls' with colors, icons, and git status
+eza -la --git --icons   # brew install eza
+
+# bat - Cat clone with syntax highlighting and git integration
+bat filename.md         # brew install bat
+
+# ripgrep (rg) - Ultra-fast recursive code search tool
+rg "pattern" src/       # brew install ripgrep
+
+# fd - Fast and user-friendly alternative to 'find'
+fd -e md                # Find all markdown files (brew install fd)
+
+# zoxide (z) - Smarter cd command that remembers your frequent directories
+z project               # Jump directly to directory (brew install zoxide)
+
+# duf & dust - Modern graphical & tree replacements for 'df' and 'du'
+duf                     # Disk usage utility (brew install duf)
+dust                    # Intuitive tree view of disk space (brew install dust)
 ```
 
-This comprehensive guide covers essential terminal commands and practices across all major areas of system administration, development workflows, networking, process management, and security. The examples are designed to be practical and immediately useful for both beginners and intermediate users working with Linux/Unix systems or macOS terminals. Remember that many of these commands can have different options depending on your specific operating system (Linux vs macOS), so always check the man pages (`man command`) for detailed information about usage variations.
+This comprehensive guide covers essential terminal commands and practices across all major areas of system administration, development workflows, networking, process management, and security. The examples are designed to be practical and immediately useful for both beginners and intermediate users working with Linux/Unix systems or macOS terminals.
 
-Would you like me to explain any particular section in more detail, provide additional examples, or show how to customize any of these commands further? The terminal is one of the most powerful tools available for interacting with your computer - mastering these basics will significantly improve productivity!
 

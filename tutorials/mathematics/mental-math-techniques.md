@@ -404,6 +404,52 @@ These are the absolute easiest tricks. **Master these before moving on!**
 
 ---
 
+### ✨ Dividing by 4
+
+**The trick:** Cut in half, then cut in half again!
+
+**Example: 164 ÷ 4**
+
+1. First half: 164 ÷ 2 = **82**
+2. Second half: 82 ÷ 2 = **41**
+
+**More examples:**
+
+- 328 ÷ 4 → 328 ÷ 2 = 164 → 164 ÷ 2 = **82**
+- 92 ÷ 4 → 92 ÷ 2 = 46 → 46 ÷ 2 = **23**
+
+---
+
+### ✨ Dividing by 25
+
+**The trick:** Multiply by 4, then divide by 100 (move decimal 2 places left).
+
+**Why this works:** Dividing by 25 is the exact same as multiplying by 4/100!
+
+**Example: 350 ÷ 25**
+
+1. Multiply by 4: 350 × 4 = 1400
+2. Move decimal 2 places left: **14.00 = 14**
+
+**More examples:**
+
+- 625 ÷ 25 → 625 × 4 = 2500 → **25**
+- 180 ÷ 25 → 180 × 4 = 720 → **7.2**
+
+---
+
+### ✨ Dividing by 9
+
+**The trick:** Add up the digits to find the whole number and repeating decimal!
+
+**Example: 43 ÷ 9**
+
+1. Tens digit is **4** (this is the whole number part)
+2. Add digits: 4 + 3 = **7** (this becomes the repeating decimal `.777...`)
+3. Answer: **4.77...** (or 4 with remainder 7)
+
+---
+
 ## 5️⃣ PERCENTAGE TRICKS
 
 ### ✨ Quick Percentage Guide
@@ -1279,4 +1325,4 @@ Every advanced trick uses the same basic principles you've already mastered:
 
 **Keep this handy until these tricks become automatic!** 🚀
 
-**Congratulations on completing the entire guide! You're now equipped with mental math superpowers!** �✨
+**Congratulations on completing the entire guide! You're now equipped with mental math superpowers!** 🧠✨

@@ -147,20 +147,26 @@ defaults write com.apple.ActivityMonitor OpenMainWindow -bool false
 # Set automatic sleep timer (in minutes)
 sudo pmset -a sleep 10
 
-# Disable keyboard backlight when not needed
-sudo defaults write /Library/Preferences/com.apple.iokit.BridgeOSUserPreferences.plist KeyboardBacklightOn -bool NO
+# Adjust keyboard backlight idle sleep (1 minute = 60s)
+defaults write com.apple.keyboard.backlight idleDimTime -int 60
 ```
 
-### Advanced Battery Management
+### Advanced Battery & Power Management
 ```bash
-# Check if battery is calibrated properly
-system_profiler SPPowerDataType | grep "Battery Capacity"
+# Prevent Mac from sleeping during long-running tasks or downloads
+caffeinate -i -s -t 3600  # Prevent sleep for 1 hour (3600s)
 
-# Reset SMC (for better power management)
-sudo pmset -a smsc 1
+# Prevent sleep while a specific command runs
+caffeinate -i bun run build
 
-# Monitor for high energy usage apps
-sudo pmset -g log | grep "High Energy Usage"
+# Check detailed battery health and state on Apple Silicon
+pmset -g batt
+
+# Check current active power assertions (which app is blocking sleep)
+pmset -g assertions
+
+# View historical power & thermal logs
+pmset -g log | grep -E "(Sleep|Wake|High Energy)"
 ```
 
 ## Keyboard and Input Tips
@@ -343,8 +349,8 @@ sudo rm -rf ~/Library/Caches/*
 sudo rm -rf /private/var/folders/*/*/C/com.apple.LaunchServices*
 sudo periodic daily weekly monthly
 
-# Optimize launch services database
-sudo lsregister -kill -r -domain local -domain system -domain user
+# Optimize Launch Services database (fix duplicate 'Open With' entries)
+/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
 
 echo "Optimization completed."
 ```
