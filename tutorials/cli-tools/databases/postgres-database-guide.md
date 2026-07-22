@@ -1,417 +1,322 @@
-# PostgreSQL CLI Tutorial for Beginners (ARM Mac + VSCode + Brew)
+# PostgreSQL CLI Guide for Beginners & Developers
 
-This tutorial teaches you how to use the PostgreSQL CLI (psql) with best practices, even if you're not a programmer. We'll cover installation, basic commands, and practical examples.
-
----
-
-## 🧰 Prerequisites
-
-### 1. Install Homebrew (if not installed)
-Homebrew is a package manager for macOS that makes installing software easy.
-
-```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-🔗 [Homebrew Documentation](https://brew.sh/)
+A comprehensive, practical guide to using the PostgreSQL command-line client (`psql`), database administration tools (`pg_dump`, `pg_restore`), advanced SQL features, and real-world scripting recipes on macOS.
 
 ---
 
-### 2. Install PostgreSQL Using Brew
+## Table of Contents
 
-```bash
-# Install PostgreSQL
-brew install postgresql
-```
-
-🔗 [PostgreSQL Installation via Brew](https://formulae.brew.sh/formula/postgresql)
+1. [Prerequisites](#1-prerequisites)
+2. [Installation & Service Management](#2-installation--service-management)
+3. [Connecting with `psql`](#3-connecting-with-psql)
+4. [Essential Meta-Commands (`\l`, `\c`, `\dt`, `\d`)](#4-essential-meta-commands-l-c-dt-d)
+5. [Core DDL & CRUD SQL Operations](#5-core-ddl--crud-sql-operations)
+6. [Non-Interactive CLI Execution & Formatting](#6-non-interactive-cli-execution--formatting)
+7. [JSONB Data Manipulation](#7-jsonb-data-manipulation)
+8. [Advanced SQL: CTEs & Window Functions](#8-advanced-sql-ctes--window-functions)
+9. [Performance Tuning & Query Profiling (`EXPLAIN ANALYZE`)](#9-performance-tuning--query-profiling-explain-analyze)
+10. [User Management & Security](#10-user-management--security)
+11. [Database Monitoring & Session Management](#11-database-monitoring--session-management)
+12. [Backups & Restores (`pg_dump` & `pg_restore`)](#12-backups--restores-pg_dump--pg_restore)
+13. [VSCode Integration & Script Automation](#13-vscode-integration--script-automation)
+14. [Command Quick Reference](#14-command-quick-reference)
 
 ---
 
-### 3. Start PostgreSQL Server
+### 1. Prerequisites
+
+Verify Homebrew on your Apple Silicon Mac:
 
 ```bash
-# Start PostgreSQL service
-brew services start postgresql
+brew --version
 ```
 
-To verify it's running:
+---
+
+### 2. Installation & Service Management
+
+Install PostgreSQL server and CLI utilities via Homebrew:
 
 ```bash
-# Check PostgreSQL status
+brew install postgresql@16
+```
+
+#### Manage PostgreSQL Background Daemon (`brew services`)
+```bash
+# Start service
+brew services start postgresql@16
+
+# Check status
 brew services list | grep postgresql
+
+# Stop or restart service
+brew services stop postgresql@16
+brew services restart postgresql@16
 ```
 
 ---
 
-### 4. Create a Default Database for Your User
+### 3. Connecting with `psql`
 
-PostgreSQL automatically creates a database named after your system user. You can verify this:
+Connect to local PostgreSQL server:
 
 ```bash
-# Connect to default database
-psql postgres
+# Connect to default 'postgres' database
+psql -U postgres
 ```
 
-You'll see a prompt like `postgres=#` — that means you're connected!
-
-🔗 [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-
----
-
-## 💡 Practical Examples
-
-### 🚀 Using PostgreSQL CLI (psql)
-
-### 1. Connect to PostgreSQL
-
+#### Connect to a Specific Database & Host
 ```bash
-# Connect to PostgreSQL
-psql postgres
+psql -U myuser -h localhost -p 5432 -d myapp_db
 ```
 
-No password is required by default for local development.
-
-You'll see a prompt like `postgres=#` — that means you're connected!
-
-🔗 [psql Documentation](https://www.postgresql.org/docs/current/app-psql.html)
-
----
-
-## 🔤 Basic Commands
-
-### 1. Show Databases
-
-```sql
--- Show all databases
-\l
-```
-
-Or:
-```sql
--- Alternative SQL command
-SELECT datname FROM pg_database;
+#### Pass Password via Environment Variable (Scripting)
+```bash
+PGPASSWORD="mysecretpassword" psql -U myuser -d myapp_db
 ```
 
 ---
 
-### 2. Create a Database
+### 4. Essential Meta-Commands (`\l`, `\c`, `\dt`, `\d`)
 
-```sql
--- Create a new database
-CREATE DATABASE myapp;
-```
+Meta-commands begin with a backslash `\` inside the `psql` interactive prompt:
+
+| Meta-Command | Description |
+| :--- | :--- |
+| `\l` | List all databases |
+| `\c dbname` | Switch/connect to specified database |
+| `\dt` | List all tables in current database |
+| `\d tablename` | Describe columns, data types, and indexes of a table |
+| `\dn` | List all schemas |
+| `\df` | List functions |
+| `\du` | List users and assigned roles |
+| `\timing` | Toggle query execution timer |
+| `\q` | Quit / exit `psql` |
 
 ---
 
-### 3. Connect to a Database
+### 5. Core DDL & CRUD SQL Operations
 
+#### 1. Create Database & Connect
 ```sql
--- Switch to the database
-\c myapp
+CREATE DATABASE myapp_db;
+\c myapp_db
 ```
 
----
-
-### 4. Create a Table
-
+#### 2. Create Table with Auto-Incrementing Primary Key & Constraints
 ```sql
--- Create a users table
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    age INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    email VARCHAR(150) UNIQUE NOT NULL,
+    age INTEGER CHECK (age >= 18),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
----
-
-### 5. Insert Data
-
+#### 3. Insert Records & Return Inserted IDs
 ```sql
--- Insert a user
-INSERT INTO users (name, email, age) VALUES ('Alice', 'alice@example.com', 30);
+INSERT INTO users (name, email, age) 
+VALUES ('Alice Smith', 'alice@example.com', 29),
+       ('Bob Jones', 'bob@example.com', 34)
+RETURNING id, created_at;
 ```
 
----
-
-### 6. Query Data
-
+#### 4. Query Records
 ```sql
--- Get all users
-SELECT * FROM users;
+SELECT id, name, email, age, created_at 
+FROM users 
+WHERE age > 25 
+ORDER BY id DESC;
 ```
 
-Expected output:
-```
- id | name  |       email       | age |         created_at         
-----+-------+-------------------+-----+----------------------------
-  1 | Alice | alice@example.com |  30 | 2023-01-01 12:00:00.000000
-(1 row)
+#### 5. Update & Delete Data
+```sql
+UPDATE users SET age = 30 WHERE email = 'alice@example.com';
+
+DELETE FROM users WHERE email = 'bob@example.com';
 ```
 
 ---
 
-### 7. Update Data
+### 6. Non-Interactive CLI Execution & Formatting
 
-```sql
--- Update Alice's age
-UPDATE users SET age = 31 WHERE name = 'Alice';
-```
+Run SQL statements directly from terminal without entering interactive prompt:
 
----
-
-### 8. Delete Data
-
-```sql
--- Delete Alice
-DELETE FROM users WHERE name = 'Alice';
-```
-
----
-
-## 📦 Working with Tables
-
-### 1. Show Tables
-
-```sql
--- List all tables
-\dt
-```
-
-Or:
-```sql
--- Alternative SQL command
-SELECT tablename FROM pg_tables WHERE schemaname = 'public';
-```
-
----
-
-### 2. Describe Table Structure
-
-```sql
--- Show table structure
-\d users
-```
-
-Or:
-```sql
--- Alternative SQL command
-SELECT column_name, data_type, is_nullable 
-FROM information_schema.columns 
-WHERE table_name = 'users';
-```
-
----
-
-### 3. Add a New Column
-
-```sql
--- Add a phone column
-ALTER TABLE users ADD COLUMN phone VARCHAR(20);
-```
-
----
-
-### 4. Drop a Table
-
-```sql
--- Delete the table
-DROP TABLE users;
-```
-
----
-
-## 👤 User Management
-
-### 1. Create a New User
-
-```sql
--- Create a new user
-CREATE USER newuser WITH PASSWORD 'password123';
-```
-
----
-
-### 2. Grant Permissions
-
-```sql
--- Grant all privileges on myapp database
-GRANT ALL PRIVILEGES ON DATABASE myapp TO newuser;
-```
-
-Note: You may also need to grant schema permissions:
-```sql
-GRANT ALL ON SCHEMA public TO newuser;
-GRANT ALL ON ALL TABLES IN SCHEMA public TO newuser;
-```
-
----
-
-### 3. Connect as New User
-
+#### 1. Run Single Query (`-c`)
 ```bash
-# Exit current session
-\q
-
-# Connect as new user
-psql -U newuser -d myapp -h localhost
+psql -d myapp_db -c "SELECT COUNT(*) FROM users;"
 ```
 
-You'll be prompted for the password.
-
----
-
-## 🧪 Best Practices
-
-### 1. Use Parameterized Queries (in applications)
-
-In application code, always use parameterized queries to prevent SQL injection:
-
-```sql
--- Example of safe query (use in application code)
-PREPARE stmt AS SELECT * FROM users WHERE id = $1;
-EXECUTE stmt(1);
-DEALLOCATE stmt;
-```
-
-🔗 [PostgreSQL Prepared Statements](https://www.postgresql.org/docs/current/sql-prepare.html)
-
----
-
-### 2. Use Indexes for Performance
-
-```sql
--- Create index on email column
-CREATE INDEX idx_email ON users(email);
-```
-
-🔗 [PostgreSQL Indexes](https://www.postgresql.org/docs/current/indexes.html)
-
----
-
-### 3. Backup Your Database
-
+#### 2. Export Query Results to CSV (`--csv` or `-A -F`)
 ```bash
-# Backup database (from terminal, not psql CLI)
-pg_dump -U your_username -W -F t myapp > myapp_backup.tar
+psql -d myapp_db --csv -c "SELECT id, name, email FROM users;" > users_export.csv
 ```
 
----
-
-### 4. Restore Database
-
+#### 3. Unaligned / Raw Output for Shell Scripting (`-t -A`)
 ```bash
-# Restore database (from terminal)
-pg_restore -U your_username -d myapp myapp_backup.tar
+# -t hides headers/footers, -A removes column padding
+USER_COUNT=$(psql -d myapp_db -t -A -c "SELECT COUNT(*) FROM users;")
+echo "Total users registered: $USER_COUNT"
+```
+
+#### 4. Output Query to HTML Table (`-H`)
+```bash
+psql -d myapp_db -H -c "SELECT name, email FROM users;" > users.html
 ```
 
 ---
 
-## 🛠️ VSCode Setup Tips
+### 7. JSONB Data Manipulation
 
-### 1. Install PostgreSQL Extension
-
-In VSCode:
-- Go to Extensions (`Cmd + Shift + X`)
-- Search: **PostgreSQL**
-- Install **PostgreSQL** by Chris Kolkman
-
----
-
-### 2. Create a `.sql` Script File
-
-Create a file named `setup.sql` and paste your commands:
+PostgreSQL features native, high-performance binary JSON (`JSONB`):
 
 ```sql
--- setup.sql
-\c myapp;
-
-CREATE TABLE IF NOT EXISTS products (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    price DECIMAL(10,2),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- Create table with JSONB document column
+CREATE TABLE user_profiles (
+    user_id INT PRIMARY KEY,
+    attributes JSONB NOT NULL
 );
 
-INSERT INTO products (name, price) VALUES ('Laptop', 999.99);
-SELECT * FROM products;
+-- Insert JSON document
+INSERT INTO user_profiles (user_id, attributes) 
+VALUES (1, '{"theme": "dark", "notifications": true, "skills": ["postgres", "sql"]}');
+
+-- Query JSON fields using operator ->>
+SELECT user_id, attributes->>'theme' AS theme 
+FROM user_profiles 
+WHERE attributes->>'theme' = 'dark';
+
+-- Update specific JSON field using jsonb_set
+UPDATE user_profiles 
+SET attributes = jsonb_set(attributes, '{theme}', '"light"') 
+WHERE user_id = 1;
 ```
 
-Run it from terminal:
+---
 
+### 8. Advanced SQL: CTEs & Window Functions
+
+#### 1. Common Table Expressions (CTEs)
+```sql
+WITH high_earners AS (
+    SELECT id, name, age 
+    FROM users 
+    WHERE age >= 30
+)
+SELECT name, age FROM high_earners ORDER BY age DESC;
+```
+
+#### 2. Window Functions (`ROW_NUMBER() OVER`)
+```sql
+SELECT name, age, 
+       ROW_NUMBER() OVER (ORDER BY age DESC) AS age_rank
+FROM users;
+```
+
+---
+
+### 9. Performance Tuning & Query Profiling (`EXPLAIN ANALYZE`)
+
+#### Inspect Execution Plan & Timing
+```sql
+EXPLAIN ANALYZE 
+SELECT * FROM users WHERE email = 'alice@example.com';
+```
+
+#### Create Index Concurrently (Non-Blocking)
+```sql
+CREATE INDEX CONCURRENTLY idx_users_email ON users(email);
+```
+
+#### Check Index Usage & Size
+```sql
+SELECT relname AS table_name, pg_size_pretty(pg_relation_size(relid)) AS table_size 
+FROM pg_stat_user_tables;
+```
+
+---
+
+### 10. User Management & Security
+
+#### Create User with Encrypted Password
+```sql
+CREATE USER app_user WITH ENCRYPTED PASSWORD 'SecurePassword123!';
+```
+
+#### Grant Privileges
+```sql
+GRANT ALL PRIVILEGES ON DATABASE myapp_db TO app_user;
+GRANT ALL ON SCHEMA public TO app_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO app_user;
+```
+
+---
+
+### 11. Database Monitoring & Session Management
+
+#### View Active Connections
+```sql
+SELECT pid, usename, client_addr, state, query 
+FROM pg_stat_activity 
+WHERE state != 'idle';
+```
+
+#### Terminate Stuck or Long-Running Backend Process
+```sql
+-- Terminate query using process ID (pid)
+SELECT pg_terminate_backend(12345);
+```
+
+---
+
+### 12. Backups & Restores (`pg_dump` & `pg_restore`)
+
+#### Export Plain SQL Text Dump
 ```bash
-psql -U your_username -f setup.sql
+pg_dump -U postgres -d myapp_db > myapp_backup.sql
 ```
 
-🔗 [VSCode PostgreSQL Extension](https://marketplace.visualstudio.com/items?itemName=ckolkman.vscode-postgres)
-
----
-
-## 🧹 Useful CLI Commands
-
-### 1. Exit psql
-
-```sql
--- Exit psql
-\q
-```
-
----
-
-### 2. Show Current Database
-
-```sql
--- Show current database
-SELECT current_database();
-```
-
----
-
-### 3. Show PostgreSQL Version
-
-```sql
--- Show version
-SELECT version();
-```
-
----
-
-### 4. Import SQL File
-
+#### Restore Plain SQL Text Dump
 ```bash
-# Import SQL file (from terminal)
-psql -U your_username -d myapp -f data.sql
+psql -U postgres -d myapp_db < myapp_backup.sql
+```
+
+#### Export Custom Binary Archive (`-F c` for Compress & Fast Restore)
+```bash
+pg_dump -U postgres -F c myapp_db > myapp_backup.dump
+```
+
+#### Restore Custom Binary Dump (`pg_restore`)
+```bash
+pg_restore -U postgres -d myapp_db -v myapp_backup.dump
 ```
 
 ---
 
-## 📚 Further Reading
+### 13. VSCode Integration & Script Automation
 
-- [Official PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [PostgreSQL SQL Syntax](https://www.postgresql.org/docs/current/sql.html)
-- [PostgreSQL Security Best Practices](https://www.postgresql.org/docs/current/runtime-config-connection.html)
+#### Execute SQL File via Terminal
+```bash
+psql -U postgres -d myapp_db -f setup.sql
+```
 
 ---
 
-## ✅ Summary
+### 14. Command Quick Reference
 
-| Task | Command |
-|------|---------|
-| Start PostgreSQL | `brew services start postgresql` |
+| Action | CLI Command |
+| :--- | :--- |
+| Start PostgreSQL | `brew services start postgresql@16` |
 | Connect CLI | `psql postgres` |
 | Show Databases | `\l` |
-| Create Database | `CREATE DATABASE myapp;` |
-| Connect to Database | `\c myapp` |
-| Create Table | `CREATE TABLE ...` |
-| Insert Data | `INSERT INTO ...` |
-| Query Data | `SELECT * FROM ...` |
-| Update Data | `UPDATE ... SET ...` |
-| Delete Data | `DELETE FROM ...` |
+| Connect to Database | `\c myapp_db` |
 | Show Tables | `\dt` |
-| Exit CLI | `\q` |
+| Describe Table | `\d tablename` |
+| Export CSV | `psql -d myapp_db --csv -c "SELECT..." > out.csv` |
+| Backup Database | `pg_dump -F c myapp_db > backup.dump` |
+| Exit `psql` | `\q` |
 
-You're now ready to use PostgreSQL CLI confidently! Practice these commands daily and build small projects to reinforce learning.
+---
+
+🔗 [Official PostgreSQL Documentation](https://www.postgresql.org/docs/)

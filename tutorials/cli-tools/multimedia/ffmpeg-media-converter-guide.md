@@ -1,427 +1,383 @@
 # FFmpeg Multimedia Converter Guide
 
-## Core FFmpeg Operations
-
-### Basic Video Processing
-- **Cutting videos
-
-This comprehensive guide covers everything from basic FFmpeg commands to advanced video processing techniques.
+This comprehensive guide covers everything from basic FFmpeg commands and video/audio manipulation to hardware-accelerated transcoding, high-quality GIF generation, subtitle management, and batch processing scripts.
 
 ## Table of Contents
 1. [Introduction to FFmpeg](#introduction-to-ffmpeg)
-2. [Basic Installation and Setup](#basic-installation-and-setup)
-3. [Core FFmpeg Concepts](#core-ffmpeg-concepts)
-4. [Video Processing Basics](#video-processing-basics)
-5. [Audio Processing](#audio-processing)
-6. [Format Conversion](#format-conversion)
-7. [Advanced Video Manipulation](#advanced-video-manipulation)
-8. [Streaming and Network Operations](#understanding-ffmpeg-options)
-9. [Filtering and Effects](#basic-command-structure-examples)
-10. [Performance Optimization](#video-processing-basics)
+2. [Installation and Setup](#installation-and-setup)
+3. [Basic Command Syntax & Core Concepts](#basic-command-syntax--core-concepts)
+4. [Quick Copy-and-Paste Cheat Sheet](#quick-copy-and-paste-cheat-sheet)
+5. [Video Processing & Compression](#video-processing--compression)
+6. [High-Quality GIF Creation](#high-quality-gif-creation)
+7. [Audio Processing & Manipulation](#audio-processing--manipulation)
+8. [Subtitles Handling](#subtitles-handling)
+9. [Hardware Acceleration](#hardware-acceleration)
+10. [Video Editing & Filter Graphs](#video-editing--filter-graphs)
+11. [Batch & Directory Processing](#batch--directory-processing)
+12. [Web Streaming & Screen Capture](#web-streaming--screen-capture)
+
+---
 
 ## Introduction to FFmpeg
 
-FFmpeg is a powerful multimedia framework that can decode, encode, transcode, mux, demux, stream, filter, and play almost any media format.
+FFmpeg is the industry-standard multimedia framework capable of decoding, encoding, transcoding, muxing, demuxing, streaming, filtering, and playing almost any audio or video format.
 
 ```bash
 # Basic FFmpeg command structure
-ffmpeg [global_options] [input_file_options] -i input_file [output_file_options] output_file
+ffmpeg [global_options] [input_file_options] -i input.mp4 [output_file_options] output.mp4
 ```
 
-## Basic Installation and Setup
+---
 
-### On Ubuntu/Debian:
+## Installation and Setup
+
+### macOS (Homebrew)
+```bash
+# Install ffmpeg with full library support
+brew install ffmpeg
+```
+
+### Ubuntu / Debian
 ```bash
 sudo apt update
 sudo apt install ffmpeg ffprobe
 ```
 
-### On macOS with Homebrew:
-```bash
-brew install ffmpeg
-```
-
-### On Windows:
-Download from https://ffmpeg.org/download.html or use Chocolatey:
+### Windows (PowerShell / Chocolatey or Winget)
 ```powershell
+# Using Winget
+winget install FFmpeg.FFmpeg
+
+# Or using Chocolatey
 choco install ffmpeg
 ```
 
-## Core FFmpeg Concepts
+---
 
-### Understanding FFmpeg Options
+## Basic Command Syntax & Core Concepts
+
+### Inspecting Media Metadata with `ffprobe`
 
 ```bash
-# View all available options
-ffmpeg -h
-
-# View specific filter help
-ffmpeg -h filter=scale
-
-# List all formats
-ffmpeg -formats
-
-# List all codecs
-ffmpeg -codecs
-
-# Get detailed information about a file
+# Display basic video format and stream info
 ffprobe input.mp4
+
+# Return concise format/codec info in JSON format
+ffprobe -v quiet -print_format json -show_format -show_streams input.mp4
+
+# Print exact duration in seconds
+ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 input.mp4
+
+# Check video resolution (width x height)
+ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=s=x:p=0 input.mp4
 ```
 
-### Basic Command Structure Examples
+---
+
+## Quick Copy-and-Paste Cheat Sheet
+
+Below are the most common tasks performed with FFmpeg ready for immediate copy and paste:
 
 ```bash
-# Simple conversion (no quality change)
-ffmpeg -i input.mp4 output.avi
+# 1. Fast trim video without re-encoding (30s duration starting at 01:15)
+ffmpeg -ss 00:01:15 -i input.mp4 -to 00:01:45 -c copy cut_output.mp4
 
-# Simple copy without re-encoding
-ffmpeg -i input.mp4 -c copy output.mp4
+# 2. Compress video to target H.264 (CRF 23 = good balance of file size & quality)
+ffmpeg -i input.mp4 -c:v libx264 -crf 23 -c:a aac -b:a 128k output.mp4
 
-# Show progress during processing
-ffmpeg -i input.mp4 -progress progress.txt output.mp4
+# 3. Extract MP3 audio from MP4 video
+ffmpeg -i input.mp4 -vn -c:a libmp3lame -q:a 2 audio.mp3
+
+# 4. Convert video to high-quality animated GIF
+ffmpeg -i input.mp4 -vf "fps=15,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" animation.gif
+
+# 5. Extract a single full-resolution frame image at timestamp 00:02:30
+ffmpeg -ss 00:02:30 -i input.mp4 -vframes 1 snapshot.jpg
+
+# 6. Remove audio track from video (mute)
+ffmpeg -i input.mp4 -an -c:v copy muted.mp4
+
+# 7. Merge external audio track into video (replacing original audio)
+ffmpeg -i input.mp4 -i new_audio.mp3 -c:v copy -c:a aac -map 0:v:0 -map 1:a:0 output.mp4
+
+# 8. Burn subtitles (.srt) directly into video (hardsub)
+ffmpeg -i input.mp4 -vf "subtitles=subtitles.srt" -c:a copy hardsubbed.mp4
+
+# 9. Resize video to 1080p maintaining aspect ratio
+ffmpeg -i input.mp4 -vf "scale=1920:-2" -c:a copy output_1080p.mp4
+
+# 10. Combine audio track + still image to create YouTube video
+ffmpeg -loop 1 -i cover.jpg -i podcast.mp3 -c:v libx264 -tune stillimage -c:a copy -shortest video.mp4
 ```
 
-## Video Processing Basics
+---
 
-### Basic Video Information Extraction
+## Video Processing & Compression
+
+### Constant Rate Factor (CRF) Quality Encoding
+
+CRF sets constant quality where lower numbers mean higher quality and larger file size.
+- **H.264 CRF scale**: 0 (lossless) to 51 (worst). Recommended range: **18–28** (default 23).
+- **H.265 (HEVC) CRF scale**: Recommended range: **20–24** (default 28).
+- **AV1 CRF scale**: Recommended range: **24–34**.
 
 ```bash
-# Get detailed information about a video file
-ffprobe -v quiet -show_format -show_streams input.mp4
+# H.264 high quality conversion (CRF 18)
+ffmpeg -i input.mp4 -c:v libx264 -crf 18 -preset slow -c:a aac output.mp4
 
-# Extract video stream info only
-ffprobe -v quiet -show_streams -select_streams v:0 input.mp4
+# Modern H.265 (HEVC) encoding for 50% smaller size at equal visual quality
+ffmpeg -i input.mp4 -c:v libx265 -crf 24 -preset medium -c:a aac output_hevc.mp4
 
-# Get frame rate and resolution
-ffmpeg -i input.mp4 2>&1 | grep "Stream.*Video"
-
-# Get duration of video
-ffprobe -v error -show_entries format=duration -of default=nw=1 input.mp4
+# Next-gen SVT-AV1 encoding (Open source standard)
+ffmpeg -i input.mp4 -c:v libsvtav1 -crf 30 -preset 5 -c:a libopus output.mkv
 ```
 
-### Video Quality Control
+### Video Scaling and Resolution Adjustment
+
+> **Tip**: Use `-2` instead of `-1` for width or height when scaling. H.264/H.265 codecs require even pixel dimensions.
 
 ```bash
-# Convert with specific quality (CRF method)
-ffmpeg -i input.mp4 -crf 23 output.mp4
+# Resize to 720p height, proportional width (even dimension safe)
+ffmpeg -i input.mp4 -vf "scale=-2:720" output_720p.mp4
 
-# Set bitrate for video
-ffmpeg -i input.mp4 -b:v 1000k output.mp4
+# Scale video to half size
+ffmpeg -i input.mp4 -vf "scale=iw/2:ih/2" half_size.mp4
 
-# Combine bitrate and CRF (more control)
-ffmpeg -i input.mp4 -b:v 1000k -crf 23 output.mp4
-
-# Variable Bitrate (VBR) with quality
-ffmpeg -i input.mp4 -qscale:v 2 output.mp4
+# Upscale or downscale to exact box while maintaining aspect ratio (letterbox black bars)
+ffmpeg -i input.mp4 -vf "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2" fitted_1080p.mp4
 ```
 
-### Video Resolution and Scaling
+### Speeding Up or Slowing Down Video & Audio
 
 ```bash
-# Resize video to specific dimensions
-ffmpeg -i input.mp4 -vf scale=1920:1080 output.mp4
+# 2x Speed up (setpts for video, atempo for audio)
+ffmpeg -i input.mp4 -filter_complex "[0:v]setpts=0.5*PTS[v];[0:a]atempo=2.0[a]" -map "[v]" -map "[a]" 2x_fast.mp4
 
-# Scale to width only (maintain aspect ratio)
-ffmpeg -i input.mp4 -vf scale=1280:-1 output.mp4
-
-# Scale to height only (maintain aspect ratio)
-ffmpeg -i input.mp4 -vf scale=-1:720 output.mp4
-
-# Resize with specific quality
-ffmpeg -i input.mp4 -vf "scale=1920:1080,eq=brightness=0.1" output.mp4
-
-# Scale to percentage of original size
-ffmpeg -i input.mp4 -vf scale=iw*0.5:-1 output.mp4
+# 0.5x Slow motion (double duration)
+ffmpeg -i input.mp4 -filter_complex "[0:v]setpts=2.0*PTS[v];[0:a]atempo=0.5[a]" -map "[v]" -map "[a]" slow_mo.mp4
 ```
 
-### Frame Rate Manipulation
+---
+
+## High-Quality GIF Creation
+
+Default GIF encoding produces low quality and large files. Utilizing a two-pass palette generator (`palettegen` / `paletteuse`) yields crisp colors and small file sizes:
 
 ```bash
-# Change frame rate (from 25fps to 30fps)
-ffmpeg -i input.mp4 -r 30 output.mp4
+# High-quality animated GIF from video snippet (FPS=15, Width=480px)
+ffmpeg -ss 00:00:10 -to 00:00:15 -i input.mp4 \
+  -vf "fps=15,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
+  output.gif
 
-# Convert video to 60 fps using interpolation
-ffmpeg -i input.mp4 -filter:v "minterpolate='mi_mode=mci:mc_mode=aobmc'" output.mp4
-
-# Slow down video by half speed
-ffmpeg -i input.mp4 -filter:v "setpts=2.0*PTS" slow_output.mp4
-
-# Speed up video by 1.5x
-ffmpeg -i input.mp4 -filter:v "setpts=0.667*PTS" fast_output.mp4
+# High-quality GIF with custom color palette deduplication (for screen recordings)
+ffmpeg -i screen_record.mp4 \
+  -vf "fps=10,scale=800:-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5" \
+  demo.gif
 ```
 
-## Audio Processing
+---
 
-### Audio Extraction and Conversion
+## Audio Processing & Manipulation
 
-```bash
-# Extract audio from video
-ffmpeg -i input.mp4 audio.aac
-
-# Extract audio in different format (MP3)
-ffmpeg -i input.mp4 -vn -ar 44100 -ac 2 -ab 192k output.mp3
-
-# Extract only the first channel
-ffmpeg -i input.mp4 -vn -acodec copy output.aac
-
-# Convert audio to WAV format with specific parameters
-ffmpeg -i input.mp3 -acodec pcm_s16le output.wav
-```
-
-### Audio Volume Control
+### Volume Adjustment and Loudness Normalization
 
 ```bash
-# Increase volume by 20%
-ffmpeg -i input.mp4 -af "volume=1.2" output.mp4
+# Double audio volume (+6dB)
+ffmpeg -i input.mp4 -af "volume=2.0" -c:v copy louder.mp4
 
 # Decrease volume by 50%
-ffmpeg -i input.mp4 -af "volume=0.5" output.mp4
+ffmpeg -i input.mp4 -af "volume=0.5" -c:v copy quieter.mp4
 
-# Normalize audio level
-ffmpeg -i input.wav -af loudnorm=I=-16:TP=-1.5:LRA=11 output.wav
-
-# Set specific volume (in dB)
-ffmpeg -i input.mp4 -af "volume=3dB" output.mp4
+# Normalize audio volume to EBU R128 standard (-16 LUFS, perfect for podcasts & YouTube)
+ffmpeg -i input.mp3 -af loudnorm=I=-16:TP=-1.5:LRA=11 normalized.mp3
 ```
 
-### Audio Mixing and Processing
+### Audio Track Operations & Delay Fixes
 
 ```bash
-# Merge multiple audio streams
-ffmpeg -i video.mp4 -i audio.wav -map 0:v -map 1:a output.mp4
+# Convert 5.1 Surround Sound down to Stereo (2-channel)
+ffmpeg -i input_51.mp4 -c:v copy -ac 2 stereo_output.mp4
 
-# Add background music to video (with volume control)
-ffmpeg -i input_video.mp4 -i background_music.mp3 \
-       -filter_complex "[0:a][1:a]amerge=inputs=2[a]" \
-       -map 0:v -map [a] output_with_music.mp4
+# Delay audio by 1.5 seconds relative to video (fix audio sync lag)
+ffmpeg -i input.mp4 -itsoffset 1.5 -i input.mp4 -map 0:v -map 1:a -c copy fixed_sync.mp4
 
-# Create audio fade in/out
-ffmpeg -i input.wav -af "afade=t=in:ss=0:duration=5,afade=t=out:st=10:duration=3" output.wav
+# Fade audio in (first 3 sec) and out (last 3 sec of 60s video)
+ffmpeg -i input.wav -af "afade=t=in:ss=0:d=3,afade=t=out:st=57:d=3" faded.wav
 ```
 
-## Format Conversion
+---
 
-### Common Format Conversions
+## Subtitles Handling
+
+### Soft Subtitles vs. Hard Subtitles
 
 ```bash
-# MP4 to AVI conversion
-ffmpeg -i input.mp4 output.avi
+# Embed soft subtitles into MP4 container (can be toggled on/off in media player)
+ffmpeg -i input.mp4 -i subtitles.srt -c copy -c:s mov_text output.mp4
 
-# Convert to WebM format (for web use)
-ffmpeg -i input.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 output.webm
+# Embed soft subtitles into MKV container
+ffmpeg -i input.mkv -i subtitles.srt -c copy -c:s srt output.mkv
 
-# Convert to MOV format
-ffmpeg -i input.mp4 output.mov
+# Burn subtitles permanently into video stream (Hardsub)
+ffmpeg -i input.mp4 -vf "subtitles=subtitles.srt:force_style='FontSize=20,PrimaryColour=&H00FFFFFF'" -c:a copy hardsub.mp4
 
-# Convert MP3 to WAV
-ffmpeg -i input.mp3 output.wav
-
-# Convert video to GIF (with frame rate)
-ffmpeg -i input.mp4 -r 15 output.gif
-
-# Create animated GIF from still images
-ffmpeg -f image2 -i img%03d.jpg animation.gif
+# Extract subtitle stream from video file to SRT
+ffmpeg -i input.mkv -map 0:s:0 subtitles.srt
 ```
 
-### Container Format Optimization
+---
 
+## Hardware Acceleration
+
+Hardware acceleration offloads video encoding to GPU integrated units, processing videos up to 10x–20x faster.
+
+### Apple Silicon (macOS M1/M2/M3/M4 VideoToolbox)
 ```bash
-# Optimize MP4 for web streaming
-ffmpeg -i input.mp4 -movflags +faststart output.mp4
+# Hardware accelerated H.264 encoding on Mac
+ffmpeg -i input.mp4 -c:v h264_videotoolbox -b:v 5M -c:a aac mac_h264.mp4
 
-# Convert to H.265 (HEVC) format
-ffmpeg -i input.mp4 -c:v libx265 output.mp4
-
-# Convert to H.264 with specific profile and level
-ffmpeg -i input.mp4 -c:v libx264 -profile:v baseline \
-       -level 3.0 -crf 18 output.mp4
+# Hardware accelerated H.265 (HEVC) encoding on Mac
+ffmpeg -i input.mp4 -c:v hevc_videotoolbox -b:v 3.5M -c:a aac mac_hevc.mp4
 ```
 
-## Advanced Video Manipulation
-
-### Cropping and Padding
-
+### NVIDIA GPUs (NVENC)
 ```bash
-# Crop video (start at x=100, y=50, width=800, height=600)
-ffmpeg -i input.mp4 -vf "crop=800:600:100:50" output.mp4
+# H.264 encoding via NVENC
+ffmpeg -i input.mp4 -c:v h264_nvenc -preset p4 -cq 23 -c:a aac nvenc_h264.mp4
 
-# Add padding to video
-ffmpeg -i input.mp4 -vf "pad=width=1920:height=1080:x=0:y=0:color=black" output.mp4
-
-# Crop and scale simultaneously
-ffmpeg -i input.mp4 -vf "crop=640:360, scale=1280:720" output.mp4
+# HEVC / H.265 encoding via NVENC
+ffmpeg -i input.mp4 -c:v hevc_nvenc -preset p4 -cq 26 -c:a aac nvenc_hevc.mp4
 ```
 
-### Video Rotation and Flip
-
+### Intel QuickSync & Linux VAAPI
 ```bash
-# Rotate video 90 degrees clockwise
-ffmpeg -i input.mp4 -vf "transpose=1" output.mp4
+# Intel QuickSync (QSV)
+ffmpeg -i input.mp4 -c:v h264_qsv -global_quality 23 qsv_output.mp4
 
-# Rotate 180 degrees
-ffmpeg -i input.mp4 -vf "transpose=2,transpose=2" output.mp4
-
-# Flip horizontally
-ffmpeg -i input.mp4 -vf "hflip" output.mp4
-
-# Flip vertically
-ffmpeg -i input.mp4 -vf "vflip" output.mp4
-
-# Rotate 90 degrees counter-clockwise and flip
-ffmpeg -i input.mp4 -vf "transpose=2" output.mp4
+# Linux VAAPI hardware encoding
+ffmpeg -vaapi_device /dev/dri/renderD128 -i input.mp4 -vf 'format=nv12,hwupload' -c:v h264_vaapi output.mp4
 ```
 
-### Multiple Video Processing Operations
+---
+
+## Video Editing & Filter Graphs
+
+### Cropping and Watermarking
 
 ```bash
-# Chain multiple video operations together
-ffmpeg -i input.mp4 \
-       -vf "scale=1280:720,eq=brightness=0.1,crop=640:360" \
-       -c:a copy output.mp4
+# Crop video: crop=width:height:x:y (800x600 box starting at X=100, Y=50)
+ffmpeg -i input.mp4 -vf "crop=800:600:100:50" cropped.mp4
 
-# Add watermark (image overlay)
-ffmpeg -i input.mp4 -i watermark.png \
-       -filter_complex "[0:v][1:v]overlay=10:10" \
-       output_with_watermark.mp4
+# Add image watermark to top-right corner with 10px margin
+ffmpeg -i video.mp4 -i logo.png -filter_complex "[0:v][1:v]overlay=main_w-overlay_w-10:10" watermarked.mp4
 ```
 
-## Time-based Operations
-
-### Video Cutting and Concatenation
+### Side-by-Side & Grid Video Stacking
 
 ```bash
-# Cut video from 30s to 60s
-ffmpeg -i input.mp4 -ss 30 -to 60 -c copy cut_video.mp4
+# Stack two videos side-by-side horizontally
+ffmpeg -i video1.mp4 -i video2.mp4 -filter_complex hstack side_by_side.mp4
 
-# Extract specific time range with re-encoding (for better quality)
-ffmpeg -i input.mp4 -ss 30 -to 60 -c:v libx264 output.mp4
+# Stack two videos vertically
+ffmpeg -i top.mp4 -i bottom.mp4 -filter_complex vstack stacked.mp4
 
-# Concatenate multiple videos
-ffmpeg -f concat -safe 0 -i list.txt output.mp4
-
-# Create list file for concatenation (create a text file with entries like):
-echo "file 'video1.mp4'" > list.txt
-echo "file 'video2.mp4'" >> list.txt
+# Create 2x2 grid preview from 4 videos
+ffmpeg -i 1.mp4 -i 2.mp4 -i 3.mp4 -i 4.mp4 \
+  -filter_complex "[0:v][1:v]hstack[top];[2:v][3:v]hstack[bottom];[top][bottom]vstack" \
+  grid_2x2.mp4
 ```
 
-### Time-lapse Creation
+### Video Concatenation (Joining Videos)
+
+To join multiple videos without re-encoding (all clips must have matching resolution, codecs, and framerate):
 
 ```bash
-# Create time-lapse video from images (at 30fps)
-ffmpeg -r 1/5 -i img%03d.jpg -c:v libx264 timelapse.mp4
+# 1. Create a file list text file
+echo "file 'part1.mp4'" > filelist.txt
+echo "file 'part2.mp4'" >> filelist.txt
+echo "file 'part3.mp4'" >> filelist.txt
 
-# Create time-lapse with specific frame rate
-ffmpeg -f image2 -framerate 24 -i %04d.jpg output.mp4
-
-# Adjust speed of existing video to create time-lapse effect
-ffmpeg -i input.mp4 -vf "setpts=0.5*PTS" output_timelapse.mp4
+# 2. Run concat demuxer
+ffmpeg -f concat -safe 0 -i filelist.txt -c copy joined_output.mp4
 ```
 
-## Preset and Quality Settings
+---
 
-### High Quality Encoding
+## Batch & Directory Processing
 
-```bash
-# Encode with high quality (lossless)
-ffmpeg -i input.mp4 -c:v libx264 -preset slow -crf 18 output.mp4
-
-# Ultra-high quality H.265 encoding
-ffmpeg -i input.mp4 -c:v libx265 -preset slow \
-       -crf 18 output.mp4
-
-# Encode with specific quality settings for web
-ffmpeg -i input.mp4 -c:v libx264 -preset medium \
-       -b:v 1000k -maxrate 1000k -bufsize 2000k output.mp4
-```
-
-### Batch Processing & Bulk Media Conversion
-
-#### 1. Flat Directory Transcoding
-Convert all media files in a single folder with quality controls:
+### Flat Directory Transcoding
 
 ```bash
-# Convert all .mkv files in current directory to .mp4 preserving quality
-for file in *.mkv; do
-    [ -f "$file" ] || continue
-    ffmpeg -i "$file" -c:v libx264 -crf 23 -c:a aac "${file%.mkv}.mp4"
+# Convert all .mov files to .mp4 preserving filenames in current directory
+for f in *.mov; do
+  [ -f "$f" ] || continue
+  ffmpeg -i "$f" -c:v libx264 -crf 22 -c:a aac "${f%.mov}.mp4"
 done
 
-# Extract audio as MP3 (192k) from all MP4 videos in folder
-for video in *.mp4; do
-    [ -f "$video" ] || continue
-    ffmpeg -i "$video" -vn -c:a libmp3lame -b:a 192k "audio_${video%.*}.mp3"
+# Extract audio from all MP4 videos into MP3
+for v in *.mp4; do
+  [ -f "$v" ] || continue
+  ffmpeg -i "$v" -vn -c:a libmp3lame -q:a 2 "audio_${v%.*}.mp3"
 done
 ```
 
-#### 2. Recursive Directory Transcoding (Preserving Subfolder Hierarchy)
-Walk through nested media folders (e.g. video library) and transcode to a new output root directory while maintaining exact folder trees:
+### Recursive Subfolder Transcoding
 
 ```bash
 #!/bin/bash
-# Recursive Video Transcoder with Directory Structure Preservation
+# Walk nested video folders, transcode to destination folder maintaining hierarchy
 
-SRC_DIR="raw_videos"
-DIST_DIR="compressed_videos"
+SRC_DIR="raw_library"
+DEST_DIR="compressed_library"
 
 find "$SRC_DIR" -type f \( -name "*.mp4" -o -name "*.mov" -o -name "*.mkv" \) | while read -r input_file; do
-    # Calculate target path relative to source directory
-    rel_path="${input_file#$SRC_DIR/}"
-    output_file="$DIST_DIR/${rel_path%.*}.mp4"
+  rel_path="${input_file#$SRC_DIR/}"
+  output_file="$DEST_DIR/${rel_path%.*}.mp4"
 
-    # Create destination subfolder automatically
-    mkdir -p "$(dirname "$output_file")"
+  mkdir -p "$(dirname "$output_file")"
+  echo "Transcoding: $input_file -> $output_file"
 
-    # Transcode video to H.264 / AAC
-    echo "Processing: $input_file -> $output_file"
-    ffmpeg -y -i "$input_file" \
-           -c:v libx264 -preset medium -crf 24 \
-           -c:a aac -b:a 128k \
-           "$output_file"
+  ffmpeg -y -i "$input_file" -c:v libx264 -crf 23 -c:a aac "$output_file"
 done
-
-echo "Recursive transcoding complete!"
 ```
 
-#### 3. Parallel Bulk Video Transcoding
-Scale video processing across multiple cores using `fd` or `xargs`:
+### Parallel Batch Execution with `xargs` or `fd`
 
 ```bash
-# Parallel audio extraction across CPU cores (4 workers)
-find . -type f -name "*.mkv" -print0 | xargs -0 -P 4 -I {} sh -c '
-    ffmpeg -y -i "$1" -vn -c:a libmp3lame -q:a 2 "${1%.*}.mp3"
+# Parallel processing across 4 CPU cores using xargs
+find . -maxdepth 1 -name "*.mkv" -print0 | xargs -0 -P 4 -I {} sh -c '
+  ffmpeg -y -i "$1" -c:v libx264 -crf 23 -c:a copy "${1%.*}.mp4"
 ' _ {}
 
-# Fast parallel recursive video scaling with `fd`
-fd -e mov -e avi -x ffmpeg -y -i {} -vf "scale=1280:720" -c:v libx264 -crf 23 -c:a copy {.}_720p.mp4
+# Fast parallel batch processing using fd
+fd -e mov -x ffmpeg -y -i {} -vf "scale=1280:-2" -c:v libx264 -crf 24 -c:a copy {.}_720p.mp4
 ```
 
-## Practical Use Cases
+---
 
-### YouTube Optimization
+## Web Streaming & Screen Capture
+
+### Web Optimization & HLS Playlist Generation
 
 ```bash
-# Create optimized video for YouTube (HD 1080p)
-ffmpeg -i input.mp4 -c:v libx264 -profile:v baseline \
-       -level 3.0 -crf 18 -preset slow \
-       -c:a aac -b:a 192k output.mp4
+# Optimize MP4 for instant web video playback (moves metadata to start of file)
+ffmpeg -i input.mp4 -c copy -movflags +faststart web_ready.mp4
 
-# Create multiple resolutions for adaptive streaming
-ffmpeg -i input.mp4 -c:v libx264 -preset medium \
-       -b:v 5000k output_1080p.mp4
-ffmpeg -i input.mp4 -c:v libx264 -preset medium \
-       -b:v 3000k output_720p.mp4
+# Create HTTP Live Streaming (HLS) m3u8 playlist and TS segments for Web Players
+ffmpeg -i input.mp4 -c:v libx264 -c:a aac -hls_time 6 -hls_playlist_type vod stream.m3u8
 ```
 
-### Audio Book Creation
+### Desktop Screen Recording
 
 ```bash
-# Create audio book from multiple audio files
-ffmpeg -f concat -safe 0 -i audiobook_list.txt output.aac
+# macOS Screen Capture (AVFoundation - Screen 1, Audio Device 0)
+ffmpeg -f avfoundation -capture_cursor 1 -i "1:0" -c:v libx264 -pix_fmt yuv420p desktop_rec.mp4
 
-# Add silence between tracks for better listening experience
-ffmpeg -i input1.wav -af "silenceremove=start_periods=1:start_duration=0.2" \
-       output_with_silence.wav
+# Linux Desktop Screen Recording (X11grab at 30 FPS)
+ffmpeg -f x11grab -video_size 1920x1080 -framerate 30 -i :0.0 -c:v libx264 -preset ultrafast desktop_linux.mp4
+
+# Windows Screen Recording (GDIGrab)
+ffmpeg -f gdigrab -framerate 30 -i desktop -c:v libx264 -preset ultrafast desktop_win.mp4
 ```
 
-These examples demonstrate various advanced FFmpeg techniques that can be used for professional video and audio editing tasks, including quality optimization, format conversion, and complex processing operations. Each command can be modified based on specific requirements such as resolution, bitrates, codecs, and desired output formats.
 

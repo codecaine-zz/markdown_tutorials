@@ -162,6 +162,42 @@ echo 'export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"' >> ~/.zshrc
 
 ---
 
+## Everyday Copy-and-Paste `ripgrep` One-Liners
+
+```bash
+# 1. Search for function/method definitions across Python, JS, Go, Rust
+rg -E "def |function |func |fn " -t py -t js -t go -t rust
+
+# 2. Search while including hidden files (.env, .gitignore) but excluding .git directory
+rg --hidden --glob "!.git/*" "SECRET_KEY"
+
+# 3. Search for TODO/FIXME comments and display line numbers with color
+rg -n --color=always "TODO|FIXME|HACK"
+
+# 4. Count matches per file (-c flag)
+rg -c "import React" -t js -t ts
+
+# 5. Search only in files modified within git status
+git status --porcelain | awk '{print $2}' | xargs rg "pattern"
+
+# 6. Pipe matching file paths into xargs to delete or edit files
+rg -l "deprecated_method" | xargs -r sd "deprecated_method" "new_method"
+
+# 7. Match multiline imports or blocks across newline boundaries
+rg -U -t ts "import \{[\s\S]*?\} from '@angular/core';"
+
+# 8. Search for IP addresses across log files
+rg -o -E "\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b" server.log
+
+# 9. Search inside zip archives (.zip, .gz, .bz2)
+rg -z "FATAL" backups/logs.tar.gz
+
+# 10. Preview regex string replace without modifying files
+rg "v1/api/users" -r "v2/api/users" src/
+```
+
+---
+
 ## 📋 Cheat Sheet Summary
 
 | Task | Command |

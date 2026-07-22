@@ -1,421 +1,290 @@
 # cURL HTTP & API Client Guide
 
+`curl` (Client URL) is the universal, industry-standard command-line tool for transferring data over protocols such as HTTP, HTTPS, FTP, SFTP, and SMTP. It is widely used by developers and sysadmins for API testing, file downloads, web scraping, and automation scripts.
 
-### Install via Homebrew on macOS
+---
+
+## 📚 Table of Contents
+
+1. [Installation via Homebrew](#installation-via-homebrew)
+2. [Essential Copy & Paste One-Liners](#essential-copy--paste-one-liners)
+3. [HTTP Methods & JSON Payloads](#http-methods--json-payloads)
+4. [Headers, Authentication & Cookies](#headers-authentication--cookies)
+5. [File Uploads & Multipart Form Data](#file-uploads--multipart-form-data)
+6. [Response Handling, Inspection & Performance Timing](#response-handling-inspection--performance-timing)
+7. [SSL/TLS, Proxies & Speed Control](#ssltls-proxies--speed-control)
+8. [Timeout & Retry Mechanisms](#timeout--retry-mechanisms)
+9. [Automation Scripts & Workflows](#automation-scripts--workflows)
+10. [Cheat Sheet Summary](#cheat-sheet-summary)
+
+---
+
+## ⚙️ Installation via Homebrew
+
 ```bash
+# Install curl via Homebrew on macOS
 brew install curl
+
+# Verify installation and supported protocols
+curl --version
 ```
-## Key Features Covered
 
-**Basic Operations:**
-- Simple GET/POST requests
-- Header manipulation
-- Response handling (status codes, headers, body)
+---
 
-**Advanced Features:**
-- Authentication (Bearer tokens, OAuth)
-- File uploads with metadata
-- Timeout and retry mechanisms
-- SSL/TLS debugging and verification
+## 🚀 Essential Copy & Paste One-Liners
 
-**Automation & Scripting:**
-- API integration examples
-- Health check monitoring
-- Bulk operations
-- Debugging with verbose output
+### 1. Download File with Remote Filename
+```bash
+# Download and save using the remote filename (-O)
+curl -O https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso
 
-## Useful Tips from the Guide
+# Follow redirects (-L) and save using remote filename
+curl -LO https://github.com/cli/cli/releases/latest/download/gh_2.40.0_macOS_amd64.zip
+```
 
-1. **Error Handling:** The monitoring script shows how to implement proper error checking with status codes
-2. **Performance Metrics:** Using `--write-out` to capture timing information
-3. **Debugging Tools:** `--trace-ascii` and `--verbose` for troubleshooting connections
-4. **JSON Processing:** Integration with `jq` for parsing and extracting data
+### 2. Save Output to Specific Local File Name
+```bash
+# Save to custom filename (-o)
+curl -o my-document.pdf https://example.com/files/report_v2_final.pdf
+```
 
-## Additional Recommendations
+### 3. Silent Execution with Error Reporting
+```bash
+# Silent mode (-s) but show error messages if request fails (-S)
+curl -sS https://httpbin.org/get -o output.json
+```
 
-For even more advanced usage, consider:
-- Using `.netrc` files for credential management
-- Implementing connection pooling with `--keepalive-time`
-- Using `--cookie-jar`/`--cookie` for session management
-- Leveraging `--form-string` for form data without file uploads
+### 4. Resume an Interrupted Download
+```bash
+# Resume download at byte offset where it left off (-C -)
+curl -C - -O https://example.com/large-archive.zip
+```
 
-The examples are practical and can be easily adapted to real-world scenarios. The guide strikes a great balance between explaining concepts clearly while providing actionable code snippets.
+---
 
-Would you like me to elaborate on any specific section or provide additional examples for particular use cases?
-date: 2025-08-29 23:51:44
+## 🌐 HTTP Methods & JSON Payloads
 
-Curl is a powerful command-line tool for transferring data with URLs. This comprehensive tutorial covers everything from basic usage to advanced techniques.
-
-## Table of Contents
-
-1. [Basic Usage](#basic-usage)
-2. [HTTP Methods](#http-methods)
-3. [Request Headers](#request-headers)
-4. [Authentication](#authentication)
-5. [Cookies and Sessions](#cookies-and-sessions)
-6. [File Uploads](#file-uploads)
-7. [Response Handling](#response-handling)
-8. [Timeout and Retry Options](#timeout-and-retry-options)
-9. [Advanced Features](#setting-custom-headers)
-10. [Useful Examples](#header-manipulation)
-
-## Basic Usage
-
-### Simple GET Request
+### 1. GET Requests with Query Parameters
 ```bash
 # Basic GET request
 curl https://httpbin.org/get
 
-# With verbose output to see headers
-curl -v https://httpbin.org/get
-
-# Save response to file
-curl -o response.json https://httpbin.org/json
-
-# Silent mode (no progress bar)
-curl -s https://httpbin.org/get
+# GET request with query parameters (URL encoded)
+curl -G --data-urlencode "query=curl tutorial" --data-urlencode "page=1" https://httpbin.org/get
 ```
 
-### Basic Response Analysis
+### 2. POST Request with JSON Data
 ```bash
-# Show only HTTP status code
-curl -s -o /dev/null -w "%{http_code}\n" https://httpbin.org/get
+# Inline JSON payload with Content-Type header
+curl -X POST https://httpbin.org/post \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice", "role": "developer", "active": true}'
 
-# Get response headers only
-curl -sI https://httpbin.org/get
-
-# Get content length from header
-curl -sI -w "%{content_length}\n" https://httpbin.org/get
+# POST JSON from a local file
+curl -X POST https://httpbin.org/post \
+  -H "Content-Type: application/json" \
+  -d @payload.json
 ```
 
-## HTTP Methods
-
-### POST Requests
+### 3. POST JSON using Heredoc in Shell Scripts
 ```bash
-# Simple POST with form data
-curl -X POST \
-  -d "name=John&age=30" \
-  https://httpbin.org/post
-
-# POST with JSON data
-curl -X POST \
+curl -X POST https://httpbin.org/post \
   -H "Content-Type: application/json" \
-  -d '{"name":"John","age":30}' \
-  https://httpbin.org/post
-
-# POST with raw data from file
-curl -X POST \
-  -H "Content-Type: application/json" \
-  --data-binary @data.json \
-  https://httpbin.org/post
+  -d @- << 'EOF'
+{
+  "user": "john_doe",
+  "email": "john@example.com",
+  "tags": ["admin", "developer"]
+}
+EOF
 ```
 
-### PUT and DELETE Requests
+### 4. PUT, PATCH & DELETE Requests
 ```bash
-# PUT request
-curl -X PUT \
+# PUT request to update resource
+curl -X PUT https://httpbin.org/put \
   -H "Content-Type: application/json" \
-  -d '{"id":1,"name":"Updated Name"}' \
-  https://httpbin.org/put
+  -d '{"id": 42, "status": "active"}'
+
+# PATCH request to modify field
+curl -X PATCH https://httpbin.org/patch \
+  -H "Content-Type: application/json" \
+  -d '{"status": "archived"}'
 
 # DELETE request
 curl -X DELETE https://httpbin.org/delete
-
-# PATCH request
-curl -X PATCH \
-  -H "Content-Type: application/json" \
-  -d '{"status":"updated"}' \
-  https://httpbin.org/patch
 ```
 
-## Request Headers
+---
 
-### Setting Custom Headers
+## 🔒 Headers, Authentication & Cookies
+
+### 1. Custom HTTP Headers & User-Agents
 ```bash
-# Set User-Agent header
-curl -H "User-Agent: MyApp/1.0" https://httpbin.org/headers
-
-# Set Accept header for JSON response
-curl -H "Accept: application/json" https://httpbin.org/get
-
-# Multiple headers
-curl -H "Authorization: Bearer token123" \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: abc123" \
-  https://api.example.com/data
-
-# Set custom header with special characters
-curl -H "User-Agent: My App (Version 1.0; +http://example.com/bot)" https://httpbin.org/headers
+# Send custom headers (e.g. API keys or User-Agent spoofing)
+curl https://httpbin.org/headers \
+  -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" \
+  -H "X-Custom-Header: my-app-value"
 ```
 
-### Header Manipulation
+### 2. Authentication Methods
 ```bash
-# Remove a default header (like Accept-Encoding)
-curl --header "Accept-Encoding:" https://httpbin.org/get
+# Bearer Token (JWT / OAuth2)
+curl https://api.example.com/v1/user \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN_HERE"
 
-# Add custom header for API key authentication
-curl -H "X-API-Key: your-api-key-here" \
-  https://api.example.com/endpoint
+# Basic Authentication (username:password)
+curl -u "admin:secret123" https://httpbin.org/basic-auth/admin/secret123
 
-# Set referer header
-curl -H "Referer: https://example.com" \
-  https://httpbin.org/headers
+# Custom API Key Header
+curl https://api.example.com/data \
+  -H "X-API-Key: secret_api_key_xyz987"
 ```
 
-## Authentication
-
-### Basic Authentication
+### 3. Cookies & Session Persistence
 ```bash
-# Username and password in URL (not recommended for production)
-curl http://user:password@https://httpbin.org/basic-auth/user/pass
+# Save response cookies to file (-c / --cookie-jar)
+curl -c cookies.txt -d "username=admin&password=secret" https://example.com/login
 
-# Using --user option
-curl --user user:pass https://httpbin.org/basic-auth/user/pass
-
-# With custom header
-curl -H "Authorization: Basic dXNlcjpwYXNz" https://httpbin.org/basic-auth/user/pass
+# Send saved cookies in subsequent request (-b / --cookie)
+curl -b cookies.txt https://example.com/dashboard
 ```
 
-### Bearer Token Authentication
+---
+
+## 📤 File Uploads & Multipart Form Data
+
+### 1. Upload File with Form Fields (`-F`)
 ```bash
-# Bearer token in header
-curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
-  https://api.example.com/protected-endpoint
-
-# Get token first, then use it
-TOKEN=$(curl -s -u user:pass https://auth.example.com/token | jq -r '.access_token')
-curl -H "Authorization: Bearer $TOKEN" https://api.example.com/endpoint
+# Upload single file with additional form metadata
+curl -X POST https://httpbin.org/post \
+  -F "file=@/path/to/document.pdf" \
+  -F "description=Monthly financial report" \
+  -F "category=finance"
 ```
 
-### OAuth Authentication
+### 2. Upload File with Custom MIME Type & Filename
 ```bash
-# OAuth 2.0 with client credentials flow
-curl -X POST \
-  -d "grant_type=client_credentials&client_id=my_client&client_secret=my_secret" \
-  https://oauth.example.com/token
-
-# Use access token in subsequent requests
-curl -H "Authorization: Bearer ACCESS_TOKEN_HERE" \
-  https://api.example.com/secure-endpoint
+# Override filename and mime-type sent to server
+curl -X POST https://httpbin.org/post \
+  -F "file=@local_image.png;filename=avatar.png;type=image/png"
 ```
 
-## Cookies and Sessions
+---
 
-### Cookie Handling
+## 📊 Response Handling, Inspection & Performance Timing
+
+### 1. Extract HTTP Status Code Only
 ```bash
-# Send cookie with request
-curl -b "sessionid=abc123; user=john" https://httpbin.org/cookies
-
-# Store cookies in file (for persistent session)
-curl -c cookies.txt https://httpbin.org/cookies/set/sessionid/abc123
-
-# Use stored cookies from file
-curl -b cookies.txt https://httpbin.org/cookies
-
-# Cookie jar mode (automatically store and use cookies)
-curl --cookie-jar cookiejar.txt https://example.com/login
-
-curl --cookie cookiejar.txt https://example.com/dashboard
+# Print HTTP status code (e.g. 200, 404, 500)
+curl -s -o /dev/null -w "%{http_code}\n" https://httpbin.org/status/200
 ```
 
-### Session Management
+### 2. Inspect Response Headers Only
 ```bash
-# Start session and maintain cookies across requests
-curl -c session_cookies.txt \
-  -d "username=admin&password=secret" \
-  https://example.com/login
+# Fetch headers only without body (-I)
+curl -sI https://httpbin.org/get
 
-# Use the same session for next request
-curl -b session_cookies.txt https://example.com/protected-page
-
-# Clear cookies from jar file
-curl --cookie-jar "" https://example.com/
+# Dump response headers to text file (-D)
+curl -s -D headers.txt https://httpbin.org/get -o body.json
 ```
 
-## File Uploads
-
-### Form Data Uploads
+### 3. Pretty Print JSON with `jq`
 ```bash
-# Simple form upload with multiple fields
-curl -F "name=John" \
-  -F "email=john@example.com" \
-  -F "file=@document.pdf" \
-  https://httpbin.org/post
-
-# Upload file from local path
-curl -F "upload_file=@/path/to/image.jpg" \
-  https://httpbin.org/post
-
-# Upload with custom field name
-curl -F "avatar=@profile.png;type=image/png" \
-  https://api.example.com/upload
+# Pipe response directly to jq
+curl -s https://httpbin.org/json | jq .
 ```
 
-### Multipart Form Data
+### 4. Measure Detailed Connection Performance Metrics
 ```bash
-# Complex multipart upload with different content types
-curl -F "file=@data.csv;type=text/csv" \
-  -F "description=Sales data" \
-  -F "category=financial" \
-  https://httpbin.org/post
-
-# Upload multiple files
-curl -F "files[]=@file1.txt" \
-  -F "files[]=@file2.txt" \
-  -F "metadata={\"upload_time\":\"$(date)\"}" \
-  https://api.example.com/upload-multiple
+# Formatted execution timing breakdown
+curl -s -w "\n--- Performance Metrics ---\nDNS Lookup:       %{time_namelookup}s\nConnect Time:     %{time_connect}s\nTLS Handshake:    %{time_appconnect}s\nTTFB:             %{time_starttransfer}s\nTotal Time:       %{time_total}s\n" \
+  -o /dev/null https://httpbin.org/get
 ```
 
-## Response Handling
+---
 
-### Response Analysis
+## 🛡️ SSL/TLS, Proxies & Speed Control
+
+### 1. Ignore SSL Certificate Errors (Insecure Mode)
 ```bash
-# Show HTTP status code only
-curl -s -o /dev/null -w "%{http_code}\n" https://httpbin.org/get
-
-# Get all response headers
-curl -D headers.txt https://httpbin.org/get
-
-# Get redirect location
-curl -L -v https://httpbin.org/redirect-to?url=https%3A%2F%2Fgoogle.com 2>&1 | grep Location
-
-# Show only the body without headers
-curl --no-keepalive \
-  --header "Accept: application/json" \
-  https://httpbin.org/get | jq -r '.url'
+# Bypass self-signed or invalid SSL certificate warnings (-k / --insecure)
+curl -k https://self-signed.internal-network.local
 ```
 
-### Response Formatting
+### 2. Route Requests Through Proxy (HTTP / SOCKS5)
 ```bash
-# Pretty print JSON response (requires jq)
-curl -s https://httpbin.org/json | jq '.'
+# Route through HTTP proxy
+curl -x http://proxy.example.com:8080 https://httpbin.org/ip
 
-# Extract specific fields from JSON
-curl -s https://httpbin.org/json | jq '.slideshow.title'
-
-# Save only the body to file without headers
-curl -s -o data.txt https://httpbin.org/get
-
-# Show progress and response time
-curl --progress-bar \
-  --dump-header response_headers.txt \
-  --write-out "Time: %{time_total}s\n" \
-  https://httpbin.org/get
+# Route through SOCKS5 proxy (DNS resolved via proxy)
+curl -x socks5h://127.0.0.1:1080 https://httpbin.org/ip
 ```
 
-## Timeout and Retry Options
-
-### Timeouts
+### 3. Throttle Download Bandwidth Speed
 ```bash
-# Set connection timeout (3 seconds)
-curl -m 3 https://httpbin.org/delay/5
-
-# Set maximum time for entire operation (10 seconds)
-curl --max-time 10 https://httpbin.org/delay/15
-
-# Separate connect and total timeouts
-curl --connect-timeout 5 \
-  --max-time 20 \
-  https://httpbin.org/get
+# Limit download speed to 500 KB/s
+curl --limit-rate 500k -O https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso
 ```
 
-### Retry Mechanisms
+---
+
+## ⏱️ Timeout & Retry Mechanisms
+
 ```bash
-# Retry failed requests up to 3 times
-curl --retry 3 https://httpbin.org/status/500
+# Set connection timeout (5 seconds) and total timeout (15 seconds)
+curl --connect-timeout 5 --max-time 15 https://httpbin.org/delay/2
 
-# Retry with exponential backoff (1, 2, 4 seconds)
-curl --retry 3 \
-  --retry-delay 1 \
-  --retry-max-time 60 \
-  https://httpbin.org/status/500
-
-# Retry on specific HTTP status codes
-curl --retry 3 \
-  --retry-connrefused \
-  --retry-http-status "429,500,503" \
-  https://api.example.com/
+# Retry failed requests up to 3 times with exponential backoff delay
+curl --retry 3 --retry-delay 2 --retry-max-time 30 https://httpbin.org/status/503
 ```
 
-## Advanced Examples
+---
 
-### API Integration Example
+## 🛠️ Automation Scripts & Workflows
+
+### 1. API Token Exchange & Data Retrieval Script
 ```bash
 #!/bin/bash
-# Complete API interaction example
+set -euo pipefail
 
-# Get authentication token
-TOKEN=$(curl -s -X POST \
-  -d "client_id=app123&client_secret=secret456&grant_type=client_credentials" \
-  https://api.example.com/oauth/token | jq -r '.access_token')
-
-# Use token to get user data
-curl -H "Authorization: Bearer $TOKEN" \
+# 1. Fetch Bearer token from OAuth endpoint
+TOKEN=$(curl -s -X POST https://httpbin.org/post \
   -H "Content-Type: application/json" \
-  https://api.example.com/users/123
+  -d '{"client_id":"app123","client_secret":"secret456"}' | jq -r '.json.client_id')
 
-# Upload file with metadata
-curl -F "file=@document.pdf" \
-  -F "metadata={\"user_id\":123,\"category\":\"documents\"}" \
-  -H "Authorization: Bearer $TOKEN" \
-  https://api.example.com/upload
+echo "Acquired Token: $TOKEN"
+
+# 2. Use token in authenticated API call
+curl -s -H "Authorization: Bearer $TOKEN" https://httpbin.org/get | jq .
 ```
 
-### Monitoring Script
+### 2. Website Health Check & Alert Script
 ```bash
 #!/bin/bash
-# Health check script
+TARGET_URL="https://httpbin.org/status/200"
+HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "$TARGET_URL")
 
-API_URL="https://api.example.com/health"
-TIMEOUT=5
-
-response=$(curl -s -w "%{http_code}" \
-  --max-time $TIMEOUT \
-  $API_URL)
-
-if [ "$response" = "200" ]; then
-  echo "$(date): API is healthy"
+if [ "$HTTP_STATUS" -eq 200 ]; then
+  echo "✅ [$(date)] $TARGET_URL is UP (Status: 200)"
 else
-  echo "$(date): API is down. Status code: $(echo $response | tail -c 3)"
+  echo "❌ [$(date)] $TARGET_URL is DOWN! Status code: $HTTP_STATUS"
 fi
 ```
 
-### Bulk Operations
-```bash
-#!/bin/bash
-# Process multiple URLs in bulk
+---
 
-URLS=(
-  "https://api.example.com/users/1"
-  "https://api.example.com/users/2"
-  "https://api.example.com/users/3"
-)
+## 📋 Cheat Sheet Summary
 
-for url in "${URLS[@]}"; do
-  echo "Processing $url..."
-  curl -s -o /dev/null "$url" &> /dev/null
-  if [ $? -eq 0 ]; then
-    echo "✓ Success for $url"
-  else
-    echo "✗ Failed for $url"
-  fi
-done
-```
-
-### Debugging with Verbose Output
-```bash
-# Verbose debugging output
-curl -v https://httpbin.org/get
-
-# Show request and response headers
-curl --trace-ascii trace.txt https://httpbin.org/post
-
-# Debug SSL/TLS connections
-curl --verbose \
-  --cert-status \
-  --tlsv1.2 \
-  https://example.com/
-```
-
-This comprehensive guide covers the most common curl usage patterns, from basic requests to advanced automation scenarios. Each example can be adapted based on your specific requirements and API endpoints.
-
+| Task | Command |
+| --- | --- |
+| Download file with remote name | `curl -LO "URL"` |
+| Resume broken download | `curl -C - -O "URL"` |
+| POST JSON payload | `curl -X POST -H "Content-Type: application/json" -d '{"k":"v"}' "URL"` |
+| Bearer token request | `curl -H "Authorization: Bearer TOKEN" "URL"` |
+| Upload file via multipart | `curl -F "file=@path/to/file.png" "URL"` |
+| Save response cookies | `curl -c cookies.txt "URL"` |
+| Output status code only | `curl -s -o /dev/null -w "%{http_code}\n" "URL"` |
+| Pretty print JSON response | `curl -s "URL" \| jq .` |
+| Bypass SSL warnings | `curl -k "URL"` |
+| Retry on failure | `curl --retry 3 --retry-delay 2 "URL"` |

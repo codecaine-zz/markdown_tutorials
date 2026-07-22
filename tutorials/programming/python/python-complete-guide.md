@@ -2090,7 +2090,81 @@ for name, age in zip(names, ages):
     print(f"{name} is {age} years old")
 ```
 
+## 13. Everyday Copy-and-Paste Python Snippets & Recipes
+
+```python
+# 1. Fetch JSON from HTTP API using standard library (urllib + json)
+import urllib.request
+import json
+
+def fetch_json(url: str) -> dict:
+    req = urllib.request.Request(url, headers={"User-Agent": "Python/3.14"})
+    with urllib.request.urlopen(req) as response:
+        return json.loads(response.read().decode())
+
+# Usage: data = fetch_json("https://api.github.com/users/octocat")
+
+# 2. Asynchronous HTTP requests and execution with asyncio
+import asyncio
+
+async def fetch_data(id: int) -> str:
+    await asyncio.sleep(0.1)  # Simulate network request
+    return f"Result {id}"
+
+async def main():
+    results = await asyncio.gather(*(fetch_data(i) for i in range(5)))
+    print("Async Results:", results)
+
+# asyncio.run(main())
+
+# 3. Calculate SHA-256 hash of a file efficiently (chunked reading)
+import hashlib
+from pathlib import Path
+
+def get_file_sha256(filepath: str | Path) -> str:
+    hasher = hashlib.sha256()
+    with open(filepath, "rb") as f:
+        while chunk := f.read(65536):
+            hasher.update(chunk)
+    return hasher.hexdigest()
+
+# 4. Concurrent file/task execution with ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
+
+def process_item(item: int) -> int:
+    return item * item
+
+with ThreadPoolExecutor(max_workers=4) as executor:
+    results = list(executor.map(process_item, range(10)))
+# print(results)
+
+# 5. Read/Write CSV file with DictReader and DictWriter
+import csv
+
+def save_users_csv(filepath: str, users: list[dict]):
+    fieldnames = ["id", "name", "email"]
+    with open(filepath, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(users)
+
+# 6. Read environment variables with fallback defaults
+import os
+
+db_url = os.getenv("DATABASE_URL", "sqlite:///dev.db")
+debug_mode = os.getenv("DEBUG", "false").lower() in ("true", "1", "yes")
+
+# 7. Safe JSON File Atomic Save (writes to temp file first, then renames)
+def save_json_atomic(filepath: str | Path, data: dict):
+    path = Path(filepath)
+    temp_path = path.with_suffix(".tmp")
+    with open(temp_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+    temp_path.replace(path)
+```
+
 ## Conclusion
+
 
 This comprehensive tutorial covered:
 

@@ -733,7 +733,68 @@ NO_CONTENT = {"status_code": status.HTTP_204_NO_CONTENT}
 
 ---
 
+## Everyday Copy-and-Paste FastAPI Code Snippets & Production Recipes
+
+```python
+# 1. Complete CORS Middleware Setup
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(title="Production API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# 2. Async Background Task Dispatcher
+from fastapi import BackgroundTasks
+
+def send_welcome_email(email: str):
+    print(f"Sending welcome email asynchronously to {email}...")
+
+@app.post("/register")
+async def register_user(email: str, background_tasks: BackgroundTasks):
+    background_tasks.add_task(send_welcome_email, email)
+    return {"message": "User registered. Email dispatch queued in background."}
+
+# 3. Global Exception Handler Custom Output
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+class ItemNotFoundException(Exception):
+    def __init__(self, item_id: int):
+        self.item_id = item_id
+
+@app.exception_handler(ItemNotFoundException)
+async def item_not_found_handler(request: Request, exc: ItemNotFoundException):
+    return JSONResponse(
+        status_code=404,
+        content={"error": "Item Error", "detail": f"Item {exc.item_id} does not exist."},
+    )
+
+# 4. File Upload Handler with Size and Content-Type Checks
+from fastapi import UploadFile, File, HTTPException
+
+@app.post("/upload")
+async def upload_image(file: UploadFile = File(...)):
+    if file.content_type not in ["image/png", "image/jpeg"]:
+        raise HTTPException(status_code=400, detail="Only PNG and JPEG images are allowed")
+    
+    contents = await file.read()
+    if len(contents) > 5 * 1024 * 1024:  # 5MB limit
+        raise HTTPException(status_code=413, detail="File too large (Max 5MB)")
+
+    return {"filename": file.filename, "size_bytes": len(contents)}
+```
+
+---
+
 ## 🎉 You’re ready!
+
 
 *Run `uvicorn app.main:app --reload` → explore `/docs` → start adding real persistence (SQLModel, Tortoise‑ORM, etc.) and you’ll have a production‑grade FastAPI service in minutes.*
 

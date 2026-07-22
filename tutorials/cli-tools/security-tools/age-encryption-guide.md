@@ -124,7 +124,7 @@ For encrypting files for your own use, a passphrase is often simpler.
     You can encrypt a file so that multiple people can decrypt it. Simply provide multiple `-r` flags.
 
     ```bash
-    age -r <alice_pubkey> -r <bob_pubkey> -o shared.zip.age shared.zip
+    age -r age1ql3z7h0cfscglarss3sl2dp2xts5uea52p0k0fh5wqg5pj38waesq455wz -r age1k5w... -o shared.zip.age shared.zip
     ```
 
     Either Alice (with her private key) or Bob (with his private key) can now decrypt `shared.zip.age`.
@@ -134,19 +134,63 @@ For encrypting files for your own use, a passphrase is often simpler.
 
       * **Encrypt** using a recipient's SSH public key with the `-R` (capital R) flag.
         ```bash
-        # Assuming the recipient gave you their id_ed25519.pub file
-        age -R ~/.ssh/recipient_key.pub -o data.age data.txt
+        # Encrypt with a public SSH key (Ed25519 or RSA)
+        age -R ~/.ssh/id_ed25519.pub -o secrets.txt.age secrets.txt
         ```
       * **Decrypt** using your corresponding SSH private key with the `-i` flag.
         ```bash
-        age -d -i ~/.ssh/id_ed25519 data.age > data.txt
+        age -d -i ~/.ssh/id_ed25519 secrets.txt.age > secrets.txt
         ```
 
-  * **Combining Recipients**
-    You can even mix and match recipient types. The command below encrypts a file so it can be decrypted by Alice (with her `age` key), Bob (with his SSH key), OR with a passphrase as a backup.
+  * **Encrypting Files for a GitHub User**
+    You can fetch any GitHub user's public SSH keys and encrypt files for them directly:
 
     ```bash
-    age -r <alice_pubkey> -R <bob_ssh_pubkey> -p -o project.tar.gz.age project.tar.gz
+    # Encrypt a file using torvalds' public SSH keys from GitHub
+    curl -s https://github.com/torvalds.keys | age -R - -o message.txt.age message.txt
+    ```
+
+  * **ASCII Armor Output (`-a` / `--armor`)**
+    By default, `age` outputs binary data. Use `-a` to produce PEM-formatted ASCII text that can easily be pasted into emails, chat apps, or configuration files:
+
+    ```bash
+    # Encrypt to printable text format
+    age -a -r age1ql3z7h0cfscglarss3sl2dp2xts5uea52p0k0fh5wqg5pj38waesq455wz -o secrets.txt.asc secrets.txt
+
+    # Decrypt ASCII armor text file
+    age -d -i key.txt secrets.txt.asc
+    ```
+
+  * **Encrypting Entire Directories on the Fly (Piping with `tar`)**
+    Avoid saving unencrypted archive files to disk by streaming directly through `tar`:
+
+    ```bash
+    # Compress and encrypt directory 'my_folder' directly to encrypted archive
+    tar -czf - my_folder/ | age -r age1ql3z7h0cfscglarss3sl2dp2xts5uea52p0k0fh5wqg5pj38waesq455wz > my_folder.tar.gz.age
+
+    # Decrypt and extract directly to current directory
+    age -d -i key.txt my_folder.tar.gz.age | tar -xzf -
+    ```
+
+  * **Batch Encrypt All Files in a Directory**
+    Encrypt all `.conf` or `.env` files in a folder into individual encrypted copies:
+
+    ```bash
+    # Encrypt every .env file in the current directory
+    for file in *.env; do
+      age -r age1ql3z7h0cfscglarss3sl2dp2xts5uea52p0k0fh5wqg5pj38waesq455wz -o "${file}.age" "$file"
+    done
+    ```
+
+  * **CI/CD Pipeline Stream Encryption (Passphrase from Environment Variable)**
+    Pass credentials securely via stdin in shell scripts or GitHub Actions:
+
+    ```bash
+    # Encrypt using password passed via environment variable (no terminal prompt)
+    echo "$BACKUP_PASSPHRASE" | age -p -o database.sql.age database.sql
+
+    # Decrypt stream to database restore command
+    echo "$BACKUP_PASSPHRASE" | age -d database.sql.age | psql -U postgres mydatabase
     ```
 
 ### 7\. Uninstallation

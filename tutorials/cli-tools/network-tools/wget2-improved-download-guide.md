@@ -1,286 +1,172 @@
-# Comprehensive Guide to Using Brew Install wget2
+# Wget2 Next-Generation Download Utility Guide
 
-## Table of Contents
-
-1. [Introduction to wget2](#introduction-to-wget2)
-2. [What is Homebrew?](#what-is-homebrew)
-3. [Prerequisites and System Requirements](#prerequisites-and-system-requirements)
-4. [Installing Homebrew (if not already installed)](#installing-homebrew-if-not-already-installed)
-5. [Installing wget2 with Homebrew](#installing-wget2-with-homebrew)
-6. [Verifying the Installation](#verifying-the-installation)
-7. [Understanding wget2 Features and Benefits](#understanding-wget2-features-and-benefits)
-8. [Basic wget2 Usage Examples](#basic-wget2-usage-examples)
-9. [Advanced wget2 Options and Commands](#advanced-wget2-options-and-commands)
-10. [wget2 Configuration and Customization](#wget2-configuration-and-customization)
-11. [Troubleshooting Common Issues](#troubleshooting-common-issues)
-12. [Updating wget2](#updating-wget2)
-13. [Uninstalling wget2](#uninstalling-wget2)
-14. [Comparing wget vs wget2](#comparing-wget-vs-wget2)
-15. [Use Cases and Best Practices](#use-cases-and-best-practices)
-16. [Security Considerations](#security-considerations)
-17. [Additional Resources and Documentation](#additional-resources-and-documentation)
+`wget2` is the successor to GNU Wget. Designed for modern high-speed internet connections, `wget2` features multi-threaded multi-connection file downloads, HTTP/2 protocol support, OCSP stapling, faster recursive website crawling, and lower CPU overhead than classic `wget`.
 
 ---
 
-## Introduction to wget2
+## 📚 Table of Contents
 
-wget2 is the next-generation version of the popular GNU wget utility, designed to be a modern replacement for the classic wget tool. It offers enhanced features including:
+1. [Overview & Comparison (`wget` vs `wget2`)](#overview--comparison-wget-vs-wget2)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [Multi-Threaded High-Speed Downloads](#multi-threaded-high-speed-downloads)
+4. [Downloading Multiple URLs & Batch Lists](#downloading-multiple-urls--batch-lists)
+5. [High-Speed Website Mirroring & Crawling](#high-speed-website-mirroring--crawling)
+6. [Headers, Auth & SSL Configuration](#headers-auth--ssl-configuration)
+7. [Configuration File (`~/.wget2rc`)](#configuration-file-wget2rc)
+8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
-- Improved HTTP/HTTPS support
-- Better proxy handling
-- Enhanced authentication methods
-- Support for newer web protocols
-- Better performance and reliability
+---
 
-## What is Homebrew?
+## 🔍 Overview & Comparison (`wget` vs `wget2`)
 
-Homebrew is a free and open-source software package management system that simplifies installing software on macOS and Linux operating systems. It handles the compilation, installation, and updates of software packages from source code.
+`wget2` addresses classic `wget` performance bottlenecks by adding native parallelism, HTTP/2 support, and multi-stream downloading:
 
-## Prerequisites and System Requirements
+| Feature | Classic `wget` | `wget2` |
+| --- | --- | --- |
+| **Multi-Threading** | Single connection stream | Multi-threaded parallel connections (`-j`) |
+| **HTTP/2 Support** | Experimental / None | Full Native HTTP/2 with multiplexing |
+| **Performance** | Single-threaded sequential | Up to 8x-10x faster directory crawling |
+| **TLS / SSL** | Standard OpenSSL / GnuTLS | Modern TLS 1.3 & OCSP Stapling |
+| **If-Modified-Since** | Basic | Advanced HTTP caching checks |
 
-Before installing wget2 with Homebrew, ensure you have:
+---
 
-- macOS or Linux operating system
-- Internet connection
-- Terminal access
-- Administrative privileges (sudo rights) if required by your system
-
-## Installing Homebrew (if not already installed)
-
-If Homebrew is not installed on your system:
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-After installation, verify it works:
-```bash
-brew --version
-```
-
-## Installing wget2 with Homebrew
-
-The simplest way to install wget2 is using the following command:
+## ⚙️ Installation via Homebrew
 
 ```bash
+# Install wget2 via Homebrew on macOS
 brew install wget2
-```
 
-Alternative installation methods:
-
-1. **Install from a specific tap (if needed):**
-   ```bash
-   brew tap homebrew/core
-   brew install wget2
-   ```
-
-2. **Install with verbose output:**
-   ```bash
-   brew install --verbose wget2
-   ```
-
-3. **Install without analytics:**
-   ```bash
-   HOMEBREW_NO_ANALYTICS=1 brew install wget2
-   ```
-
-## Verifying the Installation
-
-After installation, verify that wget2 is properly installed:
-
-```bash
+# Verify installation
 wget2 --version
 ```
 
-Expected output should show wget2 version information and build details.
+---
 
-You can also check the installation path:
+## 🚀 Multi-Threaded High-Speed Downloads
+
+Accelerate file downloads by spawning multiple parallel thread connections (`-j` / `--max-threads`).
+
 ```bash
-which wget2
+# High-speed download using 8 parallel thread connections
+wget2 -j 8 https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso
+
+# Save download to custom file name (-O)
+wget2 -O my_ubuntu.iso https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso
+
+# Save download to specific directory (-P)
+wget2 -P ~/Downloads/ https://example.com/archive.zip
+
+# Resume interrupted download (-c)
+wget2 -c -j 8 https://example.com/large-video.mp4
 ```
 
-## Understanding wget2 Features and Benefits
+---
 
-### Key Features of wget2:
-- **HTTP/HTTPS support**: Enhanced protocol handling with better SSL/TLS support
-- **Multi-threading**: Ability to download files using multiple connections simultaneously
-- **Improved proxy support**: Better handling of various proxy configurations
-- **Enhanced authentication**: Support for more authentication methods including OAuth
-- **Better error handling**: More robust error reporting and recovery mechanisms
+## 📥 Downloading Multiple URLs & Batch Lists
 
-### Benefits over classic wget:
-1. Active development and maintenance
-2. Modern codebase with better performance
-3. Regular updates with new features
-4. Better compatibility with modern web standards
-
-## Basic wget2 Usage Examples
-
-### Simple Download:
+### 1. Pass Multiple URLs on CLI
 ```bash
-wget2 https://example.com/file.zip
+# Download 3 files concurrently in parallel
+wget2 -j 4 https://example.com/file1.zip https://example.com/file2.zip https://example.com/file3.zip
 ```
 
-### Download with Specific Output Name:
-```bash
-wget2 -O mydownload.zip https://example.com/file.zip
+### 2. Read URLs from Text File (`-i`)
+Create `urls.txt`:
+```text
+https://example.com/document1.pdf
+https://example.com/document2.pdf
+https://example.com/document3.pdf
 ```
 
-### Download with Verbose Output:
+Execute batch download with 8 parallel worker threads:
 ```bash
-wget2 -v https://example.com/file.zip
+wget2 -i urls.txt -j 8 -P ~/Documents/
 ```
 
-### Download to a Specific Directory:
+---
+
+## 🌐 High-Speed Website Mirroring & Crawling
+
+Because `wget2` processes links concurrently using multiple threads, website mirroring is significantly faster than classic `wget`.
+
+### 1. Mirror Entire Directory for Offline Viewing
 ```bash
-wget2 -P /path/to/directory https://example.com/file.zip
+# Mirror site concurrently, converting links for local offline browser viewing
+wget2 --mirror --convert-links --page-requisites --no-parent -j 8 https://example.com/docs/
 ```
 
-## Advanced wget2 Options and Commands
-
-### Download with Authentication:
+### 2. Recursively Download Specific Extensions Only (`--accept` / `--reject`)
 ```bash
-wget2 --user=username --password=password https://example.com/securefile.txt
+# Crawl site up to 2 levels deep and download all PDF documents
+wget2 -r -l 2 --accept=pdf -nd https://example.com/resources/
+
+# Download site images while excluding GIFs
+wget2 -r -l 1 --accept=png,jpg,jpeg --reject=gif https://example.com/gallery/
 ```
 
-### Download with Custom Headers:
+---
+
+## 🔒 Headers, Auth & SSL Configuration
+
+### 1. HTTP Basic Authentication
 ```bash
-wget2 --header="User-Agent: Mozilla/5.0" https://example.com/page.html
+# Authenticate with username and password
+wget2 --user="admin" --password="secretpassword" https://example.com/protected/data.csv
 ```
 
-### Download with Retry Mechanism:
+### 2. Custom User-Agent & HTTP Headers
 ```bash
-wget2 --tries=3 --wait=5 https://example.com/file.zip
+# Pass custom headers and User-Agent
+wget2 --user-agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" \
+      --header="Authorization: Bearer YOUR_TOKEN_HERE" \
+      https://api.example.com/export.json
 ```
 
-### Download Mirror Site Structure:
+### 3. SSL/TLS Certificate Bypassing & Bandwidth Control
 ```bash
-wget2 -r -np -nH https://example.com/site/
+# Bypass self-signed SSL certificate errors
+wget2 --no-check-certificate https://self-signed.internal.local/file.tar.gz
+
+# Limit download speed to 1MB/s
+wget2 --limit-rate=1M https://example.com/largefile.zip
 ```
 
-### Resume Partial Downloads:
-```bash
-wget2 -c https://example.com/largefile.zip
-```
+---
 
-## wget2 Configuration and Customization
+## ⚙️ Configuration File (`~/.wget2rc`)
 
-Create a configuration file at `~/.wget2rc`:
+Save persistent configuration defaults in `~/.wget2rc`.
 
 ```bash
-# ~/.wget2rc
-user_agent = "MyCustomAgent/1.0"
-tries = 3
-timeout = 30
-progress = bar
+cat << 'EOF' > ~/.wget2rc
+# Default parallel threads
+max-threads = 8
+
+# Always resume partial downloads
 continue = on
+
+# Default timeouts
+timeout = 30
+tries = 3
+
+# Display progress bar
+progress = bar
+EOF
 ```
 
-### Environment Variables:
-```bash
-export WGET2RC="/path/to/custom/wget2.conf"
-```
+---
 
-## Troubleshooting Common Issues
+## 📋 Cheat Sheet Summary
 
-### Issue 1: "Command not found" error
-- Solution: Ensure Homebrew is in your PATH or run `source ~/.bashrc` or `source ~/.zshrc`
-- Verify with: `which brew`
-
-### Issue 2: Permission denied errors
-- Solution: Run with sudo if necessary, but this is generally discouraged for Homebrew installations
-
-### Issue 3: SSL/TLS certificate issues
-```bash
-wget2 --no-check-certificate https://example.com/securefile.txt
-```
-
-### Issue 4: Network connectivity problems
-- Check internet connection and proxy settings
-- Try downloading with verbose mode to see detailed error information
-
-## Updating wget2
-
-To update wget2 to the latest version:
-
-```bash
-brew update
-brew upgrade wget2
-```
-
-Check current version:
-```bash
-wget2 --version
-```
-
-## Uninstalling wget2
-
-To completely remove wget2 from your system:
-
-```bash
-brew uninstall wget2
-```
-
-If you want to remove all related files and cache:
-
-```bash
-brew cleanup wget2
-```
-
-## Comparing wget vs wget2
-
-| Feature | Classic wget | wget2 |
-|---------|--------------|-------|
-| Development Status | Legacy maintenance | Active development |
-| Protocol Support | Basic HTTP/HTTPS | Enhanced protocols |
-| Multi-threading | No native support | Built-in multi-threading |
-| Performance | Standard performance | Improved performance |
-| Authentication | Limited methods | More comprehensive methods |
-| SSL/TLS Support | Basic support | Enhanced security features |
-
-## Use Cases and Best Practices
-
-### Common Use Cases:
-1. **Bulk file downloads** - Take advantage of multi-threading
-2. **Automated scripts** - Reliable download handling in batch processes
-3. **Website mirroring** - Comprehensive site crawling capabilities
-4. **Research data collection** - Robust error handling for large datasets
-
-### Best Practices:
-- Always use the latest version available through Homebrew
-- Implement proper retry mechanisms for unreliable downloads
-- Use appropriate headers to avoid being blocked by servers
-- Monitor bandwidth usage in automated environments
-
-## Security Considerations
-
-### Important Security Points:
-1. **Verify downloaded files** using checksums when possible
-2. **Use HTTPS URLs** whenever available to ensure encrypted connections
-3. **Avoid downloading from untrusted sources**
-4. **Keep wget2 updated** to protect against known vulnerabilities
-
-### Secure Download Example:
-```bash
-wget2 --ca-certificate=/path/to/cert.pem https://secure.example.com/file.zip
-```
-
-## Additional Resources and Documentation
-
-### Official Documentation:
-- [GNU wget2 Homepage](https://gitlab.com/gnuwget/wget2)
-- [Homebrew Documentation](https://docs.brew.sh/)
-- [wget2 Manual Pages](https://www.gnu.org/software/wget/manual/)
-
-### Useful Commands for Further Information:
-```bash
-man wget2
-wget2 --help
-brew info wget2
-```
-
-### Community Resources:
-- GitHub repository: https://github.com/gnuwget/wget2
-- Homebrew formula: https://github.com/Homebrew/homebrew-core/blob/master/Formula/wget2.rb
-
-This comprehensive guide should provide everything needed to successfully install, configure, and use wget2 with Homebrew on your system.
+| Task | Command |
+| --- | --- |
+| High-speed 8-thread download | `wget2 -j 8 "URL"` |
+| Save as custom name | `wget2 -O "newname.ext" "URL"` |
+| Resume interrupted download | `wget2 -c -j 8 "URL"` |
+| Batch download file list | `wget2 -i urls.txt -j 8` |
+| Parallel site mirror for offline | `wget2 --mirror --convert-links --page-requisites -j 8 "URL"` |
+| Download only PDFs | `wget2 -r -l 1 --accept=pdf -nd "URL"` |
+| Ignore SSL errors | `wget2 --no-check-certificate "URL"` |
+| Bearer token download | `wget2 --header="Authorization: Bearer TOKEN" "URL"` |
+| Throttle bandwidth speed | `wget2 --limit-rate=1M "URL"` |

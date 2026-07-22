@@ -1,128 +1,145 @@
-# gping Graphical Ping Guide
+# gping Graphical Ping & Latency Visualizer Guide
 
-### Table of Contents
+`gping` is a command-line utility that provides "`ping`, but with a graph". It renders a real-time, graphical visualization of network latency directly inside your terminal, allowing developers, network engineers, and sysadmins to instantly spot latency spikes, packet drops, and internet connection jitter.
 
-1.  [What is `gping`?](https://www.google.com/search?q=%231-what-is-gping)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Basic Usage & The Interface](https://www.google.com/search?q=%234-basic-usage--the-interface)
-5.  [Key Features & Examples](https://www.google.com/search?q=%235-key-features--examples)
-6.  [Uninstallation](https://www.google.com/search?q=%236-uninstallation)
+---
 
------
+## 📚 Table of Contents
 
-### 1\. What is `gping`?
+1. [Overview & Features](#overview--features)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [Basic Ping & Multi-Host Comparison](#basic-ping--multi-host-comparison)
+4. [IPv4 vs IPv6 Latency Monitoring](#ipv4-vs-ipv6-latency-monitoring)
+5. [Graphing Command Execution Time (`--cmd`)](#graphing-command-execution-time---cmd)
+6. [Graph Buffer & Custom Update Intervals](#graph-buffer--custom-update-intervals)
+7. [Practical Use Cases & Cheat Sheet](#practical-use-cases--cheat-sheet)
 
-`gping` is a command-line tool that offers "`ping`, but with a graph". It provides a real-time, graphical visualization of network latency directly in your terminal. This makes it incredibly easy to spot trends, outages, or fluctuations in response time that are difficult to see with the standard `ping` command's wall of text.
+---
 
-### 2\. Prerequisites
+## 🔍 Overview & Features
 
-You must have [Homebrew](https://brew.sh/) installed. You can verify your installation by running:
+- **Visual Graphs**: Real-time ASCII line graph of response times instead of scrolling text.
+- **Multi-Host Plotting**: Plot multiple endpoints on a single graph with color-coded legends.
+- **Command Benchmarking**: Measure and graph the execution time of any shell command (e.g. `curl`, `dig`, database queries).
+- **Cross-Platform & Lightweight**: Built in Rust for maximum performance and minimal footprint.
+
+---
+
+## ⚙️ Installation via Homebrew
 
 ```bash
-brew --version
-```
-
-### 3\. Installation
-
-Install `gping` using a single Homebrew command:
-
-```bash
+# Install gping via Homebrew on macOS
 brew install gping
+
+# Verify installation
+gping --version
 ```
 
-### 4\. Basic Usage & The Interface
+---
 
-The simplest way to use `gping` is to provide it with a host to ping.
+## 🚀 Basic Ping & Multi-Host Comparison
 
-  * **Command:**
+### 1. Ping Single Endpoint
+```bash
+# Graph ping latency to Google
+gping google.com
+```
 
-    ```bash
-    gping google.com
-    ```
-
-  * **The Main Interface:**
-    `gping` will take over your terminal and display a continuously updating graph of the ping latency.
-
-    **Example Interface:**
-
-    ```text
-    gping google.com (142.250.190.142)
-    Press 'q' to quit
-
-    25ms ┤
-        │                                                     ╭──╮
-    20ms ┤                               ╭──╮     ╭──╮         │  │
-        │                         ╭──╮    │  │     │  │    ╭──╮ │  │
-    15ms ┤╭──╮     ╭──╮     ╭──╮   │  │╭──╮│  │╭──╮ │  │╭──╮│  │ │  │╭─
-        ││  │     │  │     │  │   │  ││  ││  ││  │ │  ││  ││  │ │  ││
-    10ms ┤│  │╭──╮ │  │╭──╮ │  │╭──╯  ││  ││  ││  │╭╯  ││  ││  │╭╯  ││
-        ││  ││  │ │  ││  │ │  ││      ││  │╰──╯│  ││   ╰──╯│  ││    ╰╯
-     5ms ┤╰──╯│  │╭╯  ││  │╭╯  │╰──────╯│  │   ╰──╯│       ╰──╯│
-        │    ╰──╯│   ╰──╯│    │       ╰──╯     │           │
-     0ms ┼───────┴───────┴────┴───────────────┴───────────┴──────────
-
-    Latency: min 8.5ms, max 22.1ms, avg 15.3ms
-    ```
-
-### 5\. Key Features & Examples
-
-  * **Pinging Multiple Hosts:**
-    You can provide multiple hosts to `gping` to compare their latencies on the same graph. Each host will be assigned a different color and letter for identification.
-
-    **Command:**
-
-    ```bash
-    gping google.com github.com 1.1.1.1
-    ```
-
-    **Example Multi-Host Interface:**
-
-    ```text
-    gping (3 hosts)
-    Press 'q' to quit
-
-    50ms ┤
-        │
-    40ms ┤               ╭──╮
-        │               │  │
-    30ms ┤               │ b│      ╭──╮
-        │               ╰──╯      │ c│
-    20ms ┤╭──╮     ╭──╮     ╭──╮   ╰──╯    ╭──╮
-        ││ a│     │ a│     │ a│           │ a│
-    10ms ┤│  │╭──╮ │  │╭──╮ │  │           │  │
-        │╰──╯│ b│╭╯  ││  │╭╯  │           ╰──╯
-     0ms ┼────┴──┴───┴───┴───┴───────────────────────────────────────
-
-    [a] google.com: min 15.2ms, max 21.8ms, avg 18.1ms
-    [b] github.com: min 8.9ms, max 32.5ms, avg 12.4ms
-    [c] 1.1.1.1:    min 28.1ms, max 30.2ms, avg 29.5ms
-    ```
-
-  * **Graphing Command Execution Time:**
-    A powerful, advanced feature is the ability to graph the execution time of any command, not just network pings. This lets you monitor the performance of scripts, API calls, or database queries over time. Use the `--cmd` flag.
-
-    **Command:** Graph the response time of a `curl` request.
-
-    ```bash
-    gping --cmd 'curl -o /dev/null -s -w "%{time_total}" https://api.github.com'
-    ```
-
-    In this mode, the Y-axis of the graph will represent the command's total execution time in seconds.
-
-  * **Adjusting the Graph Buffer:**
-    You can control how much history the graph displays with the `-b` or `--buffer` flag.
-
-    **Command:** Show the last 2 minutes (120 seconds) of ping history.
-
-    ```bash
-    gping -b 120 cloudflare.com
-    ```
-
-### 6\. Uninstallation
-
-If you need to remove `gping`, you can do so easily with Homebrew.
+### 2. Compare Multiple Endpoints Side-by-Side
+Provide multiple hostnames or IP addresses to overlay their latency curves on the same graph with color keys.
 
 ```bash
-brew uninstall gping
+# Compare DNS resolver latency (Cloudflare vs Google vs Quad9)
+gping 1.1.1.1 8.8.8.8 9.9.9.9
+
+# Compare global service latency
+gping google.com github.com amazon.com
 ```
+
+**Example Terminal Display:**
+```text
+gping (3 hosts)
+Press 'q' to quit
+
+50ms ┤
+    │
+40ms ┤               ╭──╮
+    │               │  │
+30ms ┤               │ b│      ╭──╮
+    │               ╰──╯      │ c│
+20ms ┤╭──╮     ╭──╮     ╭──╮   ╰──╯    ╭──╮
+    ││ a│     │ a│     │ a│           │ a│
+10ms ┤│  │╭──╮ │  │╭──╮ │  │           │  │
+    │╰──╯│ b│╭╯  ││  │╭╯  │           ╰──╯
+ 0ms ┼────┴──┴───┴───┴───┴───────────────────────────────────────
+
+[a] 1.1.1.1:   min 12.1ms, max 18.4ms, avg 14.3ms
+[b] 8.8.8.8:   min 18.9ms, max 32.5ms, avg 21.0ms
+[c] 9.9.9.9:   min 28.1ms, max 30.2ms, avg 29.5ms
+```
+
+---
+
+## 🌐 IPv4 vs IPv6 Latency Monitoring
+
+Force `gping` to test specifically IPv4 (`-4`) or IPv6 (`-6`) routes to identify routing issues.
+
+```bash
+# Force IPv4 resolution
+gping -4 google.com
+
+# Force IPv6 resolution
+gping -6 google.com
+```
+
+---
+
+## ⏱️ Graphing Command Execution Time (`--cmd`)
+
+A powerful feature of `gping` is graphing the total execution time (in seconds) of arbitrary shell commands using `--cmd`.
+
+### 1. Graph HTTP API Response Time via `curl`
+```bash
+# Plot HTTP response time to GitHub API
+gping --cmd 'curl -s -o /dev/null -w "%{time_total}" https://api.github.com'
+```
+
+### 2. Graph DNS Resolution Lookup Time via `doggo` or `dig`
+```bash
+# Plot DNS lookup response speed over time
+gping --cmd 'dig +short example.com @1.1.1.1'
+```
+
+---
+
+## 🎛️ Graph Buffer & Custom Update Intervals
+
+### 1. Adjust History Buffer Length (`-b` / `--buffer`)
+Control how many seconds of historical latency data are retained on screen.
+
+```bash
+# Keep 5 minutes (300 seconds) of latency history on graph
+gping -b 300 cloudflare.com
+```
+
+### 2. Adjust Ping Update Interval (`-n` / `--watch-interval`)
+Change how frequently ICMP pings are dispatched (default is 1 second).
+
+```bash
+# High-frequency monitoring (ping every 0.2 seconds)
+gping -n 0.2 1.1.1.1
+```
+
+---
+
+## 📋 Practical Use Cases & Cheat Sheet
+
+| Task | Command |
+| --- | --- |
+| Ping single host | `gping example.com` |
+| Compare 3 DNS servers | `gping 1.1.1.1 8.8.8.8 9.9.9.9` |
+| Force IPv4 ping | `gping -4 google.com` |
+| Force IPv6 ping | `gping -6 google.com` |
+| Graph API HTTP latency | `gping --cmd 'curl -s -o /dev/null -w "%{time_total}" "URL"'` |
+| Keep 5 min history buffer | `gping -b 300 example.com` |
+| Fast 200ms ping interval | `gping -n 0.2 1.1.1.1` |

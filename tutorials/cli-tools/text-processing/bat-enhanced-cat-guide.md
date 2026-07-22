@@ -247,6 +247,33 @@ alias bcat='bat --color=always'
 alias bls='bat --language=shell'
 ```
 
+### Everyday Copy-and-Paste `bat` Snippets & Shell Functions
+
+```bash
+# 1. Colorized Git Diff preview with bat
+alias batdiff='git diff --name-only --relative | xargs bat --diff'
+
+# 2. Syntax-highlighted Man Pages helper function (Add to ~/.zshrc)
+man() {
+    command man "$@" | col -b | bat -l man -p
+}
+
+# 3. Tail real-time application logs without pagination
+tail -f server.log | bat --paging=never -l log
+
+# 4. Copy raw file content without line numbers or decorations to clipboard (macOS pbcopy)
+bat --plain --paging=never config.yaml | pbcopy
+
+# 5. Highlight diff between two files side-by-side
+bat --diff file1.txt file2.txt
+
+# 6. View non-printable characters (tabs, newlines, spaces)
+bat -A main.py
+
+# 7. Prettify and highlight JSON output from curl requests
+curl -s https://api.github.com/users/octocat | bat -l json
+```
+
 ## 7. Complete Installation Verification Script
 
 ```bash

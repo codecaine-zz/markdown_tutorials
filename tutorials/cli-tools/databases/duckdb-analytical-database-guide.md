@@ -6,10 +6,14 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Basic Interactive CLI Usage](#4-basic-interactive-cli-usage)
-5. [Querying CSV, Parquet & JSON Directly](#5-querying-csv-parquet-json-directly)
-6. [Exporting & Transforming Data](#6-exporting-transforming-data)
-7. [Persistent Database Files](#7-persistent-database-files)
-8. [Uninstallation](#8-uninstallation)
+5. [Querying CSV, Parquet & Multi-File Globs](#5-querying-csv-parquet--multi-file-globs)
+6. [JSON & Nested Data Operations](#6-json--nested-data-operations)
+7. [Terminal Scripting & Pipeline Integration](#7-terminal-scripting--pipeline-integration)
+8. [Exporting & Format Conversion Recipes](#8-exporting--format-conversion-recipes)
+9. [Extensions & External Database Attachment](#9-extensions--external-database-attachment)
+10. [Query Profiling (`EXPLAIN ANALYZE`)](#10-query-profiling-explain-analyze)
+11. [Persistent Database Files](#11-persistent-database-files)
+12. [Uninstallation](#12-uninstallation)
 
 ---
 
@@ -94,43 +98,25 @@ Exit the shell: `.exit` or `Ctrl+D`.
 
 ---
 
-### 5. Querying CSV, Parquet & JSON Directly
+### 5. Querying CSV, Parquet & Multi-File Globs
 
 `duckdb` allows executing SQL directly on external data files without importing them into tables.
 
-#### Example 1: Querying a CSV File
-Create a sample CSV file:
-
+#### 1. Querying Single & Globbed CSV Files
 ```bash
-echo "name,department,salary" > employees.csv
-echo "Alice,Engineering,120000" >> employees.csv
-echo "Bob,Marketing,85000" >> employees.csv
-echo "Charlie,Engineering,135000" >> employees.csv
+# Query a single CSV file
+duckdb -c "SELECT department, AVG(salary) AS avg_sal FROM 'employees.csv' GROUP BY department;"
+
+# Query all CSV files matching a glob pattern
+duckdb -c "SELECT * FROM read_csv_auto('logs/*.csv') WHERE status = 500;"
 ```
 
-Run SQL directly from terminal command line:
-
+#### 2. Querying Parquet Files
 ```bash
-duckdb -c "SELECT department, AVG(salary) AS avg_salary FROM 'employees.csv' GROUP BY department;"
+duckdb -c "SELECT department, COUNT(*) FROM 'data.parquet' WHERE age > 30 GROUP BY department;"
 ```
 
-**Output:**
-```text
-┌─────────────┬────────────┐
-│ department  │ avg_salary │
-│   varchar   │   double   │
-├─────────────┼────────────┤
-│ Engineering │   127500.0 │
-│ Marketing   │    85000.0 │
-└─────────────┴────────────┘
-```
-
-#### Example 2: Querying Parquet Files
-```bash
-duckdb -c "SELECT * FROM 'data.parquet' WHERE age > 30 LIMIT 5;"
-```
-
-#### Example 3: Querying Remote HTTP/S3 Parquet Files
+#### 3. Querying Remote HTTP/S3 Files Directly
 `duckdb` can fetch remote HTTP data directly:
 
 ```sql
@@ -139,23 +125,100 @@ SELECT count(*) FROM 'https://shell.duckdb.org/test/data/lineitem.parquet';
 
 ---
 
-### 6. Exporting & Transforming Data
+### 6. JSON & Nested Data Operations
 
-`duckdb` makes file conversions between formats effortless:
+`duckdb` natively parses complex, nested JSON objects and arrays:
 
-#### Convert CSV to Compressed Parquet File
+#### 1. Querying JSON Files Directly
 ```bash
-duckdb -c "COPY (SELECT * FROM 'employees.csv') TO 'output.parquet' (FORMAT PARQUET, COMPRESSION SNAPPY);"
+duckdb -c "SELECT * FROM read_json_auto('users.json');"
 ```
 
-#### Export Query Results to JSON
-```bash
-duckdb -c "COPY (SELECT * FROM 'employees.csv' WHERE salary > 100000) TO 'high_earners.json' (ARRAY true);"
+#### 2. Unnesting JSON Arrays & Structs
+```sql
+-- Unnest array elements into separate table rows
+SELECT id, UNNEST(tags) AS tag FROM 'posts.json';
+
+-- Extract nested fields from structs
+SELECT user.name, user.address.city FROM 'profiles.json';
 ```
 
 ---
 
-### 7. Persistent Database Files
+### 7. Terminal Scripting & Pipeline Integration
+
+Integrate DuckDB into Unix shell pipelines:
+
+#### 1. Standard Output Formatting Options (`-csv`, `-json`, `-markdown`)
+```bash
+# Output as Markdown Table
+duckdb -markdown -c "SELECT name, salary FROM 'employees.csv';"
+
+# Output as JSON Array
+duckdb -json -c "SELECT name, salary FROM 'employees.csv';"
+```
+
+#### 2. Pipe Data into DuckDB (`/dev/stdin`)
+```bash
+cat data.json | duckdb -c "SELECT * FROM read_json_auto('/dev/stdin') WHERE active = true;"
+```
+
+---
+
+### 8. Exporting & Format Conversion Recipes
+
+`duckdb` makes file conversions between formats effortless:
+
+#### 1. Convert CSV to Compressed Parquet
+```bash
+duckdb -c "COPY (SELECT * FROM 'employees.csv') TO 'output.parquet' (FORMAT PARQUET, COMPRESSION SNAPPY);"
+```
+
+#### 2. Export Query Results to JSON
+```bash
+duckdb -c "COPY (SELECT * FROM 'employees.csv' WHERE salary > 100000) TO 'high_earners.json' (ARRAY true);"
+```
+
+#### 3. Export Parquet to CSV
+```bash
+duckdb -c "COPY (SELECT * FROM 'data.parquet') TO 'data.csv' (HEADER, DELIMITER ',');"
+```
+
+---
+
+### 9. Extensions & External Database Attachment
+
+DuckDB can attach and query external SQLite and PostgreSQL databases directly:
+
+#### 1. Install & Load Extensions
+```sql
+INSTALL postgres;
+LOAD postgres;
+```
+
+#### 2. Attach External SQLite Database
+```sql
+INSTALL sqlite;
+LOAD sqlite;
+ATTACH 'existing_app.db' AS sqlite_db (TYPE SQLITE);
+
+-- Query SQLite tables seamlessly inside DuckDB
+SELECT * FROM sqlite_db.users LIMIT 10;
+```
+
+---
+
+### 10. Query Profiling (`EXPLAIN ANALYZE`)
+
+Inspect execution plans and memory/vector usage:
+
+```bash
+duckdb -c "EXPLAIN ANALYZE SELECT department, AVG(salary) FROM 'employees.csv' GROUP BY department;"
+```
+
+---
+
+### 11. Persistent Database Files
 
 To save tables to a persistent database file on disk, pass a file path argument when launching `duckdb`:
 
@@ -167,7 +230,7 @@ SQL statements executed inside this database session will persist across termina
 
 ---
 
-### 8. Uninstallation
+### 12. Uninstallation
 
 ```bash
 brew uninstall duckdb

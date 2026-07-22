@@ -379,3 +379,89 @@ lldb ./main
 2. **Buffer Overflows with `strcpy`/`sprintf`**: Always use bounded functions like `snprintf`.
 3. **Dangling Pointers & Memory Leaks**: Set pointers to `nullptr` after calling `free()`.
 4. **Ignoring Allocation Check**: Always verify `ptr != nullptr` after dynamic allocation.
+
+---
+
+## Everyday Copy-and-Paste Modern C Snippets & Systems Recipes
+
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <time.h>
+
+// 1. Read an Entire File into Dynamically Allocated Memory
+char* read_entire_file(const char* filepath, size_t* out_size) {
+    FILE* file = fopen(filepath, "rb");
+    if (file == nullptr) return nullptr;
+
+    fseek(file, 0, SEEK_END);
+    long length = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    if (length < 0) {
+        fclose(file);
+        return nullptr;
+    }
+
+    char* buffer = (char*)malloc((size_t)length + 1);
+    if (buffer == nullptr) {
+        fclose(file);
+        return nullptr;
+    }
+
+    size_t read_bytes = fread(buffer, 1, (size_t)length, file);
+    buffer[read_bytes] = '\0';
+    fclose(file);
+
+    if (out_size != nullptr) *out_size = read_bytes;
+    return buffer;
+}
+
+// 2. High-Precision Time Measurement Utility (POSIX clock_gettime)
+double measure_execution_time(void (*func_to_test)(void)) {
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    func_to_test();
+    clock_gettime(CLOCK_MONOTONIC, &end);
+
+    return (double)(end.tv_sec - start.tv_sec) + (double)(end.tv_nsec - start.tv_nsec) / 1e9;
+}
+
+// 3. Dynamic Growing Array (Vector Equivalent in C)
+typedef struct {
+    int* data;
+    size_t size;
+    size_t capacity;
+} IntVector;
+
+IntVector vector_create(size_t initial_capacity) {
+    IntVector vec;
+    vec.size = 0;
+    vec.capacity = initial_capacity > 0 ? initial_capacity : 4;
+    vec.data = (int*)malloc(vec.capacity * sizeof(int));
+    return vec;
+}
+
+bool vector_push(IntVector* vec, int value) {
+    if (vec->size >= vec->capacity) {
+        size_t new_cap = vec->capacity * 2;
+        int* new_data = (int*)realloc(vec->data, new_cap * sizeof(int));
+        if (new_data == nullptr) return false;
+        vec->data = new_data;
+        vec->capacity = new_cap;
+    }
+    vec->data[vec->size++] = value;
+    return true;
+}
+
+void vector_free(IntVector* vec) {
+    if (vec->data != nullptr) {
+        free(vec->data);
+        vec->data = nullptr;
+    }
+    vec->size = 0;
+    vec->capacity = 0;
+}
+```

@@ -1,161 +1,218 @@
-# xh: Friendly, Fast HTTP Client written in Rust
+# xh: Fast, Ultra-Friendly HTTP Client in Rust
 
-## Table of Contents
-
-1. [What is `xh`?](#1-what-is-xh)
-2. [Prerequisites](#2-prerequisites)
-3. [Installation on ARM macOS](#3-installation-on-arm-macos)
-4. [Basic Syntax & GET Requests](#4-basic-syntax-get-requests)
-5. [POST Requests & JSON Payloads](#5-post-requests-json-payloads)
-6. [Downloading Files (`wget` mode)](#6-downloading-files-wget-mode)
-7. [Headers, Authentication & Cookies](#7-headers-authentication-cookies)
-8. [Uninstallation](#8-uninstallation)
+`xh` is a friendly, blazing-fast command-line HTTP client written in Rust. It adopts HTTPie's intuitive syntax design while delivering **up to 10x faster execution speeds**, lower memory consumption, native HTTP/2 and HTTP/3 support, automatic syntax highlighting, and instantaneous `curl` command translation.
 
 ---
 
-### 1. What is `xh`?
+## 📚 Table of Contents
 
-`xh` is a friendly, fast tool for sending HTTP requests from your terminal, written in Rust. It borrows HTTPie's intuitive syntax design while providing significantly faster execution speeds, lower resource consumption, native HTTP/2 & HTTP/3 support, syntax highlighting, and `curl` command translation.
-
-#### Key Features
-* **10x Faster Execution:** Native Rust binary vs. Python-based HTTPie.
-* **Colorful Formatted Output:** Automatic JSON colorization and syntax highlighting.
-* **Curl Translation:** Convert any `xh` command directly into `curl` syntax using `--curl`.
+1. [Overview & Features](#overview--features)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [GET Requests & Query Parameters](#get-requests--query-parameters)
+4. [POST, PUT & JSON Payloads](#post-put--json-payloads)
+5. [Headers, Bearer Tokens & Basic Auth](#headers-bearer-tokens--basic-auth)
+6. [Form Submissions & File Uploads](#form-submissions--file-uploads)
+7. [Translating `xh` to `curl` Commands](#translating-xh-to-curl-commands)
+8. [Downloading Files (`wget` mode)](#downloading-files-wget-mode)
+9. [Sessions, Proxies & TLS Options](#sessions-proxies--tls-options)
+10. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---
 
-### 2. Prerequisites
+## 🔍 Overview & Features
 
-Verify Homebrew on your ARM Mac:
+- **10x Execution Speed**: Native Rust binary for near-instant startup vs. Python-based HTTPie.
+- **Expressive Syntax**: Simple key-value syntax for headers (`H:V`), query params (`q==v`), and JSON (`k=v` or `k:=v`).
+- **Curl Translator (`--curl`)**: Print equivalent `curl` commands with `--curl`.
+- **Modern Networking**: Native HTTP/2, HTTP/3, and SOCKS5 proxy support.
+
+---
+
+## ⚙️ Installation via Homebrew
 
 ```bash
-brew --version
-```
-
----
-
-### 3. Installation on ARM macOS
-
-Install `xh` via Homebrew:
-
-```bash
+# Install xh via Homebrew on macOS
 brew install xh
-```
 
-Verify installation:
-
-```bash
-which xh
+# Verify installation
 xh --version
 ```
 
-**Expected Output:**
-```text
-/opt/homebrew/bin/xh
-xh 0.22.x (or latest)
-```
-
 ---
 
-### 4. Basic Syntax & GET Requests
+## 🚀 GET Requests & Query Parameters
 
-The basic syntax format is: `xh [METHOD] URL [REQUEST_ITEM ...]`
-
-If no method is specified, `xh` defaults to `GET` (or `POST` if data items are present).
-
-#### Send a GET Request
+### 1. Send Simple GET Request
 ```bash
+# GET is default method when no data items are supplied
 xh https://httpbin.org/get
 ```
 
-**Example Output:**
+### 2. Append URL Query Parameters (`==`)
+Use double equals (`==`) to append URL query parameters automatically.
 
-```text
-HTTP/1.1 200 OK
-Content-Length: 308
-Content-Type: application/json
-Date: Wed, 22 Jul 2026 18:30:00 GMT
-Server: gunicorn/19.9.0
-
-{
-    "args": {},
-    "headers": {
-        "Accept": "*/*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Host": "httpbin.org",
-        "User-Agent": "xh/0.22.0"
-    },
-    "origin": "136.24.10.12",
-    "url": "https://httpbin.org/get"
-}
+```bash
+# Sends: GET https://httpbin.org/get?search=rust+cli&page=1
+xh GET https://httpbin.org/get search=="rust cli" page==1
 ```
 
 ---
 
-### 5. POST Requests & JSON Payloads
+## 🌐 POST, PUT & JSON Payloads
 
-`xh` automatically constructs JSON payloads when key-value pairs are separated by `=` (string) or `:=` (raw JSON/booleans/numbers).
+`xh` automatically constructs JSON payloads when key-value arguments are supplied.
 
-#### Send a JSON POST Request
+### 1. Send Typed JSON Payloads (`=` string, `:=` raw JSON/numbers/booleans)
 ```bash
-xh POST https://httpbin.org/post name="Alice" role="developer" age:=30 active:=true
+# Send JSON payload with string, integer, boolean, and array values
+xh POST https://httpbin.org/post \
+  name="Alice" \
+  role="developer" \
+  age:=30 \
+  active:=true \
+  languages:='["rust", "go", "python"]'
 ```
 
-* `name="Alice"`: String field
-* `age:=30`: Integer number
-* `active:=true`: Boolean boolean
-
-#### Send Form-Encoded Data (`-f` / `--form`)
+### 2. Pipe JSON Input into `xh`
 ```bash
-xh -f POST https://httpbin.org/post username="admin" password="secret_password"
+# Pipe local JSON file into request body
+xh POST https://httpbin.org/post < payload.json
+
+# Pipe output from jq or cat
+cat data.json | xh POST https://httpbin.org/post
+```
+
+### 3. PUT & PATCH Requests
+```bash
+# Send PUT request
+xh PUT https://httpbin.org/put id:=42 status="updated"
+
+# Send PATCH request
+xh PATCH https://httpbin.org/patch status="archived"
 ```
 
 ---
 
-### 6. Downloading Files (`wget` mode)
+## 🔒 Headers, Bearer Tokens & Basic Auth
 
-To download a remote file with a progress bar:
-
+### 1. Custom HTTP Headers (`Header:Value`)
 ```bash
-xh -d https://releases.ubuntu.com/22.04/ubuntu-22.04.5-desktop-amd64.iso
+# Pass custom headers
+xh https://httpbin.org/headers \
+  "User-Agent: MyApp/1.0" \
+  "X-API-Key: secret_token_999"
 ```
 
-Or save with a custom output filename (`-o`):
-
+### 2. Authentication Shortcuts (`-a` / `-A`)
 ```bash
-xh https://httpbin.org/image/png -o test_image.png
-```
+# Bearer Token Authentication (-A bearer -a TOKEN)
+xh https://httpbin.org/headers -A bearer -a YOUR_ACCESS_TOKEN_HERE
 
----
-
-### 7. Headers, Authentication & Cookies
-
-#### Custom Headers (`Header:Value`)
-```bash
-xh https://api.github.com/user "Authorization: Bearer YOUR_TOKEN_HERE" "User-Agent: MyApp/1.0"
-```
-
-#### Basic Authentication (`-a` / `--auth`)
-```bash
+# Basic Authentication (-a user:pass)
 xh -a admin:password123 https://httpbin.org/basic-auth/admin/password123
 ```
 
-#### Translate `xh` Command to `curl` Syntax (`--curl`)
-If you want to copy a working API command into a shell script using `curl`:
+---
+
+## 📤 Form Submissions & File Uploads
+
+### 1. URL-Encoded Form Submission (`-f` / `--form`)
+```bash
+# Sends Content-Type: application/x-www-form-urlencoded
+xh -f POST https://httpbin.org/post username="john_doe" password="secretpassword"
+```
+
+### 2. Upload Files with Form Fields (`field@/path/to/file`)
+```bash
+# Upload document file along with text form metadata
+xh -f POST https://httpbin.org/post \
+  title="Monthly Financial Report" \
+  document@~/Documents/report.pdf
+```
+
+---
+
+## 🔄 Translating `xh` to `curl` Commands
+
+Pass `--curl` to output the exact, equivalent `curl` command without executing the request.
 
 ```bash
-xh POST https://httpbin.org/post name="Alice" --curl
+# Generate equivalent curl command
+xh POST https://httpbin.org/post name="Alice" age:=30 -A bearer -a MY_TOKEN --curl
 ```
 
 **Output:**
 ```bash
-curl -X POST --header "Content-Type: application/json" --data '{"name":"Alice"}' https://httpbin.org/post
+curl -X POST --header "Content-Type: application/json" --header "Authorization: Bearer MY_TOKEN" --data '{"age":30,"name":"Alice"}' https://httpbin.org/post
 ```
 
 ---
 
-### 8. Uninstallation
+## 📥 Downloading Files (`wget` mode)
 
+### 1. Download File with Progress Bar (`-d` / `--download`)
 ```bash
-brew uninstall xh
+# Download and save with remote filename from Content-Disposition header
+xh -d https://httpbin.org/image/png
+
+# Save download to custom output path (-o)
+xh -d https://httpbin.org/image/png -o logo.png
 ```
+
+### 2. Response Component Filtering (`-h` headers, `-b` body, `-v` verbose)
+```bash
+# Print response headers only (-h)
+xh -h https://httpbin.org/get
+
+# Print response body only (-b)
+xh -b https://httpbin.org/get
+
+# Print request AND response headers + body (-v / --verbose)
+xh -v POST https://httpbin.org/post name="Alice"
+```
+
+---
+
+## 🛡️ Sessions, Proxies & TLS Options
+
+### 1. Persistent Sessions across CLI Invocations
+```bash
+# Save session state (cookies & headers) into 'user_session'
+xh --session=user_session -f POST https://example.com/login user="admin" pass="secret"
+
+# Use session in subsequent API requests
+xh --session=user_session https://example.com/dashboard
+```
+
+### 2. Route Through HTTP / SOCKS5 Proxy & Bypass TLS Errors
+```bash
+# Route request through SOCKS5 proxy
+xh --proxy=socks5://127.0.0.1:1080 https://httpbin.org/ip
+
+# Ignore self-signed SSL certificate warnings
+xh --insecure https://self-signed.local
+```
+
+### 3. Offline Request Inspection (`--offline`)
+```bash
+# Render outgoing request without making actual network connection
+xh --offline POST https://httpbin.org/post name="Alice" "X-Custom: 123"
+```
+
+---
+
+## 📋 Cheat Sheet Summary
+
+| Task | Command |
+| --- | --- |
+| Simple GET | `xh https://httpbin.org/get` |
+| GET with query params | `xh GET https://httpbin.org/get search=="rust" page==1` |
+| POST JSON payload | `xh POST https://httpbin.org/post name="Alice" age:=30 active:=true` |
+| Bearer token auth | `xh https://httpbin.org/headers -A bearer -a TOKEN` |
+| Basic auth | `xh -a user:pass https://httpbin.org/auth` |
+| Form POST | `xh -f POST https://httpbin.org/post user="john" pass="secret"` |
+| Upload file | `xh -f POST https://httpbin.org/post doc@~/report.pdf` |
+| Translate to curl | `xh POST https://httpbin.org/post name="Alice" --curl` |
+| Download file | `xh -d https://httpbin.org/image/png -o logo.png` |
+| Output headers only | `xh -h https://httpbin.org/get` |
+| Ignore SSL errors | `xh --insecure https://self-signed.local` |

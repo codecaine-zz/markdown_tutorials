@@ -365,6 +365,40 @@ gawk '{
 gawk '{print NR ": " $0}' employees.txt log.txt
 ```
 
+## Everyday Copy-and-Paste GAWK One-Liners Cheat Sheet
+
+```bash
+# 1. Deduplicate lines without changing original line order
+gawk '!seen[$0]++' input.txt > deduplicated.txt
+
+# 2. Calculate the sum of values in Column 2
+gawk '{sum += $2} END {print "Total Sum:", sum}' numbers.txt
+
+# 3. Calculate average of values in Column 3
+gawk '{sum += $3; count++} END {print "Average:", (count > 0 ? sum/count : 0)}' data.txt
+
+# 4. Find Min and Max values in Column 1
+gawk 'NR==1 {min=max=$1} {if($1>max) max=$1; if($1<min) min=$1} END {print "Min:", min, "Max:", max}' measurements.txt
+
+# 5. Extract and count unique IP addresses from access log (Top 10 IPs)
+gawk '{ip[$1]++} END {for (i in ip) print ip[i], i}' /var/log/nginx/access.log | sort -nr | head -10
+
+# 6. Extract log lines between two timestamp markers
+gawk '/10:00:00/,/10:30:00/' server.log
+
+# 7. Convert CSV file to Tab-Separated (TSV) format
+gawk -F',' -v OFS='\t' '{$1=$1; print}' input.csv > output.tsv
+
+# 8. Print only non-empty lines with trailing whitespace removed
+gawk 'NF {sub(/[ \t]+$/, ""); print}' input.txt
+
+# 9. Print lines longer than 80 characters
+gawk 'length($0) > 80' source_code.py
+
+# 10. Reformat key-value lines into JSON key-value strings
+gawk -F'=' '{printf "  \"%s\": \"%s\",\n", $1, $2}' config.env
+```
+
 These examples demonstrate the power of `awk` for text processing and data manipulation. The key features include field-based operations, pattern matching with regular expressions, arithmetic calculations, string manipulation functions, and flexible input/output formatting. You can combine these techniques to build complex text processing pipelines for various real-world scenarios like log analysis, data transformation, report generation, and more.
 
 Would you like me to elaborate on any specific aspect of `awk` or provide additional examples? This should give you a solid foundation to start using awk effectively!

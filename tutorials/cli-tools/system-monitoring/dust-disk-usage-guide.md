@@ -108,6 +108,32 @@ dust -c
 dust -i
 ```
 
+## Everyday Copy-and-Paste `dust` Snippets Cheat Sheet
+
+```bash
+# 1. Quick top 10 largest folders/files breakdown in current directory
+dust -n 10
+
+# 2. Inspect root disk space usage restricted to 2 directory levels
+dust -d 2 /
+
+# 3. Find largest video and media files in user directory
+dust -e mp4 -e mkv -e mov -e avi ~/
+
+# 4. Analyze code repository disk space excluding build artifacts
+dust -X node_modules -X .git -X dist -X target
+
+# 5. Interactive folder size lookup function using fzf (Add to ~/.zshrc)
+du-fzf() {
+  dust -n 30 "$@" | fzf --reverse
+}
+
+# 6. Shell alias to replace du with dust (Add to ~/.zshrc)
+alias du='dust'
+alias du1='dust -d 1'
+alias du10='dust -n 10'
+```
+
 ---
 
 ## 📋 Cheat Sheet Summary
@@ -121,3 +147,4 @@ dust -i
 | Filter by file extension | `dust -e zip -e iso` |
 | Exclude node_modules | `dust -X node_modules` |
 | Show individual files | `dust -f` |
+

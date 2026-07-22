@@ -152,6 +152,35 @@ if command -v fastfetch &> /dev/null; then
 fi
 ```
 
+## Everyday Copy-and-Paste `fastfetch` Snippets & Shell Integration
+
+```bash
+# 1. Output system information as JSON for scripts or custom dashboards
+fastfetch --format json
+
+# 2. Display fastfetch with retro Apple ASCII logo
+fastfetch --logo apple
+
+# 3. Display fastfetch with custom inline image logo in iTerm2 or WezTerm
+fastfetch --logo ~/Pictures/wallpaper.png --logo-type iterm --logo-width 30
+
+# 4. Run fastfetch showing only CPU, Memory, and Disk metrics
+fastfetch --structure CPU:Memory:Disk
+
+# 5. Clean shell greeting snippet for ~/.zshrc or ~/.bashrc
+cat << 'EOF' >> ~/.zshrc
+
+# Terminal startup greeting with fastfetch
+if command -v fastfetch &> /dev/null; then
+  fastfetch --config small
+fi
+EOF
+
+# 6. Neofetch compatibility alias
+alias neofetch='fastfetch'
+alias sysinfo='fastfetch --config detailed'
+```
+
 ---
 
 ## 📋 Cheat Sheet Summary
@@ -164,3 +193,4 @@ fi
 | Custom Image Logo | `fastfetch --logo image.png --logo-type iterm` |
 | List Available Logos | `fastfetch --list-logos` |
 | List Built-in Presets | `fastfetch --list-presets` |
+

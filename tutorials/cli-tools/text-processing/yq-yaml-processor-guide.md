@@ -119,6 +119,40 @@ Merge multiple configuration files (e.g. `base.yaml` and `override.yaml`).
 yq eval-all '. as $item ireduce ({}; . * $item)' base.yaml override.yaml
 ```
 
+## Everyday Copy-and-Paste `yq` Snippets Cheat Sheet
+
+```bash
+# 1. Update container image tag in Kubernetes Deployment manifest in-place
+yq -i '.spec.template.spec.containers[0].image = "myrepo/myapp:v2.4.0"' deployment.yaml
+
+# 2. Extract all container names from Kubernetes Pod or Deployment manifest
+yq '.spec.template.spec.containers[].name' deployment.yaml
+
+# 3. Extract environment variable value by key name from docker-compose.yml
+yq '.services.web.environment.DATABASE_URL' docker-compose.yml
+
+# 4. Add a new key-value pair to a nested YAML dictionary
+yq -i '.metadata.labels.environment = "production"' manifest.yaml
+
+# 5. Delete an attribute from a YAML document in-place
+yq -i 'del(.metadata.annotations)' service.yaml
+
+# 6. Convert YAML manifest into pretty-printed JSON
+yq -o=json deployment.yaml > deployment.json
+
+# 7. Convert JSON file to formatted YAML
+yq -p=json -o=yaml package.json > package.yaml
+
+# 8. Sort keys in YAML file alphabetically in-place
+yq -i 'sort_keys(.)' config.yaml
+
+# 9. Extract multi-document YAML (e.g., K8s manifest stream) into separate files
+yq eval-all '.spec.template.spec.containers[].name' pod1.yaml pod2.yaml
+
+# 10. Extract raw string value without YAML quotes
+yq -r '.services.db.image' docker-compose.yml
+```
+
 ---
 
 ## 📋 Cheat Sheet Summary

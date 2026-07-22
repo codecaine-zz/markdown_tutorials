@@ -389,3 +389,95 @@ cargo test
 2. **Multiple mutable borrows**: Rust allows only *one* `&mut T` reference to data in a given scope.
 3. **Unnecessary `.clone()` calls**: Avoid cloning large heap strings/vectors when borrowing suffices.
 4. **Using `.unwrap()` indiscriminately**: Use pattern matching or `?` to handle errors gracefully in production code.
+
+---
+
+## Chapter 7: Everyday Copy-and-Paste Rust One-Liners & Production Snippets
+
+```rust
+// 1. Efficient Line-by-Line File Reader using BufReader
+use std::fs::File;
+use std::io::{BufRead, BufReader, Result};
+
+fn read_lines_from_file(filename: &str) -> Result<Vec<String>> {
+    let file = File::open(filename)?;
+    let reader = BufReader::new(file);
+    reader.lines().collect()
+}
+
+// 2. Multithreaded Execution with Thread Spawning & JoinHandles
+use std::thread;
+
+fn run_parallel_workers() {
+    let handles: Vec<_> = (0..4)
+        .map(|i| {
+            thread::spawn(move || {
+                format!("Worker {} completed", i)
+            })
+        })
+        .collect();
+
+    for handle in handles {
+        if let Ok(result) = handle.join() {
+            println!("{}", result);
+        }
+    }
+}
+
+// 3. Custom Error Enum with Display Implementation
+use std::fmt;
+
+#[derive(Debug)]
+pub enum AppError {
+    NotFound(String),
+    PermissionDenied,
+    IoError(std::io::Error),
+}
+
+impl fmt::Display for AppError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            AppError::NotFound(item) => write!(f, "Item not found: {}", item),
+            AppError::PermissionDenied => write!(f, "Access denied"),
+            AppError::IoError(e) => write!(f, "IO Error: {}", e),
+        }
+    }
+}
+
+impl std::error::Error for AppError {}
+
+// 4. Safe Shared State Across Threads with Arc<Mutex<T>>
+use std::sync::{Arc, Mutex};
+
+fn shared_counter() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter_clone = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter_clone.lock().unwrap();
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Final Shared Count: {}", *counter.lock().unwrap());
+}
+
+// 5. Measure Function Execution Duration
+use std::time::Instant;
+
+fn measure_execution<F, R>(func: F) -> (R, std::time::Duration)
+where
+    F: FnOnce() -> R,
+{
+    let start = Instant::now();
+    let result = func();
+    (result, start.elapsed())
+}
+```

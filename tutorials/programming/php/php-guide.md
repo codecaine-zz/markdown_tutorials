@@ -304,3 +304,98 @@ php -m
 2. **Using legacy `switch`**: Prefer type-safe `match` expressions.
 3. **Concatenating SQL strings**: Always use PDO prepared statements with bound parameters.
 4. **Modifying `readonly` properties**: `readonly` properties can only be initialized once in the constructor.
+
+---
+
+## Everyday Copy-and-Paste PHP 8.x Snippets & Practical Recipes
+
+```php
+<?php
+
+declare(strict_types=1);
+
+// 1. Secure Password Hashing & Verification
+function hashPassword(string $password): string {
+    return password_hash($password, PASSWORD_ARGON2ID);
+}
+
+function verifyPassword(string $password, string $hash): bool {
+    return password_verify($password, $hash);
+}
+
+// 2. Modern cURL HTTP GET Request with Timeout & Error Handling
+function fetchJsonApi(string $url): array {
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 5,
+        CURLOPT_USERAGENT => 'PHP 8.3 Client',
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpCode !== 200 || $response === false) {
+        throw new RuntimeException("API Request failed with status code: {$httpCode}");
+    }
+
+    return json_decode((string)$response, true, 512, JSON_THROW_ON_ERROR);
+}
+
+// 3. PDO MySQL Database Singleton Helper
+final class Database {
+    private static ?PDO $instance = null;
+
+    public static function getConnection(): PDO {
+        if (self::$instance === null) {
+            $dsn = "mysql:host=127.0.0.1;dbname=app_db;charset=utf8mb4";
+            self::$instance = new PDO($dsn, "dbuser", "secretpassword", [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_EMULATE_PREPARES => false,
+            ]);
+        }
+        return self::$instance;
+    }
+}
+
+// 4. CSRF Token Protection Generator & Validator
+function generateCsrfToken(): string {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    return $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+function validateCsrfToken(?string $token): bool {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], (string)$token);
+}
+
+// 5. Safe File Upload Handler with MIME Type Validation
+function handleFileUpload(array $file, string $uploadDir): string {
+    if ($file['error'] !== UPLOAD_ERR_OK) {
+        throw new RuntimeException("File upload failed with error code: {$file['error']}");
+    }
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo->file($file['tmp_name']);
+    
+    $allowedTypes = ['image/jpeg' => 'jpg', 'image/png' => 'png', 'application/pdf' => 'pdf'];
+    if (!isset($allowedTypes[$mimeType])) {
+        throw new InvalidArgumentException("Invalid file type: {$mimeType}");
+    }
+
+    $filename = sprintf('%s.%s', bin2hex(random_bytes(16)), $allowedTypes[$mimeType]);
+    $destination = rtrim($uploadDir, '/') . '/' . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $destination)) {
+        throw new RuntimeException("Failed to move uploaded file");
+    }
+
+    return $destination;
+}
+```

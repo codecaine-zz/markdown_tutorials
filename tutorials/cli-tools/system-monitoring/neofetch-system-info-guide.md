@@ -150,3 +150,35 @@ If you need to remove `neofetch`, you can do so easily with Homebrew.
 ```bash
 brew uninstall neofetch
 ```
+
+### 8. Everyday Copy-and-Paste `neofetch` Customization Snippets
+
+```bash
+# 1. Run neofetch with retro Apple ASCII distro logo
+neofetch --ascii_distro Apple
+
+# 2. Hide hardware specs for clean lightweight screenshots
+neofetch --disable CPU GPU Disk Battery Memory Resolution
+
+# 3. Use inline image logo protocol (iTerm2 / Kitty) instead of ASCII art
+neofetch --image ~/Pictures/logo.png --image_backend iterm2
+
+# 4. Off-mode (Print text summary without any ASCII logo)
+neofetch --off
+
+# 5. One-liner config generator for minimal neofetch output
+mkdir -p ~/.config/neofetch
+cat << 'EOF' > ~/.config/neofetch/config.conf
+print_info() {
+    info title
+    info underline
+    info "OS" os
+    info "Host" host
+    info "Kernel" kernel
+    info "Uptime" uptime
+    info "Shell" shell
+    info "CPU" cpu
+    info "Memory" memory
+}
+EOF
+```

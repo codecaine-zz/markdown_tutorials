@@ -118,6 +118,45 @@ real_memory = true
 show_memory_as_values = true
 ```
 
+## Everyday Copy-and-Paste `bottom` Command Snippets & Aliases
+
+```bash
+# 1. Launch bottom in lightweight basic text mode (no graph animations, low CPU usage)
+btm --basic
+
+# 2. Launch directly focused on process tree view mode
+btm --tree
+
+# 3. Launch with fast 250ms refresh rate for real-time monitoring
+btm --rate 250
+
+# 4. Launch showing battery status widget alongside hardware thermals
+btm --battery
+
+# 5. Launch with expanded process list by default
+btm --default_widget_type proc
+
+# 6. Useful Zsh shell aliases for quick monitoring (Add to ~/.zshrc)
+alias btop-tree='btm --tree'
+alias btop-fast='btm --rate 500'
+alias btop-lite='btm --basic'
+
+# 7. One-liner to create a dark gruvbox configuration template
+mkdir -p ~/.config/bottom && cat << 'EOF' > ~/.config/bottom/bottom.toml
+rate = 1000
+enable_gpu = true
+show_process_memory_as_values = true
+
+[colors]
+table_header_color = "Yellow"
+cpu_core_colors = ["LightRed", "LightGreen", "LightYellow", "LightBlue"]
+ram_color = "Green"
+swap_color = "Red"
+rx_color = "Cyan"
+tx_color = "Magenta"
+EOF
+```
+
 ---
 
 ## 📋 Cheat Sheet Summary

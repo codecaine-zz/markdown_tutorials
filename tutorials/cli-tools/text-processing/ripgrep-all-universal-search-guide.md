@@ -146,6 +146,37 @@ rga --rga-list-adapters
 rga --rga-adapters=+tesseract "scanned text"
 ```
 
+## Everyday Copy-and-Paste `rga` Snippets & Shell Integration
+
+```bash
+# 1. Search inside all PDF files in ~/Downloads for financial terms
+rga -i "invoice\|receipt\|total" ~/Downloads/*.pdf
+
+# 2. Search inside Word documents (.docx) and output matching filename only
+rga -l "confidential statement" -g "*.docx"
+
+# 3. Enable OCR to search scanned PDFs / images using Tesseract
+rga --rga-adapters=+tesseract "contract signature" ~/Documents/scans/
+
+# 4. Search embedded subtitles in MKV or MP4 video files
+rga --rga-adapters=+ffmpeg "character monologue" ~/Videos/
+
+# 5. Search inside compressed log archives (.tar.gz / .zip)
+rga "500 Internal Server Error" logs/archive-2025.zip
+
+# 6. Search SQLite databases for user entries
+rga "user_id_94812" database.sqlite3
+
+# 7. Zsh shell alias function: Interactive document search & open in macOS Preview (Add to ~/.zshrc)
+rga-open() {
+  local target
+  target=$(rga-fzf "$1")
+  if [[ -n "$target" ]]; then
+    open "$target"
+  fi
+}
+```
+
 ---
 
 ## 📋 Cheat Sheet Summary

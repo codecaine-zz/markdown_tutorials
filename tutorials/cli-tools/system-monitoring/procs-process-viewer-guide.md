@@ -138,10 +138,61 @@ procs --watch
 
 Press `Ctrl+C` to quit.
 
+### 8. Everyday Copy-and-Paste `procs` One-Liners & Config Snippets
+
+```bash
+# 1. Top memory-consuming processes sorted descending
+procs --sortd mem
+
+# 2. Top CPU-consuming processes sorted descending
+procs --sortd cpu
+
+# 3. Filter processes owned by current logged-in user
+procs --user $USER
+
+# 4. Display parent-child process tree with command arguments
+procs --tree
+
+# 5. Live update process table every 1 second (watch mode)
+procs --watch --interval 1
+
+# 6. Filter processes matching keyword and sort by memory
+procs node --sortd mem
+
+# 7. Useful Zsh aliases for quick process monitoring (Add to ~/.zshrc)
+alias psmem='procs --sortd mem'
+alias pscpu='procs --sortd cpu'
+alias pstree='procs --tree'
+alias psgrep='procs'
+
+# 8. Create custom procs configuration file (~/.config/procs/config.toml)
+mkdir -p ~/.config/procs
+cat << 'EOF' > ~/.config/procs/config.toml
+[header]
+on_unicode = "true"
+
+[style]
+header = "BrightWhite"
+unit = "BrightBlack"
+
+[[columns]]
+kind = "Pid"
+[[columns]]
+kind = "User"
+[[columns]]
+kind = "Cpu"
+[[columns]]
+kind = "Memory"
+[[columns]]
+kind = "Command"
+EOF
+```
+
 ---
 
-### 8. Uninstallation
+### 9. Uninstallation
 
 ```bash
 brew uninstall procs
 ```
+

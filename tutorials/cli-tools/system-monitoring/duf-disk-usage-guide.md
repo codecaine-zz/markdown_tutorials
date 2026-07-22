@@ -143,6 +143,39 @@ if [ "$usage_percent" -gt 85 ]; then
 fi
 ```
 
+## Everyday Copy-and-Paste `duf` Snippets & Shell Integration
+
+```bash
+# 1. Quick overview of physical disks sorted by highest percentage used
+duf --only local --sort usage
+
+# 2. Display filesystem name, size, used, available, and mount point only
+duf --output filesystem,size,used,avail,mountpoint
+
+# 3. Export structured JSON disk space report to a file
+duf --json > /tmp/disk_report.json
+
+# 4. Check available storage on root directory in gigabytes using jq
+duf --json / | jq -r '.[0] | "\(.mountpoint): \((.avail / 1073741824) | round) GB free"'
+
+# 5. Shell alias overrides for df replacement (Add to ~/.zshrc)
+alias df='duf'
+alias df-local='duf --only local'
+alias df-sort='duf --sort size'
+
+# 6. Automated Bash Disk Warning Script (Cron compatible)
+cat << 'EOF' > ~/check_disk.sh
+#!/bin/bash
+threshold=85
+usage=$(duf --json / | jq -r '.[0].usage * 100 | round')
+
+if [ "$usage" -ge "$threshold" ]; then
+    echo "CRITICAL: Root disk partition usage is at ${usage}%!" | mail -s "Disk Space Alert" admin@example.com
+fi
+EOF
+chmod +x ~/check_disk.sh
+```
+
 ---
 
 ## 📋 Cheat Sheet Summary

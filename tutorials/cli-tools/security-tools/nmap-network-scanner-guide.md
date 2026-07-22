@@ -379,22 +379,29 @@ echo "Scan complete. Results saved to ${OUTPUT}.{txt,xml}"
 
 ## Command Summary and Best Practices
 
-### Common Scan Patterns
+### Common Scan Patterns & Power One-Liners
 ```bash
-# Quick host discovery (ping sweep)
+# 1. Quick host discovery (ping sweep)
 nmap -sn 192.168.1.0/24
 
-# Service version detection
-nmap -sV 192.168.1.0/24
+# 2. High-speed full 65,535 TCP port scan with version & default scripts (Save all 3 formats)
+nmap -p- --min-rate 5000 -sV -sC -oA full_scan_results 192.168.1.100
 
-# Aggressive scan with all features
-nmap -A 192.168.1.0/24
+# 3. Comprehensive vulnerability scan using NSE scripts
+nmap -p 80,443,8080 -sV --script vuln,http-vuln* -oN vuln_audit.txt 192.168.1.100
 
-# UDP scan for common ports
-nmap -sU -p 53,123,161 192.168.1.0/24
+# 4. Target SSL/TLS cipher suite and certificate audit
+nmap -p 443 --script ssl-enum-ciphers,ssl-cert,ssl-date 192.168.1.100
 
-# Stealth TCP SYN scan
-nmap -sS -T2 192.168.1.0/24
+# 5. Extract live open ports from GNMAP (.gnmap) output file for xargs / netcat
+grep 'open' scan.gnmap | awk -F':' '{print $2}' | awk '{print $1}' | sort -u > open_hosts.txt
+grep -oP '\d+/open/tcp//[^/]+' scan.gnmap | cut -d '/' -f 1 | sort -u | paste -sd, - > open_ports.txt
+
+# 6. Convert Nmap XML output to a clean HTML report (viewable in any web browser)
+xsltproc scan_results.xml -o scan_report.html
+
+# 7. Firewall & IDS Evasion (Decoy IPs, MAC spoofing, and Packet Fragmentation)
+nmap -sS -f --mtu 24 -D RND:10 --spoof-mac 0 --scan-delay 1s 192.168.1.100
 ```
 
 ### Best Practices for Nmap Usage

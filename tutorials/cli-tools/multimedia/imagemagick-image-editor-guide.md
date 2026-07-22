@@ -13,9 +13,10 @@ ImageMagick is a powerful command-line utility suite for creating, editing, comp
 5. [Cropping and Cropping Tools](#cropping-and-cropping-tools)
 6. [Color Manipulation](#color-manipulation)
 7. [Filters and Effects](#filters-and-effects)
-8. [Text Overlay](#add-simple-text-overlay)
-9. [Batch Processing](#batch-processing-bulk-conversion-examples)
-10. [Advanced Techniques](#image-information)
+8. [Text and Overlay Operations](#text-and-overlay-operations)
+9. [Batch Processing & Bulk Conversion Examples](#batch-processing--bulk-conversion-examples)
+10. [Practical Copy-and-Paste Recipes](#practical-copy-and-paste-recipes-most-common-workflows)
+11. [Complete Examples](#complete-examples)
 
 ## Installation
 
@@ -424,6 +425,99 @@ find . -type f -name "*.png" -print0 | xargs -0 -P 4 -I {} sh -c '
 fd -e png -e jpg -x magick convert {} -resize 1200x800\> {.}.webp
 ```
 
+## Practical Copy-and-Paste Recipes (Most Common Workflows)
+
+### 1. Web & Mobile App Asset Generation
+```bash
+# Generate a multi-resolution favicon.ico file from a master PNG
+magick convert input_logo.png -define icon:auto-resize=256,128,96,64,48,32,16 favicon.ico
+
+# Convert PNG/JPG to WebP with Web optimization (strip metadata, 80% quality)
+magick convert photo.jpg -strip -quality 80 photo.webp
+
+# Convert image to AVIF for high-efficiency modern web delivery
+magick convert image.png -quality 65 image.avif
+
+# Create a circular profile avatar with transparent background
+magick convert profile.jpg -resize 400x400^ -gravity center -extent 400x400 \
+    \( +clone -threshold -1 -draw "circle 200,200 200,0" \) \
+    -alpha off -compose copy_opacity -composite avatar_circle.png
+
+# Remove white background (make transparent with 15% color tolerance)
+magick convert logo_white_bg.png -fuzz 15% -transparent white transparent_logo.png
+```
+
+### 2. PDF & Multi-Page Document Processing
+```bash
+# Extract high-resolution (300 DPI) images from a PDF file
+magick convert -density 300 document.pdf -quality 90 -scene 1 page_%02d.jpg
+
+# Extract single specific page (e.g. Page 1) from PDF to PNG
+magick convert -density 300 document.pdf[0] page_1.png
+
+# Combine multiple JPG/PNG images into a single multi-page PDF document
+magick convert *.jpg -quality 85 output_document.pdf
+```
+
+### 3. Image Stitching & Photo Grids (Montage & Append)
+```bash
+# Combine two photos side-by-side horizontally
+magick convert image1.jpg image2.jpg +append side_by_side.jpg
+
+# Stack two photos vertically
+magick convert top.png bottom.png -append stacked.png
+
+# Create a 3-column contact sheet / photo grid with 5px borders and gaps
+magick montage *.jpg -tile 3x -geometry 300x300+5+5 -background "#1e1e2e" photo_grid.jpg
+```
+
+### 4. Watermarking & Image Protection
+```bash
+# Add semi-transparent centered text watermark
+magick convert photo.jpg -pointsize 48 -fill "rgba(255,255,255,0.4)" \
+    -gravity center -annotate 0 "CONFIDENTIAL" photo_watermarked.jpg
+
+# Overlay semi-transparent PNG logo in bottom-right corner with 20px padding
+magick convert photo.jpg logo.png -gravity southeast -geometry +20+20 \
+    -compose dissolve -define compose:args=40 -composite photo_watermarked.jpg
+```
+
+### 5. GIF Creation, Extraction & Optimization
+```bash
+# Build animated GIF from sequence of PNG images (20ms delay, infinite loop)
+magick convert -delay 20 -loop 0 frame*.png animation.gif
+
+# Explode animated GIF into individual PNG frames
+magick convert animation.gif -scene 1 frame_%03d.png
+
+# Compress and optimize heavy GIF file size
+magick convert heavy_animation.gif -fuzz 5% -layers Optimize optimized.gif
+```
+
+### 6. Drop Shadows, Borders & Rounded Corners for Screenshots
+```bash
+# Add elegant white border and realistic drop shadow for documentation screenshots
+magick convert screenshot.png -bordercolor "#ffffff" -border 15 \
+    \( +clone -background black -shadow 60x10+0+10 \) \
+    +swap -background transparent -layers merge shadow_screenshot.png
+
+# Round corners of an image (20px radius)
+magick convert photo.jpg \
+    \( +clone -alpha extract -draw "fill black polygon 0,0 0,20 20,0 fill white circle 20,20 20,0" \
+       \( +clone -flip \) -compose Multiply -composite \
+       \( +clone -flop \) -compose Multiply -composite \) \
+    -alpha off -compose CopyOpacity -composite rounded_photo.png
+```
+
+### 7. Metadata Removal & Privacy Filtering
+```bash
+# Strip all EXIF metadata, GPS tags, and camera info before publishing
+magick convert camera_photo.jpg -strip privacy_clean.jpg
+
+# Inspect EXIF metadata (Camera model, lens, ISO, shutter speed)
+magick identify -format "Camera: %[EXIF:Make] %[EXIF:Model]\nDate: %[EXIF:DateTimeOriginal]\nISO: %[EXIF:ISOSpeedRatings]\n" photo.jpg
+```
+
 ## Complete Examples
 
 ### Example 1: Image Preprocessing Pipeline
@@ -514,27 +608,6 @@ for file in *.{jpg,png,gif}; do
 done
 
 echo "Image enhancement complete!"
-```
-
-These examples demonstrate various ImageMagick operations including image manipulation, text overlay, batch processing, and workflow automation. Each example shows practical applications that can be adapted for different use cases.
-
-```bash
-# Simple command to resize an image
-convert input.jpg -resize 800x600 output.jpg
-
-# Command to add text to an image
-convert input.jpg -pointsize 24 -fill white \
-    -gravity center -annotate 0 "Hello World" \
-    output.jpg
-
-# Command to create a thumbnail
-convert input.jpg -thumbnail 100x100 thumb.jpg
-
-# Command to convert format
-convert input.png output.jpg
-
-# Command to combine images into collage
-montage image1.jpg image2.jpg image3.jpg -geometry +4+4 collage.jpg
 ```
 
 This comprehensive guide covers basic and advanced ImageMagick operations, from simple transformations to complex batch processing and automation tasks. The examples provide practical starting points for implementing these workflows in real-world scenarios.

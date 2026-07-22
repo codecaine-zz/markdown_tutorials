@@ -141,6 +141,34 @@ fd -e py -x sd "python2" "python3" {}
 fd -e md -x sd "v1.0-deprecated" "v2.0-stable" {}
 ```
 
+## Everyday Copy-and-Paste `sd` Snippets Cheat Sheet
+
+```bash
+# 1. Strip trailing whitespace from all lines in a file in-place
+sd "\s+$" "" file.txt
+
+# 2. Convert snake_case identifiers to camelCase (e.g. user_id -> userId)
+sd "(\w+)_([a-z])" "$1${2:up}" file.js
+
+# 3. Swap key-value pair assignments (e.g. KEY=VALUE -> VALUE: KEY)
+sd "^([A-Z_]+)=(.*)$" "$2: $1" .env
+
+# 4. Remove all HTML/XML tags from a document
+echo "<h1>Title</h1><p>Text</p>" | sd "<[^>]*>" ""
+
+# 5. Replace domain names in production URLs across all source files
+fd -e ts -e js -x sd "https://api\.old-domain\.com" "https://api.new-domain.com" {}
+
+# 6. Reformat ISO timestamps (YYYY-MM-DD) into US format (MM/DD/YYYY)
+sd "(\d{4})-(\d{2})-(\d{2})" "$2/$3/$1" data.log
+
+# 7. Comment out console.log statements across TypeScript files
+fd -e ts -x sd "console\.log\((.*)\);" "// console.log($1);" {}
+
+# 8. Replace literal string special characters without escaping regex (-s flag)
+sd -s '$config["debug"] = true;' '$config["debug"] = false;' config.php
+```
+
 ---
 
 ## 📋 Cheat Sheet Summary

@@ -6,12 +6,15 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Service Management (`brew services`)](#4-service-management-brew-services)
-5. [Basic Connection & Security Setup](#5-basic-connection-security-setup)
-6. [Database & Table Operations](#6-database-table-operations)
-7. [CRUD SQL Examples & Output](#7-crud-sql-examples-output)
-8. [User Management & Privileges](#8-user-management-privileges)
-9. [Backups & Database Restores (`mysqldump`)](#9-backups-database-restores-mysqldump)
-10. [Uninstallation](#10-uninstallation)
+5. [Basic Connection & Security Setup](#5-basic-connection--security-setup)
+6. [Non-Interactive CLI Execution & Scripting](#6-non-interactive-cli-execution--scripting)
+7. [Database & Table Operations](#7-database--table-operations)
+8. [CRUD SQL Examples & Output](#8-crud-sql-examples--output)
+9. [Native JSON Data Operations](#9-native-json-data-operations)
+10. [Query Performance & Process Management](#10-query-performance--process-management)
+11. [User Management & Privileges](#11-user-management--privileges)
+12. [Backups & Restores (`mysqldump`)](#12-backups--restores-mysqldump)
+13. [Uninstallation](#13-uninstallation)
 
 ---
 
@@ -20,7 +23,7 @@
 `mysql` is the command-line client for MySQL, one of the world's most popular open-source relational database management systems (RDBMS). It allows developers and data administrators to create databases, manage tables, run SQL queries, tune index performance, and administer user privileges directly from the terminal.
 
 #### Key Features
-* **ACID-Compliant Transactions:** Full support for InnoDB transactional engine.
+* **ACID-Compliant Transactions:** Full support for the InnoDB transactional engine.
 * **Structured Data Organization:** Schema-enforced tables with primary/foreign key relationships.
 * **CLI Utility Suite:** Includes `mysql`, `mysqldump`, and `mysqladmin`.
 
@@ -99,7 +102,38 @@ Type the root password when prompted. You will enter the interactive `mysql>` sh
 
 ---
 
-### 6. Database & Table Operations
+### 6. Non-Interactive CLI Execution & Scripting
+
+Run SQL commands directly from terminal shell scripts without entering interactive mode:
+
+#### 1. Run Single Query (`-e`)
+```bash
+mysql -u root -p -e "SHOW DATABASES;"
+```
+
+#### 2. Export Query to Tab-Separated / Batch Format (`--batch`)
+```bash
+mysql -u root -p --batch -e "SELECT username, email FROM myapp_db.users;" > users.tsv
+```
+
+#### 3. Export Query to HTML Table (`--html`)
+```bash
+mysql -u root -p --html -e "SELECT * FROM myapp_db.users;" > report.html
+```
+
+#### 4. Export Query to XML Format (`--xml`)
+```bash
+mysql -u root -p --xml -e "SELECT * FROM myapp_db.users;" > report.xml
+```
+
+#### 5. Execute SQL Script File
+```bash
+mysql -u root -p myapp_db < schema.sql
+```
+
+---
+
+### 7. Database & Table Operations
 
 Execute these commands inside the `mysql>` prompt:
 
@@ -110,7 +144,7 @@ SHOW DATABASES;
 
 #### 2. Create and Select a Database
 ```sql
-CREATE DATABASE myapp_db;
+CREATE DATABASE myapp_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE myapp_db;
 ```
 
@@ -122,7 +156,7 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL,
     age INT DEFAULT 18,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB;
 ```
 
 #### 4. Inspect Table Schema
@@ -132,7 +166,7 @@ DESCRIBE users;
 
 ---
 
-### 7. CRUD SQL Examples & Output
+### 8. CRUD SQL Examples & Output
 
 #### Create (Insert Rows)
 ```sql
@@ -172,7 +206,54 @@ DELETE FROM users WHERE username = 'bob_admin';
 
 ---
 
-### 8. User Management & Privileges
+### 9. Native JSON Data Operations
+
+MySQL 8.0+ includes native JSON support:
+
+```sql
+-- Create table with JSON column
+CREATE TABLE user_settings (
+    user_id INT PRIMARY KEY,
+    preferences JSON NOT NULL
+);
+
+-- Insert JSON object
+INSERT INTO user_settings (user_id, preferences) 
+VALUES (1, JSON_OBJECT('theme', 'dark', 'notifications', true));
+
+-- Extract JSON values with inline operator ->>
+SELECT user_id, preferences->>'$.theme' AS theme 
+FROM user_settings 
+WHERE preferences->>'$.theme' = 'dark';
+```
+
+---
+
+### 10. Query Performance & Process Management
+
+#### Inspect Execution Plan (`EXPLAIN`)
+```sql
+EXPLAIN FORMAT=TREE SELECT * FROM users WHERE email = 'alice@example.com';
+```
+
+#### Inspect Table Indexes
+```sql
+SHOW INDEX FROM users;
+```
+
+#### View Running Queries & Process List
+```sql
+SHOW PROCESSLIST;
+```
+
+#### Kill a Hung Connection / Query Thread
+```sql
+KILL 42;
+```
+
+---
+
+### 11. User Management & Privileges
 
 #### Create a New Database User
 ```sql
@@ -185,20 +266,25 @@ GRANT ALL PRIVILEGES ON myapp_db.* TO 'app_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-#### Connect with the New User (from terminal)
-```bash
-mysql -u app_user -p myapp_db
+#### View Granted User Privileges
+```sql
+SHOW GRANTS FOR 'app_user'@'localhost';
 ```
 
 ---
 
-### 9. Backups & Database Restores (`mysqldump`)
+### 12. Backups & Restores (`mysqldump`)
 
-Run these commands directly in your Mac terminal (not inside `mysql>` prompt):
+Run these commands directly in your Mac terminal shell:
 
-#### Export Database to SQL Dump File
+#### Export Database to SQL Dump File (Production-Safe Transactional Dump)
 ```bash
-mysqldump -u root -p myapp_db > myapp_backup.sql
+mysqldump -u root -p --single-transaction --routines --triggers myapp_db > myapp_backup.sql
+```
+
+#### Export All Databases
+```bash
+mysqldump -u root -p --all-databases > full_server_backup.sql
 ```
 
 #### Restore Database from Dump File
@@ -208,7 +294,7 @@ mysql -u root -p myapp_db < myapp_backup.sql
 
 ---
 
-### 10. Uninstallation
+### 13. Uninstallation
 
 ```bash
 brew services stop mysql

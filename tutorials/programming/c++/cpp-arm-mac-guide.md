@@ -422,3 +422,82 @@ g++-14 -std=c++23 -O3 main.cpp -o main
 2. **Passing objects by value**: Pass large objects using `const T&` or `std::string_view`.
 3. **Ignoring const correctness**: Mark functions that do not alter class state with `const`.
 4. **Using legacy C functions (`printf`, `malloc`)**: Prefer `<print>`, `<format>`, and `std::vector`.
+
+---
+
+## Chapter 8: Everyday Copy-and-Paste Modern C++ Snippets & Recipes
+
+```cpp
+// 1. High-Precision Execution Timer Utility using std::chrono
+#include <print>
+#include <chrono>
+
+template<typename Func>
+auto measure_time(Func&& func) {
+    auto start = std::chrono::high_resolution_clock::now();
+    func();
+    auto end = std::chrono::high_resolution_clock::now();
+    return std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+}
+
+// 2. Read Whole File into std::string using Modern File I/O
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <filesystem>
+
+std::string read_file_contents(const std::filesystem::path& path) {
+    std::ifstream file(path, std::ios::in | std::ios::binary);
+    if (!file) throw std::runtime_error("Failed to open file: " + path.string());
+    
+    std::ostringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
+}
+
+// 3. Multithreaded Async Task Execution with std::async & std::future
+#include <future>
+#include <vector>
+
+int compute_square(int n) {
+    return n * n;
+}
+
+void run_async_tasks() {
+    std::vector<std::future<int>> futures;
+    for (int i = 1; i <= 5; ++i) {
+        futures.push_back(std::async(std::launch::async, compute_square, i));
+    }
+
+    for (auto& fut : futures) {
+        std::println("Async Square Result: {}", fut.get());
+    }
+}
+
+// 4. Safe String Splitting / Tokenization using std::string_view & std::ranges
+#include <vector>
+#include <string_view>
+#include <ranges>
+
+std::vector<std::string_view> split_string(std::string_view str, char delimiter) {
+    std::vector<std::string_view> tokens;
+    for (auto chunk : str | std::views::split(delimiter)) {
+        tokens.emplace_back(chunk.begin(), chunk.end());
+    }
+    return tokens;
+}
+
+// 5. High-Performance File Search using std::filesystem
+#include <filesystem>
+
+void find_files_by_extension(const std::filesystem::path& dir, std::string_view ext) {
+    namespace fs = std::filesystem;
+    if (!fs::exists(dir) || !fs::is_directory(dir)) return;
+
+    for (const auto& entry : fs::recursive_directory_iterator(dir)) {
+        if (entry.is_regular_file() && entry.path().extension() == ext) {
+            std::println("Found: {}", entry.path().string());
+        }
+    }
+}
+```

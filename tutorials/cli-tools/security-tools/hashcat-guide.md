@@ -179,6 +179,39 @@ hashcat -m 2500 -a 0 \
 | **Benchmark** | ```zsh<br>hashcat -b -m 0   # MD5 speed test on your GPU/CPU<br>``` | Shows hashes‑per‑second; helps you size larger jobs. |
 | **Using a massive list** (e.g., RockYou2021) | ```zsh<br>hashcat -m 0 -a 0 ~/hashcat-demo/hashes/example0.hash /path/to/rockyou2021.txt<br>``` | Same command, just point to the huge list you downloaded in § 2. |
 
+### 6.1 Real-World Common Hash Modes (Copy-and-Paste Cheat Sheet)
+
+Extract hashes first using `john` utilities (e.g. `pdf2john.py`, `zip2john`, `ssh2john.py`), then crack with Hashcat:
+
+```zsh
+# 1. PDF File Passwords (-m 10500 / 10600)
+# Extract hash: python3 pdf2john.py secret.pdf > pdf.hash
+hashcat -m 10500 -a 0 pdf.hash ~/hashcat-demo/dicts/rockyou.txt
+
+# 2. ZIP Archive (-m 13600 WinZip / PKZIP)
+# Extract hash: zip2john file.zip > zip.hash (remove filename prefix before running)
+hashcat -m 13600 -a 0 zip.hash ~/hashcat-demo/dicts/rockyou.txt
+
+# 3. 7-Zip Archive (-m 11600)
+# Extract hash: 7z2john.pl archive.7z > 7z.hash
+hashcat -m 11600 -a 0 7z.hash ~/hashcat-demo/dicts/rockyou.txt
+
+# 4. Microsoft Office (2013+ .docx / .xlsx) (-m 9600)
+# Extract hash: office2john.py document.docx > docx.hash
+hashcat -m 9600 -a 0 docx.hash ~/hashcat-demo/dicts/rockyou.txt
+
+# 5. SSH Private Key Passphrase (-m 22900)
+# Extract hash: ssh2john.py ~/.ssh/id_rsa > ssh.hash
+hashcat -m 22900 -a 0 ssh.hash ~/hashcat-demo/dicts/rockyou.txt
+
+# 6. Active Directory Kerberoast (krb5tgs -m 13100)
+hashcat -m 13100 -a 0 krb5tgs.hash ~/hashcat-demo/dicts/rockyou.txt -r $(brew --prefix hashcat)/share/hashcat/rules/oneruletorule-them-all.rule
+
+# 7. Targeted Mask Attack (-a 3) for "Company2024!" format
+# ?u = Uppercase, ?l = Lowercase, ?d = Digit, ?s = Special character
+hashcat -m 1000 -a 3 ntlm.hash "?u?l?l?l?l?l?l?d?d?d?d?s"
+```
+
 ---
 
 <a id="7"></a>

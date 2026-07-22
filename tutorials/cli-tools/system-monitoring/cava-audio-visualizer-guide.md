@@ -126,3 +126,50 @@ If you need to remove `cava`, you can do so easily with Homebrew.
 ```bash
 brew uninstall cava
 ```
+
+### 8. Everyday Copy-and-Paste `cava` Configurations & Custom Styles
+
+```bash
+# 1. Quick configuration generator for high-density ASCII gradient bars
+mkdir -p ~/.config/cava
+cat << 'EOF' > ~/.config/cava/config
+[general]
+framerate = 60
+sensitivity = 100
+bars = 0
+bar_width = 2
+bar_spacing = 1
+
+[input]
+method = portaudio
+source = auto
+
+[output]
+method = ncurses
+
+[color]
+gradient = 1
+gradient_count = 6
+gradient_color_1 = '#50fa7b'
+gradient_color_2 = '#8be9fd'
+gradient_color_3 = '#ff79c6'
+gradient_color_4 = '#bd93f9'
+gradient_color_5 = '#ffb86c'
+gradient_color_6 = '#ff5555'
+
+[smoothing]
+integral = 75
+monstercat = 1
+waves = 0
+gravity = 100
+EOF
+
+# 2. Launch CAVA specifying custom config path
+cava -p ~/.config/cava/config
+
+# 3. Embed CAVA audio visualizer in a mini Tmux status pane at the bottom
+tmux split-window -v -l 10 'cava'
+
+# 4. Useful Zsh alias to launch visualizer (Add to ~/.zshrc)
+alias visualizer='cava'
+```

@@ -311,3 +311,92 @@ bun add express zlib
 1. **Overusing `any`**: Defeats TypeScript's type safety. Use `unknown` or generics instead.
 2. **Ignoring `strict` mode**: Always set `"strict": true` in `tsconfig.json`.
 3. **Confusing `type` vs `interface`**: Use `interface` for expandable object shapes and `type` for unions/primitives.
+
+---
+
+## Everyday Copy-and-Paste TypeScript & Bun Recipes
+
+```ts
+// 1. Typed HTTP GET Fetch Helper with Timeout & Error Handling
+async function fetchJson<T>(url: string, timeoutMs: number = 5000): Promise<T> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}: ${res.statusText}`);
+    return (await res.json()) as T;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+// 2. Fast File I/O with Bun Native File API
+async function readAndParseJson<T>(filePath: string): Promise<T> {
+  const file = Bun.file(filePath);
+  if (!(await file.exists())) {
+    throw new Error(`File not found: ${filePath}`);
+  }
+  return await file.json();
+}
+
+async function writeJsonAtomic<T>(filePath: string, data: T): Promise<number> {
+  const content = JSON.stringify(data, null, 2);
+  return await Bun.write(filePath, content);
+}
+
+// 3. Embedded SQLite Queries with Bun Native sqlite
+import { Database } from "bun:sqlite";
+
+interface UserRecord {
+  id: number;
+  name: string;
+  email: string;
+}
+
+function queryUsers(dbPath: string): UserRecord[] {
+  const db = new Database(dbPath);
+  db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT, email TEXT)");
+  
+  const query = db.query<UserRecord, []>("SELECT * FROM users LIMIT 10");
+  return query.all();
+}
+
+// 4. Safe Runtime Type Guard Validator (Narrowing `unknown`)
+interface AppConfig {
+  port: number;
+  host: string;
+  debug: boolean;
+}
+
+function isAppConfig(val: unknown): val is AppConfig {
+  return (
+    typeof val === "object" &&
+    val !== null &&
+    typeof (val as Record<string, unknown>).port === "number" &&
+    typeof (val as Record<string, unknown>).host === "string" &&
+    typeof (val as Record<string, unknown>).debug === "boolean"
+  );
+}
+
+// 5. High-Performance HTTP REST Router using Bun.serve()
+import { serve } from "bun";
+
+serve({
+  port: 3000,
+  async fetch(req: Request): Promise<Response> {
+    const url = new URL(req.url);
+
+    if (req.method === "GET" && url.pathname === "/api/health") {
+      return Response.json({ status: "ok", timestamp: new Date().toISOString() });
+    }
+
+    if (req.method === "POST" && url.pathname === "/api/echo") {
+      const body = await req.json();
+      return Response.json({ received: body }, { status: 201 });
+    }
+
+    return Response.json({ error: "Route Not Found" }, { status: 404 });
+  },
+});
+```

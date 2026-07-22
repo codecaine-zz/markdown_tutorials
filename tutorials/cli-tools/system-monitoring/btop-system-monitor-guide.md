@@ -123,3 +123,38 @@ If you need to remove `btop`, you can do so easily with Homebrew.
 ```bash
 brew uninstall btop
 ```
+
+### 8. Everyday Copy-and-Paste `btop` Configuration & Snippets
+
+```bash
+# 1. Force UTF-8 symbols if icons look broken in your terminal
+btop --utf-force
+
+# 2. Launch btop with a specific color theme preset directly
+btop --theme dracula
+
+# 3. Create default btop configuration directory and custom config file
+mkdir -p ~/.config/btop
+cat << 'EOF' > ~/.config/btop/btop.conf
+# btop custom configuration
+color_theme = "tokyo-night"
+theme_background = False
+update_ms = 1000
+proc_sorting = "cpu lazy"
+proc_reversed = False
+proc_tree = True
+proc_colors = True
+proc_gradient = True
+proc_per_core = False
+proc_mem_bytes = True
+show_gpu = True
+selected_battery = "Auto"
+EOF
+
+# 4. Useful Zsh aliases for quick system monitoring (Add to ~/.zshrc)
+alias monitor='btop'
+alias monitor-utf='btop --utf-force'
+
+# 5. Launch btop in a dedicated side pane inside Tmux
+tmux split-window -h -p 35 'btop'
+```

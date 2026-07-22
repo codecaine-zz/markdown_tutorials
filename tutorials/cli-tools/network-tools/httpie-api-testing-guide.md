@@ -1,179 +1,209 @@
-# HTTPie with Homebrew: Human-friendly HTTP Client
+# HTTPie API Testing & HTTP Client Guide
 
-## Table of Contents
+`httpie` (command: `http` or `https`) is a human-friendly command-line HTTP client. Designed for effortless API testing and debugging, it features expressive syntax, automatic JSON colorization, syntax highlighting, session management, and simple file uploads.
 
-1.  [What is `httpie`?](#1-what-is-httpie)
-2.  [Prerequisites](#2-prerequisites)
-3.  [Installation](#3-installation)
-4.  [Basic Usage & Output](#4-basic-usage-output)
-5.  [Key Features & Examples](#5-key-features-examples)
-6.  [Uninstallation](#6-uninstallation)
+---
 
------
+## 📚 Table of Contents
 
-### 1\. What is `httpie`?
+1. [Overview & Features](#overview--features)
+2. [Installation via Homebrew](#installation-via-homebrew)
+3. [GET Requests & Query Parameters](#get-requests--query-parameters)
+4. [POST, PUT & JSON Payloads](#post-put--json-payloads)
+5. [Headers, Bearer Tokens & Basic Auth](#headers-bearer-tokens--basic-auth)
+6. [Form Submissions & File Uploads](#form-submissions--file-uploads)
+7. [Sessions & Cookie Persistence](#sessions--cookie-persistence)
+8. [File Downloads & Response Filtering](#file-downloads--response-filtering)
+9. [Offline Preview & TLS Options](#offline-preview--tls-options)
+10. [Cheat Sheet Summary](#cheat-sheet-summary)
 
-`httpie` (pronounced *aitch-tee-tee-pie*) is a human-friendly command-line HTTP client. Its goal is to make CLI interaction with web services as intuitive and pleasant as possible. It serves as a modern replacement for tools like `curl` and `wget`, providing a simple `http` command with expressive syntax, sensible defaults, and beautifully formatted, colorized output.
+---
 
-### 2\. Prerequisites
+## 🔍 Overview & Features
 
-You must have [Homebrew](https://brew.sh/) installed. You can verify your installation by running:
+- **Intuitive Syntax**: Simple key-value notation replaces cumbersome `--header` and `-d` flags.
+- **Default JSON**: Requests automatically set `Content-Type: application/json` and parse responses.
+- **Colorized Formatting**: Auto-formats and color-highlights headers and JSON bodies.
+- **Session Support**: Remembers headers and cookies across multiple CLI invocations.
+
+---
+
+## ⚙️ Installation via Homebrew
 
 ```bash
-brew --version
-```
-
-### 3\. Installation
-
-Install `httpie` using a single Homebrew command. Although the package is `httpie`, the command you will use is `http`.
-
-```bash
+# Install HTTPie via Homebrew on macOS
 brew install httpie
+
+# Verify installation
+http --version
 ```
 
-### 4\. Basic Usage & Output
+---
 
-The syntax is designed to be simple and natural.
+## 🚀 GET Requests & Query Parameters
 
-  * **Making a GET request:**
-    Simply follow the `http` command with a URL. `GET` is the default method.
+### 1. Simple GET Request
+```bash
+# Send GET request (GET is default method)
+http pie.dev/get
+```
 
-    ```bash
-    http pie.dev/get
-    ```
-
-    **Example Output:** `httpie` automatically formats and color-codes the response.
-
-    ```text
-    // Response headers are shown first
-    HTTP/2 200 OK
-    content-length: 442
-    content-type: application/json
-    date: Thu, 04 Sep 2025 00:11:44 GMT
-
-    // The JSON body is automatically parsed and pretty-printed
-    {
-        "args": {},
-        "headers": {
-            "Accept": "*/*",
-            "Accept-Encoding": "gzip, deflate",
-            "Host": "pie.dev",
-            "User-Agent": "HTTPie/3.2.2"
-        },
-        "origin": "123.123.123.123",
-        "url": "https://pie.dev/get"
-    }
-    ```
-
-  * **Making a POST request with JSON:**
-    `httpie` assumes `application/json` when you use the `item:=value` syntax for non-string JSON types (like numbers, booleans, or objects).
-
-    ```bash
-    http POST pie.dev/post name='Alice' isCool:=true age:=30
-    ```
-
-    **Example Output:** The API echos back the JSON data you sent.
-
-    ```text
-    HTTP/2 200 OK
-    // ... headers
-
-    {
-        // ... other response data
-        "json": {
-            "age": 30,
-            "isCool": true,
-            "name": "Alice"
-        }
-    }
-    ```
-
-### 5\. Key Features & Examples
-
-  * **Viewing the Request:**
-    Use the `-v` (`--verbose`) flag to see the request that `httpie` sends, in addition to the response.
-
-    ```bash
-    http -v pie.dev/get
-    ```
-
-    **Example Output:**
-
-    ```text
-    // The outgoing request is shown first
-    GET /get HTTP/1.1
-    Accept: */*
-    Accept-Encoding: gzip, deflate
-    Connection: keep-alive
-    Host: pie.dev
-    User-Agent: HTTPie/3.2.2
-
-    // A separator divides the request from the response
-    -----------------------------------------
-
-    // The response is shown next
-    HTTP/2 200 OK
-    // ...
-    ```
-
-  * **Setting Custom Headers:**
-    Use the `Header:Value` syntax to add custom headers to your request.
-
-    ```bash
-    http pie.dev/headers 'Authorization:Bearer my-secret-token' 'X-Request-ID:12345'
-    ```
-
-    **Example Output:** The API echos back the headers you sent.
-
-    ```text
-    {
-        "headers": {
-            "Accept": "*/*",
-            "Authorization": "Bearer my-secret-token",
-            "Host": "pie.dev",
-            "X-Request-Id": "12345"
-        }
-    }
-    ```
-
-  * **Submitting Forms:**
-    Use the `--form` flag with the `field==value` syntax to send data as `application/x-www-form-urlencoded`, like a traditional web form.
-
-    ```bash
-    http --form POST pie.dev/post username=='testuser' password=='supersecret'
-    ```
-
-    **Example Output:**
-
-    ```text
-    {
-        // ...
-        "form": {
-            "password": "supersecret",
-            "username": "testuser"
-        }
-        // ...
-    }
-    ```
-
-  * **Downloading Files:**
-    Use the `-d` or `--download` flag to save the response body directly to a file. A progress bar is displayed.
-
-    ```bash
-    http --download https://pie.dev/image/png
-    ```
-
-    **Example Output:**
-
-    ```text
-    Downloading 8.05 kB to "png"
-    Done. 8.05 kB in 0.01s (580.21 kB/s)
-    ```
-
-### 6\. Uninstallation
-
-If you need to remove `httpie`, you can do so easily with Homebrew.
+### 2. Add URL Query Parameters (`==`)
+Use double equals (`==`) to append URL query parameters automatically.
 
 ```bash
-brew uninstall httpie
+# Sends: GET https://pie.dev/get?search=cli+tools&page=2
+http GET pie.dev/get search=="cli tools" page==2
 ```
+
+---
+
+## 🌐 POST, PUT & JSON Payloads
+
+`httpie` sends JSON by default when key-value arguments are supplied.
+
+### 1. Send JSON Payload (`=` for string, `:=` for raw JSON types)
+```bash
+# Send JSON object with strings, numbers, booleans, and arrays
+http POST pie.dev/post \
+  name="Alice" \
+  role="developer" \
+  age:=30 \
+  active:=true \
+  skills:='["rust", "python", "go"]'
+```
+
+### 2. Send JSON Payload from Local File or Stdin
+```bash
+# Pipe JSON file into httpie
+http POST pie.dev/post < payload.json
+
+# Pipe output from jq or cat
+cat data.json | http POST pie.dev/post
+```
+
+### 3. PUT & PATCH Requests
+```bash
+# PUT request
+http PUT pie.dev/put id:=42 status="updated"
+
+# PATCH request
+http PATCH pie.dev/patch status="archived"
+```
+
+---
+
+## 🔒 Headers, Bearer Tokens & Basic Auth
+
+### 1. Custom HTTP Headers (`Header:Value`)
+```bash
+# Pass custom headers
+http GET pie.dev/headers \
+  "User-Agent: MyApp/2.0" \
+  "X-API-Key: secret_key_123"
+```
+
+### 2. Authentication Shortcuts (`-a` / `--auth`)
+```bash
+# Bearer Token Authentication (-A bearer -a TOKEN)
+http GET pie.dev/headers -A bearer -a YOUR_ACCESS_TOKEN_HERE
+
+# Basic Authentication (-a user:password)
+http GET pie.dev/basic-auth/admin/secret123 -a admin:secret123
+```
+
+---
+
+## 📤 Form Submissions & File Uploads
+
+### 1. Submit URL-Encoded Web Form Data (`-f` / `--form`)
+```bash
+# Sends Content-Type: application/x-www-form-urlencoded
+http -f POST pie.dev/post username="john_doe" password="secretpassword"
+```
+
+### 2. Upload File with Form Fields (`field@/path/to/file`)
+```bash
+# Upload document file along with text form fields
+http -f POST pie.dev/post \
+  title="Project Proposal" \
+  document@~/Documents/proposal.pdf
+```
+
+---
+
+## 💾 Sessions & Cookie Persistence
+
+Maintain persistent login state, headers, and cookies across multiple commands without re-authenticating.
+
+```bash
+# 1. Login and save session state into 'admin_session'
+http --session=admin_session -f POST https://example.com/login username="admin" password="secret"
+
+# 2. Re-use session for subsequent requests (cookies & headers automatically attached)
+http --session=admin_session https://example.com/dashboard
+
+# 3. View saved session details
+http --session=admin_session https://example.com/api/user-profile
+```
+
+---
+
+## 📥 File Downloads & Response Filtering
+
+### 1. Download File with Progress Bar (`-d` / `--download`)
+```bash
+# Download and automatically name file from Content-Disposition header
+http --download https://pie.dev/image/png
+
+# Download and save to explicit output path (-o)
+http --download https://pie.dev/image/png -o my_logo.png
+```
+
+### 2. Filter Output Components (`-h` headers, `-b` body, `-v` verbose)
+```bash
+# Show HTTP headers only (-h)
+http -h pie.dev/get
+
+# Show response body only (-b)
+http -b pie.dev/get
+
+# Show full request AND response headers + body (-v / --verbose)
+http -v POST pie.dev/post name="Alice"
+```
+
+---
+
+## 🧪 Offline Preview & TLS Options
+
+### 1. Offline Request Preview (`--offline`)
+Construct and inspect the outgoing HTTP request without sending it over the network.
+
+```bash
+# Print HTTP request structure without executing network call
+http --offline POST pie.dev/post name="Alice" "Authorization: Bearer 123"
+```
+
+### 2. Bypass SSL Certificate Verification (`--verify=no`)
+```bash
+# Bypass self-signed TLS/SSL certificate warnings
+http --verify=no https://self-signed.local
+```
+
+---
+
+## 📋 Cheat Sheet Summary
+
+| Task | Command |
+| --- | --- |
+| Simple GET | `http pie.dev/get` |
+| GET with query params | `http GET pie.dev/get search==cli page==1` |
+| POST JSON payload | `http POST pie.dev/post name="Alice" age:=30 active:=true` |
+| Bearer token auth | `http GET pie.dev/headers -A bearer -a TOKEN` |
+| Basic auth | `http GET pie.dev/auth -a user:pass` |
+| URL-encoded form POST | `http -f POST pie.dev/post user="john" pass="secret"` |
+| Upload file via form | `http -f POST pie.dev/post file@/path/to/doc.pdf` |
+| Download file | `http --download "URL" -o file.ext` |
+| Print headers only | `http -h "URL"` |
+| Persistent session | `http --session=mysession "URL"` |
+| Offline request preview | `http --offline POST "URL" name="Alice"` |

@@ -424,3 +424,38 @@ This comprehensive example shows how to:
 
 The power of jq comes from its ability to chain these operations together, making it perfect for processing JSON data in command-line environments or within automated pipelines.
 
+## Everyday Copy-and-Paste `jq` Snippets Cheat Sheet
+
+```bash
+# 1. Convert JSON array of objects directly to CSV format
+jq -r '.users[] | [.id, .name, .email, .role] | @csv' sample.json > users.csv
+
+# 2. Extract values from GitHub API response (repo name & star count)
+curl -s https://api.github.com/users/octocat/repos | jq -r '.[] | "\(.name): \(.stargazers_count) ★"'
+
+# 3. Extract raw string value without surrounding double quotes (-r flag)
+jq -r '.version' package.json
+
+# 4. Deep search recursively for a specific key anywhere in nested JSON
+jq '.. | .email? // empty' nested_data.json
+
+# 5. Merge multiple JSON files into a single consolidated array
+jq -s '.' file1.json file2.json > merged.json
+
+# 6. Sanitize JSON by recursively deleting sensitive fields (password, secret, token)
+jq 'walk(if type == "object" then del(.password, .secret, .token) else . end)' response.json
+
+# 7. Convert array of key-value objects into a single dictionary lookup map
+jq 'map({(.id | tostring): .name}) | add' sample.json
+
+# 8. Sort array of objects by a nested property in descending order
+jq 'sort_by(.age) | reverse' sample.json
+
+# 9. Read environment variables inside jq filters
+ENV_ROLE="admin" jq --arg role "$ENV_ROLE" '.users[] | select(.role == $role)' sample.json
+
+# 10. Prettify unformatted single-line JSON files in-place
+jq '.' minified.json > pretty.json
+```
+
+

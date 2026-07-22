@@ -312,5 +312,39 @@ grep -r -i "password\|secret\|token" . --include="*.conf"
 tail -n 100 /var/log/system.log | grep "error"
 ```
 
+## Everyday Copy-and-Paste Grep One-Liners Cheat Sheet
+
+```bash
+# 1. Strip all blank lines and comment lines starting with #
+grep -v -E "^\s*#|^\s*$" config.sys
+
+# 2. Extract all IP addresses from a file or log stream
+grep -o -E "[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}" /var/log/system.log
+
+# 3. Extract all HTTP URLs from text files
+grep -o -E "https?://[a-zA-Z0-9./?=_-]+" index.html
+
+# 4. Search recursively for text while excluding .git, node_modules, and binary files
+grep -rnI --exclude-dir={.git,node_modules,dist,build} "search_term" .
+
+# 5. Search for multiple keywords at once (OR logic)
+grep -E "ERROR|CRITICAL|FATAL" server.log
+
+# 6. Count total occurrences of a matching string across files
+grep -o "pattern" *.log | wc -l
+
+# 7. Print filename and line number for all matches
+grep -Hn "DB_PASSWORD" .env*
+
+# 8. Filter ps output to find a running service while excluding the grep process itself
+ps aux | grep [n]ginx
+
+# 9. Search compressed log files (.gz) for error messages
+zgrep -i "timeout" /var/log/nginx/access.log*.gz
+
+# 10. Search Git history commits for a specific keyword
+git log -p | grep -E "^commit|search_keyword"
+```
+
 This comprehensive guide provides practical examples and patterns that MacBook M4 users can apply to various development, system administration, and troubleshooting scenarios. The examples are designed to be efficient and take advantage of the performance characteristics of modern macOS systems while being compatible with standard Unix/Linux tools.
 

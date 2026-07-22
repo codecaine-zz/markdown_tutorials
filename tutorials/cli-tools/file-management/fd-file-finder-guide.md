@@ -6,14 +6,28 @@
 2. [Prerequisites](#2-prerequisites)
 3. [Installation on ARM macOS](#3-installation-on-arm-macos)
 4. [Search by Extension (`-e` / `--extension`)](#4-search-by-extension--e---extension)
-5. [Executing Commands on Found Files (`-x` vs `-X`)](#5-executing-commands-on-found-files--x-vs--x)
+5. [Common Search & Filtering Options](#5-common-search--filtering-options)
+   - [Search by File Type (`-t` / `--type`)](#search-by-file-type--t---type)
+   - [Search by File Size (`-S` / `--size`)](#search-by-file-size--s---size)
+   - [Search by Modification Time (`--changed-within` / `--changed-before`)](#search-by-modification-time---changed-within----changed-before)
+   - [Control Search Depth (`-d` / `--max-depth`)](#control-search-depth--d---max-depth)
+   - [Hidden & Ignored Files (`-H`, `-I`, `-u`)](#hidden--ignored-files--h--i--u)
+6. [Executing Commands on Found Files (`-x` vs `-X`)](#6-executing-commands-on-found-files--x-vs--x)
    - [Single File Execution (`-x` / `--exec`)](#single-file-execution--x---exec)
    - [Batch File Execution (`-X` / `--exec-batch`)](#batch-file-execution--x---exec-batch)
-6. [macOS Finder & `mdfind` CLI Search Commands](#6-macos-finder-mdfind-cli-search-commands)
+7. [Real-World Copy & Paste Recipes](#7-real-world-copy--paste-recipes)
+   - [Delete `node_modules` or `.DS_Store` Files](#delete-node_modules-or-ds_store-files)
+   - [Find and Remove Empty Files / Folders](#find-and-remove-empty-files--folders)
+   - [Bulk Rename File Extensions](#bulk-rename-file-extensions)
+   - [Batch Search & Replace Text inside Files (`fd` + `sed`)](#batch-search--replace-text-inside-files-fd--sed)
+   - [Set Correct Permissions for Files & Directories](#set-correct-permissions-for-files--directories)
+   - [Find Broken Symlinks](#find-broken-symlinks)
+   - [Interactive Search with `fzf`](#interactive-search-with-fzf)
+8. [macOS Finder & `mdfind` CLI Search Commands](#8-macos-finder-mdfind-cli-search-commands)
    - [Search by Extension with Spotlight (`mdfind`)](#search-by-extension-with-spotlight-mdfind)
    - [Opening Search Results in Program of Choice (`open -a`)](#opening-search-results-in-program-of-choice-open--a)
-7. [Comparison: `fd` vs `find` vs `mdfind`](#7-comparison-fd-vs-find-vs-mdfind)
-8. [Uninstallation](#8-uninstallation)
+9. [Comparison: `fd` vs `find` vs `mdfind`](#9-comparison-fd-vs-find-vs-mdfind)
+10. [Uninstallation](#10-uninstallation)
 
 ---
 
@@ -97,7 +111,91 @@ fd -H -e env
 
 ---
 
-### 5. Executing Commands on Found Files (`-x` vs `-X`)
+### 5. Common Search & Filtering Options
+
+`fd` provides flags to filter results by type, size, modification date, and directory depth.
+
+#### Search by File Type (`-t` / `--type`)
+
+Filter results by file system type:
+
+```bash
+# Find directories only (-t d)
+fd -t d build
+
+# Find regular files only (-t f)
+fd -t f config
+
+# Find symbolic links (-t l)
+fd -t l
+
+# Find executable files (-t x)
+fd -t x
+
+# Find empty files or directories (-t e)
+fd -t e
+```
+
+#### Search by File Size (`-S` / `--size`)
+
+Filter files based on size (`+` for larger than, `-` for smaller than):
+
+```bash
+# Find files larger than 100 Megabytes
+fd -S +100M
+
+# Find files smaller than 10 Kilobytes
+fd -S -10k
+
+# Find large files (>500M) and display file metadata (-l for detailed list)
+fd -S +500M -l
+```
+
+#### Search by Modification Time (`--changed-within` / `--changed-before`)
+
+Filter files modified within a specific timeframe:
+
+```bash
+# Find files modified within the last 24 hours
+fd --changed-within 24h
+
+# Find files modified within the last 7 days
+fd --changed-within 7d
+
+# Find files modified before 2 weeks ago
+fd --changed-before 2w
+```
+
+#### Control Search Depth (`-d` / `--max-depth`)
+
+Limit how deep `fd` traverses directory levels:
+
+```bash
+# Search only in current directory (depth 1)
+fd -d 1 -e md
+
+# Limit search depth to 2 subdirectories
+fd -d 2 config
+```
+
+#### Hidden & Ignored Files (`-H`, `-I`, `-u`)
+
+By default, `fd` ignores hidden files (`.dotfiles`) and pattern entries in `.gitignore`. Use these flags to expand search scope:
+
+```bash
+# Include hidden files (-H / --hidden)
+fd -H config
+
+# Include files matching .gitignore (-I / --no-ignore)
+fd -I build.log
+
+# Fully unrestricted search (-u / --unrestricted, includes hidden + ignored)
+fd -u secret.key
+```
+
+---
+
+### 6. Executing Commands on Found Files (`-x` vs `-X`)
 
 `fd` provides powerful execution flags to run any custom CLI program or macOS application on matching files.
 
@@ -159,7 +257,94 @@ fd -e log -X tar -cvzf logs_archive.tar.gz
 
 ---
 
-### 6. macOS Finder & `mdfind` CLI Search Commands
+### 7. Real-World Copy & Paste Recipes
+
+Here are ready-to-use one-liners for common day-to-day developer and system maintenance tasks.
+
+#### Delete `node_modules` or `.DS_Store` Files
+
+Clean up unwanted directories or macOS system metadata files:
+
+```bash
+# Find and remove all node_modules directories
+fd -H -t d '^node_modules$' -X rm -rf
+
+# Find and delete all .DS_Store files across project subdirectories
+fd -H -t f '^\.DS_Store$' -X rm -f
+```
+
+#### Find and Remove Empty Files / Folders
+
+Locate zero-byte files or empty folders and clean them up:
+
+```bash
+# Find and delete all empty files
+fd -t f -t e -X rm -f
+
+# Find and delete all empty directories
+fd -t d -t e -X rmdir
+```
+
+#### Bulk Rename File Extensions
+
+Rename files matching an extension across an entire directory tree without bash loops:
+
+```bash
+# Rename all .jpeg files to .jpg
+fd -e jpeg -x mv {} {.}.jpg
+
+# Change all .txt files to .md
+fd -e txt -x mv {} {.}.md
+```
+
+#### Batch Search & Replace Text inside Files (`fd` + `sed`)
+
+Combine `fd` with macOS `sed` to find and replace text across all project files:
+
+```bash
+# Replace 'http://localhost:3000' with 'https://api.example.com' in all .env or .js files
+fd -e env -e js -X sed -i '' 's|http://localhost:3000|https://api.example.com|g'
+```
+
+#### Set Correct Permissions for Files & Directories
+
+Apply standard POSIX permissions recursively across folders and files separately:
+
+```bash
+# Set directory permissions to 755 (rwxr-xr-x)
+fd -t d -X chmod 755
+
+# Set file permissions to 644 (rw-r--r--)
+fd -t f -X chmod 644
+```
+
+#### Find Broken Symlinks
+
+Identify invalid symbolic links pointing to non-existent files:
+
+```bash
+# List all broken symlinks
+fd -t l --broken
+
+# Remove all broken symlinks
+fd -t l --broken -X rm
+```
+
+#### Interactive Search with `fzf`
+
+Pipe `fd` search output into `fzf` for fuzzy interactive selection:
+
+```bash
+# Interactively search files and open selected file in VS Code
+code $(fd -t f | fzf)
+
+# Interactively change directory using fd and fzf
+cd $(fd -t d | fzf)
+```
+
+---
+
+### 8. macOS Finder & `mdfind` CLI Search Commands
 
 On macOS, you can also search files by extension using the native Spotlight index (`mdfind`) and launch them in macOS Finder or GUI applications (`open`).
 
@@ -208,7 +393,7 @@ fd -e jpg -X open -a Preview
 
 ---
 
-### 7. Comparison: `fd` vs `find` vs `mdfind`
+### 9. Comparison: `fd` vs `find` vs `mdfind`
 
 | Feature | `fd` | `find` | `mdfind` (macOS Spotlight) |
 |---|---|---|---|
@@ -220,7 +405,7 @@ fd -e jpg -X open -a Preview
 
 ---
 
-### 8. Uninstallation
+### 10. Uninstallation
 
 ```bash
 brew uninstall fd

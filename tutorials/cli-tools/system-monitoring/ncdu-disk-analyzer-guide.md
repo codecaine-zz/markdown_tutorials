@@ -144,3 +144,29 @@ If you need to remove `ncdu`, you can do so easily with Homebrew.
 ```bash
 brew uninstall ncdu
 ```
+
+### 8. Everyday Copy-and-Paste `ncdu` One-Liners & Advanced Workflows
+
+```bash
+# 1. Export directory scan results to a compressed file for offline analysis
+ncdu -o ~/disk_scan.ncdu.gz /
+
+# 2. Open pre-scanned report file instantly without rescanning disk
+ncdu -f ~/disk_scan.ncdu.gz
+
+# 3. Analyze remote server disk usage over SSH using piped streaming
+ssh user@remote-host "ncdu -o - /var/log" | ncdu -f -
+
+# 4. Scan disk ignoring build directories and cache paths
+ncdu --exclude node_modules --exclude .git --exclude Library ~/
+
+# 5. Enable dark color scheme and extended filesystem info
+ncdu --color dark -e /
+
+# 6. Read-only mode (prevents accidental file deletion with 'd' key)
+ncdu -r /
+
+# 7. Useful Zsh aliases for disk scanning (Add to ~/.zshrc)
+alias scan-home='ncdu ~'
+alias scan-root='sudo ncdu --color dark /'
+```

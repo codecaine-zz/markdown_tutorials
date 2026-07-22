@@ -234,3 +234,42 @@ osascript -e 'tell application "Finder" to display dialog "Quick Test"'
 1. **Confusing 1-based indexing**: AppleScript lists start at index 1, not 0!
 2. **Mixing HFS colons and POSIX slashes**: Use `POSIX file` conversion functions.
 3. **Forgetting to activate target apps**: Use `activate` before UI automation steps.
+
+---
+
+## Everyday Copy-and-Paste AppleScript Snippets & Automation Recipes
+
+```applescript
+-- 1. Display Input Dialog with Default Text and Save Response
+set userInput to display dialog "Enter your email address:" default answer "user@example.com" buttons {"Cancel", "Submit"} default button "Submit"
+set userEmail to text returned of userInput
+
+-- 2. Toggle System Dark Mode on macOS
+tell application "System Events"
+    tell appearance preferences
+        set dark mode to not dark mode
+    end tell
+end tell
+
+-- 3. Mute or Set System Volume
+set volume with output muted -- Mute system audio
+set volume output volume 50  -- Set volume to 50%
+
+-- 4. Open Multiple Web Pages in Safari Tabs
+tell application "Safari"
+    activate
+    tell window 1
+        set current tab to (make new tab with properties {URL:"https://github.com"})
+        make new tab with properties {URL:"https://news.ycombinator.com"}
+    end tell
+end tell
+
+-- 5. Send an iMessage via Messages App
+tell application "Messages"
+    set targetBuddy to buddy "+15551234567" of service "iMessage"
+    send "Automation message sent from AppleScript!" to targetBuddy
+end tell
+
+-- 6. Execute Shell Command with Administrator Privileges (Sudo prompt dialog)
+do shell script "sysctl -a" with administrator privileges
+```

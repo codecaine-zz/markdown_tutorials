@@ -287,22 +287,38 @@ jq '.[] | select(.status==200) | .host' vhost.json
 # 1. Directory brute‑force (most common)
 gobuster dir -u https://target.com -w /usr/share/seclists/Discovery/Web-Content/common.txt -t 50 -x php,html,js -s 200,301,302,403 -o dir.txt
 
-# 2. DNS sub‑domains
-gobuster dns -d target.com -w /usr/share/seclists/Discovery/DNS/subdomains.txt -t 150 -o dns.txt
+# 2. Authenticated scan with session cookies & custom User-Agent
+gobuster dir -u https://app.target.com -w common.txt \
+  -H "Cookie: sessionid=xyz123456789; AuthToken=bearer_jwt_token_here" \
+  -H "User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" \
+  -s 200,301,302 -t 30 -o auth-scan.txt
 
-# 3. Virtual‑host discovery
-gobuster vhost -u https://target.com -w /usr/share/seclists/Discovery/DNS/subdomains.txt -t 100 -c -o vhost.txt
+# 3. Authenticated API scan with Bearer Token & custom API Header
+gobuster dir -u https://api.target.com/v1 -w api-endpoints.txt \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1Ni..." \
+  -H "X-Api-Version: 2.0" \
+  -s 200,201,204,401,403 -o api-scan.txt
 
-# 4. Fuzz a GET parameter
+# 4. DNS sub‑domain discovery & pipe live hosts directly to HTTP check
+gobuster dns -d target.com -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -q | \
+  awk '{print $2}' | xargs -I {} curl -s -o /dev/null -w "%{http_code} {}\n" http://{}
+
+# 5. Virtual‑host discovery with HTTP status filtering & response size
+gobuster vhost -u https://target.com -w /usr/share/seclists/Discovery/DNS/subdomains.txt -t 100 -c -s 200,301,302 -o vhost.txt
+
+# 6. Fuzz a GET parameter
 gobuster fuzz -u "https://api.example.com/item?id=FUZZ" -w /usr/share/seclists/Discovery/Web-Content/numbers.txt -t 200 -s 200,404 -o fuzz.txt
 
-# 5. Fuzz a POST field (login bruteforce)
+# 7. Fuzz a POST field (login bruteforce)
 gobuster fuzz -u https://app.example.com/login -X POST -H "Content-Type: application/x-www-form-urlencoded" \
     -d "username=admin&password=FUZZ" \
     -w /usr/share/seclists/Passwords/Leaked-Dataset-10M.txt -t 30 -o login.txt
 
-# 6. Scan behind a proxy, ignore cert errors, slow rate
-gobuster dir -u https://internal.local -w list.txt -t 20 --delay 500 -p http://127.0.0.1:8080 -k -s 200,301 -b 403 -o stealth.txt
+# 8. Stealth scan behind a local proxy (Burp Suite), rate-limited
+gobuster dir -u https://internal.local -w list.txt -t 10 --delay 250 -p http://127.0.0.1:8080 -k -s 200,301 -b 403 -o stealth.txt
+
+# 9. Exclude false positive responses by Content-Length (--exclude-length)
+gobuster dir -u https://target.com -w common.txt --exclude-length 1234,0 -s 200 -o filtered.txt
 ```
 
 Feel free to edit the paths to match where your wordlists live (e.g., `~/SecLists/...`). All the switches shown above are supported by the version installed via Homebrew (v3+).  

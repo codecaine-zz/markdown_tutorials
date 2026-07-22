@@ -373,8 +373,73 @@ const db = new SQLiteWrapper("./data.db");
 
 ---
 
+## Everyday Copy-and-Paste Express & Bun Production Recipes
+
+```ts
+// 1. Async Express Route Error Wrapper (Eliminates try-catch in routes)
+import type { Request, Response, NextFunction, RequestHandler } from "express";
+
+export const asyncHandler = (fn: RequestHandler): RequestHandler => 
+  (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+
+// Usage: app.get("/users", asyncHandler(async (req, res) => { ... }));
+
+// 2. JWT Authentication Middleware
+import jwt from "jsonwebtoken";
+
+const JWT_SECRET = process.env.JWT_SECRET || "super-secret-key";
+
+export function authenticateJwt(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Missing or invalid authorization header" });
+  }
+
+  const token = authHeader.substring(7);
+  try {
+    const payload = jwt.verify(token, JWT_SECRET);
+    (req as any).user = payload;
+    next();
+  } catch (err) {
+    res.status(403).json({ error: "Invalid or expired token" });
+  }
+}
+
+// 3. Fast In-Memory Rate Limiter Middleware for Express
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+
+export function rateLimiter(maxRequests = 100, windowMs = 60000): RequestHandler {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const ip = req.ip || "unknown";
+    const now = Date.now();
+
+    const record = rateLimitMap.get(ip) ?? { count: 0, resetTime: now + windowMs };
+
+    if (now > record.resetTime) {
+      record.count = 1;
+      record.resetTime = now + windowMs;
+    } else {
+      record.count++;
+    }
+
+    rateLimitMap.set(ip, record);
+
+    if (record.count > maxRequests) {
+      return res.status(429).json({ error: "Too many requests. Please try again later." });
+    }
+
+    next();
+  };
+}
+```
+
+---
+
 ### 🎉 THAT’S IT
 
 You now have three **copy‑and‑paste‑ready** Express servers that run on the ultra‑fast **Bun** runtime and use the `MySQLWrapper`, `RedisWrapper`, and `SQLiteWrapper` you published.  
 
 *Pick the one you need, run the matching `bun run …` command, and start building your app.* Happy coding!
+

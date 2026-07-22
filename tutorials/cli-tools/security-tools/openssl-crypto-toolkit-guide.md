@@ -398,6 +398,56 @@ openssl x509 -req \
     -days 365
 ```
 
+## SSL/TLS Inspection & Format Conversions
+
+### Real-World SSL/TLS Server Debugging (`s_client`)
+```bash
+# 1. Connect to SSL/TLS server, send SNI header, and view full certificate chain
+openssl s_client -connect example.com:443 -servername example.com -showcerts
+
+# 2. Test specific TLS protocol version support (TLS 1.3 vs 1.2)
+openssl s_client -connect example.com:443 -tls1_3
+openssl s_client -connect example.com:443 -tls1_2
+
+# 3. Check certificate expiration date of a remote domain directly
+echo | openssl s_client -servername example.com -connect example.com:443 2>/dev/null | openssl x509 -noout -dates
+
+# 4. Test SMTP / STARTTLS mail server connection
+openssl s_client -connect mail.example.com:587 -starttls smtp
+```
+
+### Certificate Format Conversion Cheat-Sheet
+```bash
+# 1. Convert PEM (.pem/.crt) to DER binary (.der)
+openssl x509 -in cert.pem -outform der -out cert.der
+
+# 2. Convert DER binary (.der) to PEM text (.crt)
+openssl x509 -inform der -in cert.der -outform pem -out cert.crt
+
+# 3. Bundle Certificate + Private Key + CA Chain into PFX/PKCS#12 (.pfx/.p12 for IIS/Windows/Tomcat)
+openssl pkcs12 -export -out server.pfx -inkey server.key -in server.crt -certfile ca_chain.crt
+
+# 4. Extract Private Key from PFX/PKCS#12 bundle (unencrypted)
+openssl pkcs12 -in server.pfx -nocerts -nodes -out extracted_private.key
+
+# 5. Extract Public Certificate from PFX/PKCS#12 bundle
+openssl pkcs12 -in server.pfx -clcerts -nokeys -out extracted_cert.crt
+```
+
+### Verify Key and Certificate Matching
+Verify that a private key matches a certificate by comparing their MD5 modulus hashes (they must match exactly):
+
+```bash
+# Verify Certificate public key modulus
+openssl x509 -noout -modulus -in server.crt | openssl md5
+
+# Verify Private Key modulus
+openssl rsa -noout -modulus -in server.key | openssl md5
+
+# Verify CSR (Certificate Signing Request) modulus
+openssl req -noout -modulus -in server.csr | openssl md5
+```
+
 ## Python Integration Example
 
 ```python
