@@ -1,401 +1,217 @@
-# MySQL CLI Tutorial for Beginners (ARM Mac + VSCode + Brew)
+# MySQL: Relational Database Management System CLI Guide
 
-This tutorial teaches you how to use the MySQL CLI (Command Line Interface) with best practices, even if you're not a programmer. We'll cover installation, basic commands, and practical examples.
+## Table of Contents
+
+1. [What is `mysql`?](#1-what-is-mysql)
+2. [Prerequisites](#2-prerequisites)
+3. [Installation on ARM macOS](#3-installation-on-arm-macos)
+4. [Service Management (`brew services`)](#4-service-management-brew-services)
+5. [Basic Connection & Security Setup](#5-basic-connection--security-setup)
+6. [Database & Table Operations](#6-database--table-operations)
+7. [CRUD SQL Examples & Output](#7-crud-sql-examples--output)
+8. [User Management & Privileges](#8-user-management--privileges)
+9. [Backups & Database Restores (`mysqldump`)](#9-backups--database-restores-mysqldump)
+10. [Uninstallation](#10-uninstallation)
 
 ---
 
-## 🧰 Prerequisites
+### 1. What is `mysql`?
 
-### 1. Install Homebrew (if not installed)
-Homebrew is a package manager for macOS that makes installing software easy.
+`mysql` is the command-line client for MySQL, one of the world's most popular open-source relational database management systems (RDBMS). It allows developers and data administrators to create databases, manage tables, run SQL queries, tune index performance, and administer user privileges directly from the terminal.
+
+#### Key Features
+* **ACID-Compliant Transactions:** Full support for InnoDB transactional engine.
+* **Structured Data Organization:** Schema-enforced tables with primary/foreign key relationships.
+* **CLI Utility Suite:** Includes `mysql`, `mysqldump`, and `mysqladmin`.
+
+---
+
+### 2. Prerequisites
+
+Verify Homebrew on your Apple Silicon (ARM) Mac:
 
 ```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew --version
 ```
 
-🔗 [Homebrew Documentation](https://brew.sh/)
-
 ---
 
-### 2. Install MySQL Using Brew
+### 3. Installation on ARM macOS
+
+Install MySQL server and client using Homebrew:
 
 ```bash
-# Install MySQL
 brew install mysql
 ```
 
-🔗 [MySQL Installation via Brew](https://formulae.brew.sh/formula/mysql)
+Verify binary path and version:
+
+```bash
+which mysql
+mysql --version
+```
+
+**Expected Output:**
+```text
+/opt/homebrew/bin/mysql
+mysql  Ver 8.4.x (or latest) for macos14 on arm64
+```
 
 ---
 
-### 3. Start MySQL Server
+### 4. Service Management (`brew services`)
 
+On macOS, manage the MySQL background daemon (`mysqld`) using `brew services`:
+
+#### Start MySQL Background Service
 ```bash
-# Start MySQL service
 brew services start mysql
 ```
 
-To verify it's running:
-
+#### Check Service Status
 ```bash
-# Check MySQL status
 brew services list | grep mysql
 ```
 
+#### Stop or Restart MySQL Service
+```bash
+brew services stop mysql
+brew services restart mysql
+```
+
 ---
 
-### 4. Secure MySQL Installation
+### 5. Basic Connection & Security Setup
+
+#### Secure Initial Installation
+Run the security configuration wizard to set a root password and remove test accounts:
 
 ```bash
-# Run security script (recommended)
 mysql_secure_installation
 ```
 
-Follow the prompts to set root password and security options.
-
-🔗 [MySQL Installation Guide](https://dev.mysql.com/doc/refman/8.0/en/installing.html)
-
----
-
-## 💡 Practical Examples
-
-### 🚀 Using MySQL CLI
-
-### 1. Connect to MySQL as Root
-
+#### Connect as Root User
 ```bash
-# Connect to MySQL
 mysql -u root -p
 ```
 
-Enter the password you set during installation.
-
-You'll see a prompt like `mysql>` — that means you're connected!
-
-🔗 [MySQL CLI Documentation](https://dev.mysql.com/doc/refman/8.0/en/mysql.html)
+Type the root password when prompted. You will enter the interactive `mysql>` shell.
 
 ---
 
-## 🔤 Basic Commands
+### 6. Database & Table Operations
 
-### 1. Show Databases
+Execute these commands inside the `mysql>` prompt:
 
+#### 1. Show Existing Databases
 ```sql
--- Show all databases
 SHOW DATABASES;
 ```
 
----
-
-### 2. Create a Database
-
+#### 2. Create and Select a Database
 ```sql
--- Create a new database
-CREATE DATABASE myapp;
+CREATE DATABASE myapp_db;
+USE myapp_db;
 ```
 
----
-
-### 3. Use a Database
-
+#### 3. Create a Users Table
 ```sql
--- Switch to the database
-USE myapp;
-```
-
----
-
-### 4. Create a Table
-
-```sql
--- Create a users table
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    age INT,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
+    age INT DEFAULT 18,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
 
----
-
-### 5. Insert Data
-
+#### 4. Inspect Table Schema
 ```sql
--- Insert a user
-INSERT INTO users (name, email, age) VALUES ('Alice', 'alice@example.com', 30);
-```
-
----
-
-### 6. Query Data
-
-```sql
--- Get all users
-SELECT * FROM users;
-```
-
-Expected output:
-```
-+----+-------+-------------------+------+---------------------+
-| id | name  | email             | age  | created_at          |
-+----+-------+-------------------+------+---------------------+
-|  1 | Alice | alice@example.com |   30 | 2023-01-01 12:00:00 |
-+----+-------+-------------------+------+---------------------+
-```
-
----
-
-### 7. Update Data
-
-```sql
--- Update Alice's age
-UPDATE users SET age = 31 WHERE name = 'Alice';
-```
-
----
-
-### 8. Delete Data
-
-```sql
--- Delete Alice
-DELETE FROM users WHERE name = 'Alice';
-```
-
----
-
-## 📦 Working with Tables
-
-### 1. Show Tables
-
-```sql
--- List all tables
-SHOW TABLES;
-```
-
----
-
-### 2. Describe Table Structure
-
-```sql
--- Show table structure
 DESCRIBE users;
 ```
 
 ---
 
-### 3. Add a New Column
+### 7. CRUD SQL Examples & Output
 
+#### Create (Insert Rows)
 ```sql
--- Add a phone column
-ALTER TABLE users ADD COLUMN phone VARCHAR(20);
+INSERT INTO users (username, email, age) 
+VALUES ('alice_dev', 'alice@example.com', 28),
+       ('bob_admin', 'bob@example.com', 34);
+```
+
+#### Read (Select Queries)
+```sql
+SELECT id, username, email, age, created_at 
+FROM users 
+WHERE age >= 25 
+ORDER BY id ASC;
+```
+
+**Example Output:**
+```text
++----+-----------+-------------------+-----+---------------------+
+| id | username  | email             | age | created_at          |
++----+-----------+-------------------+-----+---------------------+
+|  1 | alice_dev | alice@example.com |  28 | 2026-07-22 14:00:00 |
+|  2 | bob_admin | bob@example.com   |  34 | 2026-07-22 14:00:00 |
++----+-----------+-------------------+-----+---------------------+
+2 rows in set (0.00 sec)
+```
+
+#### Update Rows
+```sql
+UPDATE users SET age = 29 WHERE username = 'alice_dev';
+```
+
+#### Delete Rows
+```sql
+DELETE FROM users WHERE username = 'bob_admin';
 ```
 
 ---
 
-### 4. Drop a Table
+### 8. User Management & Privileges
 
+#### Create a New Database User
 ```sql
--- Delete the table
-DROP TABLE users;
+CREATE USER 'app_user'@'localhost' IDENTIFIED BY 'StrongPassword123!';
 ```
 
----
-
-## 👤 User Management
-
-### 1. Create a New User
-
+#### Grant Privileges on `myapp_db`
 ```sql
--- Create a new user
-CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password123';
-```
-
----
-
-### 2. Grant Permissions
-
-```sql
--- Grant all privileges on myapp database
-GRANT ALL PRIVILEGES ON myapp.* TO 'newuser'@'localhost';
-```
-
----
-
-### 3. Apply Permissions
-
-```sql
--- Refresh privileges
+GRANT ALL PRIVILEGES ON myapp_db.* TO 'app_user'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
+#### Connect with the New User (from terminal)
+```bash
+mysql -u app_user -p myapp_db
+```
+
 ---
 
-### 4. Connect as New User
+### 9. Backups & Database Restores (`mysqldump`)
+
+Run these commands directly in your Mac terminal (not inside `mysql>` prompt):
+
+#### Export Database to SQL Dump File
+```bash
+mysqldump -u root -p myapp_db > myapp_backup.sql
+```
+
+#### Restore Database from Dump File
+```bash
+mysql -u root -p myapp_db < myapp_backup.sql
+```
+
+---
+
+### 10. Uninstallation
 
 ```bash
-# Exit current session
-EXIT;
-
-# Connect as new user
-mysql -u newuser -p
+brew services stop mysql
+brew uninstall mysql
+rm -rf /opt/homebrew/var/mysql
 ```
-
----
-
-## 🧪 Best Practices
-
-### 1. Use Prepared Statements (in applications)
-
-```sql
--- Example of safe query (use in application code)
-PREPARE stmt FROM 'SELECT * FROM users WHERE id = ?';
-SET @id = 1;
-EXECUTE stmt USING @id;
-DEALLOCATE PREPARE stmt;
-```
-
-🔗 [MySQL Prepared Statements](https://dev.mysql.com/doc/refman/8.0/en/sql-prepared-statements.html)
-
----
-
-### 2. Use Indexes for Performance
-
-```sql
--- Create index on email column
-CREATE INDEX idx_email ON users(email);
-```
-
-🔗 [MySQL Indexes](https://dev.mysql.com/doc/refman/8.0/en/optimization-indexes.html)
-
----
-
-### 3. Backup Your Database
-
-```bash
-# Backup database (from terminal, not MySQL CLI)
-mysqldump -u root -p myapp > myapp_backup.sql
-```
-
----
-
-### 4. Restore Database
-
-```bash
-# Restore database (from terminal)
-mysql -u root -p myapp < myapp_backup.sql
-```
-
----
-
-## 🛠️ VSCode Setup Tips
-
-### 1. Install MySQL Extension
-
-In VSCode:
-- Go to Extensions (`Cmd + Shift + X`)
-- Search: **MySQL**
-- Install **MySQL** by cweijan
-
----
-
-### 2. Create a `.sql` Script File
-
-Create a file named `setup.sql` and paste your commands:
-
-```sql
--- setup.sql
-USE myapp;
-
-CREATE TABLE IF NOT EXISTS products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    price DECIMAL(10,2),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-INSERT INTO products (name, price) VALUES ('Laptop', 999.99);
-SELECT * FROM products;
-```
-
-Run it from terminal:
-
-```bash
-mysql -u root -p < setup.sql
-```
-
-🔗 [VSCode MySQL Extension](https://marketplace.visualstudio.com/items?itemName=cweijan.vscode-mysql-client2)
-
----
-
-## 🧹 Useful CLI Commands
-
-### 1. Exit MySQL
-
-```sql
--- Exit MySQL
-EXIT;
-```
-
-Or:
-```sql
-QUIT;
-```
-
----
-
-### 2. Show Current Database
-
-```sql
--- Show current database
-SELECT DATABASE();
-```
-
----
-
-### 3. Show MySQL Version
-
-```sql
--- Show version
-SELECT VERSION();
-```
-
----
-
-### 4. Import SQL File
-
-```bash
-# Import SQL file (from terminal)
-mysql -u root -p myapp < data.sql
-```
-
----
-
-## 📚 Further Reading
-
-- [Official MySQL CLI Docs](https://dev.mysql.com/doc/refman/8.0/en/mysql.html)
-- [MySQL SQL Statement Syntax](https://dev.mysql.com/doc/refman/8.0/en/sql-statements.html)
-- [MySQL Security Best Practices](https://dev.mysql.com/doc/refman/8.0/en/security-guidelines.html)
-
----
-
-## ✅ Summary
-
-| Task | Command |
-|------|---------|
-| Start MySQL | `brew services start mysql` |
-| Connect CLI | `mysql -u root -p` |
-| Show Databases | `SHOW DATABASES;` |
-| Create Database | `CREATE DATABASE myapp;` |
-| Use Database | `USE myapp;` |
-| Create Table | `CREATE TABLE ...` |
-| Insert Data | `INSERT INTO ...` |
-| Query Data | `SELECT * FROM ...` |
-| Update Data | `UPDATE ... SET ...` |
-| Delete Data | `DELETE FROM ...` |
-| Show Tables | `SHOW TABLES;` |
-| Exit CLI | `EXIT;` |
-
-You're now ready to use MySQL CLI confidently! Practice these commands daily and build small projects to reinforce learning.

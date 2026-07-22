@@ -133,17 +133,65 @@ pandoc -s \
   -o api-guide.html
 ```
 
-### Example 2: Batch Converting `.docx` Files to Markdown
+### Example 2: Batch & Bulk Document Conversion
+
+#### Flat Directory Batch Conversion
+Convert all Word documents or Markdown files in a single folder:
+
+```bash
+# Convert all .docx files in current folder to Markdown
+for doc in *.docx; do
+  [ -f "$doc" ] || continue
+  base_name="${doc%.*}"
+  echo "Converting $doc -> ${base_name}.md..."
+  pandoc "$doc" -t markdown -o "${base_name}.md"
+done
+
+# Convert all .md files in current folder to standalone HTML with TOC
+for md in *.md; do
+  [ -f "$md" ] || continue
+  pandoc -s --toc "$md" -o "${md%.*}.html"
+done
+```
+
+#### Recursive Documentation Tree Conversion (Preserving Subfolder Hierarchy)
+Recursively walk nested documentation folders (e.g. `src_docs/`) and build standalone HTML site files into `dist_site/`, mirroring the exact directory tree:
+
 ```bash
 #!/bin/bash
-# Convert all Word documents in current folder to Markdown
-for doc in *.docx; do
-  if [ -f "$doc" ]; then
-    base_name="${doc%.*}"
-    echo "Converting $doc -> ${base_name}.md..."
-    pandoc "$doc" -t markdown -o "${base_name}.md"
-  fi
+# Recursive Markdown Documentation Site Generator
+
+SRC_DIR="src_docs"
+DIST_DIR="dist_site"
+
+find "$SRC_DIR" -type f -name "*.md" | while read -r md_file; do
+    # Compute relative path inside documentation tree
+    rel_path="${md_file#$SRC_DIR/}"
+    out_html="$DIST_DIR/${rel_path%.*}.html"
+
+    # Create destination nested folder automatically
+    mkdir -p "$(dirname "$out_html")"
+
+    echo "Building document: $md_file -> $out_html"
+    pandoc -s --toc \
+           -c https://cdn.jsdelivr.net/npm/water.css@2/out/water.css \
+           "$md_file" -o "$out_html"
 done
+
+echo "Recursive documentation build complete!"
+```
+
+#### Parallel Multi-Core Document Build Pipeline
+Accelerate building large document sites across CPU cores using `fd` or `xargs`:
+
+```bash
+# Parallel Markdown to PDF conversion (4 jobs)
+find . -type f -name "*.md" -print0 | xargs -0 -P 4 -I {} sh -c '
+    pandoc -s --pdf-engine=wkhtmltopdf "$1" -o "${1%.*}.pdf"
+' _ {}
+
+# Fast parallel recursive HTML site generation using `fd`
+fd -e md -x pandoc -s --toc {} -o {.}.html
 ```
 
 ---

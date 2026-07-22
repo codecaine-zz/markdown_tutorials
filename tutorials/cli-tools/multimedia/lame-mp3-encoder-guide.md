@@ -109,24 +109,59 @@ Metadata flags:
 
 ---
 
-## 🗂️ Batch Directory Conversion Script
+## 🗂️ Batch Directory Conversion & Bulk Encoding
 
-Batch convert an entire directory of `.flac` or `.wav` files into high-quality `-V0` MP3 files.
+### 1. Flat Directory Batch Encoding
+Batch convert all `.wav` or `.flac` files in a single folder into high-quality `-V0` MP3 files:
 
 ```bash
-#!/bin/bash
-# Batch convert all .wav files in current directory to .mp3
+# Convert all .wav files in current directory to .mp3
 mkdir -p mp3_output
 
 for file in *.wav; do
-  if [ -f "$file" ]; then
-    base_name="${file%.*}"
-    echo "Encoding $file..."
-    lame -V 0 --add-id3v2 "$file" "mp3_output/${base_name}.mp3"
-  fi
+  [ -f "$file" ] || continue
+  base_name="${file%.*}"
+  echo "Encoding $file..."
+  lame -V 0 --add-id3v2 "$file" "mp3_output/${base_name}.mp3"
+done
+```
+
+### 2. Recursive Music Library Encoding (Preserving Subfolder Hierarchy)
+Walk through nested artist/album folders and convert uncompressed audio while mirroring the exact directory tree into an output directory:
+
+```bash
+#!/bin/bash
+# Recursive Music Library Encoder with Subfolder Hierarchy Preservation
+
+SRC_DIR="flac_library"
+DIST_DIR="mp3_library"
+
+find "$SRC_DIR" -type f \( -name "*.wav" -o -name "*.flac" -o -name "*.aiff" \) | while read -r audio_file; do
+    # Compute relative path inside library
+    rel_path="${audio_file#$SRC_DIR/}"
+    out_mp3="$DIST_DIR/${rel_path%.*}.mp3"
+
+    # Create destination album subfolder automatically
+    mkdir -p "$(dirname "$out_mp3")"
+
+    echo "Encoding: $audio_file -> $out_mp3"
+    lame -V 2 --add-id3v2 "$audio_file" "$out_mp3"
 done
 
-echo "Batch encoding completed!"
+echo "Recursive audio library encoding completed!"
+```
+
+### 3. Parallel Multi-Threaded Audio Encoding
+Accelerate batch audio conversion across multi-core processors using `xargs` or `fd`:
+
+```bash
+# Parallel LAME encoding using find + xargs (4 CPU threads)
+find . -type f -name "*.wav" -print0 | xargs -0 -P 4 -I {} sh -c '
+    lame -V 0 --add-id3v2 "$1" "${1%.*}.mp3"
+' _ {}
+
+# Fast parallel recursive encoding using `fd`
+fd -e flac -e wav -x lame -V 0 --add-id3v2 {} {.}.mp3
 ```
 
 ---

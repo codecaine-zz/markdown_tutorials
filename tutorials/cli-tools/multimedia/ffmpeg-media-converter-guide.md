@@ -334,17 +334,65 @@ ffmpeg -i input.mp4 -c:v libx264 -preset medium \
        -b:v 1000k -maxrate 1000k -bufsize 2000k output.mp4
 ```
 
-### Batch Processing Examples
+### Batch Processing & Bulk Media Conversion
+
+#### 1. Flat Directory Transcoding
+Convert all media files in a single folder with quality controls:
 
 ```bash
-# Convert all MP4 files in directory to WebM
-for file in *.mp4; do
-    ffmpeg -i "$file" -c:v libvpx-vp9 -crf 30 "${file%.mp4}.webm"
+# Convert all .mkv files in current directory to .mp4 preserving quality
+for file in *.mkv; do
+    [ -f "$file" ] || continue
+    ffmpeg -i "$file" -c:v libx264 -crf 23 -c:a aac "${file%.mkv}.mp4"
 done
 
-# Process multiple videos with same parameters
-ffmpeg -i input1.mp4 -c:v libx264 output1.mp4
-ffmpeg -i input2.mp4 -c:v libx264 output2.mp4
+# Extract audio as MP3 (192k) from all MP4 videos in folder
+for video in *.mp4; do
+    [ -f "$video" ] || continue
+    ffmpeg -i "$video" -vn -c:a libmp3lame -b:a 192k "audio_${video%.*}.mp3"
+done
+```
+
+#### 2. Recursive Directory Transcoding (Preserving Subfolder Hierarchy)
+Walk through nested media folders (e.g. video library) and transcode to a new output root directory while maintaining exact folder trees:
+
+```bash
+#!/bin/bash
+# Recursive Video Transcoder with Directory Structure Preservation
+
+SRC_DIR="raw_videos"
+DIST_DIR="compressed_videos"
+
+find "$SRC_DIR" -type f \( -name "*.mp4" -o -name "*.mov" -o -name "*.mkv" \) | while read -r input_file; do
+    # Calculate target path relative to source directory
+    rel_path="${input_file#$SRC_DIR/}"
+    output_file="$DIST_DIR/${rel_path%.*}.mp4"
+
+    # Create destination subfolder automatically
+    mkdir -p "$(dirname "$output_file")"
+
+    # Transcode video to H.264 / AAC
+    echo "Processing: $input_file -> $output_file"
+    ffmpeg -y -i "$input_file" \
+           -c:v libx264 -preset medium -crf 24 \
+           -c:a aac -b:a 128k \
+           "$output_file"
+done
+
+echo "Recursive transcoding complete!"
+```
+
+#### 3. Parallel Bulk Video Transcoding
+Scale video processing across multiple cores using `fd` or `xargs`:
+
+```bash
+# Parallel audio extraction across CPU cores (4 workers)
+find . -type f -name "*.mkv" -print0 | xargs -0 -P 4 -I {} sh -c '
+    ffmpeg -y -i "$1" -vn -c:a libmp3lame -q:a 2 "${1%.*}.mp3"
+' _ {}
+
+# Fast parallel recursive video scaling with `fd`
+fd -e mov -e avi -x ffmpeg -y -i {} -vf "scale=1280:720" -c:v libx264 -crf 23 -c:a copy {.}_720p.mp4
 ```
 
 ## Practical Use Cases

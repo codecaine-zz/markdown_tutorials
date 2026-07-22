@@ -1,186 +1,227 @@
-# Complete Guide to Installing and Using `fd` with Homebrew
-
-`fd` is a fast and user-friendly alternative to the `find` command. It simplifies searching for files and directories in your system with a more intuitive syntax and better performance. This guide will walk you through installing `fd` using Homebrew, using it with practical examples, and linking to the official documentation.
-
----
+# fd: Fast & Intuitive CLI File Finder Guide
 
 ## Table of Contents
 
-1. [What is `fd`?](#what-is-fd)
-2. [Prerequisites](#prerequisites)
-3. [Installing `fd` with Homebrew](#installing-fd-with-homebrew)
-4. [Basic Usage of `fd`](#basic-usage-of-fd)
-5. [Advanced Examples](#advanced-examples)
-6. [Comparison with `find`](#comparison-with-find)
-7. [Official Documentation](#official-documentation)
+1. [What is `fd`?](#1-what-is-fd)
+2. [Prerequisites](#2-prerequisites)
+3. [Installation on ARM macOS](#3-installation-on-arm-macos)
+4. [Search by Extension (`-e` / `--extension`)](#4-search-by-extension--e---extension)
+5. [Executing Commands on Found Files (`-x` vs `-X`)](#5-executing-commands-on-found-files--x-vs--x)
+   - [Single File Execution (`-x` / `--exec`)](#single-file-execution--x---exec)
+   - [Batch File Execution (`-X` / `--exec-batch`)](#batch-file-execution--x---exec-batch)
+6. [macOS Finder & `mdfind` CLI Search Commands](#6-macos-finder--mdfind-cli-search-commands)
+   - [Search by Extension with Spotlight (`mdfind`)](#search-by-extension-with-spotlight-mdfind)
+   - [Opening Search Results in Program of Choice (`open -a`)](#opening-search-results-in-program-of-choice-open--a)
+7. [Comparison: `fd` vs `find` vs `mdfind`](#7-comparison-fd-vs-find-vs-mdfind)
+8. [Uninstallation](#8-uninstallation)
 
 ---
 
-## What is `fd`?
+### 1. What is `fd`?
 
-`fd` is a command-line tool designed to help you find files and directories quickly. It's built with usability in mind and offers:
-
-- **Speed**: Faster than traditional `find`.
-- **Simplicity**: Easier syntax.
-- **Colorized Output**: Better readability.
-- **Smart Defaults**: Ignores hidden files and VCS folders by default.
-
-For more information, visit the [official `fd` GitHub repository](https://github.com/sharkdp/fd).
+`fd` is a simple, blazingly fast, and user-friendly alternative to the traditional Unix `find` command, written in Rust. It features intuitive syntax, colorful output, parallel directory traversal, and smart defaults (ignoring hidden files and `.gitignore` patterns out of the box).
 
 ---
 
-## Prerequisites
+### 2. Prerequisites
 
-Before installing `fd`, you need to have **Homebrew** installed on your macOS or Linux system.
-
-### Installing Homebrew (if not already installed):
+Verify Homebrew installation on your Apple Silicon (ARM) Mac:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew --version
 ```
-
-Once Homebrew is installed, you're ready to proceed.
 
 ---
 
-## Installing `fd` with Homebrew
+### 3. Installation on ARM macOS
 
-To install `fd` using Homebrew, run the following command in your terminal:
+Install `fd` via Homebrew:
 
 ```bash
 brew install fd
 ```
 
-After installation, verify that `fd` is installed correctly:
+Verify binary path and version:
 
 ```bash
+which fd
 fd --version
 ```
 
-This command should return the installed version of `fd`.
-
-For more details, refer to the [official Homebrew installation guide](https://github.com/sharkdp/fd#on-macos-or-linux-using-homebrew).
+**Expected Output:**
+```text
+/opt/homebrew/bin/fd
+fd 10.x.x (or latest)
+```
 
 ---
 
-## Basic Usage of `fd`
+### 4. Search by Extension (`-e` / `--extension`)
 
-### Searching for Files
+The `-e` (or `--extension`) flag lets you locate files strictly by their file extension without requiring regex patterns.
 
-To search for files by name:
-
-```bash
-fd example.txt
-```
-
-This command searches for files named `example.txt` in the current directory and subdirectories.
-
-### Searching for Directories
-
-To search for directories:
-
-```bash
-fd -t d my_directory
-```
-
-The `-t d` flag specifies that you're searching for directories.
-
-### Case-Insensitive Search
-
-To perform a case-insensitive search:
-
-```bash
-fd -i example
-```
-
-The `-i` flag makes the search case-insensitive.
-
-### Search in a Specific Directory
-
-To search in a specific directory:
-
-```bash
-fd example.txt /path/to/search
-```
-
-This command searches for `example.txt` in the specified directory.
-
-For more usage examples, visit the [official `fd` usage documentation](https://github.com/sharkdp/fd#tutorial).
-
----
-
-## Advanced Examples
-
-### Search with Regular Expressions
-
-To use regular expressions in your search:
-
-```bash
-fd '^.*\.py$'
-```
-
-This command finds all Python files (`.py` extension) in the current directory.
-
-### Exclude Specific Files or Directories
-
-To exclude certain files or directories:
-
-```bash
-fd example --exclude node_modules
-```
-
-This command searches for `example` but skips the `node_modules` directory.
-
-### Search by File Extension
-
-To search for files with a specific extension:
+#### 1. Search for a Single Extension
+Search for all Markdown (`.md`) files in the current folder tree:
 
 ```bash
 fd -e md
 ```
 
-The `-e md` flag finds all Markdown files.
-
-### Search for Hidden Files
-
-To include hidden files in your search:
-
-```bash
-fd -H .config
+**Example Output:**
+```text
+README.md
+docs/installation.md
+tutorials/file-management/fd-file-finder-guide.md
 ```
 
-The `-H` flag includes hidden files and directories.
+#### 2. Search for Multiple Extensions
+Find all images (`.png`, `.jpg`, `.jpeg`) at once:
 
-For more advanced usage, visit the [official `fd` advanced usage documentation](https://github.com/sharkdp/fd#advanced-examples).
+```bash
+fd -e png -e jpg -e jpeg
+```
 
----
+#### 3. Search Extension inside Specific Target Directory
+Search for Python files (`.py`) inside `src/`:
 
-## Comparison with `find`
+```bash
+fd -e py . src/
+```
 
-Here’s how `fd` compares to the traditional `find` command:
+#### 4. Include Hidden Files or Ignored Extensions (`-H` / `-I`)
+Search for `.env` or `.gitignore` files normally hidden from default search:
 
-| Task                          | `find` Command                          | `fd` Command                     |
-|-------------------------------|-----------------------------------------|----------------------------------|
-| Find a file by name           | `find . -name example.txt`              | `fd example.txt`                 |
-| Find directories              | `find . -type d -name my_directory`     | `fd -t d my_directory`           |
-| Case-insensitive search       | `find . -iname example`                 | `fd -i example`                  |
-| Search by extension           | `find . -name "*.py"`                   | `fd -e py`                       |
-
-As you can see, `fd` provides a more concise and readable syntax.
-
----
-
-## Official Documentation
-
-For more information about `fd`, refer to the following resources:
-
-- [Official `fd` GitHub Repository](https://github.com/sharkdp/fd)
-- [Installation Guide](https://github.com/sharkdp/fd#installation)
-- [Usage Tutorial](https://github.com/sharkdp/fd#tutorial)
-- [Advanced Examples](https://github.com/sharkdp/fd#advanced-examples)
-
-These resources provide comprehensive details about `fd`'s features and capabilities.
+```bash
+fd -H -e env
+```
 
 ---
 
-This guide covers the installation and usage of `fd` with Homebrew, along with practical examples and comparisons to traditional tools. For further exploration, consult the official documentation linked above.
+### 5. Executing Commands on Found Files (`-x` vs `-X`)
+
+`fd` provides powerful execution flags to run any custom CLI program or macOS application on matching files.
+
+#### Placeholder Reference
+
+| Placeholder | Replaced With | Example Output |
+|---|---|---|
+| `{}` | Full relative path | `docs/report.pdf` |
+| `{/}` | File basename (filename only) | `report.pdf` |
+| `{.}` | Path without file extension | `docs/report` |
+| `{//}` | Parent directory path | `docs` |
+
+---
+
+### Single File Execution (`-x` / `--exec`)
+
+The `-x` flag executes the target program **individually for each matching file** (spawns one process per file in parallel).
+
+#### Example 1: Print contents of all `.txt` files with `cat`
+```bash
+fd -e txt -x cat {}
+```
+
+#### Example 2: Convert every PNG image to WEBP individually with ImageMagick
+```bash
+fd -e png -x magick {} {.}.webp
+```
+
+* `{}` passes `photo.png`
+* `{.}.webp` constructs `photo.webp`
+
+#### Example 3: Open each found markdown file individually in VSCode
+```bash
+fd -e md -x code {}
+```
+
+---
+
+### Batch File Execution (`-X` / `--exec-batch`)
+
+The `-X` flag gathers **all matching files into a single batch list** and passes them to the target program all at once as multiple arguments (spawns only **one** process).
+
+#### Example 1: Open all matched PDF documents at once in macOS Preview app
+```bash
+fd -e pdf -X open -a Preview
+```
+
+This runs: `open -a Preview file1.pdf file2.pdf file3.pdf` simultaneously in a single command.
+
+#### Example 2: Count total line statistics for all JavaScript files using `tokei` or `wc`
+```bash
+fd -e js -X wc -l
+```
+
+#### Example 3: Compress all matched `.log` files into a single tar archive
+```bash
+fd -e log -X tar -cvzf logs_archive.tar.gz
+```
+
+---
+
+### 6. macOS Finder & `mdfind` CLI Search Commands
+
+On macOS, you can also search files by extension using the native Spotlight index (`mdfind`) and launch them in macOS Finder or GUI applications (`open`).
+
+#### Search by Extension with Spotlight (`mdfind`)
+
+##### 1. Search for files with extension using raw Spotlight metadata query:
+```bash
+mdfind "kMDItemFSName == '*.pdf'"
+```
+
+##### 2. Search for extension inside a specific directory:
+```bash
+mdfind -onlyin ~/Documents "kMDItemFSName == '*.docx'"
+```
+
+##### 3. Search by file type kind:
+```bash
+mdfind "kind:markdown"
+```
+
+---
+
+#### Opening Search Results in Program of Choice (`open -a`)
+
+Combine `fd` or `mdfind` with `open -a` to launch matching files in specific macOS applications (e.g., VSCode, Preview, QuickTime Player, Safari).
+
+#### Single File Execution with `open -a` (Process Per File)
+Open every matched `.mp4` video in QuickTime Player individually:
+
+```bash
+fd -e mp4 -x open -a "QuickTime Player" {}
+```
+
+#### Batch File Execution with `open -a` (All Files in One Window)
+Open all `.md` files together in Visual Studio Code at once:
+
+```bash
+fd -e md -X open -a "Visual Studio Code"
+```
+
+Open all `.jpg` images together in Preview:
+
+```bash
+fd -e jpg -X open -a Preview
+```
+
+---
+
+### 7. Comparison: `fd` vs `find` vs `mdfind`
+
+| Feature | `fd` | `find` | `mdfind` (macOS Spotlight) |
+|---|---|---|---|
+| **Syntax for Extension** | `fd -e pdf` | `find . -name "*.pdf"` | `mdfind "kMDItemFSName == '*.pdf'"` |
+| **Single Exec** | `fd -e md -x cat {}` | `find . -name "*.md" -exec cat {} \;` | `mdfind "kMDItemFSName == '*.md'" \| xargs -n1 cat` |
+| **Batch Exec** | `fd -e md -X open -a Preview` | `find . -name "*.md" -exec open -a Preview {} +` | `mdfind "kMDItemFSName == '*.md'" \| xargs open -a Preview` |
+| **Ignores `.gitignore`** | Yes (Default) | No | No |
+| **Colorized Output** | Yes | No | No |
+
+---
+
+### 8. Uninstallation
+
+```bash
+brew uninstall fd
+```

@@ -1,337 +1,212 @@
-# Redis CLI Tutorial for Beginners (ARM Mac + VSCode + Brew)
+# Redis: In-Memory Key-Value Data Store CLI Guide
 
-This tutorial teaches you how to use the Redis CLI (Command Line Interface) with best practices, even if you're not a programmer. We'll cover installation, basic commands, and practical examples.
+## Table of Contents
+
+1. [What is `redis`?](#1-what-is-redis)
+2. [Prerequisites](#2-prerequisites)
+3. [Installation on ARM macOS](#3-installation-on-arm-macos)
+4. [Service Management (`brew services`)](#4-service-management-brew-services)
+5. [Connecting with `redis-cli`](#5-connecting-with-redis-cli)
+6. [Core Data Types & Examples](#6-core-data-types--examples)
+7. [Key Expiration & TTL (Time-To-Live)](#7-key-expiration--ttl-time-to-live)
+8. [Pub/Sub Messaging Features](#8-pubsub-messaging-features)
+9. [Server Monitoring & Benchmarking](#9-server-monitoring--benchmarking)
+10. [Uninstallation](#10-uninstallation)
 
 ---
 
-## 🧰 Prerequisites
+### 1. What is `redis`?
 
-### 1. Install Homebrew (if not installed)
-Homebrew is a package manager for macOS that makes installing software easy.
+`redis` (Remote Dictionary Server) is an open-source, in-memory data structure store used as a database, cache, message broker, and streaming engine. The `redis-cli` tool provides a command-line interface to interact directly with local or remote Redis server instances.
+
+#### Common Use Cases
+* **High-Speed Caching:** Caching database query results with TTL expiration.
+* **Session Storage:** Fast web session management across cluster nodes.
+* **Real-time Messaging:** Pub/Sub message channels and job queues.
+
+---
+
+### 2. Prerequisites
+
+Verify Homebrew on your Apple Silicon Mac:
 
 ```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew --version
 ```
 
-🔗 [Homebrew Documentation](https://brew.sh/)
-
 ---
 
-### 2. Install Redis Using Brew
+### 3. Installation on ARM macOS
+
+Install Redis server and client via Homebrew:
 
 ```bash
-# Install Redis
 brew install redis
 ```
 
-🔗 [Redis Installation via Brew](https://formulae.brew.sh/formula/redis)
+Verify binary installation:
+
+```bash
+which redis-cli
+redis-cli --version
+```
+
+**Expected Output:**
+```text
+/opt/homebrew/bin/redis-cli
+redis-cli 7.x.x (or latest)
+```
 
 ---
 
-### 3. Start Redis Server
+### 4. Service Management (`brew services`)
 
+Manage the Redis server daemon using `brew services`:
+
+#### Start Redis Background Service
 ```bash
-# Start Redis server in background
 brew services start redis
 ```
 
-To verify it's running:
-
+#### Check Service Status
 ```bash
-# Check Redis status
 brew services list | grep redis
 ```
 
-🔗 [Redis Quick Start Guide](https://redis.io/docs/getting-started/)
+#### Stop or Restart Service
+```bash
+brew services stop redis
+brew services restart redis
+```
 
 ---
 
-## 🚀 Using Redis CLI
+### 5. Connecting with `redis-cli`
 
-### 1. Connect to Redis CLI
+Launch `redis-cli` to connect to local Redis running on port 6379:
 
 ```bash
-# Open Redis CLI
 redis-cli
 ```
 
-You’ll see a prompt like `127.0.0.1:6379>` — that means you're connected!
+#### Test Server Ping
+Inside the prompt (`127.0.0.1:6379>`):
 
-🔗 [Redis CLI Documentation](https://redis.io/topics/rediscli)
+```text
+127.0.0.1:6379> PING
+PONG
+```
 
 ---
 
-## 🔤 Basic Commands
+### 6. Core Data Types & Examples
 
-### 1. Ping Redis
-
-```bash
-# Test connection
-ping
+#### 1. Strings (Simple Key-Value)
+```text
+127.0.0.1:6379> SET user:100:name "Alice"
+OK
+127.0.0.1:6379> GET user:100:name
+"Alice"
+127.0.0.1:6379> INCR page_views
+(integer) 1
 ```
 
-Expected output: `PONG`
-
----
-
-### 2. Set a Key-Value Pair
-
-```bash
-# Store a value
-set greeting "Hello, Redis!"
-```
-
-This creates a key called `greeting` with the value `"Hello, Redis!"`.
-
----
-
-### 3. Get a Value
-
-```bash
-# Retrieve the value
-get greeting
-```
-
-Expected output: `"Hello, Redis!"`
-
----
-
-### 4. Delete a Key
-
-```bash
-# Remove the key
-del greeting
-```
-
-Now try getting it again:
-
-```bash
-get greeting
-```
-
-Expected output: `(nil)` (means it doesn't exist)
-
----
-
-## 📦 Working with Data Types
-
-### 1. Strings
-
-```bash
-# Set a string
-set name "Alice"
-
-# Get the string
-get name
-```
-
-🔗 [Redis Strings Documentation](https://redis.io/docs/data-types/strings/)
-
----
-
-### 2. Lists (Ordered Collection)
-
-```bash
-# Add items to a list
-lpush tasks "Buy milk"
-lpush tasks "Walk dog"
-
-# View all items
-lrange tasks 0 -1
-```
-
-Expected output:
-```
-1) "Walk dog"
-2) "Buy milk"
-```
-
-🔗 [Redis Lists Documentation](https://redis.io/docs/data-types/lists/)
-
----
-
-### 3. Sets (Unique Items Only)
-
-```bash
-# Add unique items to a set
-sadd colors "red"
-sadd colors "blue"
-sadd colors "red"  # Won't be added again
-
-# View all items
-smembers colors
-```
-
-Expected output:
-```
-1) "red"
-2) "blue"
-```
-
-🔗 [Redis Sets Documentation](https://redis.io/docs/data-types/sets/)
-
----
-
-### 4. Hashes (Key-Value Pairs within a Key)
-
-```bash
-# Store user info
-hset user:1000 name "Bob" age 25 city "NYC"
-
-# Get specific field
-hget user:1000 name
-
-# Get all fields
-hgetall user:1000
-```
-
-Expected output:
-```
-1) "name"
-2) "Bob"
+#### 2. Hashes (Object-like Structures)
+```text
+127.0.0.1:6379> HSET user:100 email "alice@example.com" age 28 role "admin"
+(integer) 3
+127.0.0.1:6379> HGETALL user:100
+1) "email"
+2) "alice@example.com"
 3) "age"
-4) "25"
-5) "city"
-6) "NYC"
+4) "28"
+5) "role"
+6) "admin"
 ```
 
-🔗 [Redis Hashes Documentation](https://redis.io/docs/data-types/hashes/)
+#### 3. Lists (Ordered Sequences / Queues)
+```text
+127.0.0.1:6379> LPUSH job_queue "task_email_1"
+(integer) 1
+127.0.0.1:6379> LPUSH job_queue "task_email_2"
+(integer) 2
+127.0.0.1:6379> RPOP job_queue
+"task_email_1"
+```
+
+#### 4. Sets (Unique Unordered Elements)
+```text
+127.0.0.1:6379> SADD tags "database" "cli" "macos" "cli"
+(integer) 3
+127.0.0.1:6379> SMEMBERS tags
+1) "database"
+2) "cli"
+3) "macos"
+```
 
 ---
 
-## ⏱️ Expiration & TTL
+### 7. Key Expiration & TTL (Time-To-Live)
 
-### Set Expiration Time
+Set temporary keys that expire automatically after a specified number of seconds:
 
-```bash
-# Set a key that expires in 10 seconds
-set temp "This will disappear" ex 10
-
-# Check time to live
-ttl temp
+```text
+127.0.0.1:6379> SET session_token "abc123xyz" EX 10
+OK
+127.0.0.1:6379> TTL session_token
+(integer) 7
 ```
 
 After 10 seconds:
 
-```bash
-get temp
-```
-
-Expected output: `(nil)`
-
-🔗 [Redis Keys with TTL](https://redis.io/commands/ttl/)
-
----
-
-## 🧪 Best Practices
-
-### 1. Use Namespaces in Keys
-
-Use prefixes to organize data:
-
-```bash
-set user:1001:name "Charlie"
-set user:1001:email "charlie@example.com"
+```text
+127.0.0.1:6379> GET session_token
+(nil)
 ```
 
 ---
 
-### 2. Avoid Long Keys
+### 8. Pub/Sub Messaging Features
 
-Shorter keys are faster and use less memory.
+Redis includes lightweight Publish/Subscribe messaging out-of-the-box.
 
-✅ Good:
+#### Subscriber (Terminal 1)
 ```bash
-set u:1001 "active"
+redis-cli SUBSCRIBE notifications
 ```
 
-❌ Bad:
+#### Publisher (Terminal 2)
 ```bash
-set user_status_for_user_with_id_1001 "active"
+redis-cli PUBLISH notifications "New user registered!"
 ```
 
 ---
 
-### 3. Monitor Memory Usage
+### 9. Server Monitoring & Benchmarking
 
+#### Monitor Live Commands in Real-Time
 ```bash
-# Check memory usage
-info memory
+redis-cli MONITOR
 ```
 
-🔗 [Redis Memory Optimization](https://redis.io/docs/management/optimization/memory-optimization/)
+#### Check Memory & Server Stats
+```bash
+redis-cli INFO memory
+```
+
+#### Run Performance Benchmark (`redis-benchmark`)
+Test server throughput on your Mac:
+
+```bash
+redis-benchmark -n 100000 -t set,get -q
+```
 
 ---
 
-## 🛠️ VSCode Setup Tips
-
-### 1. Install Redis Syntax Highlighting Extension
-
-In VSCode:
-- Go to Extensions (`Cmd + Shift + X`)
-- Search: **Redis Syntax Highlighter**
-- Install it for better `.redis` file editing
-
----
-
-### 2. Create a `.redis` Script File
-
-Create a file named `commands.redis` and paste your commands:
-
-```redis
-# commands.redis
-SET greeting "Hello from file"
-GET greeting
-DEL greeting
-```
-
-Run it from terminal:
+### 10. Uninstallation
 
 ```bash
-redis-cli < commands.redis
-```
-
-🔗 [VSCode Redis Extension](https://marketplace.visualstudio.com/items?itemName=Redis.redis-syntax-highlighter)
-
----
-
-## 🧹 Cleanup & Stop Redis
-
-### Stop Redis Server
-
-```bash
-# Stop Redis service
 brew services stop redis
+brew uninstall redis
+rm -f /opt/homebrew/var/db/redis/dump.rdb
 ```
-
-### Flush All Data (⚠️ Use Carefully)
-
-```bash
-# Clear all keys
-flushall
-```
-
----
-
-## 📚 Further Reading
-
-- [Official Redis CLI Docs](https://redis.io/topics/rediscli)
-- [Redis Data Types Overview](https://redis.io/docs/data-types/)
-- [Redis Best Practices](https://redis.io/docs/management/best-practices/)
-
----
-
-## ✅ Summary
-
-| Task | Command |
-|------|---------|
-| Start Redis | `brew services start redis` |
-| Connect CLI | `redis-cli` |
-| Set Key | `set key value` |
-| Get Key | `get key` |
-| Delete Key | `del key` |
-| List Keys | `keys *` |
-| Exit CLI | `exit` |
-
-You're now ready to use Redis CLI confidently! Practice these commands daily and build small projects to reinforce learning.

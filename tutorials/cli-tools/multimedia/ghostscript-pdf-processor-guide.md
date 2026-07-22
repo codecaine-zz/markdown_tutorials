@@ -250,7 +250,67 @@ gs -dNOPAUSE -dBATCH \
    -sOutputFile=thumbnail.png input.pdf
 ```
 
-### 4. Troubleshooting Commands
+### 4. Batch Processing & Bulk PDF Conversion
+
+#### Single-Directory (Flat) Batch Compression
+Compress all PDF documents in a single folder for email or web distribution:
+
+```bash
+mkdir -p compressed_pdfs
+
+for pdf in *.pdf; do
+    [ -f "$pdf" ] || continue
+    echo "Compressing $pdf..."
+    gs -sDEVICE=pdfwrite \
+       -dCompatibilityLevel=1.4 \
+       -dPDFSETTINGS=/ebook \
+       -dNOPAUSE -dBATCH \
+       -sOutputFile="compressed_pdfs/$pdf" "$pdf"
+done
+```
+
+#### Recursive PDF Batch Processing (Preserving Subfolder Hierarchy)
+Recursively walk subdirectories to compress all PDFs while preserving full relative directory hierarchy in an output folder:
+
+```bash
+#!/bin/bash
+# Recursive Ghostscript PDF Compressor with Directory Mirroring
+
+SRC_DOCS="documents_archive"
+DIST_DOCS="compressed_archive"
+
+find "$SRC_DOCS" -type f -name "*.pdf" | while read -r pdf_file; do
+    rel_path="${pdf_file#$SRC_DOCS/}"
+    out_file="$DIST_DOCS/$rel_path"
+
+    # Ensure parent output directory exists
+    mkdir -p "$(dirname "$out_file")"
+
+    echo "Processing PDF: $pdf_file -> $out_file"
+    gs -sDEVICE=pdfwrite \
+       -dCompatibilityLevel=1.4 \
+       -dPDFSETTINGS=/screen \
+       -dNOPAUSE -dBATCH \
+       -sOutputFile="$out_file" "$pdf_file"
+done
+
+echo "Recursive PDF compression finished!"
+```
+
+#### Parallel Multi-Core PDF Batch Processing
+Accelerate batch processing using multi-core execution via `xargs` or `fd`:
+
+```bash
+# Parallel PDF-to-PNG page rendering (4 jobs)
+find . -type f -name "*.pdf" -print0 | xargs -0 -P 4 -I {} sh -c '
+    gs -dNOPAUSE -dBATCH -sDEVICE=png16m -r150 -sOutputFile="${1%.*}_page_%03d.png" "$1"
+' _ {}
+
+# Fast parallel PDF compression using `fd`
+fd -e pdf -x gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sOutputFile={.}_compressed.pdf {}
+```
+
+### 5. Troubleshooting Commands
 
 ```bash
 # Check if Ghostscript can read a file

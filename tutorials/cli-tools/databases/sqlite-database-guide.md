@@ -1,291 +1,224 @@
-# SQLite CLI Tutorial for Beginners (ARM Mac + VSCode + Brew)
+# SQLite: Self-Contained Serverless SQL Database CLI Guide
 
-This tutorial teaches you how to use the SQLite CLI (Command Line Interface) with best practices, even if you're not a programmer. We'll cover installation, basic commands, and practical examples.
+## Table of Contents
+
+1. [What is `sqlite`?](#1-what-is-sqlite)
+2. [Prerequisites](#2-prerequisites)
+3. [Installation on ARM macOS](#3-installation-on-arm-macos)
+4. [Creating & Opening Databases](#4-creating--opening-databases)
+5. [Essential Dot Commands (`.help`, `.mode`, `.schema`)](#5-essential-dot-commands-help-mode-schema)
+6. [Practical SQL Examples & Formatted Output](#6-practical-sql-examples--formatted-output)
+7. [Importing & Exporting Data (`.import`, `.dump`)](#7-importing--exporting-data-import-dump)
+8. [Database Backup & Vacuuming](#8-database-backup--vacuuming)
+9. [Uninstallation](#9-uninstallation)
 
 ---
 
-## 🧰 Prerequisites
+### 1. What is `sqlite`?
 
-### 1. Install Homebrew (if not installed)
-Homebrew is a package manager for macOS that makes installing software easy.
+`sqlite` (accessed via the `sqlite3` command-line utility) is a self-contained, serverless, zero-configuration, transactional SQL database engine. Unlike traditional database systems (MySQL, PostgreSQL) that run as background server daemons, SQLite reads and writes directly to ordinary disk files.
+
+#### Key Features
+* **Zero Configuration:** No server daemon process to start, stop, or configure.
+* **Single-File Storage:** The entire database (tables, indexes, triggers, data) is stored in a single cross-platform disk file.
+* **Ubiquitous & Lightweight:** Embedded in browsers, mobile operating systems (iOS/Android), and CLI applications worldwide.
+
+---
+
+### 2. Prerequisites
+
+Verify Homebrew on your Apple Silicon (ARM) Mac:
 
 ```bash
-# Install Homebrew
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+brew --version
 ```
 
-🔗 [Homebrew Documentation](https://brew.sh/)
-
 ---
 
-### 2. Install SQLite Using Brew
+### 3. Installation on ARM macOS
+
+While macOS includes a default system version of SQLite, installing the latest release via Homebrew provides modern features, extended extension support, and updated CLI tools:
 
 ```bash
-# Install SQLite
 brew install sqlite
 ```
 
-🔗 [SQLite Installation via Brew](https://formulae.brew.sh/formula/sqlite)
-
----
-
-## 💡 Practical Examples
-
-### 🚀 Using SQLite CLI
-
-### 1. Create/Open a Database
+#### Add Homebrew SQLite to your Shell PATH (`~/.zshrc`)
+Because macOS ships with a built-in SQLite, add Homebrew's binary path to the front of your `PATH`:
 
 ```bash
-# Create or open a database file
-sqlite3 mydatabase.db
+echo 'export PATH="/opt/homebrew/opt/sqlite/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
 ```
 
-You'll see a prompt like `sqlite>` — that means you're connected!
-
-🔗 [SQLite CLI Documentation](https://sqlite.org/cli.html)
-
----
-
-## 🔤 Basic Commands
-
-### 1. Show Help
-
-```sql
--- Show help
-.help
-```
-
----
-
-### 2. Create a Table
-
-```sql
--- Create a users table
-CREATE TABLE users (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE,
-    age INTEGER
-);
-```
-
----
-
-### 3. Insert Data
-
-```sql
--- Insert a user
-INSERT INTO users (name, email, age) VALUES ('Alice', 'alice@example.com', 30);
-```
-
----
-
-### 4. Query Data
-
-```sql
--- Get all users
-SELECT * FROM users;
-```
-
-Expected output:
-```
-1|Alice|alice@example.com|30
-```
-
----
-
-### 5. Update Data
-
-```sql
--- Update Alice's age
-UPDATE users SET age = 31 WHERE name = 'Alice';
-```
-
----
-
-### 6. Delete Data
-
-```sql
--- Delete Alice
-DELETE FROM users WHERE name = 'Alice';
-```
-
----
-
-## 📦 Working with Tables
-
-### 1. Show Tables
-
-```sql
--- List all tables
-.tables
-```
-
----
-
-### 2. Describe Table Structure
-
-```sql
--- Show table schema
-.schema users
-```
-
----
-
-### 3. Add a New Column
-
-```sql
--- Add a phone column
-ALTER TABLE users ADD COLUMN phone TEXT;
-```
-
----
-
-### 4. Drop a Table
-
-```sql
--- Delete the table
-DROP TABLE users;
-```
-
----
-
-## 🧪 Best Practices
-
-### 1. Use Transactions for Multiple Operations
-
-```sql
--- Begin transaction
-BEGIN;
-
--- Multiple operations
-INSERT INTO users (name, email) VALUES ('Bob', 'bob@example.com');
-UPDATE users SET age = 25 WHERE name = 'Bob';
-
--- Commit changes
-COMMIT;
-```
-
-🔗 [SQLite Transactions](https://sqlite.org/lang_transaction.html)
-
----
-
-### 2. Use Indexes for Faster Queries
-
-```sql
--- Create index on email column
-CREATE INDEX idx_email ON users(email);
-```
-
-🔗 [SQLite Indexes](https://sqlite.org/lang_createindex.html)
-
----
-
-### 3. Backup Your Database
+Verify binary path and version:
 
 ```bash
-# Backup database
-sqlite3 mydatabase.db .backup mydatabase_backup.db
+which sqlite3
+sqlite3 --version
+```
+
+**Expected Output:**
+```text
+/opt/homebrew/opt/sqlite/bin/sqlite3
+3.45.x (or latest)
 ```
 
 ---
 
-## 🛠️ VSCode Setup Tips
+### 4. Creating & Opening Databases
 
-### 1. Install SQLite Viewer Extension
+Launch `sqlite3` by specifying a database filename:
 
-In VSCode:
-- Go to Extensions (`Cmd + Shift + X`)
-- Search: **SQLite Viewer**
-- Install it for visual database browsing
-
----
-
-### 2. Create a `.sql` Script File
-
-Create a file named `setup.sql` and paste your commands:
-
-```sql
--- setup.sql
-CREATE TABLE IF NOT EXISTS products (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    price REAL
-);
-
-INSERT INTO products (name, price) VALUES ('Laptop', 999.99);
-SELECT * FROM products;
+#### 1. Open a Persistent Disk Database
+```bash
+sqlite3 company.db
 ```
 
-Run it from terminal:
+If `company.db` does not exist, SQLite creates it automatically upon saving data.
+
+#### 2. Open an In-Memory Temporary Database
+To test queries without writing to disk:
 
 ```bash
-sqlite3 mydatabase.db < setup.sql
+sqlite3 :memory:
 ```
 
-🔗 [VSCode SQLite Extension](https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer)
+You will enter the interactive `sqlite>` prompt.
 
 ---
 
-## 🧹 Useful CLI Commands
+### 5. Essential Dot Commands (`.help`, `.mode`, `.schema`)
 
-### 1. Exit SQLite
+SQLite CLI uses special commands starting with a dot (`.`) to control display formatting, list tables, and manage settings.
+
+| Command | Action |
+|---|---|
+| `.help` | Display list of all dot commands |
+| `.tables` | List all tables in current database |
+| `.schema [table]` | Display SQL `CREATE TABLE` statement |
+| `.mode column` | Format output into aligned columns |
+| `.headers on` | Display column header titles in query outputs |
+| `.show` | Show current SQLite configuration settings |
+| `.quit` / `.exit` | Exit the `sqlite3` prompt |
+
+---
+
+### 6. Practical SQL Examples & Formatted Output
+
+Configure readable column output inside the `sqlite>` shell:
 
 ```sql
--- Exit SQLite
-.quit
-```
-
-### 2. Show Headers in Output
-
-```sql
--- Enable headers
 .headers on
-
--- Enable column mode
 .mode column
-
--- Now select shows nice table
-SELECT * FROM users;
 ```
 
-### 3. Export Data to CSV
+#### Create a Table
+```sql
+CREATE TABLE employees (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    department TEXT NOT NULL,
+    salary REAL NOT NULL,
+    hired_date TEXT DEFAULT CURRENT_DATE
+);
+```
+
+#### Insert Data
+```sql
+INSERT INTO employees (name, department, salary) 
+VALUES ('Alice Smith', 'Engineering', 125000.00),
+       ('Bob Jones', 'Marketing', 88000.00),
+       ('Charlie Brown', 'Engineering', 130000.00);
+```
+
+#### Query Data
+```sql
+SELECT id, name, department, salary, hired_date 
+FROM employees 
+WHERE salary >= 90000 
+ORDER BY salary DESC;
+```
+
+**Example Output:**
+```text
+id  name           department   salary    hired_date
+--  -------------  -----------  --------  ----------
+3   Charlie Brown  Engineering  130000.0  2026-07-22
+1   Alice Smith    Engineering  125000.0  2026-07-22
+```
+
+#### Update & Delete
+```sql
+UPDATE employees SET salary = 95000.00 WHERE name = 'Bob Jones';
+DELETE FROM employees WHERE id = 2;
+```
+
+---
+
+### 7. Importing & Exporting Data (`.import`, `.dump`)
+
+#### Export Query Results to a CSV File
+Inside the `sqlite>` prompt:
 
 ```sql
--- Set output mode to CSV
 .mode csv
-
--- Output to file
-.output users.csv
-
--- Export data
-SELECT * FROM users;
-
--- Reset output
+.output employees_export.csv
+SELECT * FROM employees;
 .output stdout
+.mode column
+```
+
+#### Import a CSV File into a New Table
+Create a sample CSV file from terminal (`data.csv`):
+
+```text
+id,name,role
+101,Dave,Architect
+102,Eve,Designer
+```
+
+Import inside `sqlite3`:
+
+```sql
+.mode csv
+.import --skip 1 data.csv team_members
+```
+
+Verify imported table:
+
+```sql
+.mode column
+SELECT * FROM team_members;
 ```
 
 ---
 
-## 📚 Further Reading
+### 8. Database Backup & Vacuuming
 
-- [Official SQLite CLI Docs](https://sqlite.org/cli.html)
-- [SQLite Language Reference](https://sqlite.org/lang.html)
-- [SQLite Best Practices](https://sqlite.org/np1queryprob.html)
+#### Backup Database to an SQL Script File
+From the macOS terminal command line:
+
+```bash
+sqlite3 company.db .dump > company_backup.sql
+```
+
+#### Restore Database from SQL Script File
+```bash
+sqlite3 company_restored.db < company_backup.sql
+```
+
+#### Reclaim Disk Space (`VACUUM`)
+After deleting rows or tables, run `VACUUM` inside the `sqlite>` shell to defragment the disk file and shrink file size:
+
+```sql
+VACUUM;
+```
 
 ---
 
-## ✅ Summary
+### 9. Uninstallation
 
-| Task | Command |
-|------|---------|
-| Open Database | `sqlite3 mydatabase.db` |
-| Create Table | `CREATE TABLE ...` |
-| Insert Data | `INSERT INTO ...` |
-| Query Data | `SELECT * FROM ...` |
-| Update Data | `UPDATE ... SET ...` |
-| Delete Data | `DELETE FROM ...` |
-| Show Tables | `.tables` |
-| Exit CLI | `.quit` |
-
-You're now ready to use SQLite CLI confidently! Practice these commands daily and build small projects to reinforce learning.
+```bash
+brew uninstall sqlite
+```

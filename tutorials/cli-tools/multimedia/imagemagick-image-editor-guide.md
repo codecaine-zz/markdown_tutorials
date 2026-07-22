@@ -352,71 +352,76 @@ convert input1.jpg input2.png input3.png \
 -compose over -layers merge output_composite.jpg
 ```
 
-## Batch Processing Examples
+## Batch Processing & Bulk Conversion Examples
 
-### Simple Batch Operations
+### 1. Native In-Place Bulk Conversion (`mogrify`)
+`mogrify` is ImageMagick's native tool for batch processing multiple files in-place or into a specified target directory.
+
 ```bash
-# Resize all jpg files in directory to 800x600
-for file in *.jpg; do
-    convert "$file" -resize 800x600 "resized_$file"
+# Convert all PNG files in current directory to WebP format
+magick mogrify -format webp *.png
+
+# Resize all JPG images in current directory to maximum 1920x1080 (in-place)
+magick mogrify -resize 1920x1080\> *.jpg
+
+# Convert all PNG files to JPG and output them to a separate directory
+mkdir -p output_jpg
+magick mogrify -path output_jpg -format jpg *.png
+```
+
+### 2. Single-Directory (Flat) Batch Processing Loops
+When using `magick convert` or creating custom file names:
+
+```bash
+# Resize all PNG images in current directory to 800x600 and save with new extension
+for file in *.png; do
+    [ -f "$file" ] || continue
+    magick convert "$file" -resize 800x600 "resized_${file%.*}.jpg"
 done
 
-# Convert all images to grayscale and save with new extension
-for file in *.{jpg,png,gif}; do
-    convert "$file" -colorspace Gray "${file%.*}.bw"
-done
-
-# Apply watermark to all images
-for file in *.jpg; do
-    convert "$file" watermark.png \
-    -composite "watermarked_$file"
-done
-
-# Create thumbnails from all images
-for file in *.{jpg,png,gif}; do
-    convert "$file" -thumbnail 100x100 "thumb_${file%.*}.jpg"
-done
-
-# Batch crop images to specific ratio (4:3)
-for file in *.jpg; do
-    convert "$file" -resize 800x600^ \
-    -gravity center -crop 800x600+0+0 "cropped_${file%.*}.jpg"
-done
-
-# Batch adjust brightness and contrast
-for file in *.jpg; do
-    convert "$file" -brightness-contrast 15x15 \
-    "brightened_${file%.*}.jpg"
+# Convert images to WebP with 85% quality control
+for file in *.{jpg,jpeg,png}; do
+    [ -f "$file" ] || continue
+    magick convert "$file" -quality 85 "${file%.*}.webp"
 done
 ```
 
-### Advanced Batch Processing
+### 3. Recursive Directory Conversion (Preserving Subfolder Hierarchy)
+To recursively convert images across multi-level subfolders while maintaining the original directory structure in an output folder:
+
 ```bash
 #!/bin/bash
-# Advanced batch processing script
+# Recursive Image Conversion with Hierarchy Preservation
 
-mkdir -p processed_images
+INPUT_DIR="src_photos"
+OUTPUT_DIR="dist_photos"
 
-for image in *.jpg; do
-    base_name="${image%.*}"
+find "$INPUT_DIR" -type f \( -name "*.jpg" -o -name "*.png" -o -name "*.tiff" \) | while read -r file; do
+    # Compute output path relative to input root
+    rel_path="${file#$INPUT_DIR/}"
+    out_file="$OUTPUT_DIR/${rel_path%.*}.webp"
     
-    # Create multiple variations of each image
-    convert "$image" -resize 1200x800^ \
-        -gravity center -crop 1200x800+0+0 \
-        "processed_images/${base_name}_large.jpg"
-        
-    convert "$image" -resize 640x480 \
-        "processed_images/${base_name}_medium.jpg"
-        
-    convert "$image" -resize 320x240 \
-        "processed_images/${base_name}_small.jpg"
-        
-    # Add watermark to large image
-    convert "processed_images/${base_name}_large.jpg" watermark.png \
-        -composite "processed_images/${base_name}_watermarked.jpg"
+    # Ensure nested target directory exists
+    mkdir -p "$(dirname "$out_file")"
+    
+    # Convert file with quality optimization
+    magick convert "$file" -quality 82 "$out_file"
 done
 
-echo "Batch processing complete!"
+echo "Recursive conversion finished!"
+```
+
+### 4. Parallel Multi-Core Batch Conversion
+Speed up large-scale bulk conversions across CPU cores using `xargs` or `fd`:
+
+```bash
+# Parallel conversion using find + xargs (4 parallel jobs)
+find . -type f -name "*.png" -print0 | xargs -0 -P 4 -I {} sh -c '
+    magick convert "$1" -quality 85 "${1%.*}.jpg"
+' _ {}
+
+# Fast parallel recursive conversion using `fd` (modern find replacement)
+fd -e png -e jpg -x magick convert {} -resize 1200x800\> {.}.webp
 ```
 
 ## Complete Examples
