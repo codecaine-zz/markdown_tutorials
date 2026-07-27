@@ -14635,6 +14635,7 @@ This section is grouped into focused subtopics so you can jump quickly to the ar
 - [Io](#io)
 - [Io Util](#io-util)
 - [Term](#term)
+- [Term Ui](#term-ui)
 - [Benchmark](#benchmark)
 - [Clipboard](#clipboard)
 - [Context](#context)
@@ -18146,6 +18147,535 @@ fn main() {
 
 ---
 
+### Term Ui
+
+_File location: [language_updates_and_stdlib/02_standard_library/37_term_ui/term_ui.v](language_updates_and_stdlib/02_standard_library/37_term_ui/term_ui.v)_
+
+### Lesson: Term Ui
+
+V's standard library provides the `term.ui` (or `tui`) module for building full-featured, cross-platform terminal user interface applications. It manages an event-driven render loop, keyboard and mouse input handling, window resize events, screen buffer clearing, and drawing text, shapes, interactive GUI-in-TUI controls (inputs, buttons, checkboxes, tabs), and custom RGB colors directly in the terminal window.
+
+---
+
+#### 1. Configuration & Application Lifecycle Callbacks (`Config`)
+
+- **The Vibe:** "The central app engine configuration and lifecycle setup."
+- **What it does:** Configures the TUI context via `tui.init()` with custom application state and lifecycle callback hooks:
+  - `user_data voidptr`: Pointer to custom application state struct, passed to all callbacks.
+  - `init_fn fn(voidptr)`: Callback fired once after terminal initialization before the main loop starts.
+  - `frame_fn fn(voidptr)`: Main render callback fired automatically at `frame_rate` frames per second.
+  - `event_fn fn(&Event, voidptr)`: Callback fired for keyboard, mouse, and window resize events.
+  - `cleanup_fn fn(voidptr)`: Callback fired once when the application exits to restore terminal state cleanly.
+  - `fail_fn fn(string)`: Callback fired if a fatal error occurs during initialization.
+  - Options: `frame_rate` (FPS, default 30), `buffer_size` (input buffer size), `hide_cursor` (hides terminal cursor), `capture_events` (intercepts raw key combinations such as `Ctrl+C`/`Ctrl+Z`), `window_title` (sets window title bar).
+- **Best to use when:** Setting up structured terminal applications with state management, custom render rates, and clean shutdown routines.
+- **Real-world example:** Terminal dashboards, file managers, text editors, and system monitoring monitors.
+
+#### 2. Interactive Controls & GUI-in-TUI Patterns
+
+- **The Vibe:** "Full GUI-style interactive widgets inside the terminal."
+- **What it does:** Implements common UI controls using mouse bounding boxes and keyboard event dispatchers:
+  - **Interactive Text Input Box**: Captures focused key strokes (`.utf8` input), backspace deletion (`.backspace`), Enter submission (`.enter`), and renders a blinking cursor bar (`|`).
+  - **Mouse-Clickable UI Buttons**: Renders styled rectangle buttons with hover state (`.mouse_move`) and active pressed state (`.mouse_down`/`.mouse_up` inside button bounds `x..x+w, y..y+h`).
+  - **Checkboxes & Toggle Switches**: Clickable boolean toggle switches (`[X]` vs `[ ]`) for toggling settings like dark mode or grid lines.
+  - **Radio Selectors & Segmented Controls**: Single-option selection controls (`(•)` vs `( )`) for choosing modes or speeds.
+  - **Navigation Tabs**: Tabbed interface bars (`[1] Controls & Form  [2] Canvas Drawing  [3] Event Log Stream`) allowing users to switch active views via macOS-friendly number shortcuts (`1`, `2`, `3`), fallback function keys (`F1`-`F3`), or mouse clicks.
+
+#### 3. Graphics & Drawing Primitives
+
+- **The Vibe:** "The terminal screen canvas paint box."
+- **What it does:** Provides built-in drawing methods for text, lines, and shapes:
+  - `draw_text(x, y, text)`: Renders strings starting at column `x`, row `y`.
+  - `draw_point(x, y)`: Draws a single point/character cell at `x`, `y`.
+  - `draw_line(x1, y1, x2, y2)`: Draws solid line segments using Bresenham's algorithm or fast horizontal line rendering.
+  - `draw_dashed_line(x1, y1, x2, y2)`: Draws dashed line segments.
+  - `draw_rect(x1, y1, x2, y2)`: Draws a filled rectangle spanning from top-left `(x1, y1)` to bottom-right `(x2, y2)`.
+  - `draw_empty_rect(x1, y1, x2, y2)`: Draws an outlined rectangle without fill.
+  - `draw_empty_dashed_rect(x1, y1, x2, y2)`: Draws a dashed rectangle outline.
+  - `horizontal_separator(y)`: Draws a horizontal line rule across the entire window width at row `y`.
+
+#### 4. Color & Styling Control (`Color`)
+
+- **The Vibe:** "The terminal palette and typography controls."
+- **What it does:** Manages foreground/background colors and text attributes:
+  - `set_color(Color{r, g, b})`: Sets text foreground color (using 24-bit RGB true color or 256-color ANSI fallback).
+  - `set_bg_color(Color{r, g, b})`: Sets background color for text and filled shapes.
+  - `reset_color()` / `reset_bg_color()`: Restores foreground or background color back to default terminal style.
+  - `bold()`: Enables bold text formatting.
+  - `reset()`: Resets all text styles and color formatting attributes back to default (`\x1b[0m`).
+
+#### 5. Real-Time Event Loop & Event Stream Inspector (`Event`)
+
+- **The Vibe:** "The real-time keyboard, mouse, and window event logger."
+- **What it does:** Inspects and logs live input events via `tui.Event`:
+  - `typ EventType`: `.key_down`, `.mouse_down`, `.mouse_up`, `.mouse_move`, `.mouse_drag`, `.mouse_scroll`, `.resized`.
+  - Keyboard details: `code` (`KeyCode` enum matching `.escape`, `.enter`, `.space`, `.up`, `.down`, `.left`, `.right`, `.tab`, `._1`–`._9`, letters, numbers), `modifiers` (`.ctrl`, `.shift`, `.alt` flags), `ascii`, `utf8`.
+  - Mouse details: `x`, `y` coordinates, `button` (`.left`, `.middle`, `.right`), `direction` (`.up`, `.down`, `.left`, `.right` scroll).
+  - Window resize details: `width`, `height` passed on `.resized` events (and auto-updated in `window_width`/`window_height`).
+
+---
+
+**Additional Context from Repository docs:**
+This example demonstrates the concepts of **term.ui**.
+
+```v
+module main
+
+// Import the terminal UI module from V's standard library
+import term.ui as tui
+
+// Button represents an interactive mouse-clickable TUI button
+struct Button {
+	id     string
+	label  string
+	x      int
+	y      int
+	width  int
+	height int
+}
+
+// App struct stores complete application state across render frames and events
+struct App {
+mut:
+	tui &tui.Context = unsafe { nil }
+	// Navigation Tabs
+	active_tab int // 0: Form & Controls, 1: Drawing Primitives, 2: Event Stream Log
+	tab_titles []string
+	// Form & Widget State
+	text_input        string
+	input_focused     bool
+	counter           int
+	show_grid         bool
+	dark_mode         bool
+	selected_option   int
+	radio_options     []string
+	// Buttons list
+	buttons []Button
+	// Event Stream Log (last 10 events)
+	event_log []string
+	// Mouse tracking
+	mouse_x      int
+	mouse_y      int
+	hovered_btn  string
+	clicked_btn  string
+	scroll_state string
+}
+
+// log_event adds a formatted message to the event log buffer
+fn (mut app App) log_event(msg string) {
+	app.event_log << msg
+	if app.event_log.len > 10 {
+		app.event_log.delete(0)
+	}
+}
+
+// frame_fn is called automatically on every render cycle (at 30 FPS)
+fn frame_fn(x voidptr) {
+	mut app := unsafe { &App(x) }
+
+	// 1. Clear previous frame contents from screen buffer
+	app.tui.clear()
+
+	// 2. Main Color Scheme depending on Dark Mode toggle
+	bg_r, bg_g, bg_b := if app.dark_mode { u8(15), u8(18), u8(28) } else { u8(30), u8(45), u8(70) }
+	accent_r, accent_g, accent_b := u8(0), u8(180), u8(220)
+
+	// 3. Render Top Navigation Bar & Tabs
+	app.tui.set_bg_color(r: bg_r, g: bg_g, b: bg_b)
+	app.tui.set_color(r: 255, g: 255, b: 255)
+	app.tui.bold()
+	header := ' === V term.ui Interactive Widgets & Event Inspector === [Res: ${app.tui.window_width}x${app.tui.window_height}] '
+	app.tui.draw_text(2, 1, header)
+	app.tui.reset()
+
+	// Draw Tab Buttons (using macOS-friendly standard 1, 2, 3 shortcuts)
+	mut tab_x := 4
+	for i in 0 .. app.tab_titles.len {
+		title := app.tab_titles[i]
+		if i == app.active_tab {
+			app.tui.set_bg_color(r: accent_r, g: accent_g, b: accent_b)
+			app.tui.set_color(r: 255, g: 255, b: 255)
+			app.tui.bold()
+		} else {
+			app.tui.set_bg_color(r: 60, g: 70, b: 90)
+			app.tui.set_color(r: 200, g: 200, b: 200)
+		}
+		tab_btn_text := ' [ ${i + 1} ] ${title} '
+		app.tui.draw_text(tab_x, 3, tab_btn_text)
+		app.tui.reset()
+		tab_x += tab_btn_text.len + 2
+	}
+
+	app.tui.horizontal_separator(4)
+
+	// 4. Render Active Tab Content
+	match app.active_tab {
+		0 {
+			// ==========================================
+			// TAB 0: Interactive Form, Textbox & Buttons
+			// ==========================================
+			app.tui.set_color(r: 255, g: 220, b: 0)
+			app.tui.bold()
+			app.tui.draw_text(4, 6, '1. Interactive Text Input Box (Click or Press TAB to focus)')
+			app.tui.reset()
+
+			// Textbox Container
+			input_bg_r, input_bg_g, input_bg_b := if app.input_focused {
+				u8(40), u8(60), u8(100)
+			} else {
+				u8(25), u8(30), u8(45)
+			}
+			app.tui.set_bg_color(r: input_bg_r, g: input_bg_g, b: input_bg_b)
+			app.tui.set_color(r: 255, g: 255, b: 255)
+			app.tui.draw_rect(4, 7, 54, 9)
+
+			cursor_char := if app.input_focused && (app.tui.frame_count / 15) % 2 == 0 {
+				'|'
+			} else {
+				''
+			}
+			display_text := if app.text_input == '' {
+				'Type text here...'
+			} else {
+				app.text_input
+			}
+			app.tui.draw_text(6, 8, '> ${display_text}${cursor_char}')
+			app.tui.reset()
+
+			// Interactive Buttons Section
+			app.tui.set_color(r: 255, g: 220, b: 0)
+			app.tui.bold()
+			app.tui.draw_text(4, 11, '2. Clickable UI Buttons & Counter State')
+			app.tui.reset()
+
+			// Render Buttons
+			for btn in app.buttons {
+				is_hover := app.hovered_btn == btn.id
+				is_click := app.clicked_btn == btn.id
+
+				b_r, b_g, b_b := if is_click {
+					u8(255), u8(140), u8(0)
+				} else if is_hover {
+					u8(0), u8(150), u8(220)
+				} else {
+					u8(50), u8(70), u8(100)
+				}
+
+				app.tui.set_bg_color(r: b_r, g: b_g, b: b_b)
+				app.tui.set_color(r: 255, g: 255, b: 255)
+				app.tui.bold()
+				app.tui.draw_rect(btn.x, btn.y, btn.x + btn.width, btn.y + btn.height)
+				app.tui.draw_text(btn.x + 2, btn.y + 1, btn.label)
+				app.tui.reset()
+			}
+
+			// Display Counter Value
+			app.tui.set_color(r: 0, g: 255, b: 180)
+			app.tui.bold()
+			app.tui.draw_text(4, 15, 'Current Counter Value: ${app.counter}')
+			app.tui.reset()
+
+			// Checkboxes & Radio Selectors Section
+			app.tui.set_color(r: 255, g: 220, b: 0)
+			app.tui.bold()
+			app.tui.draw_text(4, 17, '3. Checkbox & Radio Controls')
+			app.tui.reset()
+
+			chk_grid := if app.show_grid { '[X]' } else { '[ ]' }
+			chk_dark := if app.dark_mode { '[X]' } else { '[ ]' }
+			app.tui.draw_text(4, 18, '${chk_grid} Show Grid (Click to toggle)')
+			app.tui.draw_text(32, 18, '${chk_dark} Dark Mode Theme (Click to toggle)')
+
+			app.tui.draw_text(4, 20, 'Select Speed Mode:')
+			for idx, opt in app.radio_options {
+				selected_str := if idx == app.selected_option { '(•)' } else { '( )' }
+				app.tui.draw_text(4 + idx * 16, 21, '${selected_str} ${opt}')
+			}
+		}
+		1 {
+			// ==========================================
+			// TAB 1: Graphics & Drawing Canvas
+			// ==========================================
+			app.tui.set_color(r: 0, g: 220, b: 255)
+			app.tui.bold()
+			app.tui.draw_text(4, 6, '=== Canvas Graphics & Drawing Primitives ===')
+			app.tui.reset()
+
+			// Filled Rect
+			app.tui.set_bg_color(r: 180, g: 40, b: 80)
+			app.tui.draw_rect(4, 8, 30, 12)
+			app.tui.reset_bg_color()
+			app.tui.set_color(r: 255, g: 255, b: 255)
+			app.tui.draw_text(6, 10, 'Filled Rect (draw_rect)')
+
+			// Outline Rect
+			app.tui.set_color(r: 0, g: 255, b: 150)
+			app.tui.draw_empty_rect(34, 8, 60, 12)
+			app.tui.draw_text(36, 10, 'Outline Rect (draw_empty_rect)')
+
+			// Dashed Line & Dashed Rect
+			app.tui.set_color(r: 255, g: 200, b: 0)
+			app.tui.draw_dashed_line(4, 14, 30, 14)
+			app.tui.draw_text(4, 15, 'Dashed Line (draw_dashed_line)')
+
+			app.tui.draw_empty_dashed_rect(34, 14, 60, 17)
+			app.tui.draw_text(36, 15, 'Dashed Rect (draw_empty_dashed_rect)')
+			app.tui.reset()
+		}
+		else {
+			// ==========================================
+			// TAB 2: Real-time Event Log Inspector
+			// ==========================================
+			app.tui.set_color(r: 255, g: 180, b: 0)
+			app.tui.bold()
+			app.tui.draw_text(4, 6, '=== Live Input Event Stream (Last 10 Events) ===')
+			app.tui.reset()
+
+			app.tui.draw_empty_rect(4, 7, 85, 19)
+
+			for i, log_entry in app.event_log {
+				app.tui.set_color(r: 200, g: 220, b: 255)
+				app.tui.draw_text(6, 8 + i, '[#${i + 1}] ${log_entry}')
+			}
+			app.tui.reset()
+		}
+	}
+
+	// 5. Footer Status & macOS-friendly Shortcuts
+	app.tui.horizontal_separator(21)
+	app.tui.set_color(r: 180, g: 180, b: 180)
+	app.tui.draw_text(4, 22, 'Mouse Pos: X=${app.mouse_x}, Y=${app.mouse_y} | Scroll: ${app.scroll_state} | Active Hover: "${app.hovered_btn}"')
+	app.tui.draw_text(4, 23, 'Shortcuts: [1-3] Switch Tabs | [TAB] Focus Textbox | [ESC] or "q" Quit')
+	app.tui.reset()
+
+	app.tui.set_cursor_position(0, 0)
+	app.tui.reset()
+	app.tui.flush()
+}
+
+// event_fn handles keyboard, mouse, and window resize events
+fn event_fn(e &tui.Event, x voidptr) {
+	mut app := unsafe { &App(x) }
+
+	match e.typ {
+		.key_down {
+			app.log_event('Key Down: Code=${e.code} (${int(e.code)}) | Modifiers=${e.modifiers} | Utf8="${e.utf8}"')
+
+			// Mac-friendly Tab switching shortcuts (1, 2, 3 or Escape/q for quit)
+			match e.code {
+				.escape, .q {
+					if !app.input_focused || e.code == .escape {
+						exit(0)
+					}
+				}
+				.tab {
+					app.input_focused = !app.input_focused
+				}
+				._1, .f1 {
+					if !app.input_focused || e.code == .f1 {
+						app.active_tab = 0
+					}
+				}
+				._2, .f2 {
+					if !app.input_focused || e.code == .f2 {
+						app.active_tab = 1
+					}
+				}
+				._3, .f3 {
+					if !app.input_focused || e.code == .f3 {
+						app.active_tab = 2
+					}
+				}
+				else {}
+			}
+
+			// Textbox Input Editing
+			if app.input_focused {
+				match e.code {
+					.backspace {
+						if app.text_input.len > 0 {
+							app.text_input = app.text_input[..app.text_input.len - 1]
+						}
+					}
+					.enter {
+						app.log_event('Submitted Text: "${app.text_input}"')
+					}
+					else {
+						if e.utf8.len > 0 && e.code != .tab && e.code != .escape {
+							app.text_input += e.utf8
+						}
+					}
+				}
+			}
+		}
+		.mouse_move {
+			app.mouse_x = e.x
+			app.mouse_y = e.y
+
+			// Detect button hover
+			mut found_hover := ''
+			for btn in app.buttons {
+				if app.active_tab == 0 && e.x >= btn.x && e.x <= btn.x + btn.width
+					&& e.y >= btn.y && e.y <= btn.y + btn.height {
+					found_hover = btn.id
+					break
+				}
+			}
+			app.hovered_btn = found_hover
+		}
+		.mouse_down {
+			app.mouse_x = e.x
+			app.mouse_y = e.y
+			app.log_event('Mouse Click: Btn=${e.button} at (${e.x}, ${e.y})')
+
+			// 1. Check Tab Clicks
+			if e.y == 3 {
+				if e.x >= 4 && e.x <= 18 {
+					app.active_tab = 0
+				} else if e.x >= 20 && e.x <= 36 {
+					app.active_tab = 1
+				} else if e.x >= 38 && e.x <= 56 {
+					app.active_tab = 2
+				}
+			}
+
+			// 2. Check Textbox Focus Click
+			if app.active_tab == 0 && e.x >= 4 && e.x <= 54 && e.y >= 7 && e.y <= 9 {
+				app.input_focused = true
+			} else if app.active_tab == 0 && (e.y < 7 || e.y > 9) {
+				app.input_focused = false
+			}
+
+			// 3. Check Button Clicks
+			if app.active_tab == 0 {
+				for btn in app.buttons {
+					if e.x >= btn.x && e.x <= btn.x + btn.width && e.y >= btn.y
+						&& e.y <= btn.y + btn.height {
+						app.clicked_btn = btn.id
+						match btn.id {
+							'inc' {
+								app.counter++
+								app.log_event('Button Click: Counter Incremented to ${app.counter}')
+							}
+							'dec' {
+								app.counter--
+								app.log_event('Button Click: Counter Decremented to ${app.counter}')
+							}
+							'clear' {
+								app.text_input = ''
+								app.log_event('Button Click: Text Input Cleared')
+							}
+							'reset' {
+								app.counter = 0
+								app.log_event('Button Click: Counter Reset to 0')
+							}
+							else {}
+						}
+						break
+					}
+				}
+
+				// Checkbox Toggles
+				if e.y == 18 {
+					if e.x >= 4 && e.x <= 20 {
+						app.show_grid = !app.show_grid
+						app.log_event('Toggle Grid: ${app.show_grid}')
+					} else if e.x >= 32 && e.x <= 52 {
+						app.dark_mode = !app.dark_mode
+						app.log_event('Toggle Dark Mode: ${app.dark_mode}')
+					}
+				}
+
+				// Radio Options
+				if e.y == 21 {
+					if e.x >= 4 && e.x <= 16 {
+						app.selected_option = 0
+						app.log_event('Selected Speed: Slow')
+					} else if e.x >= 20 && e.x <= 32 {
+						app.selected_option = 1
+						app.log_event('Selected Speed: Normal')
+					} else if e.x >= 36 && e.x <= 48 {
+						app.selected_option = 2
+						app.log_event('Selected Speed: Fast')
+					}
+				}
+			}
+		}
+		.mouse_up {
+			app.clicked_btn = ''
+		}
+		.mouse_scroll {
+			app.scroll_state = '${e.direction}'
+			app.log_event('Mouse Scroll: Direction=${e.direction} at (${e.x}, ${e.y})')
+		}
+		.resized {
+			app.log_event('Window Resized: Width=${app.tui.window_width}, Height=${app.tui.window_height}')
+		}
+		else {}
+	}
+}
+
+fn main() {
+	mut app := &App{
+		tab_titles:    ['Controls & Form', 'Canvas Drawing', 'Event Log Stream']
+		text_input:    'Hello Vlang term.ui!'
+		counter:       10
+		show_grid:     true
+		dark_mode:     true
+		radio_options: ['Slow', 'Normal', 'Fast']
+		buttons:       [
+			Button{
+				id:     'inc'
+				label:  '[ + ] Increment'
+				x:      4
+				y:      12
+				width:  16
+				height: 2
+			},
+			Button{
+				id:     'dec'
+				label:  '[ - ] Decrement'
+				x:      22
+				y:      12
+				width:  16
+				height: 2
+			},
+			Button{
+				id:     'reset'
+				label:  '[ R ] Reset'
+				x:      40
+				y:      12
+				width:  12
+				height: 2
+			},
+			Button{
+				id:     'clear'
+				label:  '[ C ] Clear Text'
+				x:      54
+				y:      12
+				width:  16
+				height: 2
+			},
+		]
+	}
+
+	app.tui = tui.init(
+		user_data:      app
+		frame_fn:       frame_fn
+		event_fn:       event_fn
+		window_title:   'V Comprehensive Terminal GUI & Widgets'
+		hide_cursor:    true
+		capture_events: true
+		frame_rate:     30
+		buffer_size:    256
+	)
+
+	app.tui.run()!
+}
+```
+
+---
+
 ### Benchmark
 
 _File location: [language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v](language_updates_and_stdlib/02_standard_library/18_benchmark/benchmark.v)_
@@ -19183,58 +19713,327 @@ fn main() {
 
 _File location: [language_updates_and_stdlib/02_standard_library/32_veb/veb.v](language_updates_and_stdlib/02_standard_library/32_veb/veb.v)_
 
-This example demonstrates building a web application with routes, starting it in a background thread, and testing requests using the modern `veb` web framework.
+This example demonstrates building a full-featured REST API with full CRUD operations (`GET`, `POST`, `PUT`, `DELETE`), clean helper functions for request parsing and validation (`parse_and_validate_task`), standardized JSON response functions (`send_json`, `send_error`, `send_message`), thread-safe state management (`sync.RwMutex`), and file-based JSON database persistence using the `veb` web framework.
 
 ```v
 module main
 
-import veb
+import json
 import net.http
+import os
+import sync
 import time
+import veb
+
+// ============================================================================
+// 1. DATA MODEL & VALIDATION
+// ============================================================================
+
+// Task represents a item in our system stored in a JSON file.
+struct Task {
+mut:
+	id        int    @[json: 'id']
+	title     string @[json: 'title']
+	details   string @[json: 'details']
+	completed bool   @[json: 'completed']
+}
+
+// validate checks that incoming task data meets our business rules.
+fn (t Task) validate() ! {
+	if t.title.trim_space() == '' {
+		return error('Task title cannot be empty')
+	}
+}
+
+// ============================================================================
+// 2. DATABASE LAYER (JSON FILE PERSISTENCE)
+// ============================================================================
+
+struct Database {
+mut:
+	file_path string
+	tasks     []Task
+}
+
+fn (mut db Database) load() ! {
+	if !os.exists(db.file_path) {
+		db.tasks = []Task{}
+		return
+	}
+	content := os.read_file(db.file_path)!
+	if content.trim_space() == '' {
+		db.tasks = []Task{}
+		return
+	}
+	db.tasks = json.decode([]Task, content)!
+}
+
+fn (mut db Database) save() ! {
+	encoded := json.encode_pretty(db.tasks)
+	os.write_file(db.file_path, encoded)!
+}
+
+// CRUD operations on the database
+fn (db &Database) get_all() []Task {
+	return db.tasks
+}
+
+fn (db &Database) get_by_id(id int) ?Task {
+	for task in db.tasks {
+		if task.id == id {
+			return task
+		}
+	}
+	return none
+}
+
+fn (mut db Database) add(new_task Task) !Task {
+	new_task.validate()!
+	mut max_id := 0
+	for t in db.tasks {
+		if t.id > max_id {
+			max_id = t.id
+		}
+	}
+	created := Task{
+		id:        max_id + 1
+		title:     new_task.title.trim_space()
+		details:   new_task.details.trim_space()
+		completed: new_task.completed
+	}
+	db.tasks << created
+	db.save()!
+	return created
+}
+
+fn (mut db Database) update(id int, update_data Task) !Task {
+	update_data.validate()!
+	for i in 0 .. db.tasks.len {
+		if db.tasks[i].id == id {
+			db.tasks[i].title = update_data.title.trim_space()
+			db.tasks[i].details = update_data.details.trim_space()
+			db.tasks[i].completed = update_data.completed
+			db.save()!
+			return db.tasks[i]
+		}
+	}
+	return error('Task with ID ${id} not found')
+}
+
+fn (mut db Database) delete(id int) ! {
+	for i, t in db.tasks {
+		if t.id == id {
+			db.tasks.delete(i)
+			db.save()!
+			return
+		}
+	}
+	return error('Task with ID ${id} not found')
+}
+
+// ============================================================================
+// 3. HTTP APP & CONTEXT DEFINITION
+// ============================================================================
+
+struct App {
+mut:
+	lock sync.RwMutex
+	db   Database
+}
 
 pub struct Context {
 	veb.Context
 }
 
-pub struct App {
-	secret_key string
+// ============================================================================
+// 4. REQUEST & RESPONSE HELPERS (ABSTRACTION LAYER)
+// ============================================================================
+
+// parse_and_validate_task parses JSON request body and validates field constraints.
+fn parse_and_validate_task(mut ctx Context) !Task {
+	if ctx.req.data.trim_space() == '' {
+		return error('Request body cannot be empty')
+	}
+	task := json.decode(Task, ctx.req.data) or {
+		return error('Invalid JSON payload structure')
+	}
+	task.validate()!
+	return task
 }
 
-// Route handler
+// send_json encodes data as JSON and sets the HTTP status code.
+fn send_json[T](mut ctx Context, data T, status http.Status) veb.Result {
+	ctx.res.set_status(status)
+	return ctx.json(json.encode(data))
+}
+
+// send_error sets an HTTP error status code and returns a JSON error response.
+fn send_error(mut ctx Context, message string, status http.Status) veb.Result {
+	ctx.res.set_status(status)
+	return ctx.json('{"error": "${message}"}')
+}
+
+// send_message sets an HTTP status code and returns a success JSON message.
+fn send_message(mut ctx Context, message string, status http.Status) veb.Result {
+	ctx.res.set_status(status)
+	return ctx.json('{"message": "${message}"}')
+}
+
+// ============================================================================
+// 5. ROUTE HANDLERS (CLEAN & CONCISE)
+// ============================================================================
+
+// GET / - Index welcome page
 pub fn (app &App) index(mut ctx Context) veb.Result {
-	return ctx.text('Hello from veb web framework!')
+	return ctx.text('Welcome to veb Clean CRUD API!')
 }
 
-fn main() {
-	println('=== veb Web Framework Demo ===')
+// GET /api/tasks - Retrieve all tasks (READ)
+@['/api/tasks'; get]
+pub fn (mut app App) get_tasks(mut ctx Context) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
+	return send_json(mut ctx, app.db.get_all(), .ok)
+}
 
-	mut app := &App{
-		secret_key: 'veb_secret_key'
+// GET /api/tasks/:id - Retrieve a task by ID (READ)
+@['/api/tasks/:id'; get]
+pub fn (mut app App) get_task_by_id(mut ctx Context, id int) veb.Result {
+	app.lock.@rlock()
+	defer { app.lock.runlock() }
+
+	task := app.db.get_by_id(id) or {
+		return send_error(mut ctx, 'Task not found', .not_found)
+	}
+	return send_json(mut ctx, task, .ok)
+}
+
+// POST /api/tasks - Create a new task (CREATE)
+@['/api/tasks'; post]
+pub fn (mut app App) create_task(mut ctx Context) veb.Result {
+	payload := parse_and_validate_task(mut ctx) or {
+		return send_error(mut ctx, err.msg(), .bad_request)
 	}
 
+	app.lock.@lock()
+	defer { app.lock.unlock() }
+
+	created := app.db.add(payload) or {
+		return send_error(mut ctx, err.msg(), .internal_server_error)
+	}
+	return send_json(mut ctx, created, .created)
+}
+
+// PUT /api/tasks/:id - Update an existing task (UPDATE)
+@['/api/tasks/:id'; put]
+pub fn (mut app App) update_task(mut ctx Context, id int) veb.Result {
+	payload := parse_and_validate_task(mut ctx) or {
+		return send_error(mut ctx, err.msg(), .bad_request)
+	}
+
+	app.lock.@lock()
+	defer { app.lock.unlock() }
+
+	updated := app.db.update(id, payload) or {
+		status := if err.msg().contains('not found') { http.Status.not_found } else { http.Status.internal_server_error }
+		return send_error(mut ctx, err.msg(), status)
+	}
+	return send_json(mut ctx, updated, .ok)
+}
+
+// DELETE /api/tasks/:id - Delete a task by ID (DELETE)
+@['/api/tasks/:id'; delete]
+pub fn (mut app App) delete_task(mut ctx Context, id int) veb.Result {
+	app.lock.@lock()
+	defer { app.lock.unlock() }
+
+	app.db.delete(id) or {
+		return send_error(mut ctx, err.msg(), .not_found)
+	}
+	return send_message(mut ctx, 'Task deleted successfully', .ok)
+}
+
+// ============================================================================
+// 6. MAIN DEMONSTRATION SUITE
+// ============================================================================
+
+fn main() {
+	println('=== veb Web Framework Full CRUD Demo (Clean Abstractions) ===')
+
+	db_file := 'veb_tasks_db.json'
+	defer {
+		if os.exists(db_file) {
+			os.rm(db_file) or {}
+			println('Cleaned up temporary database file: ${db_file}')
+		}
+	}
+
+	mut db := Database{ file_path: db_file }
+	db.load() or {}
+
+	mut app := &App{ db: db }
 	port := 30088
 
-	// Run the web server in a separate thread to avoid blocking the main execution
+	// Start server in background thread
 	spawn fn [mut app, port] () {
-		println('Starting veb server on port ${port}...')
+		println('Starting veb server on http://localhost:${port}/...')
 		veb.run[App, Context](mut app, port)
 	}()
 
-	// Wait for the server to spin up
-	time.sleep(200 * time.millisecond)
+	time.sleep(250 * time.millisecond)
+	base_url := 'http://localhost:${port}'
 
-	// Make an HTTP GET request to verify the server is running and responding
-	url := 'http://localhost:${port}/'
-	println('Sending request to: ${url}')
+	println('\n--- 1. POST /api/tasks (Validation Failure Test) ---')
+	invalid_json := '{"title": "   ", "details": "No title provided"}'
+	resp_invalid := http.post_json('${base_url}/api/tasks', invalid_json) or { panic(err) }
+	println('Status: ${resp_invalid.status_code} | Body: ${resp_invalid.body}')
 
-	resp := http.get(url) or {
-		println('HTTP request failed: ${err}')
-		return
+	println('\n--- 2. POST /api/tasks (Create Task 1) ---')
+	valid_json1 := '{"title": "Learn V veb Abstractions", "details": "Clean helper functions for CRUD", "completed": false}'
+	resp_create1 := http.post_json('${base_url}/api/tasks', valid_json1) or { panic(err) }
+	println('Status: ${resp_create1.status_code} | Body: ${resp_create1.body}')
+
+	println('\n--- 3. POST /api/tasks (Create Task 2) ---')
+	valid_json2 := '{"title": "Build Clean REST API", "details": "Abstracted validation and responses", "completed": false}'
+	resp_create2 := http.post_json('${base_url}/api/tasks', valid_json2) or { panic(err) }
+	println('Status: ${resp_create2.status_code} | Body: ${resp_create2.body}')
+
+	println('\n--- 4. GET /api/tasks (List All Tasks) ---')
+	resp_all := http.get('${base_url}/api/tasks') or { panic(err) }
+	println('Status: ${resp_all.status_code} | Body:\n${resp_all.body}')
+
+	println('\n--- 5. GET /api/tasks/1 (Fetch Task by ID) ---')
+	resp_get := http.get('${base_url}/api/tasks/1') or { panic(err) }
+	println('Status: ${resp_get.status_code} | Body: ${resp_get.body}')
+
+	println('\n--- 6. PUT /api/tasks/1 (Update Task 1 to completed) ---')
+	update_json := '{"title": "Learn V veb Abstractions (Completed)", "details": "Clean helper functions for CRUD", "completed": true}'
+	resp_put := http.fetch(http.FetchConfig{
+		url: '${base_url}/api/tasks/1'
+		method: .put
+		header: http.new_header(http.HeaderConfig{ key: .content_type, value: 'application/json' })
+		data: update_json
+	}) or { panic(err) }
+	println('Status: ${resp_put.status_code} | Body: ${resp_put.body}')
+
+	println('\n--- 7. DELETE /api/tasks/2 (Delete Task 2) ---')
+	resp_del := http.fetch(http.FetchConfig{
+		url: '${base_url}/api/tasks/2'
+		method: .delete
+	}) or { panic(err) }
+	println('Status: ${resp_del.status_code} | Body: ${resp_del.body}')
+
+	println('\n--- 8. GET /api/tasks (Final Task List) ---')
+	resp_final := http.get('${base_url}/api/tasks') or { panic(err) }
+	println('Status: ${resp_final.status_code} | Body: ${resp_final.body}')
+
+	println('\n--- 9. Check JSON File Content on Disk ---')
+	if os.exists(db_file) {
+		db_content := os.read_file(db_file) or { '' }
+		println('JSON DB File (${db_file}) Content:\n${db_content}')
 	}
 
-	println('Response Status Code: ${resp.status_code}')
-	println('Response Body:        "${resp.body}"')
-	println('veb server tested successfully.')
+	println('\nveb Full CRUD with clean abstractions completed successfully!')
 }
 ```
 
