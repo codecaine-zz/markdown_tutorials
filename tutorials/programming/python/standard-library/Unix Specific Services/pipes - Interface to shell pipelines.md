@@ -1,4 +1,8 @@
 # pipes - Interface to shell pipelines
+
+> [!WARNING]
+> **Removed in Python 3.13+**: The `pipes` module was deprecated in Python 3.11 and completely removed in Python 3.13 (PEP 594). Use the standard library **`subprocess`** and **`shlex`** modules for piping and executing shell commands in modern Python.
+
 ## Table of Contents
 
 1. [Example 1: Basic Pipelines](#example-1-basic-pipelines)

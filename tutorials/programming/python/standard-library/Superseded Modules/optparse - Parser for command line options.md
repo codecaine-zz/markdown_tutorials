@@ -1,4 +1,8 @@
 # optparse - Parser for command line options
+
+> [!NOTE]
+> **Superseded by `argparse`**: `optparse` has been deprecated since Python 3.2. New Python code should use the modern **`argparse`** standard library module or modern CLI frameworks like **`click`** and **`typer`**.
+
 ## Table of Contents
 
 1. [Explanation:](#explanation)

@@ -1,4 +1,8 @@
 # crypt - Function to check Unix passwords
+
+> [!WARNING]
+> **Removed in Python 3.13+**: The `crypt` module was deprecated in Python 3.11 and completely removed in Python 3.13 (PEP 594). In modern Python applications, use **`hashlib.scrypt`**, **`bcrypt`**, or **`argon2-cffi`** for secure password hashing and verification.
+
 ## Table of Contents
 
 1. [Explanation:](#explanation)

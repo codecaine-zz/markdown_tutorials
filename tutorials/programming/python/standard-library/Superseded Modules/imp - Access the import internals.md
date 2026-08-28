@@ -1,4 +1,8 @@
 # imp - Access the import internals
+
+> [!WARNING]
+> **Removed in Python 3.12+**: The `imp` module was deprecated in Python 3.4 and completely removed in Python 3.12 (PEP 594). Use the modern standard library module **`importlib`** for dynamic module importing, loading, and inspection in modern Python (3.12+).
+
 ## Table of Contents
 
 1. [Example 1: Using `imp.load_module()` (Legacy Functionality)](#example-1-using-impload_module-legacy-functionality)

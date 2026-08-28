@@ -1,4 +1,8 @@
 # 2to3 - Automated Python 2 to 3 code translation
+
+> [!WARNING]
+> **Removed in Python 3.13+**: `2to3` (and the `lib2to3` package) was deprecated in Python 3.11 and completely removed in Python 3.13 (PEP 594). For modern codebase syntax upgrades, use modern tools like **`pyupgrade`** or **`ruff check --select UP`**.
+
 ## Table of Contents
 
 1. [Example 1: Basic Conversion with a Script](#example-1-basic-conversion-with-a-script)
