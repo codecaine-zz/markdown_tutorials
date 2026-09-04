@@ -2,13 +2,13 @@
 
 ### Table of Contents
 
-1.  [What is `cava`?](https://www.google.com/search?q=%231-what-is-cava)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Basic Usage & The Interface](https://www.google.com/search?q=%234-basic-usage--the-interface)
-5.  [Customizing `cava` via the Config File](https://www.google.com/search?q=%235-customizing-cava-via-the-config-file)
-6.  [Interactive Controls (While Running)](https://www.google.com/search?q=%236-interactive-controls-while-running)
-7.  [Uninstallation](https://www.google.com/search?q=%237-uninstallation)
+1.  [What is `cava`?](#1-what-is-cava)
+2.  [Prerequisites](#2-prerequisites)
+3.  [Installation](#3-installation)
+4.  [Basic Usage & The Interface](#4-basic-usage--the-interface)
+5.  [Customizing `cava` via the Config File](#5-customizing-cava-via-the-config-file)
+6.  [Interactive Controls (While Running)](#6-interactive-controls-while-running)
+7.  [Uninstallation](#7-uninstallation)
 
 -----
 

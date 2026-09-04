@@ -1,7 +1,7 @@
 # distutils - Building and installing Python packages
 
 > [!WARNING]
-> **Removed in Python 3.12+**: `distutils` was deprecated in Python 3.10 and completely removed in Python 3.12 (PEP 632). For modern Python packaging and distribution, use **`setuptools`**, **`build`**, or modern all-in-one managers like **[`uv`](file:///Users/codecaine/markdown_tutorials/tutorials/programming/python/uv-python-package-manager-guide.md)** and **`flit`** / **`hatchling`** with standard `pyproject.toml` configurations.
+> **Removed in Python 3.12+**: `distutils` was deprecated in Python 3.10 and completely removed in Python 3.12 (PEP 632). For modern Python packaging and distribution, use **`setuptools`**, **`build`**, or modern all-in-one managers like **[`uv`](?page=programming%2Fpython%2Fuv-python-package-manager-guide)** and **`flit`** / **`hatchling`** with standard `pyproject.toml` configurations.
 
 ## Table of Contents
 

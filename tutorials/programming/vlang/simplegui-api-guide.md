@@ -32,8 +32,8 @@ If you are new to programming or desktop app creation, here are simple definitio
 - [2. Control layout and grid rows](#2-control-layout--grid-rows)
 - [3. Adding controls](#3-adding-controls)
 - [4. Control sizing and styling](#4-control-sizing--styling)
-- [5. Dialogs, popups, and file pickers](#5-dialogs-popups-and-file-pickers)
-- [6. Utilities and system actions](#6-utilities-and-system-actions)
+- [5. Dialogs, Popups, & File Pickers](#5-dialogs-popups--file-pickers)
+- [6. Utilities & System Actions](#6-utilities--system-actions)
 - [6c. V Standard Library High-Level Wrappers](#6c-v-standard-library-high-level-wrappers)
 - [7. List Box & Image View Operations](#7-list-box--image-view-operations)
 - [8. Scheduled Timers & Delays](#8-scheduled-timers--delays)
@@ -245,7 +245,7 @@ Looks up a built-in production theme by name (or alias) and applies its backgrou
 - **Values**: Accepts any built-in theme name (e.g. `'Apple Light'`, `'Apple Dark'`, `'Midnight Space Gray'`, `'Apple Sunset'`, `'Sonoma Emerald'`, `'Ventura Amber'`, `'Soft Pastel'`, `'Catppuccin'`, `'Nord'`, `'Dracula'`, `'Cyberpunk'`, `'Solarized Light'`, `'Solarized Dark'`, `'GitHub Dark'`, `'GitHub Light'`, `'Navy Blue'`, `'Forest Green'`).
 - **Control styling**: applying a theme restyles every control — buttons, dropdowns, text inputs, textareas, and date pickers derive their light/dark surface colors from the theme's background luminance, not from the macOS system appearance. A light theme therefore renders light controls even on a Mac running system Dark Mode (and vice versa).
 - **Window appearance**: the window's `NSAppearance` (Aqua / Dark Aqua) is switched automatically to match the theme background, so native bezels, menus, and scrollers stay consistent.
-- **Explicit overrides**: per-control colors set with `win.set_control_background_color()` / `win.set_control_font_color()` complement the theme — setting one property never resets the other. Applying a new theme restyles all controls, so re-apply per-control overrides after `set_theme()` when switching palettes at runtime (see [demos/form_color_theme_demo.v](demos/form_color_theme_demo.v)).
+- **Explicit overrides**: per-control colors set with `win.set_control_background_color()` / `win.set_control_font_color()` complement the theme — setting one property never resets the other. Applying a new theme restyles all controls, so re-apply per-control overrides after `set_theme()` when switching palettes at runtime (see [demos/form_color_theme_demo.v](https://github.com/codecaine-zz/vlang_simplegui/blob/main/demos/form_color_theme_demo.v)).
 
 ```v
 win.set_theme('Apple Dark')
@@ -4841,7 +4841,7 @@ win.on_shortcut('cmd+shift+p', fn (mut win simplegui.SimpleWindow, key string) {
 
 ## 7. RAD Visual UI Designer & Code Generator API
 
-SimpleGUI includes a Delphi/VB/Lazarus-inspired **Visual UI Designer Engine** ([simplegui/designer.v](file:///Users/codecaine/vlang_simplegui/simplegui/designer.v)) and executable RAD Studio workspace ([ui_designer.v](file:///Users/codecaine/vlang_simplegui/ui_designer.v) and [demos/ui_designer.v](file:///Users/codecaine/vlang_simplegui/demos/ui_designer.v)).
+SimpleGUI includes a Delphi/VB/Lazarus-inspired **Visual UI Designer Engine** ([simplegui/designer.v](https://github.com/codecaine-zz/vlang_simplegui/blob/main/simplegui/designer.v)) and executable RAD Studio workspace ([ui_designer.v](https://github.com/codecaine-zz/vlang_simplegui/blob/main/ui_designer.v) and [demos/ui_designer.v](https://github.com/codecaine-zz/vlang_simplegui/blob/main/demos/ui_designer.v)).
 
 ### Structs
 

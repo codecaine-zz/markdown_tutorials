@@ -49,7 +49,9 @@ class MarkdownTutorialApp {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Markdown Tutorials</title>
+            <title>Dev Knowledge Base &amp; Tutorials | Programming, Client Utils &amp; CLI</title>
+            <meta name="description" content="Comprehensive full-stack programming and developer knowledge base with 400+ guides: complete Python standard library (300+ modules) &amp; web frameworks, modern JavaScript &amp; Bun runtime, client utilities (Axios, es-toolkit), CLI tooling (Chalk, Boxen, Clack Prompts, CLI-Table3), systems programming in Rust and C on ARM Mac, databases, and DevOps.">
+            <meta name="keywords" content="programming tutorials, python standard library, client utils, cli tools, bun runtime, typescript, chalk, boxen, clack prompts, axios, es-toolkit, rust, c arm mac, fastapi, django, dev cheat sheets">
             <!-- Site favicon (only include if files exist to avoid 404s) -->
             <?php 
             $faviconFiles = [
@@ -85,26 +87,38 @@ class MarkdownTutorialApp {
             <!-- Scroll Progress Indicator -->
             <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
 
-            <button class="mobile-menu-toggle" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
-            
+            <!-- Mobile Menu Backdrop -->
+            <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="toggleSidebar(false)" aria-hidden="true"></div>
+
             <div class="container">
                 <!-- Sidebar Navigation -->
-                <nav class="sidebar" id="sidebar">
-                        <!-- Width toggle like Neutralino app -->
-                        <button class="sidebar-toggle" id="sidebarToggle" title="Toggle Navigation Width">
-                            <i class="fas fa-arrows-alt-h"></i>
-                        </button>
+                <nav class="sidebar" id="sidebar" aria-label="Documentation Navigation">
                     <div class="sidebar-header">
-                        <h2><i class="fas fa-book"></i> Tutorials</h2>
+                        <div class="sidebar-top-bar">
+                            <a href="/" class="sidebar-hub-btn" title="Return to CodeCaine Hub">
+                                <i class="fas fa-arrow-left"></i>
+                                <span>CodeCaine Hub</span>
+                            </a>
+                            <button class="sidebar-toggle-btn" id="sidebarToggle" title="Toggle Sidebar Width (Desktop)" aria-label="Toggle Sidebar Width">
+                                <i class="fas fa-arrows-alt-h"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar-brand-row">
+                            <div class="sidebar-brand-icon">
+                                <i class="fas fa-book-bookmark"></i>
+                            </div>
+                            <div class="sidebar-brand-info">
+                                <span class="brand-title">Tutorials &amp; Guides</span>
+                                <span class="brand-badge"><span class="badge-dot"></span> 400+ Guides</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="sidebar-content">
                             <!-- Sidebar search -->
                             <div class="search-container">
                                 <div class="search-box">
                                     <i class="fas fa-search search-icon"></i>
-                                    <input type="text" id="navigationSearch" placeholder="Search tutorials..." autocomplete="off" />
+                                    <input type="text" id="navigationSearch" placeholder="Search tutorials... (⌘K)" autocomplete="off" />
                                     <button class="clear-search" id="clearSearch" title="Clear search">
                                         <i class="fas fa-times"></i>
                                     </button>
@@ -123,18 +137,35 @@ class MarkdownTutorialApp {
                     <!-- Top Toolbar -->
                     <header class="toolbar" role="toolbar" aria-label="Application toolbar">
                         <div class="toolbar-left">
+                            <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleSidebar()" aria-label="Toggle Navigation Menu" title="Toggle Navigation Menu">
+                                <i class="fas fa-bars"></i>
+                            </button>
+                            <a href="/" class="tb-hub-pill" title="Return to CodeCaine Hub">
+                                <i class="fas fa-house"></i>
+                                <span>Hub</span>
+                            </a>
+                            <div class="tb-sep" aria-hidden="true"></div>
                             <button id="tbHome" class="tb-btn" title="Home"><i class="fas fa-home"></i><span>Home</span></button>
-                            <button id="tbCollapseAll" class="tb-btn" title="Collapse all"><i class="fas fa-compress"></i><span>Collapse</span></button>
-                            <button id="tbExpandAll" class="tb-btn" title="Expand all"><i class="fas fa-expand"></i><span>Expand</span></button>
+                            <button id="tbCollapseAll" class="tb-btn" title="Collapse all folders"><i class="fas fa-compress"></i><span>Collapse</span></button>
+                            <button id="tbExpandAll" class="tb-btn" title="Expand all folders"><i class="fas fa-expand"></i><span>Expand</span></button>
                             <button id="tbRefresh" class="tb-btn" title="Refresh navigation"><i class="fas fa-rotate"></i><span>Refresh</span></button>
+                        </div>
+                        <div class="toolbar-center">
+                            <button class="tb-search-trigger" id="tbSearchTrigger" onclick="window.showCommandPalette &amp;&amp; window.showCommandPalette()" title="Open Command Palette (⌘K / Ctrl+K)">
+                                <i class="fas fa-search"></i>
+                                <span>Quick search...</span>
+                                <kbd>⌘K</kbd>
+                            </button>
                         </div>
                         <div class="toolbar-right">
                             <button id="tbHelp" class="tb-btn" title="Keyboard shortcuts (F1)"><i class="fas fa-question-circle"></i><span>Help</span></button>
                             <button id="tbTheme" class="tb-btn" title="Toggle theme"><i class="fas fa-moon"></i><span>Theme</span></button>
                             <div class="tb-sep" aria-hidden="true"></div>
-                            <button id="tbZoomOut" class="tb-btn" title="Zoom out"><i class="fas fa-search-minus"></i></button>
-                            <span id="tbZoomIndicator" class="tb-indicator" aria-live="polite">100%</span>
-                            <button id="tbZoomIn" class="tb-btn" title="Zoom in"><i class="fas fa-search-plus"></i></button>
+                            <div class="zoom-controls">
+                                <button id="tbZoomOut" class="tb-btn tb-btn-compact" title="Zoom out"><i class="fas fa-search-minus"></i></button>
+                                <span id="tbZoomIndicator" class="tb-indicator" aria-live="polite">100%</span>
+                                <button id="tbZoomIn" class="tb-btn tb-btn-compact" title="Zoom in"><i class="fas fa-search-plus"></i></button>
+                            </div>
                         </div>
                     </header>
 
@@ -306,6 +337,7 @@ class MarkdownTutorialApp {
     }
     
     private function findMarkdownFile($page) {
+        $page = preg_replace('/\.md$/i', '', $page);
         $parts = explode('/', $page);
         $fileName = array_pop($parts) . '.md';
         $subPath = implode('/', $parts);
@@ -597,44 +629,182 @@ class MarkdownTutorialApp {
         ?>
         <div class="content-wrapper">
             <div class="home-page">
-                <h1><i class="fas fa-book-open"></i> Welcome to Markdown Tutorials</h1>
-                <p>Find concise, practical guides. Use the sidebar search, browse by category, or jump into something new.</p>
+                <div class="hero-badge"><i class="fas fa-layer-group"></i> 400+ Production Cheat-Sheets &amp; Developer Guides</div>
+                <h1><i class="fas fa-terminal"></i> Developer Knowledge Base &amp; Engineering Hub</h1>
+                <p class="hero-lead">An encyclopedic reference library of 400+ practical, field-tested developer guides. Dive deep into the complete Python Standard Library (300+ modules), modern JavaScript/TypeScript with Bun runtime &amp; Drizzle ORM, client utilities &amp; CLI tools (Chalk, Boxen, Clack Prompts, Axios, es-toolkit), systems programming in Rust and C on ARM Apple Silicon, and 100+ command-line tools.</p>
 
                 <!-- Quick actions -->
-                <div class="tutorial-actions" style="display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;">
+                <div class="tutorial-actions" style="display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 24px 0;">
                     <button class="btn" onclick="(function(){const s=document.getElementById('navigationSearch'); if(s){s.focus(); s.select();}})()" title="Focus the sidebar search">
-                        <i class="fas fa-search"></i> Search tutorials
+                        <i class="fas fa-search"></i> Search all 400+ guides
+                    </button>
+                    <button class="btn-secondary" onclick="(function(){if(window.MarkdownApp &amp;&amp; window.MarkdownApp.openCommandPalette){window.MarkdownApp.openCommandPalette();}else{const ev=new KeyboardEvent('keydown',{key:'k',metaKey:true,bubbles:true});document.dispatchEvent(ev);}})()" title="Open Command Palette (Cmd+K)">
+                        <i class="fas fa-bolt"></i> Command Palette <kbd style="font-size:0.75em;padding:2px 5px;background:rgba(255,255,255,0.15);border-radius:4px;margin-left:4px;">⌘K</kbd>
                     </button>
                     <?php if (!empty($random)) { ?>
                     <a class="btn-secondary" href="?page=<?php echo rawurlencode($random['page']); ?>" title="Open a random tutorial">
-                        <i class="fas fa-shuffle"></i> Random tutorial
+                        <i class="fas fa-shuffle"></i> Random guide
                     </a>
                     <?php } ?>
-                    <a class="btn-secondary" href="?page=tutorials" onclick="return false;" style="display:none"></a>
                 </div>
 
-                <!-- Stats -->
-                <div class="features" style="margin-top:10px;">
+                <!-- Core Engineering Domains Spotlight -->
+                <div class="content-section" style="margin-top:20px;">
+                    <h2><i class="fas fa-cubes"></i> Core Engineering Domains &amp; What's Inside</h2>
+                    <p style="opacity:0.85; margin-bottom:16px;">Specialized learning tracks curated with runnable code snippets, architecture breakdowns, and syntax cheat-sheets:</p>
+                    <div class="domains-grid">
+                        <!-- Domain 1: Python Standard Library & Frameworks -->
+                        <div class="domain-card">
+                            <div class="domain-header">
+                                <div class="domain-icon python-icon"><i class="fab fa-python"></i></div>
+                                <div>
+                                    <h3>Python Standard Library &amp; Web Frameworks</h3>
+                                    <span class="domain-stat">256 Comprehensive Guides</span>
+                                </div>
+                            </div>
+                            <p class="domain-desc">Deep-dive encyclopedic coverage of over 300+ Python standard library modules grouped by domain: Data Persistence (sqlite3, shelve, pickle), Functional (itertools, functools), Debugging (pdb, trace, timeit), File Formats (csv, tomllib, configparser), Tkinter GUI, Concurrency (asyncio, multiprocessing, threading), plus modern web frameworks (FastAPI, Django, Flask).</p>
+                            <div class="domain-tags">
+                                <span class="tag">Python 3.12+</span>
+                                <span class="tag">StdLib (300+ Modules)</span>
+                                <span class="tag">AsyncIO</span>
+                                <span class="tag">FastAPI</span>
+                                <span class="tag">SQLite3</span>
+                                <span class="tag">Tkinter GUI</span>
+                            </div>
+                            <div class="domain-footer">
+                                <a href="?page=programming%2Fpython" class="domain-link">Explore Python Guides <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Domain 2: Modern JavaScript, TypeScript & Bun Runtime -->
+                        <div class="domain-card">
+                            <div class="domain-header">
+                                <div class="domain-icon js-icon"><i class="fab fa-js-square"></i></div>
+                                <div>
+                                    <h3>Modern JS, TypeScript &amp; Bun Runtime</h3>
+                                    <span class="domain-stat">24 High-Performance Guides</span>
+                                </div>
+                            </div>
+                            <p class="domain-desc">Cutting-edge JavaScript &amp; TypeScript development with the ultra-fast Bun runtime. Complete full-stack guides for Bun + Express stacks (integrated with SQLite, MySQL, and Redis), lightweight cross-platform desktop apps with Neutralinojs &amp; WebUI, type-safe database schemas with Drizzle ORM, and modern frontend guides.</p>
+                            <div class="domain-tags">
+                                <span class="tag">Bun Runtime</span>
+                                <span class="tag">TypeScript</span>
+                                <span class="tag">Drizzle ORM</span>
+                                <span class="tag">Neutralinojs Desktop</span>
+                                <span class="tag">WebUI Native GUI</span>
+                                <span class="tag">Express Stacks</span>
+                            </div>
+                            <div class="domain-footer">
+                                <a href="?page=programming%2Fjavascript" class="domain-link">Explore JS &amp; Bun Guides <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Domain 3: Client Utilities & CLI Developer Packages -->
+                        <div class="domain-card">
+                            <div class="domain-header">
+                                <div class="domain-icon cli-icon"><i class="fas fa-terminal"></i></div>
+                                <div>
+                                    <h3>Client Utilities &amp; Interactive CLI Tools</h3>
+                                    <span class="domain-stat">Production Packages &amp; Utilities</span>
+                                </div>
+                            </div>
+                            <p class="domain-desc">Essential libraries for building delightful user experiences and command-line interfaces. Master modern HTTP data fetching with Axios HTTP Client, high-performance array/object helpers with es-toolkit, elegant modals with SweetAlert2, and CLI packages: Chalk terminal colors, Boxen framed banners, Clack interactive prompts, CLI-Table3 unicode tables, Nanospinner, and Consola.</p>
+                            <div class="domain-tags">
+                                <span class="tag">Axios HTTP Client</span>
+                                <span class="tag">es-toolkit</span>
+                                <span class="tag">Chalk Colors</span>
+                                <span class="tag">Boxen Banners</span>
+                                <span class="tag">Clack Prompts</span>
+                                <span class="tag">CLI-Table3</span>
+                                <span class="tag">SweetAlert2</span>
+                            </div>
+                            <div class="domain-footer">
+                                <a href="?page=programming%2Fjavascript%2Fpackages" class="domain-link">Explore Client Utils &amp; CLI <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Domain 4: Systems Programming, DevOps & CLI Tools -->
+                        <div class="domain-card">
+                            <div class="domain-header">
+                                <div class="domain-icon rust-icon"><i class="fas fa-server"></i></div>
+                                <div>
+                                    <h3>Systems, DevOps &amp; 100+ Command-Line Tools</h3>
+                                    <span class="domain-stat">108 Guides across OS &amp; CLI</span>
+                                </div>
+                            </div>
+                            <p class="domain-desc">Low-level systems programming and terminal mastery: Rust comprehensive guide, C on ARM Apple Silicon Mac, PHP language reference, and macOS Automator workflows. Plus cheat-sheets for 100+ CLI tools: Docker containerization with Bun installers, database clients (DuckDB, PostgreSQL, Redis, MySQL), multimedia processing (FFmpeg), text streams (awk, sed, jq), and network diagnostics.</p>
+                            <div class="domain-tags">
+                                <span class="tag">Rust</span>
+                                <span class="tag">C on ARM Mac</span>
+                                <span class="tag">Docker &amp; Bun</span>
+                                <span class="tag">DuckDB &amp; SQL</span>
+                                <span class="tag">FFmpeg</span>
+                                <span class="tag">macOS Automator</span>
+                            </div>
+                            <div class="domain-footer">
+                                <a href="?page=cli-tools" class="domain-link">Explore Systems &amp; CLI Tools <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Overview -->
+                <div class="features" style="margin-top:20px;">
                     <div class="feature">
-                        <i class="fas fa-file-alt"></i>
-                        <h3><?php echo (int)$stats['totalTutorials']; ?> Tutorials</h3>
-                        <p>Total number of guides available.</p>
+                        <i class="fas fa-file-code"></i>
+                        <h3><?php echo (int)$stats['totalTutorials']; ?> Deep-Dive Guides</h3>
+                        <p>Practical cheat-sheets with runnable code examples.</p>
                     </div>
                     <div class="feature">
                         <i class="fas fa-folder-tree"></i>
-                        <h3><?php echo (int)$stats['totalCategories']; ?> Categories</h3>
-                        <p>Top-level sections to explore.</p>
+                        <h3><?php echo (int)$stats['totalCategories']; ?> Curated Domains</h3>
+                        <p>Programming, CLI tools, systems &amp; mathematics.</p>
                     </div>
                     <div class="feature">
-                        <i class="fas fa-clock"></i>
-                        <h3>Updated <?php echo htmlspecialchars($stats['lastUpdatedAgo']); ?></h3>
-                        <p>Latest content refresh time.</p>
+                        <i class="fas fa-keyboard"></i>
+                        <h3>Keyboard Superpowers</h3>
+                        <p>Cmd+K palette, live search, and shortcuts modal.</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Productivity Superpowers -->
+                <div class="content-section superpowers-card" style="margin-top:24px;">
+                    <h2><i class="fas fa-wand-magic-sparkles"></i> Built for Developer Productivity</h2>
+                    <div class="superpowers-grid">
+                        <div class="superpower-item">
+                            <i class="fas fa-bolt"></i>
+                            <div>
+                                <h4>Global Command Palette (<kbd>⌘K</kbd> / <kbd>Ctrl+K</kbd>)</h4>
+                                <p>Instant keyboard-driven search to jump directly to any tutorial, switch themes, or toggle outlines without touching your mouse.</p>
+                            </div>
+                        </div>
+                        <div class="superpower-item">
+                            <i class="fas fa-code"></i>
+                            <div>
+                                <h4>Interactive Code Blocks with Line Numbers</h4>
+                                <p>Syntax highlighted snippets with language tags, vertical line numbering, and a 1-click Copy button.</p>
+                            </div>
+                        </div>
+                        <div class="superpower-item">
+                            <i class="fas fa-list-check"></i>
+                            <div>
+                                <h4>Outline Table of Contents &amp; Anchor Links</h4>
+                                <p>Sticky and floating right-rail TOC with live filter search, scrollspy active heading tracking, and deep-link copying.</p>
+                            </div>
+                        </div>
+                        <div class="superpower-item">
+                            <i class="fas fa-bookmark"></i>
+                            <div>
+                                <h4>Reading Progress &amp; Local Bookmarks</h4>
+                                <p>100% client-side privacy: tracks your scroll percentage and bookmarked guides in localStorage with zero server tracking.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Browse by category -->
-                <div class="content-section" style="margin-top:18px;">
-                    <h2><i class="fas fa-sitemap"></i> Browse by category</h2>
+                <div class="content-section" style="margin-top:24px;">
+                    <h2><i class="fas fa-sitemap"></i> Browse Directory Structure</h2>
                     <div class="folder-grid">
                         <?php if (empty($categories)) { ?>
                             <div class="empty-folder"><i class="fas fa-inbox"></i><p>No categories found.</p></div>
@@ -643,7 +813,7 @@ class MarkdownTutorialApp {
                                 <a href="?page=<?php echo rawurlencode($cat['page']); ?>">
                                     <i class="fas fa-folder-open"></i>
                                     <span><?php echo htmlspecialchars($cat['title']); ?></span>
-                                    <span style="opacity:.75;font-size:.9em;">(<?php echo (int)$cat['count']; ?>)</span>
+                                    <span style="opacity:.75;font-size:.9em;">(<?php echo (int)$cat['count']; ?> guides)</span>
                                     <i class="fas fa-chevron-right"></i>
                                 </a>
                             </div>
@@ -652,8 +822,8 @@ class MarkdownTutorialApp {
                 </div>
 
                 <!-- Recently added -->
-                <div class="content-section" style="margin-top:18px;">
-                    <h2><i class="fas fa-sparkles"></i> Recently added</h2>
+                <div class="content-section" style="margin-top:24px;">
+                    <h2><i class="fas fa-sparkles"></i> Recently Added &amp; Updated</h2>
                     <div class="file-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));">
                         <?php if (empty($recent)) { ?>
                             <div class="file-card"><div style="padding:16px;opacity:.8;">No recent tutorials yet.</div></div>
@@ -671,12 +841,13 @@ class MarkdownTutorialApp {
                 </div>
 
                 <!-- Getting started -->
-                <div class="content-section" style="margin-top:18px;">
-                    <h2><i class="fas fa-road"></i> Getting started</h2>
+                <div class="content-section" style="margin-top:24px;">
+                    <h2><i class="fas fa-road"></i> Quick Navigation Tips</h2>
                     <ul style="line-height:1.8; margin-left: 1rem;">
-                        <li>Use the sidebar search to filter tutorials quickly.</li>
-                        <li>Open a category to browse its guides; each page shows a table of contents.</li>
-                        <li>Use copy buttons on code blocks to grab commands and snippets.</li>
+                        <li><strong>Press <kbd>⌘K</kbd> or <kbd>Ctrl+K</kbd></strong> to open the Command Palette and instantly filter across all 400+ guides.</li>
+                        <li><strong>Press <kbd>F1</kbd></strong> at any time to see the complete list of keyboard shortcuts (zooming, toggling sidebar, bookmarking).</li>
+                        <li><strong>Click any heading</strong> or hover to copy a direct deep-link anchor URL for instant sharing.</li>
+                        <li><strong>Click the Copy icon</strong> on any code block to copy formatted syntax with line numbers excluded.</li>
                     </ul>
                 </div>
             </div>

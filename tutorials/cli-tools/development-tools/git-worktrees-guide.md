@@ -90,6 +90,25 @@ git worktree list
 
 ---
 
+## 🔄 Switching Between Worktrees Effortlessly
+
+Because worktrees are independent working directories on your filesystem, you switch between branches simply by changing directories:
+
+```bash
+# Jump to the hotfix worktree
+cd ../hotfix
+
+# Work in your terminal, run tests, or edit files
+git status
+
+# Jump back to your primary feature branch
+cd ../feature-auth
+```
+
+You can also use tools like `zoxide` (`z hotfix`) or separate terminal tabs to keep multiple branches open and running side-by-side without any stash or checkout overhead.
+
+---
+
 ## 🧹 Removing & Cleaning Up Worktrees
 
 When you are done with a feature or PR:

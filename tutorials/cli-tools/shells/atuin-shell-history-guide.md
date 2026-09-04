@@ -2,14 +2,14 @@
 
 ### Table of Contents
 
-1.  [What is `atuin`?](https://www.google.com/search?q=%231-what-is-atuin)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Shell Configuration (Crucial Step)](https://www.google.com/search?q=%234-shell-configuration-crucial-step)
-5.  [Basic Usage: The Search UI (`Ctrl+R`)](https://www.google.com/search?q=%235-basic-usage-the-search-ui-ctrlr)
-6.  [Command-Line Usage & Output](https://www.google.com/search?q=%236-command-line-usage--output)
-7.  [Cloud Sync (Optional but Recommended)](https://www.google.com/search?q=%237-cloud-sync-optional-but-recommended)
-8.  [Uninstallation](https://www.google.com/search?q=%238-uninstallation)
+1.  [What is `atuin`?](#1-what-is-atuin)
+2.  [Prerequisites](#2-prerequisites)
+3.  [Installation](#3-installation)
+4.  [Shell Configuration (Crucial Step)](#4-shell-configuration-crucial-step)
+5.  [Basic Usage: The Search UI (`Ctrl+R`)](#5-basic-usage-the-search-ui-ctrlr)
+6.  [Command-Line Usage & Output](#6-command-line-usage--output)
+7.  [Cloud Sync (Optional but Recommended)](#7-cloud-sync-optional-but-recommended)
+8.  [Uninstallation](#8-uninstallation)
 
 -----
 

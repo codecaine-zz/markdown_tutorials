@@ -2,13 +2,13 @@
 
 ### Table of Contents
 
-1.  [What is `age`?](https://www.google.com/search?q=%231-what-is-age)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Core Workflow: Asymmetric Encryption (Public Keys)](https://www.google.com/search?q=%234-core-workflow-asymmetric-encryption-public-keys)
-5.  [Alternative: Symmetric Encryption (Passphrase)](https://www.google.com/search?q=%235-alternative-symmetric-encryption-passphrase)
-6.  [Key Features & Examples](https://www.google.com/search?q=%236-key-features--examples)
-7.  [Uninstallation](https://www.google.com/search?q=%237-uninstallation)
+1.  [What is `age`?](#1-what-is-age)
+2.  [Prerequisites](#2-prerequisites)
+3.  [Installation](#3-installation)
+4.  [Core Workflow: Asymmetric Encryption (Public Keys)](#4-core-workflow-asymmetric-encryption-public-keys)
+5.  [Alternative: Symmetric Encryption (Passphrase)](#5-alternative-symmetric-encryption-passphrase)
+6.  [Key Features & Examples](#6-key-features--examples)
+7.  [Uninstallation](#7-uninstallation)
 
 -----
 

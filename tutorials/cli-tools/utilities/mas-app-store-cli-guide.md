@@ -2,13 +2,13 @@
 
 ### Table of Contents
 
-1.  [What is `mas`?](https://www.google.com/search?q=%231-what-is-mas)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Basic Usage: Finding & Installing Apps](https://www.google.com/search?q=%234-basic-usage-finding--installing-apps)
-5.  [Managing Your Apps](https://www.google.com/search?q=%235-managing-your-apps)
-6.  [Advanced Usage: Automation with `Brewfile`](https://www.google.com/search?q=%236-advanced-usage-automation-with-brewfile)
-7.  [Uninstallation](https://www.google.com/search?q=%237-uninstallation)
+1.  [What is `mas`?](#1-what-is-mas)
+2.  [Prerequisites](#2-prerequisites)
+3.  [Installation](#3-installation)
+4.  [Basic Usage: Finding & Installing Apps](#4-basic-usage-finding--installing-apps)
+5.  [Managing Your Apps](#5-managing-your-apps)
+6.  [Advanced Usage: Automation with `Brewfile`](#6-advanced-usage-automation-with-brewfile)
+7.  [Uninstallation](#7-uninstallation)
 
 -----
 

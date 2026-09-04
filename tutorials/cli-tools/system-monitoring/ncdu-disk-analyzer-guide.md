@@ -2,13 +2,13 @@
 
 ### Table of Contents
 
-1.  [What is `ncdu`?](https://www.google.com/search?q=%231-what-is-ncdu)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Running `ncdu` & The Interface](https://www.google.com/search?q=%234-running-ncdu--the-interface)
-5.  [Navigation and Key Features](https://www.google.com/search?q=%235-navigation-and-key-features)
-6.  [Interactive Example: Cleaning Up a Directory](https://www.google.com/search?q=%236-interactive-example-cleaning-up-a-directory)
-7.  [Uninstallation](https://www.google.com/search?q=%237-uninstallation)
+1.  [What is `ncdu`?](#1-what-is-ncdu)
+2.  [Prerequisites](#2-prerequisites)
+3.  [Installation](#3-installation)
+4.  [Running `ncdu` & The Interface](#4-running-ncdu--the-interface)
+5.  [Navigation and Key Features](#5-navigation-and-key-features)
+6.  [Interactive Example: Cleaning Up a Directory](#6-interactive-example-cleaning-up-a-directory)
+7.  [Uninstallation](#7-uninstallation)
 
 -----
 

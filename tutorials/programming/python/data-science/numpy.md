@@ -741,7 +741,7 @@ pip cache purge
 ## Next steps
 
 - Official docs: [numpy.org/doc](https://numpy.org/doc/)
-- Work with tabular data using [pandas](./pandas.md)
-- Plot arrays with [Matplotlib](./matplotlib.md) or Seaborn
+- Work with tabular data using [pandas](?page=programming%2Fpython%2Fdata-science%2Fpandas)
+- Plot arrays with [Matplotlib](?page=programming%2Fpython%2Fdata-science%2Fmatplotlib) or Seaborn
 
 This guide covers clean installation, verification, and a reusable helper pattern to speed up everyday NumPy tasks.

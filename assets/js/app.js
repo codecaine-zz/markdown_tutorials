@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (contentDiv) {
             const markdownSrc = contentDiv.getAttribute('data-md-src');
             if (markdownSrc) {
-                fetch(markdownSrc)
+                const fetchUrl = markdownSrc + (markdownSrc.includes('?') ? '&' : '?') + 't=' + Date.now();
+                fetch(fetchUrl, { cache: 'no-cache' })
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
@@ -19,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .then(text => {
                         contentDiv.innerHTML = marked.parse(text, { headerIds: true, headerPrefix: '' });
+                        // Rewrite relative .md links and file:/// links to ?page= routes
+                        rewriteTutorialRelativeLinks(contentDiv, markdownSrc);
                         // After rendering, ensure headings have stable IDs matching TOC anchors
                         ensureHeadingIds(contentDiv);
                         // Align in-page anchor hrefs with final unique IDs
@@ -86,6 +89,59 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Rewrite relative markdown links and tutorial references to SPA ?page= routes
+    function rewriteTutorialRelativeLinks(root, markdownSrc) {
+        if (!root || !markdownSrc) return;
+        let relDir = markdownSrc.replace(/^[/\\]*tutorials[/\\]*/i, '');
+        const slashIdx = relDir.lastIndexOf('/');
+        const currentFolder = slashIdx !== -1 ? relDir.slice(0, slashIdx) : '';
+
+        const links = root.querySelectorAll('a[href]');
+        links.forEach(a => {
+            let href = a.getAttribute('href') || '';
+            href = href.trim();
+            if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('javascript:')) return;
+
+            // Handle file:/// URLs pointing to tutorials directory
+            if (href.startsWith('file://')) {
+                const tutIdx = href.indexOf('/tutorials/');
+                if (tutIdx !== -1) {
+                    let sub = href.slice(tutIdx + '/tutorials/'.length);
+                    let [pathPart, hashPart] = sub.split('#');
+                    pathPart = pathPart.replace(/\.md$/i, '');
+                    a.setAttribute('href', `?page=${encodeURIComponent(decodeURIComponent(pathPart))}${hashPart ? '#' + hashPart : ''}`);
+                    return;
+                }
+            }
+
+            // Skip external URLs
+            if (href.startsWith('http://') || href.startsWith('https://')) {
+                return;
+            }
+
+            // Relative link pointing to a .md file or relative tutorial path
+            if (href.includes('.md') || (!href.startsWith('?') && !href.startsWith('/'))) {
+                let [pathPart, hashPart] = href.split('#');
+                if (pathPart.endsWith('.md') || (!pathPart.includes('.') && pathPart.length > 0)) {
+                    pathPart = pathPart.replace(/\.md$/i, '');
+                    const baseParts = currentFolder ? currentFolder.split('/') : [];
+                    const targetParts = pathPart.split('/');
+                    const resolvedParts = [...baseParts];
+                    for (const p of targetParts) {
+                        if (!p || p === '.') continue;
+                        if (p === '..') {
+                            if (resolvedParts.length > 0) resolvedParts.pop();
+                        } else {
+                            resolvedParts.push(p);
+                        }
+                    }
+                    const resolvedPage = resolvedParts.join('/');
+                    a.setAttribute('href', `?page=${encodeURIComponent(resolvedPage)}${hashPart ? '#' + hashPart : ''}`);
+                }
+            }
+        });
+    }
+
     // Normalize all in-page anchor hrefs (#...) so they match the final unique heading IDs
     function rewriteAnchorHrefs(root) {
         if (!root) return;
@@ -94,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const href = a.getAttribute('href') || '';
             const raw = decodeURIComponent(href.replace('#',''));
             if (!raw) return;
-            const target = getAnchorTarget(raw);
+            const target = getAnchorTarget(raw, a.textContent);
             if (target && target.id) {
                 // Update href to the exact final id to keep history/scroll spy consistent
                 a.setAttribute('href', `#${target.id}`);
@@ -340,19 +396,74 @@ document.addEventListener('DOMContentLoaded', function() {
         onScroll();
     }
 
-    function getAnchorTarget(id) {
-        if (!id) return null;
-        // Exact match
-        let el = document.getElementById(id);
-        if (el) return el;
-        // GitHub-style prefix sometimes added by renderers
-        el = document.getElementById(`user-content-${id}`);
-        if (el) return el;
-        // Fallback: find a heading whose slugified text matches
-        const headings = document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4, .markdown-content h5, .markdown-content h6');
-        for (const h of headings) {
-            if (githubSlugify(h.textContent || '') === id) return h;
+    function getAnchorTarget(id, optionalText = '') {
+        if (!id && !optionalText) return null;
+        if (id) {
+            // Exact ID match
+            let el = document.getElementById(id);
+            if (el) return el;
+            // GitHub-style prefix
+            el = document.getElementById(`user-content-${id}`);
+            if (el) return el;
         }
+
+        const headings = Array.from(document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4, .markdown-content h5, .markdown-content h6'));
+        if (headings.length === 0) return null;
+
+        if (id) {
+            const rawId = decodeURIComponent(id).toLowerCase().trim();
+            // 1. Direct slug comparison (with and without replacing & with and)
+            for (const h of headings) {
+                const hText = (h.textContent || '').trim();
+                const s1 = githubSlugify(hText);
+                const s2 = githubSlugify(hText.replace(/&/g, ''));
+                if (s1 === rawId || s2 === rawId) return h;
+            }
+
+            // 2. Number-prefix stripped slug match (e.g. #installing vs ## 3. Installing)
+            const rawIdNoNum = rawId.replace(/^\d+[-_.\s]+/, '');
+            if (rawIdNoNum) {
+                for (const h of headings) {
+                    const hText = (h.textContent || '').trim();
+                    const hNoNum = hText.replace(/^\d+[-_.\s]+/, '');
+                    if (githubSlugify(hNoNum) === rawIdNoNum || githubSlugify(hNoNum.replace(/&/g, '')) === rawIdNoNum) {
+                        return h;
+                    }
+                }
+            }
+
+            // 3. Alphanumeric normalized matching (ignores hyphens, emojis, spacing)
+            const idAlpha = rawId.replace(/[^a-z0-9]/g, '');
+            const idAlphaNoNum = rawIdNoNum.replace(/[^a-z0-9]/g, '');
+            if (idAlpha) {
+                for (const h of headings) {
+                    const hText = (h.textContent || '').trim();
+                    const hAlpha = hText.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const hAlphaNoNum = hText.replace(/^\d+[-_.\s]+/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (hAlpha === idAlpha || (idAlphaNoNum && hAlphaNoNum === idAlphaNoNum)) {
+                        return h;
+                    }
+                    if (idAlpha.length >= 8 && (hAlpha.includes(idAlpha) || idAlpha.includes(hAlpha))) {
+                        return h;
+                    }
+                }
+            }
+        }
+
+        // 4. Fallback matching using link text if provided
+        if (optionalText) {
+            const textAlpha = optionalText.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (textAlpha.length >= 4) {
+                for (const h of headings) {
+                    const hText = (h.textContent || '').trim();
+                    const hAlpha = hText.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (hAlpha === textAlpha || hAlpha.includes(textAlpha) || textAlpha.includes(hAlpha)) {
+                        return h;
+                    }
+                }
+            }
+        }
+
         return null;
     }
 
@@ -456,11 +567,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const id = decodeURIComponent(href.slice(1));
                 if (id) {
-                    const el = getAnchorTarget(id);
+                    const el = getAnchorTarget(id, a.textContent);
                     window.__lastAnchorScrollY = window.scrollY;
                     if (el) {
-                        if (window.location.hash !== `#${id}`) {
-                            history.pushState(null, '', `#${id}`);
+                        if (window.location.hash !== `#${el.id}`) {
+                            history.pushState(null, '', `#${el.id}`);
                         }
                         scrollToElement(el);
                         showInlinePreviousButton(el);
@@ -621,11 +732,42 @@ document.addEventListener('DOMContentLoaded', function() {
     expandCurrentPath();
     initializeBreadcrumbEnhancements();
 
-    // Mobile sidebar toggle
-    window.toggleSidebar = function() {
+    // Mobile sidebar toggle with backdrop and body lock
+    window.toggleSidebar = function(forceState) {
         const sidebar = document.getElementById('sidebar');
-    // On mobile, slide in/out using 'open' class to match CSS
-    sidebar.classList.toggle('open');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        if (!sidebar) return;
+        
+        const isOpen = typeof forceState === 'boolean' 
+            ? forceState 
+            : !sidebar.classList.contains('open');
+            
+        sidebar.classList.toggle('open', isOpen);
+        if (backdrop) {
+            backdrop.classList.toggle('active', isOpen);
+        }
+        document.body.classList.toggle('sidebar-mobile-open', isOpen);
+    };
+
+    // Close mobile sidebar on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar && sidebar.classList.contains('open')) {
+                window.toggleSidebar(false);
+            }
+        }
+    });
+
+    // Close mobile drawer when clicking navigation links on mobile
+    const navItemsEl = document.getElementById('nav-items');
+    if (navItemsEl) {
+        navItemsEl.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (link && window.innerWidth <= 900) {
+                window.toggleSidebar(false);
+            }
+        });
     }
 
     // History navigation
@@ -1215,6 +1357,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (href.startsWith('?page=') || href.startsWith('index.php?page=') || href === '') {
             e.preventDefault();
             loadPage(link.href);
+        } else if (href.includes('.md') && !href.startsWith('http://') && !href.startsWith('https://')) {
+            // Safety interception for relative markdown links
+            const contentDiv = document.querySelector('.markdown-content');
+            const mdSrc = contentDiv ? contentDiv.getAttribute('data-md-src') : '';
+            if (mdSrc && typeof rewriteTutorialRelativeLinks === 'function') {
+                e.preventDefault();
+                rewriteTutorialRelativeLinks(contentDiv, mdSrc);
+                const newHref = link.getAttribute('href');
+                if (newHref && newHref.startsWith('?page=')) {
+                    loadPage(link.href);
+                }
+            }
         }
     });
 

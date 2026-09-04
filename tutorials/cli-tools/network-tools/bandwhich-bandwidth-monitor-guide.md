@@ -9,11 +9,10 @@
 1. [Overview & `iftop` / `nethogs` vs `bandwhich` Comparison](#overview--iftop--nethogs-vs-bandwhich-comparison)
 2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
 3. [Running `bandwhich` & Terminal TUI Layout](#running-bandwhich--terminal-tui-layout)
-4. [Process, Connection & Address Panes](#process-connection--address-panes)
+4. [Interactive Keyboard Controls](#interactive-keyboard-controls)
 5. [Filtering by Interface & Process](#filtering-by-interface--process)
-6. [DNS Resolution & Total Data Modes](#dns-resolution--total-data-modes)
-7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
-8. [Uninstallation](#uninstallation)
+6. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+7. [Uninstallation](#uninstallation)
 
 ---
 

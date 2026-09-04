@@ -2,11 +2,11 @@
 
 ## 🚀 Express + Bun Guides (quick links)
 
-- Production API with views: [Express + Bun + MySQL + EJS](./express-bun-mysql-guide.md)
+- Production API with views: [Express + Bun + MySQL + EJS](?page=programming%2Fjavascript%2Fframeworks%2Fexpress-bun-mysql-guide)
 - Data store quickstarts:
-  - [Express + Bun + MySQL](./express-bun-mysql-guide.md)
-  - [Express + Bun + Redis](./express-bun-redis-guide.md)
-  - [Express + Bun + SQLite](./express-bun-sqlite-guide.md)
+  - [Express + Bun + MySQL](?page=programming%2Fjavascript%2Fframeworks%2Fexpress-bun-mysql-guide)
+  - [Express + Bun + Redis](?page=programming%2Fjavascript%2Fframeworks%2Fexpress-bun-redis-guide)
+  - [Express + Bun + SQLite](?page=programming%2Fjavascript%2Fframeworks%2Fexpress-bun-sqlite-guide)
 
 ---
 
@@ -52,7 +52,7 @@ Classic form (PRG):
  ```
 
 
-See: [Express + Bun + MySQL + EJS](./express-bun-mysql-guide.md) → “EJS Views (Server-Rendered UI)” section.
+See: [Express + Bun + MySQL + EJS](?page=programming%2Fjavascript%2Fframeworks%2Fexpress-bun-mysql-guide#ejs-views-server-rendered-ui) → “EJS Views (Server-Rendered UI)” section.
 
 ## 📂 PROJECT LAYOUT (copy‑paste)
 

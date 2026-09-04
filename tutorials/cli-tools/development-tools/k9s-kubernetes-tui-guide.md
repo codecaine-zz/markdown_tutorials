@@ -123,6 +123,17 @@ In `k9s`, press `:` (colon) to open the command bar, type the resource name or s
 
 ---
 
+## ⚡ Editing, Scaling & Restarting Deployments
+
+Manage workloads in real time directly from the K9s UI:
+
+* **Edit YAML (`e`)**: Highlight a pod, service, or deployment and press `e` to open its live definition in your `$EDITOR`. Saving the file applies the changes immediately.
+* **Scale Replicas (`s`)**: In the `:deploy` or `:sts` view, highlight a workload and press `s` to prompt for a new replica count.
+* **Rolling Restart (`Ctrl+Z`)**: Trigger a zero-downtime rolling restart of all pods in a deployment.
+* **Delete Resource (`Ctrl+D`)**: Safely prompt to terminate and delete any highlighted resource.
+
+---
+
 ## 🎯 Filtering by Namespaces & Search Filtering
 
 ### 1. Filter by Namespace (Press `0` to `9`)

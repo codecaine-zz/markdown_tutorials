@@ -132,6 +132,21 @@ rules:
 
 ---
 
+## 🐳 Analyzing Local Dockerfiles & Images Directly
+
+You can build and analyze an image in a single continuous command without manual image tagging:
+
+```bash
+# Build current Dockerfile and launch dive immediately
+dive build -t my-app:test .
+
+# Inspect an exported docker tar archive directly
+docker save my-app:latest -o my-app.tar
+dive --source docker-archive my-app.tar
+```
+
+---
+
 ## 📋 Everyday Cheat Sheet & Useful Shell Aliases
 
 ### Quick Reference Table

@@ -8,13 +8,12 @@ Tiling window managers organize your application windows automatically into non-
 
 1. [Overview & Why Use Tiling on macOS?](#overview--why-use-tiling-on-macos)
 2. [AeroSpace vs Yabai Comparison](#aerospace-vs-yabai-comparison)
-3. [Installing & Configuring AeroSpace (Recommended, No SIP Required)](#installing--configuring-aerospace-recommended-no-sip-required)
+3. [Installing & Configuring AeroSpace (Recommended)](#installing--configuring-aerospace-recommended)
 4. [AeroSpace Workspaces & Keybindings](#aerospace-workspaces--keybindings)
 5. [Installing & Configuring Yabai + Skhd](#installing--configuring-yabai--skhd)
-6. [Window Rules, Floating Windows & Exclusions](#window-rules-floating-windows--exclusions)
-7. [Status Bars & Indicators (SketchyBar / JankyBorders)](#status-bars--indicators-sketchybar--jankyborders)
-8. [Everyday Cheat Sheet & Useful Configurations](#everyday-cheat-sheet--useful-configurations)
-9. [Uninstallation](#uninstallation)
+6. [Visual Accents: JankyBorders](#visual-accents-jankyborders)
+7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+8. [Uninstallation](#uninstallation)
 
 ---
 

@@ -2,13 +2,13 @@
 
 ### Table of Contents
 
-1.  [What is `trash`?](https://www.google.com/search?q=%231-what-is-trash)
-2.  [Prerequisites](https://www.google.com/search?q=%232-prerequisites)
-3.  [Installation](https://www.google.com/search?q=%233-installation)
-4.  [Basic Usage & Output](https://www.google.com/search?q=%234-basic-usage--output)
-5.  [Managing Your Trashed Files](https://www.google.com/search?q=%235-managing-your-trashed-files)
-6.  [Pro-Tip: Aliasing `rm` for Safety](https://www.google.com/search?q=%236-pro-tip-aliasing-rm-for-safety)
-7.  [Uninstallation](https://www.google.com/search?q=%237-uninstallation)
+1.  [What is `trash`?](#1-what-is-trash)
+2.  [Prerequisites](#2-prerequisites)
+3.  [Installation](#3-installation)
+4.  [Basic Usage & Output](#4-basic-usage--output)
+5.  [Managing Your Trashed Files](#5-managing-your-trashed-files)
+6.  [Pro-Tip: Aliasing `rm` for Safety](#6-pro-tip-aliasing-rm-for-safety)
+7.  [Uninstallation](#7-uninstallation)
 
 -----
 

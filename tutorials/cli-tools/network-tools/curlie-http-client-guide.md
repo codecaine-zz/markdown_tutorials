@@ -145,6 +145,26 @@ curlie --limit-rate 500k https://example.com/large-file.zip
 
 ---
 
+## 🎨 Output Formatting & Silent Flags
+
+Control terminal output formatting, pretty-printing, and silent modes:
+
+```bash
+# Pretty-print JSON responses automatically (default behavior)
+curlie https://api.github.com/users/octocat
+
+# Silent mode: hide progress and non-essential output (-s)
+curlie -s https://api.github.com/users/octocat
+
+# Print only response headers (-i / --include)
+curlie -i https://httpbin.org/get
+
+# Print response status and headers without body (-I / --head)
+curlie -I https://httpbin.org/get
+```
+
+---
+
 ## 📋 Everyday Cheat Sheet & Useful Shell Aliases
 
 ### Quick Reference Table

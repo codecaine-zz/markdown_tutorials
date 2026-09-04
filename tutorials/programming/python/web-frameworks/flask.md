@@ -377,6 +377,106 @@ nav {
 
 ---
 
+## Forms and Form Handling
+
+Handling user input with Flask `request.form` and WTForms:
+
+```python
+from flask import Flask, render_template, request, redirect, url_for, flash
+
+app = Flask(__name__)
+app.secret_key = 'super-secret-key'
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        email = request.form.get('email')
+        message = request.form.get('message')
+        
+        if not name or not email:
+            flash('Name and email are required!', 'error')
+            return redirect(url_for('contact'))
+            
+        flash('Thank you for your message!', 'success')
+        return redirect(url_for('contact'))
+        
+    return render_template('contact.html')
+```
+
+---
+
+## Database Integration (SQLAlchemy)
+
+Integrate SQLite database models using Flask-SQLAlchemy:
+
+```python
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+# Create tables
+with app.app_context():
+    db.create_all()
+```
+
+---
+
+## User Authentication & Sessions
+
+Manage user sessions and password hashing:
+
+```python
+from flask import Flask, session, redirect, url_for, request, render_template
+from werkzeug.security import generate_password_hash, check_password_hash
+
+app = Flask(__name__)
+app.secret_key = 'session-signing-secret'
+
+# Mock user database
+users_db = {
+    'admin': generate_password_hash('password123')
+}
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username in users_db and check_password_hash(users_db[username], password):
+            session['user'] = username
+            return redirect(url_for('dashboard'))
+        return 'Invalid credentials', 401
+    return render_template('login.html')
+
+@app.route('/dashboard')
+def dashboard():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return f"Welcome back, {session['user']}! <a href='/logout'>Logout</a>"
+
+@app.route('/logout')
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('login'))
+```
+
+---
+
 ## Complete Flask Application
 
 ```python
@@ -469,4 +569,3 @@ This comprehensive Flask tutorial covers:
 7. URL parameters and query strings
 
 The example demonstrates both web application features and RESTful API capabilities in a single Flask app structure.
-```

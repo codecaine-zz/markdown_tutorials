@@ -149,6 +149,33 @@ func PrintArea(s Shape) {
 
 ---
 
+## 🧬 Generics & Type Parameters
+
+Write reusable, type-safe functions and data structures across multiple types:
+
+```go
+package main
+
+import "fmt"
+
+// Map transforms a slice of type T to type R
+func Map[T any, R any](slice []T, f func(T) R) []R {
+	result := make([]R, len(slice))
+	for i, v := range slice {
+		result[i] = f(v)
+	}
+	return result
+}
+
+func main() {
+	numbers := []int{1, 2, 3, 4}
+	doubled := Map(numbers, func(n int) int { return n * 2 })
+	fmt.Println(doubled) // [2 4 6 8]
+}
+```
+
+---
+
 ## ⚡ Mastering Concurrency: Goroutines & Channels
 
 ### 1. Spawning Goroutines
@@ -216,6 +243,40 @@ func main() {
 
 	wg.Wait()
 	fmt.Printf("Final Thread-Safe Counter: %d\n", counter) // Output: 100
+}
+```
+
+---
+
+## ⚠️ Error Handling & Custom Errors
+
+Idiomatic Go error handling and custom error types:
+
+```go
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+type NotFoundError struct {
+	Resource string
+	ID       string
+}
+
+func (e *NotFoundError) Error() string {
+	return fmt.Sprintf("%s with ID '%s' not found", e.Resource, e.ID)
+}
+
+func FindUser(id string) (string, error) {
+	if id == "" {
+		return "", errors.New("empty user ID")
+	}
+	if id != "1" {
+		return "", &NotFoundError{Resource: "User", ID: id}
+	}
+	return "Alice", nil
 }
 ```
 

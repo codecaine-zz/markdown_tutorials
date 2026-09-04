@@ -102,6 +102,18 @@ Suggestions: [ login, id, node_id, avatar_url, html_url, type ]
 
 ---
 
+## 📋 Exporting Query Results to Clipboard or stdout
+
+Once you have refined your `jq` filter in `jnv`:
+
+* **Print to stdout (`Enter`)**: Pressing `Enter` exits `jnv` and outputs the filtered JSON to standard output, making it easy to pipe to other terminal utilities.
+* **Copy Output to Clipboard**: Pipe the `jnv` output directly to `pbcopy` on macOS:
+  ```bash
+  cat data.json | jnv | pbcopy
+  ```
+
+---
+
 ## 📋 Everyday Cheat Sheet & Useful Shell Aliases
 
 ### Quick Reference Table

@@ -8,13 +8,12 @@
 
 1. [Overview & `Prisma` vs `Drizzle` Comparison](#overview--prisma-vs-drizzle-comparison)
 2. [Prerequisites & Package Installation](#prerequisites--package-installation)
-3. [Declaring Database Schemas (`schema.ts`)](#declaring-database-schemas-schemats)
-4. [Setting Up Database Connections (Postgres / SQLite)](#setting-up-database-connections-postgres--sqlite)
-5. [CRUD Operations: Insert, Select, Update, Delete](#crud-operations-insert-select-update-delete)
-6. [Advanced Queries: Joins, Aggregations & Prepared Statements](#advanced-queries-joins-aggregations--prepared-statements)
-7. [Relational Queries (Prisma-Style Nested Queries)](#relational-queries-prisma-style-nested-queries)
-8. [Schema Migrations & Prototyping (`drizzle-kit`)](#schema-migrations--prototyping-drizzle-kit)
-9. [Everyday Cheat Sheet & Useful Snippets](#everyday-cheat-sheet--useful-snippets)
+3. [Declaring Database Schemas (`src/schema.ts`)](#declaring-database-schemas-srcschemats)
+4. [Setting Up Database Connections (`src/db.ts`)](#setting-up-database-connections-srcdbts)
+5. [CRUD Operations (Insert, Select, Update, Delete)](#crud-operations)
+6. [Relational Queries (Nested Includes)](#relational-queries-nested-includes)
+7. [Schema Migrations & Prototyping (`drizzle-kit`)](#schema-migrations--prototyping-drizzle-kit)
+8. [Everyday Cheat Sheet & Useful Snippets](#everyday-cheat-sheet--useful-snippets)
 
 ---
 

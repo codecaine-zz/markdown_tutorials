@@ -160,6 +160,27 @@ zellij --layout dev
 
 ---
 
+## 🎨 Configuration & Theme Customization
+
+Create and customize the Zellij configuration file (`~/.config/zellij/config.kdl`):
+
+```bash
+# Dump the default configuration template to edit
+mkdir -p ~/.config/zellij
+zellij setup --dump-config > ~/.config/zellij/config.kdl
+```
+
+In `config.kdl`, configure themes (e.g. `"catppuccin-mocha"`, `"dracula"`, `"nord"`) and settings:
+
+```kdl
+theme "catppuccin-mocha"
+default_layout "compact"
+mouse_mode true
+copy_on_select true
+```
+
+---
+
 ## 📋 Everyday Cheat Sheet & Useful Shell Aliases
 
 ### Quick Reference Table
