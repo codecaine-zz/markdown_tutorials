@@ -6,16 +6,16 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `rm` vs `rip2` Comparison](#overview--rm-vs-rip2-comparison)
-2. [Prerequisites & Installation](#prerequisites--installation)
-3. [Core Concepts: Graveyard & Lifecycle](#core-concepts-graveyard--lifecycle)
-4. [Basic File Deletion & Usage](#basic-file-deletion--usage)
+1. [Overview & `rm` vs `rip2` Comparison](#overview-rm-vs-rip2-comparison)
+2. [Prerequisites & Installation](#prerequisites-installation)
+3. [Core Concepts: Graveyard & Lifecycle](#core-concepts-graveyard-lifecycle)
+4. [Basic File Deletion & Usage](#basic-file-deletion-usage)
 5. [Recovering Files with Unbury (`-u`)](#recovering-files-with-unbury--u)
 6. [Inspecting Past Deletions with Séance (`-s`)](#inspecting-past-deletions-with-séance--s)
 7. [Permanently Decomposing the Graveyard (`-d`)](#permanently-decomposing-the-graveyard--d)
-8. [Configuration & Custom Graveyards](#configuration--custom-graveyards)
+8. [Configuration & Custom Graveyards](#configuration-custom-graveyards)
 9. [Hands-On Recovery Walkthrough](#hands-on-recovery-walkthrough)
-10. [Aliasing `rm` & Everyday Cheat Sheet](#aliasing-rm--everyday-cheat-sheet)
+10. [Aliasing `rm` & Everyday Cheat Sheet](#aliasing-rm-everyday-cheat-sheet)
 11. [Uninstallation](#uninstallation)
 
 ---

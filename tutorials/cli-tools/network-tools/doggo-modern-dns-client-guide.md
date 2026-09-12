@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `dig` vs `doggo` Comparison](#overview--dig-vs-doggo-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
+1. [Overview & `dig` vs `doggo` Comparison](#overview-dig-vs-doggo-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
 3. [Basic DNS Queries](#basic-dns-queries)
-4. [Querying Specific Record Types (A, MX, TXT, CNAME, etc.)](#querying-specific-record-types-a-mx-txt-cname-etc)
-5. [Using Custom & Secure Resolvers (DoH / DoT / DoQ)](#using-custom--secure-resolvers-doh--dot--doq)
-6. [Reverse DNS Lookups (`--reverse`)](#reverse-dns-lookups---reverse)
-7. [JSON Output & Scripting Automation](#json-output--scripting-automation)
+4. [Querying Specific Record Types (A, MX, TXT, CNAME, etc.)](#querying-specific-record-types)
+5. [Using Custom & Secure Resolvers (DoH / DoT / DoQ)](#using-custom-secure-resolvers-doh-dot-doq)
+6. [Reverse DNS Lookups (`--reverse`)](#reverse-dns-lookups---reverse--x)
+7. [JSON Output & Scripting Automation](#json-output-scripting-automation)
 8. [Interactive TUI Mode](#interactive-tui-mode)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

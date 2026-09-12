@@ -21,34 +21,35 @@ v install --git https://github.com/codecaine-zz/simple_gg
 
 - **V Module Import**: `import simplegui` (unified on macOS, Linux, and Windows)
 - **Headless CLI Import**: `import simplecli`
+- **30 Utility Modules**: `import <modulename>` (e.g., `import strutils`, `import cacheutils`, `import sqliteutils`). Complete manual: [UTILS_API.md](UTILS_API.md)
 
 ---
 
 ## Quick Navigation Index
 
 1. [60-Second Copy-Paste Starter App](#1-60-second-copy-paste-starter-app)
-2. [Window Setup, Sizing & Content Fitting](#2-window-setup-sizing--content-fitting)
-3. [Built-in Themes & Styling](#3-built-in-themes--styling)
-4. [Layout Containers & Grouping](#4-layout-containers--grouping)
+2. [Window Setup, Sizing & Content Fitting](#2-window-setup-sizing-content-fitting)
+3. [Built-in Themes & Styling](#3-built-in-themes-styling)
+4. [Layout Containers & Grouping](#4-layout-containers-grouping)
 5. [Widget Reference (Complete Catalog)](#5-widget-reference-complete-catalog)
-6. [Form RAD Helpers (Label + Widget Pairs)](#6-form-rad-helpers-label--widget-pairs)
+6. [Form RAD Helpers (Label + Widget Pairs)](#6-form-rad-helpers-label-widget-pairs)
 7. [Nameless RAD Shortcuts](#7-nameless-rad-shortcuts)
-8. [Widget Styling & Fluent Method Chaining](#8-widget-styling--fluent-method-chaining)
-9. [Reading & Writing Control Values](#9-reading--writing-control-values)
-10. [Event Listeners & Callbacks](#10-event-listeners--callbacks)
-11. [RAD Utilities & Form JSON Serialization](#11-rad-utilities--form-json-serialization)
-12. [Reactive State Store & JSON Persistence](#12-reactive-state-store--json-persistence)
-13. [OS System Calls & Hardware API](#13-os-system-calls--hardware-api)
+8. [Widget Styling & Fluent Method Chaining](#8-widget-styling-fluent-method-chaining)
+9. [Reading & Writing Control Values](#9-reading-writing-control-values)
+10. [Event Listeners & Callbacks](#10-event-listeners-callbacks)
+11. [RAD Utilities & Form JSON Serialization](#11-rad-utilities-form-json-serialization)
+12. [Reactive State Store & JSON Persistence](#12-reactive-state-store-json-persistence)
+13. [OS System Calls & Hardware API](#13-os-system-calls-hardware-api)
 14. [V Standard Library Integrations](#14-v-standard-library-integrations)
 15. [Ergonomic Standalone Functions](#15-ergonomic-standalone-functions)
-16. [Interval Timers & Scheduled Callbacks](#16-interval-timers--scheduled-callbacks)
-17. [Modern UI & RAD UX Enhancements](#17-modern-ui--rad-ux-enhancements)
-18. [Data & Event Binding (`bind`)](#18-data--event-binding-bind)
-19. [Cross-Window Spy++ & External App Automation](#19-cross-window-spy--external-app-automation)
+16. [Interval Timers & Scheduled Callbacks](#16-interval-timers-scheduled-callbacks)
+17. [Modern UI & RAD UX Enhancements](#17-modern-ui-rad-ux-enhancements)
+18. [Data & Event Binding (`bind`)](#18-data-event-binding-bind)
+19. [Cross-Window Spy++ & External App Automation](#19-cross-window-spy-external-app-automation)
 20. [Modern Super Controls (Developer Heaven Catalog)](#20-modern-super-controls-developer-heaven-catalog)
-21. [Modern Image Super Controls & Developer Asset Catalog](#21-modern-image-super-controls--developer-asset-catalog)
-22. [Type & Struct Reference Index](#22-type--struct-reference-index)
-23. [Modern UI Suite & Ergonomic Enhancements](#23-modern-ui-suite--ergonomic-enhancements)
+21. [Modern Image Super Controls & Developer Asset Catalog](#21-modern-image-super-controls-developer-asset-catalog)
+22. [Type & Struct Reference Index](#22-type-struct-reference-index)
+23. [Modern UI Suite & Ergonomic Enhancements](#23-modern-ui-suite-ergonomic-enhancements)
 
 
 ---

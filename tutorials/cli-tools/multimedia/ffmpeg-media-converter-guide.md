@@ -5,16 +5,16 @@ This comprehensive guide covers everything from basic FFmpeg commands and video/
 ## Table of Contents
 1. [Introduction to FFmpeg](#introduction-to-ffmpeg)
 2. [Installation and Setup](#installation-and-setup)
-3. [Basic Command Syntax & Core Concepts](#basic-command-syntax--core-concepts)
+3. [Basic Command Syntax & Core Concepts](#basic-command-syntax-core-concepts)
 4. [Quick Copy-and-Paste Cheat Sheet](#quick-copy-and-paste-cheat-sheet)
-5. [Video Processing & Compression](#video-processing--compression)
+5. [Video Processing & Compression](#video-processing-compression)
 6. [High-Quality GIF Creation](#high-quality-gif-creation)
-7. [Audio Processing & Manipulation](#audio-processing--manipulation)
+7. [Audio Processing & Manipulation](#audio-processing-manipulation)
 8. [Subtitles Handling](#subtitles-handling)
 9. [Hardware Acceleration](#hardware-acceleration)
-10. [Video Editing & Filter Graphs](#video-editing--filter-graphs)
-11. [Batch & Directory Processing](#batch--directory-processing)
-12. [Web Streaming & Screen Capture](#web-streaming--screen-capture)
+10. [Video Editing & Filter Graphs](#video-editing-filter-graphs)
+11. [Batch & Directory Processing](#batch-directory-processing)
+12. [Web Streaming & Screen Capture](#web-streaming-screen-capture)
 
 ---
 

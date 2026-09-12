@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `Node.js` vs `Bun` Comparison](#overview--nodejs-vs-bun-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Running JavaScript & TypeScript Directly (`bun run`)](#running-javascript--typescript-directly-bun-run)
+1. [Overview & `Node.js` vs `Bun` Comparison](#overview-nodejs-vs-bun-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Running JavaScript & TypeScript Directly (`bun run`)](#running-javascript-typescript-directly)
 4. [High-Speed Package Management (`bun install`, `bun add`)](#high-speed-package-management-bun-install-bun-add)
-5. [Running Scripts & Ephemeral Packages (`bunx`)](#running-scripts--ephemeral-packages-bunx)
+5. [Running Scripts & Ephemeral Packages (`bunx`)](#running-scripts-ephemeral-packages-bunx)
 6. [Built-in Native Test Runner (`bun test`)](#built-in-native-test-runner-bun-test)
-7. [Bundling Applications & Libraries (`bun build`)](#bundling-applications--libraries-bun-build)
-8. [High-Performance Native APIs (`Bun.serve`, `Bun.file`, `Bun.password`)](#high-performance-native-apis-bunserve-bunfile-bunpassword)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+7. [Bundling Applications & Libraries (`bun build`)](#bundling-applications-libraries-bun-build)
+8. [High-Performance Native APIs (`Bun.serve`, `Bun.file`, `Bun.password`)](#high-performance-native-apis)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

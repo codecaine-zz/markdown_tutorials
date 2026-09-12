@@ -6,13 +6,13 @@ Tiling window managers organize your application windows automatically into non-
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use Tiling on macOS?](#overview--why-use-tiling-on-macos)
+1. [Overview & Why Use Tiling on macOS?](#overview-why-use-tiling-on-macos)
 2. [AeroSpace vs Yabai Comparison](#aerospace-vs-yabai-comparison)
-3. [Installing & Configuring AeroSpace (Recommended)](#installing--configuring-aerospace-recommended)
-4. [AeroSpace Workspaces & Keybindings](#aerospace-workspaces--keybindings)
-5. [Installing & Configuring Yabai + Skhd](#installing--configuring-yabai--skhd)
+3. [Installing & Configuring AeroSpace (Recommended)](#installing-configuring-aerospace-recommended)
+4. [AeroSpace Workspaces & Keybindings](#aerospace-workspaces-keybindings)
+5. [Installing & Configuring Yabai + Skhd](#installing-configuring-yabai-skhd)
 6. [Visual Accents: JankyBorders](#visual-accents-jankyborders)
-7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 8. [Uninstallation](#uninstallation)
 
 ---

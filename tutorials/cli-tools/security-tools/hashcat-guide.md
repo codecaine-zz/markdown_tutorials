@@ -11,14 +11,14 @@
 
 ## 📚 Table of Contents  
 
-1. [Install Homebrew & hashcat (zsh)](#1)  
-2. [The biggest word‑lists you can actually download](#2)  
-3. [Grab a dictionary (quick‑start list)](#3)  
-4. [Create sample hash files](#4)  
+1. [Install Homebrew & hashcat (zsh)](#1-install-the-prerequisites-zsh)  
+2. [The biggest word‑lists you can actually download](#2-the-biggest-public-word-lists-download-urls)  
+3. [Grab a dictionary (quick‑start list)](#3-quick-start-dictionary-the-one-used-in-the-demo)  
+4. [Create sample hash files](#4-create-some-sample-hash-files)  
 5. [Run basic cracking commands](#5-run-basic-cracking-commands)  
 6. [More powerful attacks](#6-more-powerful-attacks)  
-7. [One‑click demo script (zsh)](#7-oneclick-demo-script-zsh)  
-8. [Tips, common errors & Gotchas](#8)  
+7. [One‑click demo script (zsh)](#7-one-click-demo-script-zsh)  
+8. [Tips, common errors & Gotchas](#8-tips-gotchas-zsh-friendly)  
 
 ---  
 

@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `watch` vs `viddy` Comparison](#overview--watch-vs-viddy-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Basic Usage & Terminal Display](#basic-usage--terminal-display)
-4. [Time-Machine History & Rewind Mode](#time-machine-history--rewind-mode)
-5. [Diff Highlighting & Precise Execution](#diff-highlighting--precise-execution)
+1. [Overview & `watch` vs `viddy` Comparison](#overview-watch-vs-viddy-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Basic Usage & Terminal Display](#basic-usage-terminal-display)
+4. [Time-Machine History & Rewind Mode](#time-machine-history-rewind-mode)
+5. [Diff Highlighting & Precise Execution](#diff-highlighting-precise-execution)
 6. [Interactive Keyboard Controls](#interactive-keyboard-controls)
-7. [Custom Intervals & Shell Configurations](#custom-intervals--shell-configurations)
+7. [Custom Intervals & Shell Configurations](#custom-intervals-shell-configurations)
 8. [Real-World Monitoring Scenarios](#real-world-monitoring-scenarios)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

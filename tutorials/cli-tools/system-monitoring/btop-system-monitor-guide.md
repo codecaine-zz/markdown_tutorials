@@ -5,7 +5,7 @@
 1.  [What is `btop`?](#1-what-is-btop)
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
-4.  [Running `btop` & The Interface](#4-running-btop--the-interface)
+4.  [Running `btop` & The Interface](#4-running-btop-the-interface)
 5.  [Navigation and Key Features](#5-navigation-and-key-features)
 6.  [Interactive Example: Finding and Killing a Process](#6-interactive-example-finding-and-killing-a-process)
 7.  [Uninstallation](#7-uninstallation)

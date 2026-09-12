@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Features](#overview--features)
+1. [Overview & Features](#overview-features)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic Ping & Multi-Host Comparison](#basic-ping--multi-host-comparison)
+3. [Basic Ping & Multi-Host Comparison](#basic-ping-multi-host-comparison)
 4. [IPv4 vs IPv6 Latency Monitoring](#ipv4-vs-ipv6-latency-monitoring)
 5. [Graphing Command Execution Time (`--cmd`)](#graphing-command-execution-time---cmd)
-6. [Graph Buffer & Custom Update Intervals](#graph-buffer--custom-update-intervals)
-7. [Practical Use Cases & Cheat Sheet](#practical-use-cases--cheat-sheet)
+6. [Graph Buffer & Custom Update Intervals](#graph-buffer-custom-update-intervals)
+7. [Practical Use Cases & Cheat Sheet](#practical-use-cases-cheat-sheet)
 
 ---
 

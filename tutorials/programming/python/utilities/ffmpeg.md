@@ -18,19 +18,19 @@ If you spot a typo or a missing import, the fix is included in the snippet.
 
 1. [What is FFmpeg?](#1-what-is-ffmpeg)  
 2. [Prerequisites](#2-prerequisites)  
-3. [System‑wide FFmpeg installation](#install-ffmpeg)  
-4. [Python package installation](#install-py)  
+3. [System‑wide FFmpeg installation](#3-install-ffmpeg-system-binary)  
+4. [Python package installation](#4-install-python-packages)  
 5. [Verify everything works](#5-verify-everything-works)  
-6. [Helper module – `ffmpeg_helpers.py`](#6-helper-module--ffmpeg_helperspy)  
+6. [Helper module – `ffmpeg_helpers.py`](#6-helper-module-ffmpeg_helperspy)  
    - 6.1 Core validators  
    - 6.2 Video helpers  
    - 6.3 Audio helpers  
    - 6.4 Info & quality checks  
    - 6.5 Batch processing  
-7. [Demo script – `demo_ffmpeg.py`](#7-demo-script--demo_ffmpegpy)  
+7. [Demo script – `demo_ffmpeg.py`](#7-demo-script-demo_ffmpegpy)  
 8. [Testing with **pytest**](#8-testing-with-pytest)  
-9. [Troubleshooting common errors](#troubleshoot)  
-10. [Security & best‑practice checklist](#10-security-bestpractice-checklist)  
+9. [Troubleshooting common errors](#troubleshooting-common-errors)  
+10. [Security & best‑practice checklist](#10-security-best-practice-checklist)  
 11. [Next steps & official docs](#11-next-steps-official-docs)  
 
 ---  
@@ -700,7 +700,7 @@ Run with: `pytest -q`.
 
 ---  
 
-## <a name="troubleshoot"></a>9️⃣ Troubleshooting  
+## <a id="troubleshooting-common-errors" name="troubleshoot"></a>9️⃣ Troubleshooting  
 
 | Symptom | Typical cause | Fix |
 |---------|----------------|-----|

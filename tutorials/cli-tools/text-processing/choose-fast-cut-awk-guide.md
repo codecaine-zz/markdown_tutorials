@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `cut` / `awk` vs `choose` Comparison](#overview--cut--awk-vs-choose-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Basic Usage & Field Selection](#basic-usage--field-selection)
-4. [Python-Style Slices & Negative Indices](#python-style-slices--negative-indices)
-5. [Custom Field Separators & Output Formatting](#custom-field-separators--output-formatting)
-6. [Character Mode vs Field Mode](#character-mode-vs-field-mode)
+1. [Overview & `cut` / `awk` vs `choose` Comparison](#overview-cut-awk-vs-choose-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Basic Usage & Field Selection](#basic-usage-field-selection)
+4. [Python-Style Slices & Negative Indices](#python-style-slices-negative-indices)
+5. [Custom Field Separators & Output Formatting](#custom-field-separators-output-formatting)
+6. [Character Mode vs Field Mode](#character-mode-vs-field-mode--c---character-mode)
 7. [Real-World Pipeline Examples](#real-world-pipeline-examples)
-8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 9. [Uninstallation](#uninstallation)
 
 ---

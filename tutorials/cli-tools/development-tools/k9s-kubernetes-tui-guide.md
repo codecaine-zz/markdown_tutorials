@@ -6,16 +6,16 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use `k9s`?](#overview--why-use-k9s)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Launching `k9s` & Connecting to Clusters](#launching-k9s--connecting-to-clusters)
-4. [Navigating Kubernetes Resources (`:pod`, `:svc`, `:deploy`, etc.)](#navigating-kubernetes-resources-pod-svc-deploy-etc)
-5. [Viewing & Streaming Logs (`l`)](#viewing--streaming-logs-l)
+1. [Overview & Why Use `k9s`?](#overview-why-use-k9s)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Launching `k9s` & Connecting to Clusters](#launching-k9s-connecting-to-clusters)
+4. [Navigating Kubernetes Resources (`:pod`, `:svc`, `:deploy`, etc.)](#navigating-kubernetes-resources)
+5. [Viewing & Streaming Logs (`l`)](#viewing-streaming-logs-l)
 6. [Interactive Shell Exec into Containers (`s`)](#interactive-shell-exec-into-containers-s)
-7. [Port Forwarding Services & Pods (`Shift + F`)](#port-forwarding-services--pods-shift--f)
-8. [Editing, Scaling & Restarting Deployments](#editing-scaling--restarting-deployments)
-9. [Filtering by Namespaces & Search Filtering](#filtering-by-namespaces--search-filtering)
-10. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+7. [Port Forwarding Services & Pods (`Shift + F`)](#port-forwarding-services-pods-shift-f)
+8. [Editing, Scaling & Restarting Deployments](#editing-scaling-restarting-deployments)
+9. [Filtering by Namespaces & Search Filtering](#filtering-by-namespaces-search-filtering)
+10. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 11. [Uninstallation](#uninstallation)
 
 ---

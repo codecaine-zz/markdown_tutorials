@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use `fx`?](#overview--why-use-fx)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Interactive TUI Mode: Folding & Navigation](#interactive-tui-mode-folding--navigation)
-4. [Keyboard Navigation & Search](#keyboard-navigation--search)
-5. [Non-Interactive CLI Processing & JavaScript Reducers](#non-interactive-cli-processing--javascript-reducers)
-6. [Combining `fx` with `curl` & APIs](#combining-fx-with-curl--apis)
-7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+1. [Overview & Why Use `fx`?](#overview-why-use-fx)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Interactive TUI Mode: Folding & Navigation](#interactive-tui-mode-folding-navigation)
+4. [Keyboard Navigation & Search](#keyboard-navigation-search)
+5. [Non-Interactive CLI Processing & JavaScript Reducers](#non-interactive-cli-processing-javascript-reducers)
+6. [Combining `fx` with `curl` & APIs](#combining-fx-with-curl-apis)
+7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 8. [Uninstallation](#uninstallation)
 
 ---

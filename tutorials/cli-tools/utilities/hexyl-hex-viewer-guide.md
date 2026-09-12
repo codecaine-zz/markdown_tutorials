@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `xxd` / `hexdump` vs `hexyl` Comparison](#overview--xxd--hexdump-vs-hexyl-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Basic Usage & Byte Color Categories](#basic-usage--byte-color-categories)
-4. [Range Slicing: Length, Offsets & Squeezing (`-n` / `-r` / `-v`)](#range-slicing-length-offsets--squeezing--n---r---v)
-5. [Display Customizations: Formats, Groups & Columns](#display-customizations-formats-groups--columns)
-6. [Inspecting Binary Payloads & Shell Piping](#inspecting-binary-payloads--shell-piping)
-7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+1. [Overview & `xxd` / `hexdump` vs `hexyl` Comparison](#overview-xxd-hexdump-vs-hexyl-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Basic Usage & Byte Color Categories](#basic-usage-byte-color-categories)
+4. [Range Slicing: Length, Offsets & Squeezing (`-n` / `-r` / `-v`)](#range-slicing-length-offsets-squeezing)
+5. [Display Customizations: Formats, Groups & Columns](#display-customizations-formats-groups-columns)
+6. [Inspecting Binary Payloads & Shell Piping](#inspecting-binary-payloads-shell-piping)
+7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 8. [Uninstallation](#uninstallation)
 
 ---

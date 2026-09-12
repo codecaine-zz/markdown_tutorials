@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `scp` / `rsync` vs `croc` Comparison](#overview--scp--rsync-vs-croc-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Sending Files & Generating Codephrases (`croc send`)](#sending-files--generating-codephrases-croc-send)
+1. [Overview & `scp` / `rsync` vs `croc` Comparison](#overview-scp-rsync-vs-croc-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Sending Files & Generating Codephrases (`croc send`)](#sending-files-generating-codephrases-croc-send)
 4. [Receiving Files with Codephrases](#receiving-files-with-codephrases)
-5. [Custom Codephrases & Password Protection](#custom-codephrases--password-protection)
-6. [Sending Folders & Multiple Files](#sending-folders--multiple-files)
-7. [Local-Only Transfers (LAN Mode) & Self-Hosted Relays](#local-only-transfers-lan-mode--self-hosted-relays)
-8. [Sending Raw Text & Clipboard Snippets](#sending-raw-text--clipboard-snippets)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+5. [Custom Codephrases & Password Protection](#custom-codephrases-password-protection)
+6. [Sending Folders & Multiple Files](#sending-folders-multiple-files)
+7. [Local-Only Transfers (LAN Mode) & Self-Hosted Relays](#local-only-transfers-lan-mode-self-hosted-relays)
+8. [Sending Raw Text & Clipboard Snippets](#sending-raw-text-clipboard-snippets)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

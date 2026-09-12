@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Architecture (Formulae vs Casks vs Taps)](#overview--architecture-formulae-vs-casks-vs-taps)
-2. [Installation & Shell Configuration](#installation--shell-configuration)
-3. [Formulae vs GUI Applications (`brew install` vs `brew install --cask`)](#formulae-vs-gui-applications-brew-install-vs-brew-install---cask)
-4. [Reproducible Machines with `brew bundle` & `Brewfile`](#reproducible-machines-with-brew-bundle--brewfile)
+1. [Overview & Architecture (Formulae vs Casks vs Taps)](#overview-architecture)
+2. [Installation & Shell Configuration](#installation-shell-configuration)
+3. [Formulae vs GUI Applications (`brew install` vs `brew install --cask`)](#formulae-vs-gui-applications)
+4. [Reproducible Machines with `brew bundle` & `Brewfile`](#reproducible-machines-with-brew-bundle-brewfile)
 5. [Managing Background Daemons (`brew services`)](#managing-background-daemons-brew-services)
 6. [Adding Third-Party Repositories (`brew tap`)](#adding-third-party-repositories-brew-tap)
-7. [System Health, Doctor & Storage Cleanup](#system-health-doctor--storage-cleanup)
-8. [Pinning Packages & Version Locking](#pinning-packages--version-locking)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+7. [System Health, Doctor & Storage Cleanup](#system-health-doctor-storage-cleanup)
+8. [Pinning Packages & Version Locking](#pinning-packages-version-locking)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

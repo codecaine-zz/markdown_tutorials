@@ -10,7 +10,7 @@
 7. [3. `contextlib.ExitStack`](#3-contextlibexitstack)
 8. [Example 3: Using `ExitStack` with `open()` and closing them in reverse order](#example-3-using-exitstack-with-open-and-closing-them-in-reverse-order)
 9. [Explanation:](#explanation)
-10. [4. `contextlib.suppress()`](#4-contextlibsuppress)
+10. [4. `contextlib.suppress()`](#10-contextlibsuppress)
 
 
 

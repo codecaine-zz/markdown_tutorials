@@ -7,14 +7,14 @@
 ## 📚 Table of Contents
 
 1. [Installation via Homebrew](#installation-via-homebrew)
-2. [Essential Copy & Paste One-Liners](#essential-copy--paste-one-liners)
-3. [HTTP Methods & JSON Payloads](#http-methods--json-payloads)
-4. [Headers, Authentication & Cookies](#headers-authentication--cookies)
-5. [File Uploads & Multipart Form Data](#file-uploads--multipart-form-data)
-6. [Response Handling, Inspection & Performance Timing](#response-handling-inspection--performance-timing)
-7. [SSL/TLS, Proxies & Speed Control](#ssltls-proxies--speed-control)
-8. [Timeout & Retry Mechanisms](#timeout--retry-mechanisms)
-9. [Automation Scripts & Workflows](#automation-scripts--workflows)
+2. [Essential Copy & Paste One-Liners](#essential-copy-paste-one-liners)
+3. [HTTP Methods & JSON Payloads](#http-methods-json-payloads)
+4. [Headers, Authentication & Cookies](#headers-authentication-cookies)
+5. [File Uploads & Multipart Form Data](#file-uploads-multipart-form-data)
+6. [Response Handling, Inspection & Performance Timing](#response-handling-inspection-performance-timing)
+7. [SSL/TLS, Proxies & Speed Control](#ssltls-proxies-speed-control)
+8. [Timeout & Retry Mechanisms](#timeout-retry-mechanisms)
+9. [Automation Scripts & Workflows](#automation-scripts-workflows)
 10. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

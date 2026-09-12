@@ -9,7 +9,7 @@
 5. [Search & Filtering Features](#5-search-filtering-features)
 6. [Tree View Mode](#6-tree-view-mode)
 7. [Watch Mode (Live Updating)](#7-watch-mode-live-updating)
-8. [Uninstallation](#8-uninstallation)
+8. [Uninstallation](#9-uninstallation)
 
 ---
 

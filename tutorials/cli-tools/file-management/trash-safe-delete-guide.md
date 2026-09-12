@@ -5,7 +5,7 @@
 1.  [What is `trash`?](#1-what-is-trash)
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
-4.  [Basic Usage & Output](#4-basic-usage--output)
+4.  [Basic Usage & Output](#4-basic-usage-output)
 5.  [Managing Your Trashed Files](#5-managing-your-trashed-files)
 6.  [Pro-Tip: Aliasing `rm` for Safety](#6-pro-tip-aliasing-rm-for-safety)
 7.  [Uninstallation](#7-uninstallation)

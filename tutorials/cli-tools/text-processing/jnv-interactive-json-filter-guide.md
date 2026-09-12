@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use `jnv`?](#overview--why-use-jnv)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Basic Usage & Terminal Interface](#basic-usage--terminal-interface)
-4. [Auto-Completion & Live Query Previewing](#auto-completion--live-query-previewing)
+1. [Overview & Why Use `jnv`?](#overview-why-use-jnv)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Basic Usage & Terminal Interface](#basic-usage-terminal-interface)
+4. [Auto-Completion & Live Query Previewing](#auto-completion-live-query-previewing)
 5. [Interactive Keyboard Navigation](#interactive-keyboard-navigation)
 6. [Exporting Query Results to Clipboard or stdout](#exporting-query-results-to-clipboard-or-stdout)
-7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+7. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 8. [Uninstallation](#uninstallation)
 
 ---

@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Features](#overview--features)
+1. [Overview & Features](#overview-features)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [GET Requests & Query Parameters](#get-requests--query-parameters)
-4. [POST, PUT & JSON Payloads](#post-put--json-payloads)
-5. [Headers, Bearer Tokens & Basic Auth](#headers-bearer-tokens--basic-auth)
-6. [Form Submissions & File Uploads](#form-submissions--file-uploads)
-7. [Sessions & Cookie Persistence](#sessions--cookie-persistence)
-8. [File Downloads & Response Filtering](#file-downloads--response-filtering)
-9. [Offline Preview & TLS Options](#offline-preview--tls-options)
+3. [GET Requests & Query Parameters](#get-requests-query-parameters)
+4. [POST, PUT & JSON Payloads](#post-put-json-payloads)
+5. [Headers, Bearer Tokens & Basic Auth](#headers-bearer-tokens-basic-auth)
+6. [Form Submissions & File Uploads](#form-submissions-file-uploads)
+7. [Sessions & Cookie Persistence](#sessions-cookie-persistence)
+8. [File Downloads & Response Filtering](#file-downloads-response-filtering)
+9. [Offline Preview & TLS Options](#offline-preview-tls-options)
 10. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

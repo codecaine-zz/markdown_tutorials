@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use Git Worktrees?](#overview--why-use-git-worktrees)
+1. [Overview & Why Use Git Worktrees?](#overview-why-use-git-worktrees)
 2. [How Worktrees Work Under the Hood](#how-worktrees-work-under-the-hood)
 3. [Creating Your First Worktree (`git worktree add`)](#creating-your-first-worktree-git-worktree-add)
-4. [Listing & Inspecting Worktrees (`git worktree list`)](#listing--inspecting-worktrees-git-worktree-list)
+4. [Listing & Inspecting Worktrees (`git worktree list`)](#listing-inspecting-worktrees-git-worktree-list)
 5. [Switching Between Worktrees Effortlessly](#switching-between-worktrees-effortlessly)
-6. [Removing & Cleaning Up Worktrees (`git worktree remove` / `prune`)](#removing--cleaning-up-worktrees-git-worktree-remove--prune)
+6. [Removing & Cleaning Up Worktrees (`git worktree remove` / `prune`)](#removing-cleaning-up-worktrees)
 7. [Recommended Directory Structure (Bare Repo Pattern)](#recommended-directory-structure-bare-repo-pattern)
 8. [Real-World Development Scenarios](#real-world-development-scenarios)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 
 ---
 

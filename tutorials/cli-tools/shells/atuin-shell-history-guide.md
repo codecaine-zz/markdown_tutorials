@@ -7,7 +7,7 @@
 3.  [Installation](#3-installation)
 4.  [Shell Configuration (Crucial Step)](#4-shell-configuration-crucial-step)
 5.  [Basic Usage: The Search UI (`Ctrl+R`)](#5-basic-usage-the-search-ui-ctrlr)
-6.  [Command-Line Usage & Output](#6-command-line-usage--output)
+6.  [Command-Line Usage & Output](#6-command-line-usage-output)
 7.  [Cloud Sync (Optional but Recommended)](#7-cloud-sync-optional-but-recommended)
 8.  [Uninstallation](#8-uninstallation)
 

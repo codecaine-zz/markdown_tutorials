@@ -7,7 +7,7 @@
 3.  [Installation](#3-installation)
 4.  [Core Workflow: Asymmetric Encryption (Public Keys)](#4-core-workflow-asymmetric-encryption-public-keys)
 5.  [Alternative: Symmetric Encryption (Passphrase)](#5-alternative-symmetric-encryption-passphrase)
-6.  [Key Features & Examples](#6-key-features--examples)
+6.  [Key Features & Examples](#6-key-features-examples)
 7.  [Uninstallation](#7-uninstallation)
 
 -----

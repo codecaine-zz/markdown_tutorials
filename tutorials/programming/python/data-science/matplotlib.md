@@ -7,11 +7,11 @@ Every function and class is linked to the **official Matplotlib documentation**,
 ## Table of Contents
 1. [What is Matplotlib?](#1-what-is-matplotlib)  
 2. [Prerequisites & Installation](#2-prerequisites-installation)  
-3. [Quick‑Start: a “Hello‑World” Plot](#3-quickstart-a-helloworld-plot)  
+3. [Quick‑Start: a “Hello‑World” Plot](#3-quick-start-a-hello-world-plot)  
 4. [Core Plot Types (Line, Scatter, Bar, Histograms, etc.)](#plot)  
 5. [Customising Axes, Ticks & Layout](#5-customising-axes-ticks-layout)  
-6. [Sub‑plots & Shared Axes](#6-subplots-shared-axes)  
-7. [3‑D Visualisations](#7-3d-visualisations)  
+6. [Sub‑plots & Shared Axes](#6-sub-plots-shared-axes)  
+7. [3‑D Visualisations](#7-3-d-visualisations)  
 8. [Styling, Themes & Colour Maps](#8-styling-themes-colour-maps)  
 9. **Reusable Helper Module – `mpl_helpers.py`**  
    - Figure & Axes helpers  
@@ -22,8 +22,8 @@ Every function and class is linked to the **official Matplotlib documentation**,
    - Performance helpers for large data  
    - Miscellaneous one‑liners  
 10. [Interactive Widgets (Jupyter) & Simple Animation](#10-interactive-widgets-jupyter-simple-animation)  
-11. [Performance Tips for Very Large Datasets](#data)  
-12. [Publication‑Ready Plots – Best Practices](#plot)  
+11. [Performance Tips for Very Large Datasets](#11-performance-tips-for-very-large-datasets)  
+12. [Publication‑Ready Plots – Best Practices](#12-publication-ready-plots-best-practices)  
 13. [Common Errors & How to Fix Them](#13-common-errors-how-to-fix-them)  
 14. [FAQ](#14-faq)  
 15. [Next Steps & Further Reading](#15-next-steps-further-reading)  

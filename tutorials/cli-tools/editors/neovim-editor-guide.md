@@ -7,23 +7,23 @@ Welcome to your complete guide to installing, configuring, and mastering Neovim 
 ### 💡 Practical Examples & Table of Contents
 
   * **Part 1: The Foundation - Beginner**
-      * [1.1. Why Neovim?](#1.1.-why-neovim%3F)
-      * [1.2. Prerequisites: Homebrew and Essential Tools](#1.2.-prerequisites:-homebrew-and-essential-tools)
-      * [1.3. Installing Neovim](#1.3.-installing-neovim)
-      * [1.4. Your First Configuration: `init.lua`](#1.4.-your-first-configuration:-init.lua)
-      * [1.5. Essential Settings for a Better Experience](#1.5.-essential-settings-for-a-better-experience)
-      * [1.6. Navigating Neovim: The Basics](#1.6.-navigating-neovim:-the-basics)
+      * [1.1. Why Neovim?](#11-why-neovim)
+      * [1.2. Prerequisites: Homebrew and Essential Tools](#12-prerequisites-homebrew-and-essential-tools)
+      * [1.3. Installing Neovim](#13-installing-neovim)
+      * [1.4. Your First Configuration: `init.lua`](#14-your-first-configuration-initlua)
+      * [1.5. Essential Settings for a Better Experience](#15-essential-settings-for-a-better-experience)
+      * [1.6. Navigating Neovim: The Basics](#16-navigating-neovim-the-basics)
   * **Part 2: Powering Up with Plugins - Intermediate**
-      * [2.1. Introduction to Plugin Management with `lazy.nvim`](#2.1.-introduction-to-plugin-management-with-lazy.nvim)
-      * [2.2. Setting Up `lazy.nvim`](#2.2.-setting-up-lazy.nvim)
-      * [2.3. Must-Have Plugins for a Modern Workflow](#2.3.-must-have-plugins-for-a-modern-workflow)
-      * [2.4. Configuring Plugins in Lua](#2.4.-configuring-plugins-in-lua)
+      * [2.1. Introduction to Plugin Management with `lazy.nvim`](#21-introduction-to-plugin-management-with-lazynvim)
+      * [2.2. Setting Up `lazy.nvim`](#22-setting-up-lazynvim)
+      * [2.3. Must-Have Plugins for a Modern Workflow](#23-must-have-plugins-for-a-modern-workflow)
+      * [2.4. Configuring Plugins in Lua](#24-configuring-plugins-in-lua)
   * **Part 3: Becoming a Power User - Advanced**
-      * [3.1. Unleashing the Language Server Protocol (LSP)](#3.1.-unleashing-the-language-server-protocol-\(lsp\))
-      * [3.2. Autocompletion with `nvim-cmp`](#3.2.-autocompletion-with-nvim-cmp)
-      * [3.3. Advanced Keymappings for Efficiency](#3.3.-advanced-keymappings-for-efficiency)
-      * [3.4. Debugging in Neovim](#3.4.-debugging-in-neovim)
-      * [3.5. Tips and Tricks for Performance and Workflow](#3.5.-tips-and-tricks-for-performance-and-workflow)
+      * [3.1. Unleashing the Language Server Protocol (LSP)](#31-unleashing-the-language-server-protocol-lsp))
+      * [3.2. Autocompletion with `nvim-cmp`](#32-autocompletion-with-nvim-cmp)
+      * [3.3. Advanced Keymappings for Efficiency](#33-advanced-keymappings-for-efficiency)
+      * [3.4. Debugging in Neovim](#34-debugging-in-neovim)
+      * [3.5. Tips and Tricks for Performance and Workflow](#35-tips-and-tricks-for-performance-and-workflow)
 
 -----
 

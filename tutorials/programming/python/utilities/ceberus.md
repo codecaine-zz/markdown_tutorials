@@ -18,7 +18,7 @@ Official documentation links are added as foot‑note references – click the n
 5. [Advanced Usage](#5-advanced-usage)  
 6. [Error Handling & Customisation](#6-error-handling-customisation)  
 7. [Best Practices & Performance Tips](#7-best-practices-performance-tips)  
-8. [Reusable Helper Library (copy‑paste ready)](#8-reusable-helper-library-copypaste-ready)  
+8. [Reusable Helper Library (copy‑paste ready)](#8-reusable-helper-library-copy-paste-ready)  
 
 ---
 

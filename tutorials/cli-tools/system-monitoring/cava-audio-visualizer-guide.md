@@ -5,7 +5,7 @@
 1.  [What is `cava`?](#1-what-is-cava)
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
-4.  [Basic Usage & The Interface](#4-basic-usage--the-interface)
+4.  [Basic Usage & The Interface](#4-basic-usage-the-interface)
 5.  [Customizing `cava` via the Config File](#5-customizing-cava-via-the-config-file)
 6.  [Interactive Controls (While Running)](#6-interactive-controls-while-running)
 7.  [Uninstallation](#7-uninstallation)

@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `curl` vs `httpie` vs `curlie`](#overview--curl-vs-httpie-vs-curlie)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Basic HTTP Requests (GET, POST, PUT, DELETE)](#basic-http-requests-get-post-put-delete)
-4. [Request Headers & Authentication](#request-headers--authentication)
-5. [Sending JSON Payloads & Form Data](#sending-json-payloads--form-data)
+1. [Overview & `curl` vs `httpie` vs `curlie`](#overview-curl-vs-httpie-vs-curlie)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Basic HTTP Requests (GET, POST, PUT, DELETE)](#basic-http-requests)
+4. [Request Headers & Authentication](#request-headers-authentication)
+5. [Sending JSON Payloads & Form Data](#sending-json-payloads-form-data)
 6. [Combining `curl` Flags with `curlie`](#combining-curl-flags-with-curlie)
-7. [Output Formatting & Silent Flags](#output-formatting--silent-flags)
-8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+7. [Output Formatting & Silent Flags](#output-formatting-silent-flags)
+8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 9. [Uninstallation](#uninstallation)
 
 ---

@@ -57,14 +57,20 @@ document.addEventListener('DOMContentLoaded', function() {
     // Stable GitHub-like slug generator for heading IDs
     function githubSlugify(text) {
         if (!text) return '';
-        let slug = text
+        let clean = text
+            .replace(/<[^>]*>/g, '')
+            .replace(/`([^`]+)`/g, '$1')
+            .replace(/[\u2010-\u2015\u2212]/g, '-')
             .toLowerCase()
-            .trim()
-            .replace(/&/g, ' and ')
-            .replace(/[\u2000-\u206F\u2E00-\u2E7F'"!#$%*+,./:;<=?>@\[\]^`{|}~()]/g, '') // remove punctuation (keep hyphens and underscores handling next)
+            .trim();
+
+        // Standard GitHub GFM: remove non-alphanumeric characters (keeps letters, numbers, spaces, hyphens)
+        let slug = clean
+            .replace(/[^\p{L}\p{N}\s-]/gu, '')
             .replace(/\s+/g, '-')
             .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
+            .replace(/^-+|-+$/g, '');
+
         return slug;
     }
 
@@ -72,10 +78,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const used = new Set();
         const headings = root.querySelectorAll('h1, h2, h3, h4, h5, h6');
         headings.forEach(h => {
-            let id = h.getAttribute('id');
-            if (!id || id.trim() === '') {
-                id = githubSlugify(h.textContent || '');
+            // Support existing <a name="..."> or <a id="..."> inside or preceding headings
+            const namedAnchor = h.querySelector('a[name], a[id]');
+            let explicitName = '';
+            if (namedAnchor) {
+                explicitName = namedAnchor.getAttribute('id') || namedAnchor.getAttribute('name') || '';
+                if (explicitName) {
+                    explicitName = explicitName.replace(/[\u2010-\u2015\u2212]/g, '-').trim();
+                    if (!namedAnchor.id) namedAnchor.id = explicitName;
+                }
             }
+
+            let id = h.getAttribute('id');
+            if (explicitName) {
+                id = explicitName;
+            } else if (!id || id.trim() === '') {
+                id = githubSlugify(h.textContent || '');
+            } else {
+                id = githubSlugify(id);
+            }
+
+            if (!id) id = 'section';
+
             // Ensure uniqueness in page
             let unique = id;
             let i = 1;
@@ -398,65 +422,108 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getAnchorTarget(id, optionalText = '') {
         if (!id && !optionalText) return null;
-        if (id) {
-            // Exact ID match
-            let el = document.getElementById(id);
+
+        const rawId = id ? decodeURIComponent(id).replace(/[\u2010-\u2015\u2212]/g, '-').toLowerCase().trim() : '';
+
+        if (rawId) {
+            // 1. Exact ID match
+            let el = document.getElementById(rawId);
             if (el) return el;
+            
+            // Check for element with matching name attribute (e.g. <a name="...">)
+            try {
+                const named = document.querySelector(`a[name="${CSS.escape(rawId)}"], [id="${CSS.escape(rawId)}"]`);
+                if (named) return named.closest('h1, h2, h3, h4, h5, h6') || named;
+            } catch (e) {}
+
             // GitHub-style prefix
-            el = document.getElementById(`user-content-${id}`);
+            el = document.getElementById(`user-content-${rawId}`);
             if (el) return el;
         }
 
         const headings = Array.from(document.querySelectorAll('.markdown-content h1, .markdown-content h2, .markdown-content h3, .markdown-content h4, .markdown-content h5, .markdown-content h6'));
         if (headings.length === 0) return null;
 
-        if (id) {
-            const rawId = decodeURIComponent(id).toLowerCase().trim();
-            // 1. Direct slug comparison (with and without replacing & with and)
+        if (rawId) {
+            // 2. Direct slug comparison (with and without replacing & with and / stripping hyphens)
             for (const h of headings) {
                 const hText = (h.textContent || '').trim();
                 const s1 = githubSlugify(hText);
-                const s2 = githubSlugify(hText.replace(/&/g, ''));
-                if (s1 === rawId || s2 === rawId) return h;
+                const s2 = githubSlugify(hText.replace(/&/g, 'and'));
+                const s3 = githubSlugify(hText.replace(/&/g, ''));
+                if (s1 === rawId || s2 === rawId || s3 === rawId) return h;
+                if (s1.replace(/-+/g, '-') === rawId.replace(/-+/g, '-')) return h;
             }
 
-            // 2. Number-prefix stripped slug match (e.g. #installing vs ## 3. Installing)
-            const rawIdNoNum = rawId.replace(/^\d+[-_.\s]+/, '');
-            if (rawIdNoNum) {
+            // 3. Pure number match (#1 -> ## 1️⃣ Install...)
+            if (/^\d+$/.test(rawId)) {
                 for (const h of headings) {
                     const hText = (h.textContent || '').trim();
-                    const hNoNum = hText.replace(/^\d+[-_.\s]+/, '');
-                    if (githubSlugify(hNoNum) === rawIdNoNum || githubSlugify(hNoNum.replace(/&/g, '')) === rawIdNoNum) {
+                    const m = hText.match(/^\s*#*\s*(\d+|[0-9])/);
+                    if (m && m[1] === rawId) return h;
+                }
+            }
+
+            // 4. Number-prefix stripped slug match (e.g. #5-workflow or #8-uninstallation)
+            const numPrefixMatch = rawId.match(/^(\d+)[-_.\s]+(.+)$/);
+            if (numPrefixMatch) {
+                const num = numPrefixMatch[1];
+                const rest = numPrefixMatch[2];
+                for (const h of headings) {
+                    const hText = (h.textContent || '').trim().toLowerCase();
+                    const hNumMatch = hText.match(/^\s*#*\s*(\d+|[0-9])/);
+                    const hNum = hNumMatch ? hNumMatch[1] : '';
+                    if ((hNum === num && hText.includes(rest)) || hText.includes(rest)) {
                         return h;
                     }
                 }
             }
 
-            // 3. Alphanumeric normalized matching (ignores hyphens, emojis, spacing)
+            // 5. Alphanumeric normalized matching (ignores hyphens, emojis, spacing)
             const idAlpha = rawId.replace(/[^a-z0-9]/g, '');
-            const idAlphaNoNum = rawIdNoNum.replace(/[^a-z0-9]/g, '');
             if (idAlpha) {
                 for (const h of headings) {
-                    const hText = (h.textContent || '').trim();
-                    const hAlpha = hText.toLowerCase().replace(/[^a-z0-9]/g, '');
-                    const hAlphaNoNum = hText.replace(/^\d+[-_.\s]+/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
-                    if (hAlpha === idAlpha || (idAlphaNoNum && hAlphaNoNum === idAlphaNoNum)) {
+                    const hText = (h.textContent || '').trim().toLowerCase();
+                    const hAlpha = hText.replace(/[^a-z0-9]/g, '');
+                    if (hAlpha === idAlpha) return h;
+                    if (idAlpha.length >= 6 && (hAlpha.includes(idAlpha) || idAlpha.includes(hAlpha))) {
                         return h;
                     }
-                    if (idAlpha.length >= 8 && (hAlpha.includes(idAlpha) || idAlpha.includes(hAlpha))) {
-                        return h;
+                }
+            }
+
+            // 6. Word-based overlap match (handles parentheticals or extra descriptive text in TOC)
+            const getWords = (str) => str.replace(/[\u2010-\u2015\u2212]/g, '-')
+                .toLowerCase()
+                .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+                .split(/\s+/)
+                .filter(w => w.length > 2 && !/^\d+$/.test(w));
+                
+            const anchorWords = getWords(rawId);
+            if (anchorWords.length >= 2) {
+                let bestHeading = null;
+                let maxOverlap = 0;
+                for (const h of headings) {
+                    const hWords = getWords(h.textContent || '');
+                    const common = anchorWords.filter(w => hWords.includes(w));
+                    if (common.length >= 2 && common.length > maxOverlap) {
+                        maxOverlap = common.length;
+                        bestHeading = h;
                     }
+                }
+                if (bestHeading && maxOverlap >= Math.min(anchorWords.length, 2)) {
+                    return bestHeading;
                 }
             }
         }
 
-        // 4. Fallback matching using link text if provided
+        // 7. Fallback matching using link text if provided
         if (optionalText) {
             const textAlpha = optionalText.toLowerCase().replace(/[^a-z0-9]/g, '');
             if (textAlpha.length >= 4) {
                 for (const h of headings) {
-                    const hText = (h.textContent || '').trim();
-                    const hAlpha = hText.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const hText = (h.textContent || '').trim().toLowerCase();
+                    const hAlpha = hText.replace(/[^a-z0-9]/g, '');
                     if (hAlpha === textAlpha || hAlpha.includes(textAlpha) || textAlpha.includes(hAlpha)) {
                         return h;
                     }
@@ -559,6 +626,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Delegate in-page anchor clicks inside markdown so they scroll smoothly
     function wireInPageLinks(root) {
+        if (!root || root.__inPageLinksWired) return;
+        root.__inPageLinksWired = true;
         root.addEventListener('click', (e) => {
             const a = e.target.closest('a[href^="#"]');
             if (!a) return;
@@ -1526,10 +1595,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     a.addEventListener('click', (e) => {
                         e.preventDefault();
                         const id = decodeURIComponent((a.getAttribute('href') || '').replace('#', ''));
-                        const el = document.getElementById(id) || document.getElementById(`user-content-${id}`);
+                        const el = getAnchorTarget(id, a.textContent);
                         if (el) {
+                            window.__lastAnchorScrollY = window.scrollY;
                             scrollToElement(el);
+                            showInlinePreviousButton(el);
                             floatingMenu.classList.remove('open');
+                            if (history.pushState) history.pushState(null, '', `#${el.id || id}`);
                         }
                     });
                 });

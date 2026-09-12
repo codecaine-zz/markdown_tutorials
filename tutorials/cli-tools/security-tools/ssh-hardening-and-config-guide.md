@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Modern SSH Cryptography](#overview--modern-ssh-cryptography)
-2. [Generating Modern Ed25519 & Hardware Security Keys](#generating-modern-ed25519--hardware-security-keys)
+1. [Overview & Modern SSH Cryptography](#overview-modern-ssh-cryptography)
+2. [Generating Modern Ed25519 & Hardware Security Keys](#generating-modern-ed25519-hardware-security-keys)
 3. [Mastering the `~/.ssh/config` File](#mastering-the-sshconfig-file)
-4. [Bastion & Jump Hosts (`ProxyJump`)](#bastion--jump-hosts-proxyjump)
+4. [Bastion & Jump Hosts (`ProxyJump`)](#bastion-jump-hosts-proxyjump)
 5. [Turbocharging Connection Speed with Multiplexing (`ControlMaster`)](#turbocharging-connection-speed-with-multiplexing-controlmaster)
-6. [Local & Remote Port Forwarding Tunnels (`-L` / `-R`)](#local--remote-port-forwarding-tunnels--l---r)
+6. [Local & Remote Port Forwarding Tunnels (`-L` / `-R`)](#local-remote-port-forwarding-tunnels)
 7. [Server-Side SSH Hardening Best Practices (`sshd_config`)](#server-side-ssh-hardening-best-practices-sshd_config)
-8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 
 ---
 

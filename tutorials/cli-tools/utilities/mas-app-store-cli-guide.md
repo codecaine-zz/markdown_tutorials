@@ -5,7 +5,7 @@
 1.  [What is `mas`?](#1-what-is-mas)
 2.  [Prerequisites](#2-prerequisites)
 3.  [Installation](#3-installation)
-4.  [Basic Usage: Finding & Installing Apps](#4-basic-usage-finding--installing-apps)
+4.  [Basic Usage: Finding & Installing Apps](#4-basic-usage-finding-installing-apps)
 5.  [Managing Your Apps](#5-managing-your-apps)
 6.  [Advanced Usage: Automation with `Brewfile`](#6-advanced-usage-automation-with-brewfile)
 7.  [Uninstallation](#7-uninstallation)

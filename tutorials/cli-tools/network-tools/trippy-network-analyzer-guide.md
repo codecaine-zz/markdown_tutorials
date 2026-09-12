@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `traceroute` vs `trippy` Comparison](#overview--traceroute-vs-trippy-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Basic Tracing & Running `trip`](#basic-tracing--running-trip)
-4. [Tracing Protocols: ICMP, UDP & TCP](#tracing-protocols-icmp-udp--tcp)
-5. [Interactive TUI Navigation & Visual Charts](#interactive-tui-navigation--visual-charts)
-6. [DNS, GeoIP & Autonomous System (AS) Lookups](#dns-geoip--autonomous-system-as-lookups)
-7. [Multipath Routing & ECMP Analysis](#multipath-routing--ecmp-analysis)
-8. [Exporting Reports: JSON, CSV & Stream Modes](#exporting-reports-json-csv--stream-modes)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+1. [Overview & `traceroute` vs `trippy` Comparison](#overview-traceroute-vs-trippy-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Basic Tracing & Running `trip`](#basic-tracing-running-trip)
+4. [Tracing Protocols: ICMP, UDP & TCP](#tracing-protocols-icmp-udp-tcp)
+5. [Interactive TUI Navigation & Visual Charts](#interactive-tui-navigation-visual-charts)
+6. [DNS, GeoIP & Autonomous System (AS) Lookups](#dns-geoip-autonomous-system-as-lookups)
+7. [Multipath Routing & ECMP Analysis](#multipath-routing-ecmp-analysis)
+8. [Exporting Reports: JSON, CSV & Stream Modes](#exporting-reports-json-csv-stream-modes)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

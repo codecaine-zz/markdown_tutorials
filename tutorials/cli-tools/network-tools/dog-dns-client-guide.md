@@ -6,13 +6,13 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Comparison (`dig` vs `doggo`)](#overview--comparison-dig-vs-doggo)
+1. [Overview & Comparison (`dig` vs `doggo`)](#overview-comparison-dig-vs-doggo)
 2. [Installation via Homebrew](#installation-via-homebrew)
-3. [Basic & Special DNS Record Queries](#basic--special-dns-record-queries)
-4. [Querying Public & Custom Resolvers](#querying-public--custom-resolvers)
-5. [Encrypted DNS: DoH (HTTPS), DoT (TLS) & DoQ (QUIC)](#encrypted-dns-doh-https-dot-tls--doq-quic)
-6. [JSON Output & Shell Integration (`jq`)](#json-output--shell-integration-jq)
-7. [Reverse IP Lookups & Network Diagnostics](#reverse-ip-lookups--network-diagnostics)
+3. [Basic & Special DNS Record Queries](#basic-special-dns-record-queries)
+4. [Querying Public & Custom Resolvers](#querying-public-custom-resolvers)
+5. [Encrypted DNS: DoH (HTTPS), DoT (TLS) & DoQ (QUIC)](#encrypted-dns-doh-https-dot-tls-doq-quic)
+6. [JSON Output & Shell Integration (`jq`)](#json-output-shell-integration-jq)
+7. [Reverse IP Lookups & Network Diagnostics](#reverse-ip-lookups-network-diagnostics)
 8. [Cheat Sheet Summary](#cheat-sheet-summary)
 
 ---

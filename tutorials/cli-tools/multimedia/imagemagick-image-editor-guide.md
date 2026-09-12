@@ -14,7 +14,7 @@ ImageMagick is a powerful command-line utility suite for creating, editing, comp
 6. [Color Manipulation](#color-manipulation)
 7. [Filters and Effects](#filters-and-effects)
 8. [Text and Overlay Operations](#text-and-overlay-operations)
-9. [Batch Processing & Bulk Conversion Examples](#batch-processing--bulk-conversion-examples)
+9. [Batch Processing & Bulk Conversion Examples](#batch-processing-bulk-conversion-examples)
 10. [Practical Copy-and-Paste Recipes](#practical-copy-and-paste-recipes-most-common-workflows)
 11. [Complete Examples](#complete-examples)
 

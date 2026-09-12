@@ -6,17 +6,17 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Go Design Philosophy](#overview--go-design-philosophy)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Modules & Project Setup (`go mod init`)](#modules--project-setup-go-mod-init)
-4. [Syntax Fundamentals: Variables, Control Flow & Functions](#syntax-fundamentals-variables-control-flow--functions)
-5. [Structs, Methods & Interfaces](#structs-methods--interfaces)
-6. [Generics & Type Parameters](#generics--type-parameters)
-7. [Mastering Concurrency: Goroutines & Channels](#mastering-concurrency-goroutines--channels)
-8. [Sync Package: WaitGroups & Mutexes](#sync-package-waitgroups--mutexes)
-9. [Error Handling & Custom Errors](#error-handling--custom-errors)
-10. [Building & Cross-Compiling Standalone Binaries](#building--cross-compiling-standalone-binaries)
-11. [Everyday Cheat Sheet & Useful Commands](#everyday-cheat-sheet--useful-commands)
+1. [Overview & Go Design Philosophy](#overview-go-design-philosophy)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Modules & Project Setup (`go mod init`)](#modules-project-setup-go-mod-init)
+4. [Syntax Fundamentals: Variables, Control Flow & Functions](#syntax-fundamentals)
+5. [Structs, Methods & Interfaces](#structs-methods-interfaces)
+6. [Generics & Type Parameters](#generics-type-parameters)
+7. [Mastering Concurrency: Goroutines & Channels](#mastering-concurrency-goroutines-channels)
+8. [Sync Package: WaitGroups & Mutexes](#sync-package-waitgroups-mutexes)
+9. [Error Handling & Custom Errors](#error-handling-custom-errors)
+10. [Building & Cross-Compiling Standalone Binaries](#building-cross-compiling-standalone-binaries)
+11. [Everyday Cheat Sheet & Useful Commands](#everyday-cheat-sheet-useful-commands)
 
 ---
 

@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use `dive`?](#overview--why-use-dive)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
+1. [Overview & Why Use `dive`?](#overview-why-use-dive)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
 3. [Inspecting Docker Images with `dive`](#inspecting-docker-images-with-dive)
-4. [TUI Layout: Layers, Layer Details & Image Efficiency](#tui-layout-layers-layer-details--image-efficiency)
-5. [Detecting Wasted Space & Inefficiencies](#detecting-wasted-space--inefficiencies)
-6. [CI/CD Integration & Automated Image Quality Gates](#cicd-integration--automated-image-quality-gates)
-7. [Analyzing Local Dockerfiles & Images Directly](#analyzing-local-dockerfiles--images-directly)
-8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+4. [TUI Layout: Layers, Layer Details & Image Efficiency](#tui-layout-layers-layer-details-image-efficiency)
+5. [Detecting Wasted Space & Inefficiencies](#detecting-wasted-space-inefficiencies)
+6. [CI/CD Integration & Automated Image Quality Gates](#cicd-integration-automated-image-quality-gates)
+7. [Analyzing Local Dockerfiles & Images Directly](#analyzing-local-dockerfiles-images-directly)
+8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 9. [Uninstallation](#uninstallation)
 
 ---

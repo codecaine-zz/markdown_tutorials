@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `asdf` / `nvm` vs `mise` Comparison](#overview--asdf--nvm-vs-mise-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Shell Activation & Setup](#shell-activation--setup)
-4. [Installing & Managing Runtimes (Node, Python, Go, etc.)](#installing--managing-runtimes-node-python-go-etc)
+1. [Overview & `asdf` / `nvm` vs `mise` Comparison](#overview-asdf-nvm-vs-mise-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Shell Activation & Setup](#shell-activation-setup)
+4. [Installing & Managing Runtimes (Node, Python, Go, etc.)](#installing-managing-runtimes)
 5. [Configuring Project Tools (`mise.toml`)](#configuring-project-tools-misetoml)
 6. [Managing Environment Variables (`[env]` Section)](#managing-environment-variables-env-section)
 7. [Running Project Tasks (`[tasks]` Section)](#running-project-tasks-tasks-section)
-8. [Compatibility with `.tool-versions` & Legacy Configs](#compatibility-with-tool-versions--legacy-configs)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+8. [Compatibility with `.tool-versions` & Legacy Configs](#compatibility-with-tool-versions-legacy-configs)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

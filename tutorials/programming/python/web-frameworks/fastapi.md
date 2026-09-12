@@ -7,15 +7,15 @@
 
 1️⃣ [Introduction](#1-introduction)  
 2️⃣ [Setup](#2-setup)  
-3️⃣ [Your First API – “Hello World”](#3-your-first-api---hello-world)  
-4️⃣ [Organising a Real‑World Project](#organising)  
-5️⃣ [CRUD Example (in‑memory)](#5-crud-example-inmemory)  
+3️⃣ [Your First API – “Hello World”](#3-your-first-api-hello-world)  
+4️⃣ [Organising a Real‑World Project](#4-organising-a-real-world-app)  
+5️⃣ [CRUD Example (in‑memory)](#5-crud-example-in-memory)  
 6️⃣ [Error Handling & Custom Responses](#6-error-handling-custom-responses)  
 7️⃣ [Background Tasks](#7-background-tasks)  
-8️⃣ [Authentication (API‑Key & JWT)](#auth)  
+8️⃣ [Authentication (API‑Key & JWT)](#8-auth-quickstart-api-key-jwt)  
 9️⃣ [Testing with **pytest**](#9-testing-with-pytest)  
 🔟 [Extras – WebSockets, Static Files, Docker, Production Tips](#websockets)  
-↪️ [Copy‑Paste Snippets](#reusable-copypaste-snippets)  
+↪️ [Copy‑Paste Snippets](#reusable-copy-paste-snippets)  
 
 ---
 
@@ -433,7 +433,7 @@ async def notify(tasks: BackgroundTasks):
 
 ---
 
-## <a name="auth"></a>8️⃣ Auth Quickstart – API‑Key + JWT  
+## <a name="auth" id="auth"></a>8️⃣ Auth Quickstart – API‑Key + JWT  
 
 ### 8.1 API‑Key (already shown)  
 

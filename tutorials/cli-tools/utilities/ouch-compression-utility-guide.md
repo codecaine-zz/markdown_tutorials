@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `tar` vs `ouch` Comparison](#overview--tar-vs-ouch-comparison)
+1. [Overview & `tar` vs `ouch` Comparison](#overview-tar-vs-ouch-comparison)
 2. [Supported Archive Formats](#supported-archive-formats)
-3. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-4. [Decompressing Archives (`ouch decompress` / `ouch d`)](#decompressing-archives-ouch-decompress--ouch-d)
-5. [Creating & Compressing Archives (`ouch compress` / `ouch c`)](#creating--compressing-archives-ouch-compress--ouch-c)
-6. [Listing Archive Contents (`ouch list` / `ouch l`)](#listing-archive-contents-ouch-list--ouch-l)
-7. [Advanced Flags: Gitignore, Passwords & Multithreading](#advanced-flags-gitignore-passwords--multithreading)
-8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+3. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+4. [Decompressing Archives (`ouch decompress` / `ouch d`)](#decompressing-archives-ouch-decompress-ouch-d)
+5. [Creating & Compressing Archives (`ouch compress` / `ouch c`)](#creating-compressing-archives-ouch-compress-ouch-c)
+6. [Listing Archive Contents (`ouch list` / `ouch l`)](#listing-archive-contents-ouch-list-ouch-l)
+7. [Advanced Flags: Gitignore, Passwords & Multithreading](#advanced-flags-gitignore-passwords-multithreading)
+8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 9. [Uninstallation](#uninstallation)
 
 ---

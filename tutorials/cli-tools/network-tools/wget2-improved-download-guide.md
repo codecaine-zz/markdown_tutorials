@@ -6,12 +6,12 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Comparison (`wget` vs `wget2`)](#overview--comparison-wget-vs-wget2)
+1. [Overview & Comparison (`wget` vs `wget2`)](#overview-comparison-wget-vs-wget2)
 2. [Installation via Homebrew](#installation-via-homebrew)
 3. [Multi-Threaded High-Speed Downloads](#multi-threaded-high-speed-downloads)
-4. [Downloading Multiple URLs & Batch Lists](#downloading-multiple-urls--batch-lists)
-5. [High-Speed Website Mirroring & Crawling](#high-speed-website-mirroring--crawling)
-6. [Headers, Auth & SSL Configuration](#headers-auth--ssl-configuration)
+4. [Downloading Multiple URLs & Batch Lists](#downloading-multiple-urls-batch-lists)
+5. [High-Speed Website Mirroring & Crawling](#high-speed-website-mirroring-crawling)
+6. [Headers, Auth & SSL Configuration](#headers-auth-ssl-configuration)
 7. [Configuration File (`~/.wget2rc`)](#configuration-file-wget2rc)
 8. [Cheat Sheet Summary](#cheat-sheet-summary)
 

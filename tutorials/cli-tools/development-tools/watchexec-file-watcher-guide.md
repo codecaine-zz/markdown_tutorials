@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use `watchexec`?](#overview--why-use-watchexec)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Basic Usage & Watching Directories](#basic-usage--watching-directories)
-4. [Filtering by Extension & Ignore Rules (`-e` / `-i`)](#filtering-by-extension--ignore-rules--e---i)
-5. [Process Management: Restarts & Signals (`-r` / `-s`)](#process-management-restarts--signals--r---s)
-6. [Screen Clearing & Debouncing (`-c` / `-d`)](#screen-clearing--debouncing--c---d)
+1. [Overview & Why Use `watchexec`?](#overview-why-use-watchexec)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Basic Usage & Watching Directories](#basic-usage-watching-directories)
+4. [Filtering by Extension & Ignore Rules (`-e` / `-i`)](#filtering-by-extension-ignore-rules)
+5. [Process Management: Restarts & Signals (`-r` / `-s`)](#process-management-restarts-signals--r--s)
+6. [Screen Clearing & Debouncing (`-c` / `-d`)](#screen-clearing-debouncing--c--d)
 7. [Real-World Development Workflows](#real-world-development-workflows)
-8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 9. [Uninstallation](#uninstallation)
 
 ---

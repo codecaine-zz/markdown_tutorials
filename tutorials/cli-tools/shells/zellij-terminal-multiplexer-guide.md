@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `tmux` vs `zellij` Comparison](#overview--tmux-vs-zellij-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Starting Zellij & Interface Overview](#starting-zellij--interface-overview)
-4. [Modes & Keyboard Navigation (Pane, Tab, Resize, Scroll)](#modes--keyboard-navigation-pane-tab-resize-scroll)
-5. [Floating Panes & Stacked Layouts](#floating-panes--stacked-layouts)
-6. [Session Management & Resurrection](#session-management--resurrection)
+1. [Overview & `tmux` vs `zellij` Comparison](#overview-tmux-vs-zellij-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Starting Zellij & Interface Overview](#starting-zellij-interface-overview)
+4. [Modes & Keyboard Navigation (Pane, Tab, Resize, Scroll)](#modes-keyboard-navigation)
+5. [Floating Panes & Stacked Layouts](#floating-panes-stacked-layouts)
+6. [Session Management & Resurrection](#session-management-resurrection)
 7. [Custom Layouts (KDL Format)](#custom-layouts-kdl-format)
-8. [Configuration & Theme Customization](#configuration--theme-customization)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+8. [Configuration & Theme Customization](#configuration-theme-customization)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

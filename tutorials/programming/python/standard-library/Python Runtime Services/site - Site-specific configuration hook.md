@@ -8,7 +8,7 @@
 5. [5. `site.removesitedir(path)`](#5-siteremovesitedirpath)
 6. [6. `site.setusersitepackages(True | False)`](#6-sitesetusersitepackagestrue-false)
 7. [7. `site.clearsitepackages()`](#7-siteclearsitepackages)
-8. [8. `site.addsitedir(path, setpath=True)`](#8-siteaddsitedirpath-setpathtrue)
+8. [8. `site.addsitedir(path, setpath=True)`](#10-siteaddsitedirpath-setpathtrue)
 9. [9. `site.removesitedir(path, unsetsitepackages=False)`](#9-siteremovesitedirpath-unsetsitepackagesfalse)
 10. [10. `site.addsitedir(path, setpath=True)`](#10-siteaddsitedirpath-setpathtrue)
 

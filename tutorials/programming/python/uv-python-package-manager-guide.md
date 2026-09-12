@@ -6,15 +6,15 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & Why Use `uv`?](#overview--why-use-uv)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
+1. [Overview & Why Use `uv`?](#overview-why-use-uv)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
 3. [Installing Python Versions (`uv python`)](#installing-python-versions-uv-python)
-4. [Creating & Managing Virtual Environments (`uv venv`)](#creating--managing-virtual-environments-uv-venv)
+4. [Creating & Managing Virtual Environments (`uv venv`)](#creating-managing-virtual-environments-uv-venv)
 5. [High-Speed Package Management (`uv pip`)](#high-speed-package-management-uv-pip)
 6. [Universal Project Management (`uv init`, `uv add`, `uv run`)](#universal-project-management-uv-init-uv-add-uv-run)
 7. [Running Standalone CLI Tools with `uvx` (pipx Alternative)](#running-standalone-cli-tools-with-uvx-pipx-alternative)
-8. [Lockfiles & Deterministic Builds (`uv.lock`)](#lockfiles--deterministic-builds-uvlock)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+8. [Lockfiles & Deterministic Builds (`uv.lock`)](#lockfiles-deterministic-builds-uvlock)
+9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 10. [Uninstallation](#uninstallation)
 
 ---

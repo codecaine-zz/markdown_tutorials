@@ -9,7 +9,7 @@
 6. [6. Using `abc` with Inheritance and Multiple Abstract Methods](#6-using-abc-with-inheritance-and-multiple-abstract-methods)
 7. [7. Using `abc` with Inheritance and Multiple Abstract Methods in a Subclass](#7-using-abc-with-inheritance-and-multiple-abstract-methods-in-a-subclass)
 8. [8. Using `abc` with Inheritance and Multiple Abstract Methods in a Subclass with Class Attributes](#8-using-abc-with-inheritance-and-multiple-abstract-methods-in-a-subclass-with-class-attributes)
-9. [9. Using `abc` with Inheritance and Multiple Abstract Methods in a Subclass with Class Attributes and Properties](#9-using-abc-with-inheritance-and-multiple-abstract-methods-in-a-subclass-with-class-attributes-and-properties)
+9. [9. Using `abc` with Inheritance and Multiple Abstract Methods in a Subclass with Class Attributes and Properties](#10-using-abc-with-inheritance-and-multiple-abstract-methods-in-a-subclass-with-class-attributes-and-properties)
 10. [10. Using `abc` with Inheritance and Multiple Abstract Methods in a Subclass with Class Attributes and Properties](#10-using-abc-with-inheritance-and-multiple-abstract-methods-in-a-subclass-with-class-attributes-and-properties)
 
 

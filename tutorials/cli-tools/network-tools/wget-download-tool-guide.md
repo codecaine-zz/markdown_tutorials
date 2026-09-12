@@ -7,12 +7,12 @@
 ## 📚 Table of Contents
 
 1. [Installation via Homebrew](#installation-via-homebrew)
-2. [Essential Copy & Paste One-Liners](#essential-copy--paste-one-liners)
-3. [Website Mirroring & Offline Archiving](#website-mirroring--offline-archiving)
-4. [Batch Downloading & Rate Throttling](#batch-downloading--rate-throttling)
-5. [Authentication, Headers & Cookies](#authentication-headers--cookies)
-6. [File Filtering & Pattern Matching](#file-filtering--pattern-matching)
-7. [SSL/TLS, Proxies & Troubleshooting](#ssltls-proxies--troubleshooting)
+2. [Essential Copy & Paste One-Liners](#essential-copy-paste-one-liners)
+3. [Website Mirroring & Offline Archiving](#website-mirroring-offline-archiving)
+4. [Batch Downloading & Rate Throttling](#batch-downloading-rate-throttling)
+5. [Authentication, Headers & Cookies](#authentication-headers-cookies)
+6. [File Filtering & Pattern Matching](#file-filtering-pattern-matching)
+7. [SSL/TLS, Proxies & Troubleshooting](#ssltls-proxies-troubleshooting)
 8. [Practical Automation Scripts](#practical-automation-scripts)
 9. [Cheat Sheet Summary](#cheat-sheet-summary)
 

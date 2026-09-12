@@ -6,14 +6,14 @@
 
 ## 📚 Table of Contents
 
-1. [Overview & `tree` vs `broot` Comparison](#overview--tree-vs-broot-comparison)
-2. [Prerequisites & Homebrew Installation](#prerequisites--homebrew-installation)
-3. [Shell Integration & Setup (`br` Function)](#shell-integration--setup-br-function)
-4. [Interactive Navigation & Fuzzy Search](#interactive-navigation--fuzzy-search)
-5. [Disk Space & Size Analysis Mode (`-s` / `--sizes`)](#disk-space--size-analysis-mode--s---sizes)
-6. [Git Status & Permissions Modes](#git-status--permissions-modes)
-7. [Verbs, Shortcuts & File Operations](#verbs-shortcuts--file-operations)
-8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
+1. [Overview & `tree` vs `broot` Comparison](#overview-tree-vs-broot-comparison)
+2. [Prerequisites & Homebrew Installation](#prerequisites-homebrew-installation)
+3. [Shell Integration & Setup (`br` Function)](#shell-integration-setup-br-function)
+4. [Interactive Navigation & Fuzzy Search](#interactive-navigation-fuzzy-search)
+5. [Disk Space & Size Analysis Mode (`-s` / `--sizes`)](#disk-space-size-analysis-mode--s---sizes)
+6. [Git Status & Permissions Modes](#git-status-permissions-modes)
+7. [Verbs, Shortcuts & File Operations](#verbs-shortcuts-file-operations)
+8. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet-useful-shell-aliases)
 9. [Uninstallation](#uninstallation)
 
 ---

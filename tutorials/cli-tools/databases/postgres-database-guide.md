@@ -7,18 +7,18 @@ A comprehensive, practical guide to using the PostgreSQL command-line client (`p
 ## Table of Contents
 
 1. [Prerequisites](#1-prerequisites)
-2. [Installation & Service Management](#2-installation--service-management)
+2. [Installation & Service Management](#2-installation-service-management)
 3. [Connecting with `psql`](#3-connecting-with-psql)
 4. [Essential Meta-Commands (`\l`, `\c`, `\dt`, `\d`)](#4-essential-meta-commands-l-c-dt-d)
-5. [Core DDL & CRUD SQL Operations](#5-core-ddl--crud-sql-operations)
-6. [Non-Interactive CLI Execution & Formatting](#6-non-interactive-cli-execution--formatting)
+5. [Core DDL & CRUD SQL Operations](#5-core-ddl-crud-sql-operations)
+6. [Non-Interactive CLI Execution & Formatting](#6-non-interactive-cli-execution-formatting)
 7. [JSONB Data Manipulation](#7-jsonb-data-manipulation)
-8. [Advanced SQL: CTEs & Window Functions](#8-advanced-sql-ctes--window-functions)
-9. [Performance Tuning & Query Profiling (`EXPLAIN ANALYZE`)](#9-performance-tuning--query-profiling-explain-analyze)
-10. [User Management & Security](#10-user-management--security)
-11. [Database Monitoring & Session Management](#11-database-monitoring--session-management)
-12. [Backups & Restores (`pg_dump` & `pg_restore`)](#12-backups--restores-pg_dump--pg_restore)
-13. [VSCode Integration & Script Automation](#13-vscode-integration--script-automation)
+8. [Advanced SQL: CTEs & Window Functions](#8-advanced-sql-ctes-window-functions)
+9. [Performance Tuning & Query Profiling (`EXPLAIN ANALYZE`)](#9-performance-tuning-query-profiling-explain-analyze)
+10. [User Management & Security](#10-user-management-security)
+11. [Database Monitoring & Session Management](#11-database-monitoring-session-management)
+12. [Backups & Restores (`pg_dump` & `pg_restore`)](#12-backups-restores-pg_dump-pg_restore)
+13. [VSCode Integration & Script Automation](#13-vscode-integration-script-automation)
 14. [Command Quick Reference](#14-command-quick-reference)
 
 ---
