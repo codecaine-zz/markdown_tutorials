@@ -58,8 +58,8 @@ Every machine learning model (like a linear model or a deep neural network) star
 
 ### The Speedometer Analogy
 Imagine you drive **60 miles in 1 hour**.
-- Your **Average Speed** was $60\text{ mph}$.
-- But did you travel at exactly $60\text{ mph}$ the whole time? No! You stopped at red lights ($0\text{ mph}$) and drove on highways ($75\text{ mph}$).
+- Your **Average Speed** was 60 mph.
+- But did you travel at exactly 60 mph the whole time? No! You stopped at red lights (0 mph) and drove on highways (75 mph).
 - If a police officer clocks your speed with a radar gun, they don't care about your 1-hour average. They want to know: **"How fast were you moving at this exact instant?"**
 
 **A derivative is just a speedometer for mathematical functions.** It tells you the instantaneous rate of change (the **Slope**) at one exact point on a curve.
@@ -67,7 +67,10 @@ Imagine you drive **60 miles in 1 hour**.
 ---
 
 ### Slopes and What They Tell Us
-Remember the slope formula from school: $\text{Slope} = \frac{\text{Rise}}{\text{Run}} = \frac{\Delta y}{\Delta x}$.
+Remember the slope formula from school:
+```
+Slope = Rise / Run = Δy / Δx
+```
 
 ```
    y |          /  <-- Positive Slope (Going uphill: x goes up -> y goes up)
@@ -78,32 +81,38 @@ Remember the slope formula from school: $\text{Slope} = \frac{\text{Rise}}{\text
      +---------------- x
 ```
 
-- **Positive Derivative ($> 0$):** As $x$ increases, $y$ goes UP.
-- **Negative Derivative ($< 0$):** As $x$ increases, $y$ goes DOWN.
-- **Zero Derivative ($= 0$):** The curve is completely flat at this point! This means you are at the **peak of a hill** or the **bottom of a valley (the minimum error)**!
+- **Positive Derivative (> 0):** As x increases, y goes UP.
+- **Negative Derivative (< 0):** As x increases, y goes DOWN.
+- **Zero Derivative (= 0):** The curve is completely flat at this point! This means you are at the **peak of a hill** or the **bottom of a valley (the minimum error)**!
 
 ---
 
 ## The Chain Rule: The Magic Behind Neural Networks
 
 Neural networks consist of multiple layers hooked together in a chain:
-$$\text{Input } X \longrightarrow \text{Layer 1 } (A) \longrightarrow \text{Layer 2 } (B) \longrightarrow \text{Output / Error } (E)$$
+```
+Input X → Layer 1 (A) → Layer 2 (B) → Output / Error (E)
+```
 
 If you change something at the beginning, how does it ripple through to change the error at the end?
 
 ### The Bicycle Gears Analogy
 Imagine a bicycle with three connected gears:
-- When Gear **A** turns $1$ revolution, it causes Gear **B** to turn **$3$ revolutions**.
-- When Gear **B** turns $1$ revolution, it causes Gear **C** to turn **$2$ revolutions**.
+- When Gear **A** turns 1 revolution, it causes Gear **B** to turn **3 revolutions**.
+- When Gear **B** turns 1 revolution, it causes Gear **C** to turn **2 revolutions**.
 
-*Question:* If you turn Gear **A** by $1$ revolution, how many revolutions will Gear **C** turn?  
+*Question:* If you turn Gear **A** by 1 revolution, how many revolutions will Gear **C** turn?  
 You simply multiply their rates of change together:
-$$3 \times 2 = 6 \text{ revolutions!}$$
+```
+3 × 2 = 6 revolutions!
+```
 
 ### Why It Powers Backpropagation
-The **Chain Rule** states: to find how much the final error ($E$) changes when you tweak an early weight ($W$), **simply multiply the rates of change across all connecting steps**:
+The **Chain Rule** states: to find how much the final error (E) changes when you tweak an early weight (W), **simply multiply the rates of change across all connecting steps**:
 
-$$\frac{\partial E}{\partial W} = \frac{\partial E}{\partial B} \times \frac{\partial B}{\partial A} \times \frac{\partial A}{\partial W}$$
+```
+∂E/∂W = (∂E/∂B) × (∂B/∂A) × (∂A/∂W)
+```
 
 This simple multiplication rule is called **Backpropagation**—the algorithm that trains modern deep learning models like GPT-4!
 
@@ -114,7 +123,7 @@ This simple multiplication rule is called **Backpropagation**—the algorithm th
 In real life, errors depend on thousands or millions of parameters, not just one.
 
 ### Freezing All Other Variables
-A **Partial Derivative** ($\frac{\partial f}{\partial x}$) sounds fancy, but the trick is wonderfully simple:  
+A **Partial Derivative** (∂f/∂x) sounds fancy, but the trick is wonderfully simple:  
 **Pretend all other variables are frozen in ice (constants), and treat only the one variable you care about as changing!**
 
 If your recipe error depends on both **Sugar** and **Salt**:
@@ -123,7 +132,7 @@ If your recipe error depends on both **Sugar** and **Salt**:
 ---
 
 ### What is the Gradient?
-The **Gradient** (written with the symbol $\nabla$) is simply **all the partial derivatives packaged together into a single vector arrow**.
+The **Gradient** (written with the nabla symbol **∇**) is simply **all the partial derivatives packaged together into a single vector arrow**.
 
 > 💡 **The Cardinal Rule of the Gradient:**  
 > The Gradient vector **always points in the direction of the STEEPEST UPHILL CLIMB**.  
@@ -158,11 +167,11 @@ Error
 ---
 
 ### The Learning Rate: Small Steps vs Giant Leaps
-How big should each step be? In machine learning, step size is controlled by the **Learning Rate ($\alpha$)**:
+How big should each step be? In machine learning, step size is controlled by the **Learning Rate (α, alpha)**:
 
-- **Learning Rate Too Small ($\alpha = 0.00001$):** You take microscopic steps. The training will take days or weeks to reach the bottom!
-- **Learning Rate Too Big ($\alpha = 5.0$):** You take giant leaps. You completely overshoot the valley, bounce wildly up the other side, and the error explodes!
-- **Just Right ($\alpha = 0.01$):** Smooth, steady convergence to the lowest error.
+- **Learning Rate Too Small (α = 0.00001):** You take microscopic steps. The training will take days or weeks to reach the bottom!
+- **Learning Rate Too Big (α = 5.0):** You take giant leaps. You completely overshoot the valley, bounce wildly up the other side, and the error explodes!
+- **Just Right (α = 0.01):** Smooth, steady convergence to the lowest error.
 
 ---
 
@@ -223,7 +232,7 @@ Final discovered value: x = 4.0
 - **Learning Rate:** The size of each step taken downhill.
 
 ### 💪 Test Yourself!
-1. If the slope at your current position is positive ($+10$), which way should you adjust $x$ to lower the error?  
-   *(Answer: Decrease $x$ (move left), because positive slope means moving right goes uphill!)*
+1. If the slope at your current position is positive (+10), which way should you adjust x to lower the error?  
+   *(Answer: Decrease x (move left), because positive slope means moving right goes uphill!)*
 2. What happens if your learning rate is set way too high?  
    *(Answer: The algorithm will overshoot the valley and diverge or explode!)*

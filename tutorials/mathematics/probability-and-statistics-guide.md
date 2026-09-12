@@ -31,7 +31,7 @@
 People often lump these two subjects together, but they are opposite sides of the same coin:
 
 - **Probability looks forward:** You know how the machine works, and you predict what will happen.  
-  *Example:* "You hold a fair 6-sided die. What is the chance of rolling a 4?" (Answer: Exactly $1$ in $6$, or $16.6\%$).
+  *Example:* "You hold a fair 6-sided die. What is the chance of rolling a 4?" (Answer: Exactly 1 in 6, or 16.6%).
 - **Statistics looks backward:** You have observed real-world data, and you try to deduce how the machine works.  
   *Example:* "You roll a die 100 times, and it lands on 4 forty times. Is this die loaded, or was it just unusual luck?"
 
@@ -46,13 +46,13 @@ Imagine you run an e-commerce website with 100,000 orders. You cannot read throu
 - **Median:** Sort all numbers from smallest to largest and pick the exact middle one.
 
 **Why the difference matters immensely:**  
-Imagine a small coffee shop with 10 patrons. Each person makes $\$50,000$ per year.
-- **Mean income:** $\$50,000$
-- **Median income:** $\$50,000$
+Imagine a small coffee shop with 10 patrons. Each person makes $50,000 per year.
+- **Mean income:** $50,000
+- **Median income:** $50,000
 
 Now, billionaire Elon Musk walks through the door.
-- The **Median income** is still $\$50,000$ (the middle person hasn't changed).
-- The **Mean income** suddenly jumps to **$\$100,000,000$ per person**!
+- The **Median income** is still $50,000 (the middle person hasn't changed).
+- The **Mean income** suddenly jumps to **$100,000,000 per person**!
 
 > 💡 **Developer Rule:** Whenever you are measuring user data with extreme outliers (like website latency, server response times, or salaries), **always prefer the Median (p50) over the Mean**, because a single slow request will distort the mean!
 
@@ -67,9 +67,9 @@ Consider two software development teams:
 
 Both teams have the same average, but Team A is consistent, while Team B is erratic and unpredictable!
 
-- **Standard Deviation ($\sigma$):** A single number telling you on average how far each data point strays from the mean.
-  - Team A has a low standard deviation ($\approx 2\text{ms}$).
-  - Team B has a high standard deviation ($\approx 95\text{ms}$).
+- **Standard Deviation (σ, sigma):** A single number telling you on average how far each data point strays from the mean.
+  - Team A has a low standard deviation (≈ 2ms).
+  - Team B has a high standard deviation (≈ 95ms).
 
 ---
 
@@ -84,10 +84,12 @@ When you hear a web server has a **"p99 latency of 250ms"**, what does that mean
 ## Probability Fundamentals: Odds, Independent Events, and Conditions
 
 ### 1. Probability Range
-Probability is always a number between **$0$** (Impossible) and **$1$** (Guaranteed):
-$$P(\text{Event}) = \frac{\text{Number of Ways it Can Happen}}{\text{Total Number of Possible Outcomes}}$$
+Probability is always a number between **0** (Impossible) and **1** (Guaranteed):
+```
+P(Event) = Number of Ways it Can Happen / Total Number of Possible Outcomes
+```
 
-Flipping heads on a coin: $\frac{1}{2} = 0.5$ (or $50\%$).
+Flipping heads on a coin: 1/2 = 0.5 (or 50%).
 
 ### 2. Independent vs Dependent Events
 - **Independent:** The outcome of the first event has zero effect on the second.  
@@ -106,8 +108,8 @@ It is simply a mathematical formula for **updating your estimate of the probabil
 This classic example proves why human intuition fails at probability, and why Bayes' rule is essential:
 
 **The Setup:**
-1. A rare disease affects **$1$ in $1,000$ people** in the general population.
-2. A laboratory develops a test that is **$99\%$ accurate** (if you have the disease, it tests positive $99\%$ of the time; if you are healthy, it tests negative $99\%$ of the time).
+1. A rare disease affects **1 in 1,000 people** in the general population.
+2. A laboratory develops a test that is **99% accurate** (if you have the disease, it tests positive 99% of the time; if you are healthy, it tests negative 99% of the time).
 3. You take the test, and **it comes back POSITIVE**.
 
 *Question:* What is the probability that you actually have the disease?  
@@ -120,10 +122,12 @@ Most people instinctively say *"99%"*. **The real answer is only about 9%!**
 - We test everyone:
   - Out of the 100 sick people, **99 test positive**.
   - Out of the 99,900 healthy people, the 1% false positive rate means **999 healthy people ALSO test positive!**
-- Total positive test results: $99 + 999 = 1,098$ positive tests.
+- Total positive test results: 99 + 999 = 1,098 positive tests.
 - Out of those 1,098 positive tests, only **99 people actually have the disease**:
 
-$$\text{Actual Chance} = \frac{99}{1,098} \approx 9\%!$$
+```
+Actual Chance = 99 / 1,098 ≈ 9%!
+```
 
 This is the exact mathematical foundation behind **Spam Filters**: an email containing the word "viagra" might usually be spam, but if you work at a pharmaceutical company, the filter must update its prior probabilities before marking it as junk!
 
@@ -135,9 +139,9 @@ This is the exact mathematical foundation behind **Spam Filters**: an email cont
 In nature and society, when many small, independent random factors add up, the result almost always forms a smooth bell curve (e.g., human heights, shoe sizes, factory part tolerances).
 
 **The 68–95–99.7 Rule:**
-- **$68\%$** of all data falls within $1$ standard deviation of the mean.
-- **$95\%$** of all data falls within $2$ standard deviations.
-- **$99.7\%$** of all data falls within $3$ standard deviations.
+- **68%** of all data falls within 1 standard deviation of the mean.
+- **95%** of all data falls within 2 standard deviations.
+- **99.7%** of all data falls within 3 standard deviations.
 
 ```
             Mean
@@ -169,12 +173,12 @@ Suppose you change your website checkout button from **Blue** to **Green**.
 Did the green button actually improve sales, or was it just random luck?
 
 ### What on Earth is a p-value?
-- **Null Hypothesis ($H_0$):** The skeptical assumption that *"There is zero real difference; any jump in sales was pure dumb luck."*
+- **Null Hypothesis (H₀):** The skeptical assumption that *"There is zero real difference; any jump in sales was pure dumb luck."*
 - **The p-value:** The probability that we would see a difference this big (or bigger) purely by random chance if the null hypothesis were true.
 
 **The Golden Standard:**
-- If **$p < 0.05$ (5%)**: It is statistically significant! There is less than a 5% chance this occurred by luck alone. We reject the null hypothesis and ship the green button!
-- If **$p \ge 0.05$**: We cannot be confident. The difference could easily be random noise.
+- If **p < 0.05 (5%)**: It is statistically significant! There is less than a 5% chance this occurred by luck alone. We reject the null hypothesis and ship the green button!
+- If **p ≥ 0.05**: We cannot be confident. The difference could easily be random noise.
 
 ---
 
@@ -210,11 +214,11 @@ print(f"90th Percentile (p90): {sorted_lat[p90_index]}ms")
 - **Mean:** The arithmetic average (vulnerable to extreme outliers).
 - **Median (p50):** The middle value (reliable for latency and incomes).
 - **Standard Deviation:** How spread out the values are from the average.
-- **p-value:** Probability of seeing a result by pure random luck ($p < 0.05$ is standard).
+- **p-value:** Probability of seeing a result by pure random luck (p < 0.05 is standard).
 - **Independent Events:** One event has no bearing on another.
 
 ### 💪 Test Yourself!
-1. If 9 people make $\$40,000$ and 1 person makes $\$1,000,000$, which is higher: the Mean or the Median?  
+1. If 9 people make $40,000 and 1 person makes $1,000,000, which is higher: the Mean or the Median?  
    *(Answer: The **Mean** is much higher, pulled up by the single large outlier!)*
 2. If you flip a fair coin 5 times and get Heads every time, what is the probability that the next flip will be Heads?  
-   *(Answer: Still exactly **$50\%$**! Coins have no memory; each flip is an independent event!)*
+   *(Answer: Still exactly **50%**! Coins have no memory; each flip is an independent event!)*

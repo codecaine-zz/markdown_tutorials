@@ -2,7 +2,7 @@
 
 ## A Friendly, Visual Guide to Understanding How Code Scales
 
-> **Welcome!** If you've ever seen terms like $O(n)$, $O(\log n)$, or "asymptotic complexity" and felt your eyes glaze over, take a deep breath. Big-O notation is not about complex calculus; it's simply a universal language programmers use to answer one question:  
+> **Welcome!** If you've ever seen terms like O(n), O(log n), or "asymptotic complexity" and felt your eyes glaze over, take a deep breath. Big-O notation is not about complex calculus; it's simply a universal language programmers use to answer one question:  
 > **"If my data gets 1,000 times bigger, how much slower will my program run?"**
 
 ---
@@ -34,12 +34,12 @@ Imagine you have a file on your computer and want to send it to a friend who liv
 - If the file is **1 Megabyte**, it uploads in **1 second**.
 - If the file is **1 Gigabyte**, it uploads in **15 minutes**.
 - If the file is **10 Terabytes**, it takes **several weeks**!
-- As the file size ($n$) gets bigger, the time required grows proportionally. This is **$O(n)$ Linear Time**.
+- As the file size (n) gets bigger, the time required grows proportionally. This is **O(n) Linear Time**.
 
 ### Method 2: Put a Hard Drive in Your Car and Drive It Over
 - If you copy **1 Megabyte** onto a USB drive and drive 20 miles, it takes **30 minutes**.
 - If you copy **10 Terabytes** onto an external hard drive and drive 20 miles, it still takes **30 minutes**!
-- The transfer time does **not care** how big the file is. This is **$O(1)$ Constant Time**.
+- The transfer time does **not care** how big the file is. This is **O(1) Constant Time**.
 
 For small files (1MB), the internet is faster. But for massive files (10TB), putting a hard drive in your car beats the fastest internet on Earth!  
 **Big-O is the language that describes this difference as things grow.**
@@ -52,10 +52,10 @@ When we say "this algorithm takes 5 seconds", that doesn't tell us much:
 - 5 seconds on a supercomputer? Or on a 10-year-old cheap smartphone?
 - 5 seconds with 10 users? Or with 10 million users?
 
-Because computers have different CPUs, RAM, and internet speeds, computer scientists don't measure performance in seconds. Instead, they measure **how the number of steps grows compared to the input size ($n$)**.
+Because computers have different CPUs, RAM, and internet speeds, computer scientists don't measure performance in seconds. Instead, they measure **how the number of steps grows compared to the input size (n)**.
 
-- We use the letter **$n$** to mean **"the amount of data"** (number of items in an array, number of lines in a file, number of users in a database).
-- **Big-O ($O$)** gives us the **worst-case scenario** (the safety guarantee: "It will never be worse than this").
+- We use the letter **n** to mean **"the amount of data"** (number of items in an array, number of lines in a file, number of users in a database).
+- **Big-O (O)** gives us the **worst-case scenario** (the safety guarantee: "It will never be worse than this").
 
 ---
 
@@ -139,7 +139,7 @@ def find_item(items, target):
 
 ### O(n log n) - Linearithmic Time (Efficient Sorting)
 **The Analogy:** Sorting a messy deck of cards. You divide the deck into two halves, sort each half, and merge them back together.
-Almost all modern programming language built-in sort functions (e.g., `.sort()` in JavaScript or Python's `sorted()`) run in $O(n \log n)$ time.
+Almost all modern programming language built-in sort functions (e.g., `.sort()` in JavaScript or Python's `sorted()`) run in O(n log n) time.
 
 ```python
 # Python's built-in TimSort runs in O(n log n)
@@ -150,10 +150,10 @@ sorted_numbers = sorted(numbers)
 ---
 
 ### O(n^2) - Quadratic Time (The Handshake Problem)
-**The Analogy:** You walk into a room with $n$ people, and every single person must shake hands with every other person.
-- If there are 5 people: $5 \times 5 = 25$ handshakes.
-- If there are 50 people: $50 \times 50 = 2,500$ handshakes!
-- If there are 1,000 people: $1,000,000$ operations!
+**The Analogy:** You walk into a room with n people, and every single person must shake hands with every other person.
+- If there are 5 people: 5 × 5 = 25 handshakes.
+- If there are 50 people: 50 × 50 = 2,500 handshakes!
+- If there are 1,000 people: 1,000,000 operations!
 
 In code, this usually happens when you have a **loop inside another loop (nested loops)**:
 
@@ -165,15 +165,15 @@ def print_all_pairs(items):
             print(i, j)
 ```
 
-> ⚠️ **Warning:** If an array has 100,000 items, an $O(n^2)$ algorithm will perform **10 billion operations**, easily freezing your application!
+> ⚠️ **Warning:** If an array has 100,000 items, an O(n²) algorithm will perform **10 billion operations**, easily freezing your application!
 
 ---
 
 ### O(2^n) and O(n!) - Exponential and Factorial (The Danger Zone)
 **The Analogy:** Trying every possible combination on an ATM PIN or trying to visit every city in the world on a road trip without retracing your steps (The Traveling Salesperson problem).
-- For $n = 10$, $2^{10} = 1,024$ operations.
-- For $n = 30$, $2^{30} = 1,073,741,824$ operations (over 1 billion!).
-- For $n = 100$, the operations exceed the number of atoms in the known universe!
+- For n = 10, 2¹⁰ = 1,024 operations.
+- For n = 30, 2³⁰ = 1,073,741,824 operations (over 1 billion!).
+- For n = 100, the operations exceed the number of atoms in the known universe!
 
 ---
 
@@ -192,16 +192,16 @@ for item in items: # n steps
 for item in items: # n steps
     pass
 ```
-That's $2n$ steps. In Big-O, we **drop the 2** and just say **$O(n)$**. Why? Because as $n$ grows to a billion, multiplying by 2 doesn't change the fundamental growth shape.
+That's 2n steps. In Big-O, we **drop the 2** and just say **O(n)**. Why? Because as n grows to a billion, multiplying by 2 doesn't change the fundamental growth shape.
 
 ### Rule 3: Drop Lower-Order Terms (Keep Only the Biggest Beast)
-If a function does $n^2 + 5n + 100$ steps:
-- If $n = 1,000$:
-  - $n^2 = 1,000,000$
-  - $5n = 5,000$
-  - $100 = 100$
-The $n^2$ accounts for 99.5% of the work. The rest is pocket change.  
-**Result: We throw away the rest and call it $O(n^2)$.**
+If a function does n² + 5n + 100 steps:
+- If n = 1,000:
+  - n² = 1,000,000
+  - 5n = 5,000
+  - 100 = 100
+The n² accounts for 99.5% of the work. The rest is pocket change.  
+**Result: We throw away the rest and call it O(n²).**
 
 ---
 
@@ -209,8 +209,8 @@ The $n^2$ accounts for 99.5% of the work. The rest is pocket change.
 
 Big-O isn't just for execution time! It also measures **Space Complexity** (how much extra RAM memory your algorithm consumes):
 
-- **$O(1)$ Space:** Your function uses a couple of fixed variables (`total = 0`), regardless of how large the input is.
-- **$O(n)$ Space:** Your function creates a brand-new copy of the array or stores a cache for every single input item.
+- **O(1) Space:** Your function uses a couple of fixed variables (`total = 0`), regardless of how large the input is.
+- **O(n) Space:** Your function creates a brand-new copy of the array or stores a cache for every single input item.
 
 > 💡 **The Great Engineering Trade-Off:** Often in programming, you can make your code run **faster** (lower Time Complexity) by using a bit more **memory** (higher Space Complexity), such as using a Hash Map/Dictionary!
 
@@ -220,16 +220,16 @@ Big-O isn't just for execution time! It also measures **Space Complexity** (how 
 
 | Data Structure | Access by Index | Search for Value | Insert at End | Insert at Beginning |
 | :--- | :--- | :--- | :--- | :--- |
-| **Array / Python List** | $O(1)$ | $O(n)$ | $O(1)$ | $O(n)$ (must shift items) |
-| **Hash Map / Object / Dict** | $O(1)$ | $O(1)$ (by key) | $O(1)$ | $O(1)$ |
-| **Linked List** | $O(n)$ | $O(n)$ | $O(1)$ (with tail) | $O(1)$ |
-| **Binary Search Tree** | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ | $O(\log n)$ |
+| **Array / Python List** | O(1) | O(n) | O(1) | O(n) (must shift items) |
+| **Hash Map / Object / Dict** | O(1) | O(1) (by key) | O(1) | O(1) |
+| **Linked List** | O(n) | O(n) | O(1) (with tail) | O(1) |
+| **Binary Search Tree** | O(log n) | O(log n) | O(log n) | O(log n) |
 
 | Sorting Algorithm | Best Case | Average Case | Worst Case | Space Complexity |
 | :--- | :--- | :--- | :--- | :--- |
-| **Quick Sort** | $O(n \log n)$ | $O(n \log n)$ | $O(n^2)$ | $O(\log n)$ |
-| **Merge Sort** | $O(n \log n)$ | $O(n \log n)$ | $O(n \log n)$ | $O(n)$ |
-| **Bubble Sort** | $O(n)$ | $O(n^2)$ | $O(n^2)$ | $O(1)$ |
+| **Quick Sort** | O(n log n) | O(n log n) | O(n²) | O(log n) |
+| **Merge Sort** | O(n log n) | O(n log n) | O(n log n) | O(n) |
+| **Bubble Sort** | O(n) | O(n²) | O(n²) | O(1) |
 
 ---
 
@@ -242,7 +242,7 @@ def check_first_two(arr):
     print(arr[1])
 ```
 *What is the Big-O?*  
-👉 **Answer:** **$O(1)$ Constant Time**. It only touches two items, whether the array has 2 items or 20 million items.
+👉 **Answer:** **O(1) Constant Time**. It only touches two items, whether the array has 2 items or 20 million items.
 
 ### Challenge 2:
 ```python
@@ -253,7 +253,7 @@ def print_everything_twice(arr):
         print(y)
 ```
 *What is the Big-O?*  
-👉 **Answer:** **$O(n)$ Linear Time**. It does $n + n = 2n$ steps. We drop the constant 2, leaving $O(n)$.
+👉 **Answer:** **O(n) Linear Time**. It does n + n = 2n steps. We drop the constant 2, leaving O(n).
 
 ### Challenge 3:
 ```python
@@ -263,4 +263,4 @@ def print_all_combinations(arr):
             print(i, j)
 ```
 *What is the Big-O?*  
-👉 **Answer:** **$O(n^2)$ Quadratic Time**. A loop running $n$ times inside another loop running $n$ times means $n \times n = n^2$ operations.
+👉 **Answer:** **O(n²) Quadratic Time**. A loop running n times inside another loop running n times means n × n = n² operations.

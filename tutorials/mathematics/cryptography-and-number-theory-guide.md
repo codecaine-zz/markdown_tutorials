@@ -38,12 +38,14 @@ To protect messages, we need **One-Way Mathematical Trapdoors**:
 ## Modular Arithmetic: The Clock Math of Cryptography
 
 ### The 12-Hour Clock Analogy
-**Modulo** (written as `%` in programming or $\pmod n$ in mathematics) simply means **the remainder after division**.
+**Modulo** (written as `%` in programming or `mod n` in mathematics) simply means **the remainder after division**.
 
 You already use modular arithmetic every single day of your life when looking at a clock!
-- If the current time is **$9\text{ o'clock}$**, and you wait **$5\text{ hours}$**, what time is it?
+- If the current time is **9 o'clock**, and you wait **5 hours**, what time is it?
 - You don't say *"It's 14 o'clock"*. You wrap around after 12:
-$$9 + 5 = 14 \longrightarrow 14 \pmod{12} = 2\text{ o'clock!}$$
+```
+9 + 5 = 14  →  14 mod 12 = 2 o'clock!
+```
 
 ```
         12
@@ -56,21 +58,25 @@ $$9 + 5 = 14 \longrightarrow 14 \pmod{12} = 2\text{ o'clock!}$$
 ```
 
 ### More Modulo Examples:
-- $17 \pmod 5 = \mathbf{2}$ (because $5 \times 3 = 15$, with a remainder of $2$).
-- $20 \pmod{10} = \mathbf{0}$ (divides evenly with no remainder).
-- $7 \pmod{10} = \mathbf{7}$ (doesn't divide at all, 7 remains).
+- 17 mod 5 = **2** (because 5 × 3 = 15, with a remainder of 2).
+- 20 mod 10 = **0** (divides evenly with no remainder).
+- 7 mod 10 = **7** (doesn't divide at all, 7 remains).
 
 ---
 
 ### Why Modulo Creates a One-Way Street
 In regular arithmetic, if I tell you:
-$$x + 5 = 14$$
-You can easily reverse it: $x = 14 - 5 = 9$.
+```
+x + 5 = 14
+```
+You can easily reverse it: x = 14 - 5 = 9.
 
 But in modular arithmetic, if I tell you:
-$$x \pmod{12} = 2$$
-What is $x$?  
-It could be $2$, or $14$, or $26$, or $38$, or $1,000,000,010$!  
+```
+x mod 12 = 2
+```
+What is x?  
+It could be 2, or 14, or 26, or 38, or 1,000,000,010!  
 **Information was destroyed in the wrap-around.** Without knowing how many full laps around the clock were made, you cannot reverse the answer. This is why modulo is the bedrock of cryptography!
 
 ---
@@ -78,12 +84,14 @@ It could be $2$, or $14$, or $26$, or $38$, or $1,000,000,010$!
 ## Prime Numbers: The Indestructible Atoms of Math
 
 A **Prime Number** is a whole number greater than 1 that can only be divided evenly by 1 and itself:
-$$2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, \dots$$
+```
+2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, ...
+```
 
 ### The Giant Multiplication Trapdoor
 Computers are fantastic at multiplication, but terrible at factoring huge numbers:
-1. If I give a computer two large prime numbers with 300 digits each ($P$ and $Q$), multiplying them together into a 600-digit number ($N = P \times Q$) takes **less than 1 millisecond**.
-2. But if I give that 600-digit number $N$ to the fastest supercomputers on Earth and say: *"Find the original two prime numbers that made this,"* it would take **billions of years** to find them by trial and error!
+1. If I give a computer two large prime numbers with 300 digits each (P and Q), multiplying them together into a 600-digit number (N = P × Q) takes **less than 1 millisecond**.
+2. But if I give that 600-digit number N to the fastest supercomputers on Earth and say: *"Find the original two prime numbers that made this,"* it would take **billions of years** to find them by trial and error!
 
 > 💡 **The Secret:** In RSA encryption, the public key is the product ($N$). The private key is the two original secret primes ($P$ and $Q$).
 
@@ -97,12 +105,12 @@ The **Greatest Common Divisor (GCD)** of two numbers is the largest number that 
 
 ### Euclid's Elegant Algorithm (300 BC)
 Instead of listing every factor, Greek mathematician Euclid proved a genius shortcut:  
-**$\text{GCD}(A, B)$ is the exact same as $\text{GCD}(B, A \pmod B)$!**
+**GCD(A, B) is the exact same as GCD(B, A mod B)!**
 
-Let's find $\text{GCD}(252, 105)$:
-1. $252 \pmod{105} = 42$
-2. $105 \pmod{42} = 21$
-3. $42 \pmod{21} = 0$ (Remainder is 0!)
+Let's find GCD(252, 105):
+1. 252 mod 105 = 42
+2. 105 mod 42 = 21
+3. 42 mod 21 = 0 (Remainder is 0!)
 4. **Answer:** **21**! It only took 3 quick steps!
 
 ---
@@ -154,8 +162,8 @@ Invented in 1976, this uses the famous **Paint Mixing Analogy**:
 4. Bob mixes Yellow + Green = **Lime**, and sends Lime over the internet to Alice.
 5. Eve intercepts both Orange and Lime. But in paint (and in modular arithmetic), **it is impossible to unmix the colors** to isolate the original secret Red and Green!
 6. Now:
-   - Alice takes Bob's Lime and adds her secret Red $\longrightarrow$ **Brown**.
-   - Bob takes Alice's Orange and adds his secret Green $\longrightarrow$ **The EXACT SAME Brown**!
+   - Alice takes Bob's Lime and adds her secret Red → **Brown**.
+   - Bob takes Alice's Orange and adds his secret Green → **The EXACT SAME Brown**!
 7. **Alice and Bob now share an identical secret color (Brown) without ever sending it across the wire!**
 
 ---
@@ -164,13 +172,17 @@ Invented in 1976, this uses the famous **Paint Mixing Analogy**:
 
 Named after its inventors (Rivest, Shamir, Adleman in 1977), RSA is based on modular powers:
 
-- You choose two massive primes $p$ and $q$, and calculate $n = p \times q$.
-- **Encryption:** Take a message number $m$, and calculate:
-  $$\text{Ciphertext } c = m^e \pmod n$$
-- **Decryption:** Take the scrambled text $c$, and calculate:
-  $$\text{Original Message } m = c^d \pmod n$$
+- You choose two massive primes `p` and `q`, and calculate `n = p × q`.
+- **Encryption:** Take a message number `m`, and calculate:
+  ```
+  Ciphertext: c = (m^e) mod n
+  ```
+- **Decryption:** Take the scrambled text `c`, and calculate:
+  ```
+  Original Message: m = (c^d) mod n
+  ```
 
-Because of Euler's Totient Theorem, calculating the secret decryption number $d$ requires knowing $p$ and $q$. Since nobody on Earth can factor $n$ into $p$ and $q$, the message remains unbreakable!
+Because of Euler's Totient Theorem, calculating the secret decryption number `d` requires knowing `p` and `q`. Since nobody on Earth can factor `n` into `p` and `q`, the message remains unbreakable!
 
 ---
 
@@ -229,16 +241,16 @@ print(f"Decrypted Message: {decrypted}")
 ## Cheat Sheet and Practice Quiz
 
 ### Quick Reference Table
-- **Modulo ($a \pmod n$):** The remainder after division (like a 12-hour clock).
+- **Modulo (a mod n):** The remainder after division (like a 12-hour clock).
 - **Prime Number:** A number divisible only by 1 and itself.
 - **Asymmetric Encryption:** Public key locks the message; Private key unlocks it.
 - **Hash Function (SHA-256):** A one-way deterministic fingerprint of any data.
 - **Diffie-Hellman:** A way to create a shared secret across an insecure channel.
 
 ### 💪 Test Yourself!
-1. What is $14 \pmod 5$?  
-   *(Answer: $4$, because $5 \times 2 = 10$, leaving a remainder of $4$!)*
+1. What is 14 mod 5?  
+   *(Answer: **4**, because 5 × 2 = 10, leaving a remainder of 4!)*
 2. In public-key encryption, which key do you share with your friends: your Public Key or your Private Key?  
    *(Answer: Your **Public Key**! Your Private Key must never leave your computer!)*
 3. If an attacker intercepts the encrypted ciphertext and knows your public key, why can't they just reverse the math?  
-   *(Answer: Because factoring the public modulus $n$ back into the secret primes $p$ and $q$ would take billions of years!)*
+   *(Answer: Because factoring the public modulus n back into the secret primes p and q would take billions of years!)*

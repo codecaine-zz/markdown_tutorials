@@ -65,9 +65,9 @@ There are four primary ways computers combine Booleans:
 
 A **Truth Table** is just a simple cheat sheet listing every possible input and what the output will be.
 
-Here is the master table for two inputs ($A$ and $B$):
+Here is the master table for two inputs (A and B):
 
-| Input A | Input B | $A$ AND $B$ (`&&`) | $A$ OR $B$ (`\|\|`) | $A$ XOR $B$ (`^`) | NOT $A$ (`!A`) |
+| Input A | Input B | A AND B (`&&`) | A OR B (`\|\|`) | A XOR B (`^`) | NOT A (`!A`) |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | `False` (0) | `False` (0) | `False` | `False` | `False` | `True` |
 | `False` (0) | `True` (1) | `False` | `True` | `True` | `True` |
@@ -115,8 +115,8 @@ if (!isWeekend && !isHoliday) {
 Your computer's CPU processes numbers as patterns of 8, 16, 32, or 64 bits (1s and 0s). Bitwise operations do logic on each individual bit simultaneously.
 
 Let's take two 8-bit numbers:
-- Number $A = 12$ (in binary: `0000 1100`)
-- Number $B = 10$ (in binary: `0000 1010`)
+- Number A = 12 (in binary: `0000 1100`)
+- Number B = 10 (in binary: `0000 1010`)
 
 ### Bitwise AND (`&`)
 Compares each column. Only gives 1 if both numbers have a 1 in that position:
@@ -187,20 +187,20 @@ Set A: { 1, 2, 3, 4 }
 Set B: { 3, 4, 5, 6 }
 ```
 
-1. **Union ($A \cup B$) - "Give me everything from both":**
+1. **Union (A ∪ B) - "Give me everything from both":**
    - Result: `{ 1, 2, 3, 4, 5, 6 }`
    - In SQL: `SELECT id FROM A UNION SELECT id FROM B;`
    - In JavaScript: `new Set([...setA, ...setB])`
 
-2. **Intersection ($A \cap B$) - "Give me only what is in common":**
+2. **Intersection (A ∩ B) - "Give me only what is in common":**
    - Result: `{ 3, 4 }`
    - In SQL: `SELECT A.id FROM A INNER JOIN B ON A.id = B.id;`
 
-3. **Difference ($A \setminus B$) - "Give me what is in A, but NOT in B":**
+3. **Difference (A \ B) - "Give me what is in A, but NOT in B":**
    - Result: `{ 1, 2 }`
    - In SQL: `SELECT A.id FROM A LEFT JOIN B ON A.id = B.id WHERE B.id IS NULL;`
 
-4. **Subset ($A \subseteq B$) - "Is everything in A already inside B?":**
+4. **Subset (A ⊆ B) - "Is everything in A already inside B?":**
    - Example: `{ 1, 2 }` is a subset of `{ 1, 2, 3, 4 }`.
 
 ---
@@ -244,8 +244,8 @@ Combinatorics answers questions like: *"How many possible passwords can a user c
 | Choosing 3 pizza toppings | **NO!** (Mushrooms + Pepperoni is the same pizza as Pepperoni + Mushrooms) | Food recipe, lottery | **Combination** |
 
 ### Easy Formulas:
-- **Factorial ($n!$):** Multiply down to 1.
-  - $4! = 4 \times 3 \times 2 \times 1 = 24$
+- **Factorial (n!):** Multiply down to 1.
+  - 4! = 4 × 3 × 2 × 1 = 24
   - Represents: *How many ways can 4 people line up in single file?* Answer: 24 ways!
 
 ---
