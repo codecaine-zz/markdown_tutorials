@@ -1,15 +1,15 @@
 ## Table of Contents
 
 1. [Basic Navigation Shortcuts](#basic-navigation-shortcuts)
-2. [Window Snapping & Layout Management](#window-snapping--layout-management)
-3. [Virtual Desktops & Task View](#virtual-desktops--task-view)
+2. [Window Snapping and Layout Management](#window-snapping-and-layout-management)
+3. [Virtual Desktops and Task View](#virtual-desktops-and-task-view)
 4. [File Explorer Shortcuts](#file-explorer-shortcuts)
-5. [Text Editing & Command Prompt / PowerShell](#text-editing--command-prompt--powershell)
-6. [System-Level & Power User Shortcuts](#system-level--power-user-shortcuts)
+5. [Text Editing, Command Prompt, and PowerShell](#text-editing-command-prompt-and-powershell)
+6. [System-Level and Power User Shortcuts](#system-level-and-power-user-shortcuts)
 7. [Windows Terminal Shortcuts](#windows-terminal-shortcuts)
-8. [Accessibility & Screen Controls](#accessibility--screen-controls)
-9. [Web Browsing & Microsoft Edge](#web-browsing--microsoft-edge)
-10. [Troubleshooting & Emergency Shortcuts](#troubleshooting--emergency-shortcuts)
+8. [Accessibility and Screen Controls](#accessibility-and-screen-controls)
+9. [Web Browsing and Microsoft Edge](#web-browsing-and-microsoft-edge)
+10. [Troubleshooting and Emergency Shortcuts](#troubleshooting-and-emergency-shortcuts)
 
 ---
 
@@ -53,7 +53,7 @@ Win + D
 
 ---
 
-## Window Snapping & Layout Management
+## Window Snapping and Layout Management
 
 Windows 11 introduces native **Snap Layouts** and enhanced keyboard snapping actions:
 
@@ -96,7 +96,7 @@ Ctrl + Click app icon on Taskbar
 
 ---
 
-## Virtual Desktops & Task View
+## Virtual Desktops and Task View
 
 ```powershell
 # Create a new virtual desktop
@@ -186,7 +186,7 @@ Alt + Shift + P
 
 ---
 
-## Text Editing & Command Prompt / PowerShell
+## Text Editing, Command Prompt, and PowerShell
 
 ### Readline & Editing Actions
 ```powershell
@@ -235,7 +235,7 @@ Win + H
 
 ---
 
-## System-Level & Power User Shortcuts
+## System-Level and Power User Shortcuts
 
 ### Security & Hardware
 ```powershell
@@ -323,7 +323,7 @@ Ctrl + 0  # Reset zoom to default
 
 ---
 
-## Accessibility & Screen Controls
+## Accessibility and Screen Controls
 
 ```powershell
 # Open Magnifier and Zoom In
@@ -347,7 +347,7 @@ Win + Ctrl + C
 
 ---
 
-## Web Browsing & Microsoft Edge
+## Web Browsing and Microsoft Edge
 
 ```powershell
 # Open new tab
@@ -377,7 +377,7 @@ Ctrl + Shift + J
 
 ---
 
-## Troubleshooting & Emergency Shortcuts
+## Troubleshooting and Emergency Shortcuts
 
 ### Diagnostic Quick Keys
 ```powershell

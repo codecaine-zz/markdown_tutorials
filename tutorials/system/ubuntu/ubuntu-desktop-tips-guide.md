@@ -1,11 +1,11 @@
 ## Table of Contents
 1. [Hardware Optimization](#hardware-optimization)
-2. [System Preferences & GNOME Settings](#system-preferences--gnome-settings)
+2. [System Preferences and GNOME Settings](#system-preferences-and-gnome-settings)
 3. [Performance Tweaks](#performance-tweaks)
 4. [Battery Life Management](#battery-life-management)
 5. [Keyboard and Input Tips](#keyboard-and-input-tips)
-6. [Software & Package Optimization](#software--package-optimization)
-7. [Developer Tools & Terminal Commands](#developer-tools--terminal-commands)
+6. [Software and Package Optimization](#software-and-package-optimization)
+7. [Developer Tools and Terminal Commands](#developer-tools-and-terminal-commands)
 8. [Productivity Hacks](#productivity-hacks)
 9. [Troubleshooting and Maintenance](#troubleshooting-and-maintenance)
 
@@ -79,7 +79,7 @@ sudo journalctl --vacuum-size=500M
 
 ---
 
-## System Preferences & GNOME Settings
+## System Preferences and GNOME Settings
 
 ### Energy & Power State Settings
 ```bash
@@ -308,7 +308,7 @@ sudo systemctl enable --now touchegg
 
 ---
 
-## Software & Package Optimization
+## Software and Package Optimization
 
 ### APT Package Maintenance & Cache Cleaning
 ```bash
@@ -373,7 +373,7 @@ sudo systemctl disable bluetooth.service     # If not using Bluetooth
 
 ---
 
-## Developer Tools & Terminal Commands
+## Developer Tools and Terminal Commands
 
 ### Core Development Environment Setup
 ```bash

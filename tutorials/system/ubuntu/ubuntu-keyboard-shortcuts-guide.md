@@ -1,15 +1,15 @@
 ## Table of Contents
 
 1. [Basic Navigation Shortcuts](#basic-navigation-shortcuts)
-2. [App Switching & Window Management](#app-switching--window-management)
+2. [App Switching and Window Management](#app-switching-and-window-management)
 3. [Files (Nautilus) File Manager Shortcuts](#files-nautilus-file-manager-shortcuts)
-4. [Text Editing & Readline Shortcuts](#text-editing--readline-shortcuts)
-5. [System-Level & Session Shortcuts](#system-level--session-shortcuts)
-6. [Terminal & Developer Tools Shortcuts](#terminal--developer-tools-shortcuts)
-7. [Accessibility & Display Shortcuts](#accessibility--display-shortcuts)
-8. [Web Browsing & Productivity Apps](#web-browsing--productivity-apps)
+4. [Text Editing and Readline Shortcuts](#text-editing-and-readline-shortcuts)
+5. [System-Level and Session Shortcuts](#system-level-and-session-shortcuts)
+6. [Terminal and Developer Tools Shortcuts](#terminal-and-developer-tools-shortcuts)
+7. [Accessibility and Display Shortcuts](#accessibility-and-display-shortcuts)
+8. [Web Browsing and Productivity Apps](#web-browsing-and-productivity-apps)
 9. [Programmatic Shortcut Configuration with Gsettings](#programmatic-shortcut-configuration-with-gsettings)
-10. [Troubleshooting & Conflict Resolution](#troubleshooting--conflict-resolution)
+10. [Troubleshooting and Conflict Resolution](#troubleshooting-and-conflict-resolution)
 
 ---
 
@@ -62,7 +62,7 @@ Super  # Then use mouse scroll or horizontal 3-finger swipe
 
 ---
 
-## App Switching & Window Management
+## App Switching and Window Management
 
 ### Application Switching
 ```bash
@@ -171,7 +171,7 @@ Ctrl + Shift + I
 
 ---
 
-## Text Editing & Readline Shortcuts
+## Text Editing and Readline Shortcuts
 
 These universal Bash, Zsh, and GNU Readline shortcuts work across GNOME Terminal, standard text editors, and CLI shells:
 
@@ -228,7 +228,7 @@ Ctrl + D
 
 ---
 
-## System-Level & Session Shortcuts
+## System-Level and Session Shortcuts
 
 ### Security & Power
 ```bash
@@ -277,7 +277,7 @@ Alt + SysRq + R -> E -> I -> S -> U -> B
 
 ---
 
-## Terminal & Developer Tools Shortcuts
+## Terminal and Developer Tools Shortcuts
 
 ### GNOME Terminal / Console Hotkeys
 ```bash
@@ -316,7 +316,7 @@ Ctrl + 0
 
 ---
 
-## Accessibility & Display Shortcuts
+## Accessibility and Display Shortcuts
 
 ```bash
 # Toggle Orca Screen Reader on/off
@@ -337,7 +337,7 @@ Super + Alt + C
 
 ---
 
-## Web Browsing & Productivity Apps
+## Web Browsing and Productivity Apps
 
 ### Web Browsers (Firefox, Chrome, Brave)
 ```bash
@@ -396,7 +396,7 @@ gsettings get org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:$CU
 
 ---
 
-## Troubleshooting & Conflict Resolution
+## Troubleshooting and Conflict Resolution
 
 ### Resetting Shortcuts to Default
 ```bash

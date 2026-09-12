@@ -6,22 +6,22 @@ Unlike macOS and Windows which run Docker inside a lightweight hypervisor virtua
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [✨ Features & Linux Native Advantages](#features--linux-native-advantages)
-2. [📋 Clean Installation (Official Docker CE & Compose v2)](#clean-installation-official-docker-ce--compose-v2)
-3. [👤 Non-Root & Rootless Docker Security Setup](#non-root--rootless-docker-security-setup)
-4. [⚙️ Production Daemon Configuration (`daemon.json`)](#production-daemon-configuration-daemonjson)
-5. [🚀 Complete Development Stack Compose Template](#complete-development-stack-compose-template)
-6. [🛠 Docker Development Manager CLI Script](#docker-development-manager-cli-script)
-7. [💾 Data Persistence, Volume Management & Backups](#data-persistence-volume-management--backups)
-8. [📊 Resource Limits, Profiling & Real-Time Monitoring](#resource-limits-profiling--real-time-monitoring)
-9. [🐛 Troubleshooting & Firewall Conflicts](#troubleshooting--firewall-conflicts)
-10. [🧹 Automated Cleanup & Disk Maintenance](#automated-cleanup--disk-maintenance)
+1. [Features and Linux Native Advantages](#features-and-linux-native-advantages)
+2. [Clean Installation (Official Docker CE and Compose v2)](#clean-installation-official-docker-ce-and-compose-v2)
+3. [Non-Root and Rootless Docker Security Setup](#non-root-and-rootless-docker-security-setup)
+4. [Production Daemon Configuration (daemon.json)](#production-daemon-configuration-daemonjson)
+5. [Complete Development Stack Compose Template](#complete-development-stack-compose-template)
+6. [Docker Development Manager CLI Script](#docker-development-manager-cli-script)
+7. [Data Persistence, Volume Management and Backups](#data-persistence-volume-management-and-backups)
+8. [Resource Limits, Profiling and Real-Time Monitoring](#resource-limits-profiling-and-real-time-monitoring)
+9. [Troubleshooting and Firewall Conflicts](#troubleshooting-and-firewall-conflicts)
+10. [Automated Cleanup and Disk Maintenance](#automated-cleanup-and-disk-maintenance)
 
 ---
 
-## ✨ Features & Linux Native Advantages
+## Features and Linux Native Advantages
 
 - **Zero Virtualization Overhead**: Native Linux kernel namespaces and cgroups v2.
 - **Direct Filesystem I/O**: Eliminates VirtioFS / osxfs volume speed bottlenecks.
@@ -31,7 +31,7 @@ Unlike macOS and Windows which run Docker inside a lightweight hypervisor virtua
 
 ---
 
-## 📋 Clean Installation (Official Docker CE & Compose v2)
+## Clean Installation (Official Docker CE and Compose v2)
 
 Do **not** install Docker from Ubuntu's default universe repo or via Snap. Follow the official Docker repository setup for latest updates and Compose v2:
 
@@ -64,7 +64,7 @@ docker compose version
 
 ---
 
-## 👤 Non-Root & Rootless Docker Security Setup
+## Non-Root and Rootless Docker Security Setup
 
 ### 1. Standard Non-Root User Configuration
 By default, the Docker daemon binds to a Unix socket owned by `root`. Add your user to the `docker` group to run commands without `sudo`:
@@ -106,7 +106,7 @@ loginctl enable-linger $USER
 
 ---
 
-## ⚙️ Production Daemon Configuration (`daemon.json`)
+## Production Daemon Configuration (daemon.json)
 
 Configure `/etc/docker/daemon.json` for optimal logging, storage performance, and stability:
 
@@ -140,7 +140,7 @@ sudo systemctl restart docker
 
 ---
 
-## 🚀 Complete Development Stack Compose Template
+## Complete Development Stack Compose Template
 
 A ready-to-use `docker-compose.yml` defining a modern multi-service stack with hot-reloading, persistent volumes, and health checks:
 
@@ -210,7 +210,7 @@ volumes:
 
 ---
 
-## 🛠 Docker Development Manager CLI Script
+## Docker Development Manager CLI Script
 
 Create a reusable bash CLI tool at `~/.local/bin/docker-dev` for container lifecycle management:
 
@@ -289,7 +289,7 @@ chmod +x ~/.local/bin/docker-dev
 
 ---
 
-## 💾 Data Persistence, Volume Management & Backups
+## Data Persistence, Volume Management and Backups
 
 ### Inspecting & Managing Docker Volumes
 ```bash
@@ -308,7 +308,7 @@ docker run --rm \
 
 ---
 
-## 📊 Resource Limits, Profiling & Real-Time Monitoring
+## Resource Limits, Profiling and Real-Time Monitoring
 
 ### Setting Precise Resource Limits (cgroups v2)
 Prevent runaway build processes from freezing your Ubuntu desktop:
@@ -334,7 +334,7 @@ docker stats --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\
 
 ---
 
-## 🐛 Troubleshooting & Firewall Conflicts
+## Troubleshooting and Firewall Conflicts
 
 ### 1. UFW (Uncomplicated Firewall) Port Exposure
 By default, Docker modifies `iptables` directly, which can bypass UFW rules and expose ports to external networks!
@@ -373,7 +373,7 @@ sudo systemctl restart docker
 
 ---
 
-## 🧹 Automated Cleanup & Disk Maintenance
+## Automated Cleanup and Disk Maintenance
 
 ### Safe Maintenance Commands
 ```bash

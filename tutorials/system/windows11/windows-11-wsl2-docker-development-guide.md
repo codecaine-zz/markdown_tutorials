@@ -1,4 +1,4 @@
-# 🐳 Windows 11 WSL2 & Docker Development Environment Guide
+# Windows 11 WSL2 and Docker Development Environment Guide
 
 **A comprehensive, production-grade guide for building, optimizing, and managing high-performance Linux and Docker development environments on Windows 11.**
 
@@ -6,22 +6,22 @@ With **WSL2 (Windows Subsystem for Linux 2)**, Windows 11 runs a real Linux kern
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-1. [✨ Modern Windows 11 Architecture (WSL2 + Docker)](#modern-windows-11-architecture-wsl2--docker)
-2. [🚀 Installing & Configuring WSL2 Ubuntu 24.04](#installing--configuring-wsl2-ubuntu-2404)
-3. [⚙️ Tuning `.wslconfig` (Preventing `vmmem` RAM Exhaustion)](#tuning-wslconfig-preventing-vmmem-ram-exhaustion)
-4. [🐳 Docker Setup: Docker Desktop vs Native Docker in WSL2](#docker-setup-docker-desktop-vs-native-docker-in-wsl2)
-5. [⚡ The Golden Rule of WSL2 Performance (Filesystem Speeds)](#the-golden-rule-of-wsl2-performance-filesystem-speeds)
-6. [📦 Complete Multi-Container Development Stack](#complete-multi-container-development-stack)
-7. [🛠 WSL2 & Docker Management Toolkit (`wsl-dev.ps1`)](#wsl2--docker-management-toolkit-wsl-devps1)
-8. [💾 Data Persistence, Volume Management & Backups](#data-persistence-volume-management--backups)
-9. [🐛 Troubleshooting, Clock Drift & Port Conflicts](#troubleshooting-clock-drift--port-conflicts)
-10. [🧹 Maintenance & WSL2 Disk Compaction](#maintenance--wsl2-disk-compaction)
+1. [Modern Windows 11 Architecture (WSL2 and Docker)](#modern-windows-11-architecture-wsl2-and-docker)
+2. [Installing and Configuring WSL2 Ubuntu 24.04](#installing-and-configuring-wsl2-ubuntu-2404)
+3. [Tuning .wslconfig (Preventing vmmem RAM Exhaustion)](#tuning-wslconfig-preventing-vmmem-ram-exhaustion)
+4. [Docker Setup: Docker Desktop vs Native Docker in WSL2](#docker-setup-docker-desktop-vs-native-docker-in-wsl2)
+5. [The Golden Rule of WSL2 Performance (Filesystem Speeds)](#the-golden-rule-of-wsl2-performance-filesystem-speeds)
+6. [Complete Multi-Container Development Stack](#complete-multi-container-development-stack)
+7. [WSL2 and Docker Management Toolkit (wsl-dev.ps1)](#wsl2-and-docker-management-toolkit-wsl-devps1)
+8. [Data Persistence, Volume Management and Backups](#data-persistence-volume-management-and-backups)
+9. [Troubleshooting, Clock Drift and Port Conflicts](#troubleshooting-clock-drift-and-port-conflicts)
+10. [Maintenance and WSL2 Disk Compaction](#maintenance-and-wsl2-disk-compaction)
 
 ---
 
-## ✨ Modern Windows 11 Architecture (WSL2 + Docker)
+## Modern Windows 11 Architecture (WSL2 and Docker)
 
 Traditional Windows virtualization relied on heavyweight VMs with fixed RAM allocations. WSL2 uses a dynamic lightweight utility VM running a custom Microsoft Linux kernel:
 
@@ -32,7 +32,7 @@ Traditional Windows virtualization relied on heavyweight VMs with fixed RAM allo
 
 ---
 
-## 🚀 Installing & Configuring WSL2 Ubuntu 24.04
+## Installing and Configuring WSL2 Ubuntu 24.04
 
 ### 1. Install WSL2 and Ubuntu via PowerShell
 Open an elevated Administrator PowerShell prompt:
@@ -74,7 +74,7 @@ wsl
 
 ---
 
-## ⚙️ Tuning `.wslconfig` (Preventing `vmmem` RAM Exhaustion)
+## Tuning .wslconfig (Preventing vmmem RAM Exhaustion)
 
 By default, WSL2 can consume up to 50% (or in older versions, 80%) of your total host RAM. You must create a `%USERPROFILE%\.wslconfig` file in Windows to enforce strict resource limits:
 
@@ -117,11 +117,11 @@ wsl --shutdown
 
 ---
 
-## 🐳 Docker Setup: Docker Desktop vs Native Docker in WSL2
+## Docker Setup: Docker Desktop vs Native Docker in WSL2
 
 You have two supported methods for running Docker on Windows 11:
 
-### Option A: Docker Desktop (GUI & Official Extension Ecosystem)
+### Option A: Docker Desktop (GUI and Official Extension Ecosystem)
 1. Install Docker Desktop via Winget:
    ```powershell
    winget install --id Docker.DockerDesktop -e
@@ -157,7 +157,7 @@ sudo usermod -aG docker $USER
 
 ---
 
-## ⚡ The Golden Rule of WSL2 Performance (Filesystem Speeds)
+## The Golden Rule of WSL2 Performance (Filesystem Speeds)
 
 > [!IMPORTANT]
 > **NEVER** store active development projects or run `git`, `npm install`, or `docker build` inside `/mnt/c/...`!
@@ -174,7 +174,7 @@ You can easily access your native Linux files in Windows File Explorer:
 
 ---
 
-## 📦 Complete Multi-Container Development Stack
+## Complete Multi-Container Development Stack
 
 A full-stack development template (`docker-compose.yml`) for Bun/Node.js, PostgreSQL, and Redis:
 
@@ -241,7 +241,7 @@ volumes:
 
 ---
 
-## 🛠 WSL2 & Docker Management Toolkit (`wsl-dev.ps1`)
+## WSL2 and Docker Management Toolkit (wsl-dev.ps1)
 
 Save this PowerShell script to `$HOME\bin\wsl-dev.ps1` to manage your WSL environment from Windows:
 
@@ -285,9 +285,9 @@ switch ($Action) {
 
 ---
 
-## 💾 Data Persistence, Volume Management & Backups
+## Data Persistence, Volume Management and Backups
 
-### Exporting & Backing Up an Entire WSL2 Distro
+### Exporting and Backing Up an Entire WSL2 Distro
 To create an immutable snapshot before major experiments or OS upgrades:
 
 ```powershell
@@ -303,7 +303,7 @@ wsl --export Ubuntu-24.04 C:\Backups\ubuntu-24-04-snapshot.tar
 
 ---
 
-## 🐛 Troubleshooting, Clock Drift & Port Conflicts
+## Troubleshooting, Clock Drift and Port Conflicts
 
 ### 1. Clock Drift Bug (Time Desync on Sleep/Wake)
 When your laptop sleeps, the WSL2 hardware clock can fall behind, causing Git SSL authentication failures and TLS errors:
@@ -329,7 +329,7 @@ wsl hostname -I
 
 ---
 
-## 🧹 Maintenance & WSL2 Disk Compaction
+## Maintenance and WSL2 Disk Compaction
 
 WSL2 virtual hard disks (`ext4.vhdx`) grow as you pull Docker images, but do not shrink automatically when containers are deleted unless using `sparseVhd`:
 

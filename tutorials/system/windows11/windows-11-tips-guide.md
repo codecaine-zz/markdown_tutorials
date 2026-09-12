@@ -1,17 +1,17 @@
 ## Table of Contents
-1. [Hardware & Thermal Optimization](#hardware--thermal-optimization)
-2. [Display, Resolution & Graphics Settings](#display-resolution--graphics-settings)
-3. [System Performance & Registry Tweaks](#system-performance--registry-tweaks)
-4. [Memory, Swap & Storage Optimization](#memory-swap--storage-optimization)
-5. [Battery Life & Power Management](#battery-life--power-management)
+1. [Hardware and Thermal Optimization](#hardware-and-thermal-optimization)
+2. [Display, Resolution and Graphics Settings](#display-resolution-and-graphics-settings)
+3. [System Performance and Registry Tweaks](#system-performance-and-registry-tweaks)
+4. [Memory, Swap and Storage Optimization](#memory-swap-and-storage-optimization)
+5. [Battery Life and Power Management](#battery-life-and-power-management)
 6. [Windows Package Management (Winget)](#windows-package-management-winget)
-7. [Developer Environment & CLI Optimization](#developer-environment--cli-optimization)
-8. [Productivity Hacks & PowerToys](#productivity-hacks--powertoys)
-9. [Troubleshooting & System Repair](#troubleshooting--system-repair)
+7. [Developer Environment and CLI Optimization](#developer-environment-and-cli-optimization)
+8. [Productivity Hacks and PowerToys](#productivity-hacks-and-powertoys)
+9. [Troubleshooting and System Repair](#troubleshooting-and-system-repair)
 
 ---
 
-## Hardware & Thermal Optimization
+## Hardware and Thermal Optimization
 
 ### Thermal Management & Hardware Diagnostics
 ```powershell
@@ -47,7 +47,7 @@ Remove-Item -Path "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyConti
 
 ---
 
-## Display, Resolution & Graphics Settings
+## Display, Resolution and Graphics Settings
 
 ### GPU & Refresh Rate Configuration
 ```powershell
@@ -70,7 +70,7 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" 
 
 ---
 
-## System Performance & Registry Tweaks
+## System Performance and Registry Tweaks
 
 ### Telemetry Reduction & Background Services Optimization
 ```powershell
@@ -112,7 +112,7 @@ Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer
 
 ---
 
-## Memory, Swap & Storage Optimization
+## Memory, Swap and Storage Optimization
 
 ### RAM Management & Standby List
 ```powershell
@@ -130,7 +130,7 @@ $sys | Set-CimInstance
 
 ---
 
-## Battery Life & Power Management
+## Battery Life and Power Management
 
 ### Power Schemes & Ultimate Performance Plan
 ```powershell
@@ -196,7 +196,7 @@ winget upgrade --all --include-unknown
 
 ---
 
-## Developer Environment & CLI Optimization
+## Developer Environment and CLI Optimization
 
 ### Enable Windows Developer Mode
 ```powershell
@@ -252,7 +252,7 @@ git config --global credential.helper manager
 
 ---
 
-## Productivity Hacks & PowerToys
+## Productivity Hacks and PowerToys
 
 Install **Microsoft PowerToys** (`winget install Microsoft.PowerToys -e`) for developer productivity utilities:
 
@@ -265,7 +265,7 @@ Install **Microsoft PowerToys** (`winget install Microsoft.PowerToys -e`) for de
 
 ---
 
-## Troubleshooting & System Repair
+## Troubleshooting and System Repair
 
 ### System File Checker & Component Store Repair
 Run these commands in an elevated Administrator PowerShell prompt if Windows behaves unstably:

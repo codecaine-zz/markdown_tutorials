@@ -1,27 +1,27 @@
-# Ubuntu Tiling Window Managers (i3, Sway & Hyprland) Guide
+# Ubuntu Tiling Window Managers (i3, Sway and Hyprland) Guide
 
 Tiling window managers organize your application windows automatically into non-overlapping grids, splits, and columns. Unlike traditional desktop environments where you manually drag and resize floating windows, tiling window managers give you full, keyboard-driven productivity with zero wasted screen space.
 
-On Ubuntu, developers have the choice between battle-tested X11 managers (**i3-wm**), drop-in Wayland equivalents (**Sway**), modern fluid Wayland compositors (**Hyprland**), and GNOME-integrated tiling extensions (**Pop Shell** & **Ubuntu Tiling Assistant**).
+On Ubuntu, developers have the choice between battle-tested X11 managers (**i3-wm**), drop-in Wayland equivalents (**Sway**), modern fluid Wayland compositors (**Hyprland**), and GNOME-integrated tiling extensions (**Pop Shell** and **Ubuntu Tiling Assistant**).
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
-1. [Overview & Why Use Tiling on Ubuntu?](#overview--why-use-tiling-on-ubuntu)
+1. [Overview and Why Use Tiling on Ubuntu?](#overview-and-why-use-tiling-on-ubuntu)
 2. [Tiling Window Managers Comparison](#tiling-window-managers-comparison)
-3. [Installing & Configuring i3-wm (X11 Classic)](#installing--configuring-i3-wm-x11-classic)
-4. [Installing & Configuring Sway (Wayland Native)](#installing--configuring-sway-wayland-native)
+3. [Installing and Configuring i3-wm (X11 Classic)](#installing-and-configuring-i3-wm-x11-classic)
+4. [Installing and Configuring Sway (Wayland Native)](#installing-and-configuring-sway-wayland-native)
 5. [Modern Dynamic Tiling: Hyprland on Ubuntu](#modern-dynamic-tiling-hyprland-on-ubuntu)
 6. [Integrated Option: GNOME Tiling (Pop Shell)](#integrated-option-gnome-tiling-pop-shell)
-7. [Application Launchers: Rofi & Wofi](#application-launchers-rofi--wofi)
-8. [Status Bars: i3status, Polybar & Waybar](#status-bars-i3status-polybar--waybar)
-9. [Everyday Cheat Sheet & Useful Shell Aliases](#everyday-cheat-sheet--useful-shell-aliases)
-10. [Session Switching & Uninstallation](#session-switching--uninstallation)
+7. [Application Launchers: Rofi and Wofi](#application-launchers-rofi-and-wofi)
+8. [Status Bars: i3status, Polybar and Waybar](#status-bars-i3status-polybar-and-waybar)
+9. [Everyday Cheat Sheet and Useful Shell Aliases](#everyday-cheat-sheet-and-useful-shell-aliases)
+10. [Session Switching and Uninstallation](#session-switching-and-uninstallation)
 
 ---
 
-## 🔍 Overview & Why Use Tiling on Ubuntu?
+## Overview and Why Use Tiling on Ubuntu?
 
 Default desktop environments require continuous mouse interaction to arrange, minimize, and locate overlapping windows. Tiling window managers offer:
 
@@ -32,7 +32,7 @@ Default desktop environments require continuous mouse interaction to arrange, mi
 
 ---
 
-## ⚖️ Tiling Window Managers Comparison
+## Tiling Window Managers Comparison
 
 | Feature | i3-wm | Sway | Hyprland | Pop Shell (GNOME) |
 | :--- | :--- | :--- | :--- | :--- |
@@ -45,7 +45,7 @@ Default desktop environments require continuous mouse interaction to arrange, mi
 
 ---
 
-## 🚀 Installing & Configuring i3-wm (X11 Classic)
+## Installing and Configuring i3-wm (X11 Classic)
 
 i3 is the gold standard for X11 tiling on Ubuntu.
 
@@ -140,7 +140,7 @@ bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 
 ---
 
-## 🌊 Installing & Configuring Sway (Wayland Native)
+## Installing and Configuring Sway (Wayland Native)
 
 Sway is designed as a drop-in Wayland replacement for i3. It uses the exact same configuration syntax as i3 while offering tear-free rendering and per-monitor fractional scaling.
 
@@ -183,7 +183,7 @@ output eDP-1 scale 1.25
 
 ---
 
-## ✨ Modern Dynamic Tiling: Hyprland on Ubuntu
+## Modern Dynamic Tiling: Hyprland on Ubuntu
 
 Hyprland is a high-performance, fluid Wayland compositor that includes dual-directional tiling, smooth physics-based animations, rounded corners, and native GPU blur.
 
@@ -231,7 +231,7 @@ decoration {
 
 ---
 
-## 🧩 Integrated Option: GNOME Tiling (Pop Shell)
+## Integrated Option: GNOME Tiling (Pop Shell)
 
 If you prefer keeping your standard Ubuntu GNOME desktop with system trays, settings panels, and Bluetooth integration while having full keyboard-driven auto-tiling:
 
@@ -256,7 +256,7 @@ gnome-extensions enable pop-shell@system76.com
 
 ---
 
-## 🎯 Application Launchers: Rofi & Wofi
+## Application Launchers: Rofi and Wofi
 
 ### Rofi Configuration for i3 (X11)
 ```bash
@@ -303,7 +303,7 @@ EOF
 
 ---
 
-## 📊 Status Bars: i3status, Polybar & Waybar
+## Status Bars: i3status, Polybar and Waybar
 
 ### Minimal `i3status.conf` (`~/.config/i3status/config`)
 ```ini
@@ -332,7 +332,7 @@ tztime local { format = "📅 %Y-%m-%d %H:%M:%S" }
 
 ---
 
-## ⚡ Everyday Cheat Sheet & Useful Shell Aliases
+## Everyday Cheat Sheet and Useful Shell Aliases
 
 ```bash
 # Add to ~/.bashrc or ~/.zshrc for fast tiling window management
@@ -369,7 +369,7 @@ alias lock="i3lock -c 000000"
 
 ---
 
-## 🔄 Session Switching & Uninstallation
+## Session Switching and Uninstallation
 
 ### Switching Sessions at Login
 1. Log out of your current session (`Mod + Shift + E` in i3).

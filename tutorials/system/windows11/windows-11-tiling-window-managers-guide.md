@@ -1,4 +1,4 @@
-# Windows 11 Tiling Window Managers (GlazeWM, Komorebi & FancyZones) Guide
+# Windows 11 Tiling Window Managers (GlazeWM, Komorebi and FancyZones) Guide
 
 Tiling window managers organize your application windows automatically into non-overlapping grids, splits, and columns. For developers transitioning from Linux (i3/bspwm/Hyprland) or macOS (AeroSpace/Yabai) to Windows 11, dynamic tiling window managers bring complete keyboard-driven ergonomics and zero window management latency to Windows.
 
@@ -6,21 +6,21 @@ On Windows 11, developers have options ranging from native zone-based grid snapp
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
-1. [Overview & Why Use Tiling on Windows 11?](#overview--why-use-tiling-on-windows-11)
+1. [Overview and Why Use Tiling on Windows 11?](#overview-and-why-use-tiling-on-windows-11)
 2. [Tiling Window Managers Comparison](#tiling-window-managers-comparison)
-3. [Installing & Configuring GlazeWM (Recommended)](#installing--configuring-glazewm-recommended)
-4. [GlazeWM Workspaces & Keybindings Configuration](#glazewm-workspaces--keybindings-configuration)
+3. [Installing and Configuring GlazeWM (Recommended)](#installing-and-configuring-glazewm-recommended)
+4. [GlazeWM Workspaces and Keybindings Configuration](#glazewm-workspaces-and-keybindings-configuration)
 5. [Advanced Dynamic Tiling: Komorebi](#advanced-dynamic-tiling-komorebi)
 6. [Zone-Based Tiling: PowerToys FancyZones](#zone-based-tiling-powertoys-fancyzones)
-7. [Status Bars for Windows: Zebar & Yasb](#status-bars-for-windows-zebar--yasb)
-8. [Everyday Cheat Sheet & PowerShell Aliases](#everyday-cheat-sheet--powershell-aliases)
-9. [Autostart Setup & Clean Uninstallation](#autostart-setup--clean-uninstallation)
+7. [Status Bars for Windows: Zebar and Yasb](#status-bars-for-windows-zebar-and-yasb)
+8. [Everyday Cheat Sheet and PowerShell Aliases](#everyday-cheat-sheet-and-powershell-aliases)
+9. [Autostart Setup and Clean Uninstallation](#autostart-setup-and-clean-uninstallation)
 
 ---
 
-## 🔍 Overview & Why Use Tiling on Windows 11?
+## Overview and Why Use Tiling on Windows 11?
 
 While Windows 11 includes native Snap Layouts (`Win + Z`), traditional window management still requires manual dragging, resizing, and positioning with the mouse. Tiling window managers offer:
 
@@ -31,7 +31,7 @@ While Windows 11 includes native Snap Layouts (`Win + Z`), traditional window ma
 
 ---
 
-## ⚖️ Tiling Window Managers Comparison
+## Tiling Window Managers Comparison
 
 | Feature | GlazeWM | Komorebi | PowerToys FancyZones |
 | :--- | :--- | :--- | :--- |
@@ -45,7 +45,7 @@ While Windows 11 includes native Snap Layouts (`Win + Z`), traditional window ma
 
 ---
 
-## 🚀 Installing & Configuring GlazeWM (Recommended)
+## Installing and Configuring GlazeWM (Recommended)
 
 **GlazeWM** is an i3-inspired dynamic tiling window manager designed specifically for Windows 10 and 11.
 
@@ -70,7 +70,7 @@ notepad "$HOME\.glzr\glazewm\config.yaml"
 
 ---
 
-## ⚙️ GlazeWM Workspaces & Keybindings Configuration
+## GlazeWM Workspaces and Keybindings Configuration
 
 Below is a battle-tested, developer-ready `config.yaml` configuration using `Alt` as the primary modifier key:
 
@@ -183,7 +183,7 @@ keybindings:
 
 ---
 
-## 🦀 Advanced Dynamic Tiling: Komorebi
+## Advanced Dynamic Tiling: Komorebi
 
 **Komorebi** is a dynamic tiling window manager written in Rust, featuring deep customization and ultra-low latency:
 
@@ -212,7 +212,7 @@ komorebic change-layout columns
 
 ---
 
-## 📐 Zone-Based Tiling: PowerToys FancyZones
+## Zone-Based Tiling: PowerToys FancyZones
 
 If you want a GUI-configured tiling workflow that works natively with Windows 11 animations:
 
@@ -229,7 +229,7 @@ If you want a GUI-configured tiling workflow that works natively with Windows 11
 
 ---
 
-## 📊 Status Bars for Windows: Zebar & Yasb
+## Status Bars for Windows: Zebar and Yasb
 
 To complete your keyboard-driven tiling setup with a minimal status bar displaying CPU, RAM, battery, active workspace, and network:
 
@@ -242,7 +242,7 @@ Zebar uses web technologies (HTML, CSS, JavaScript) to render beautiful status b
 
 ---
 
-## ⚡ Everyday Cheat Sheet & PowerShell Aliases
+## Everyday Cheat Sheet and PowerShell Aliases
 
 Add these productivity aliases to your PowerShell `$PROFILE`:
 
@@ -275,7 +275,7 @@ function restart-wm {
 
 ---
 
-## 🔄 Autostart Setup & Clean Uninstallation
+## Autostart Setup and Clean Uninstallation
 
 ### Enable Autostart on Windows Login
 Create a shortcut to GlazeWM in your Windows Startup folder:
