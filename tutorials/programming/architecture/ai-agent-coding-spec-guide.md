@@ -14,6 +14,7 @@ A ready-to-use master specification template you can drop into any project as `A
    - [Enforcing Composition Over Inheritance](#enforcing-composition-over-inheritance)
    - [Data-Oriented Programming (Plain Data First)](#data-oriented-programming-plain-data-first)
    - [Feature-First Folder Colocation](#feature-first-folder-colocation)
+   - [100% API Documentation Coverage & RAD Examples](#100-api-documentation-coverage--rad-examples)
 5. [Explicitly Forbidden Agent Anti-Patterns](#explicitly-forbidden-agent-anti-patterns)
 6. [How to Prompt and Enforce Compliance](#how-to-prompt-and-enforce-compliance)
 
@@ -159,6 +160,23 @@ When providing solutions:
 2. Show the Coordinator that orchestrates them.
 3. Keep code blocks self-contained and runnable.
 4. Avoid unnecessary comments that merely restate the code; explain the *why* or edge-case decisions instead.
+
+---
+
+## 8. 100% API Documentation Coverage & RAD Examples (Strictly Enforced)
+Every feature and API in this codebase exists for a solo developer building high-velocity software. To maximize velocity and eliminate context-switching:
+
+1. **Zero Documentation Drift**: Whenever any function, coordinator, doer, option, CLI flag, or type signature is added or updated, documentation must be updated in the exact same turn.
+2. **100% API Surface Coverage**: Every exported function, data interface, and configuration option must be documented. No "left as an exercise to the reader" or undocumented flags.
+3. **RAD (Rapid Application Development) Code Blocks**:
+   - Provide concrete, copy-and-pasteable TypeScript code blocks for the **entire** API surface.
+   - Developers must be able to copy a recipe directly into their application and have it work immediately without guessing imports, types, or argument structures.
+4. **Three-Tier Documentation Architecture**:
+   - **Feature README (`src/features/<feature>/README.md`)**: Full local documentation containing CLI flags, interactive TUI shortcuts (if any), full TypeScript types, and end-to-end runnable recipes.
+   - **Central Cookbook (`docs/API.md`)**: Unified API reference with cross-feature integration recipes and complete types.
+   - **Root README (`README.md`)**: CLI cheatsheet and workflow overview covering all commands and flags.
+5. **Executable Verification**:
+   - All documentation code recipes must be mirrored in automated tests (e.g., `src/test_readme_recipes.test.ts`) to guarantee they never rot, fail, or fall out of sync with active code.
 ````
 
 ---
@@ -249,6 +267,116 @@ src/
 
 ---
 
+### 100% API Documentation Coverage & RAD Examples
+
+For a solo developer, context-switching is fatal to productivity. If an AI writes a clean feature but leaves configuration options undocumented, omits imports, or leaves pseudo-code placeholders like `// ...initialize client here`, the developer has to stop and inspect the source code to figure out how to call it.
+
+Under this rule, the AI agent is required to deliver **100% complete, runnable, and test-verified documentation** in the exact same turn that code is generated or modified.
+
+#### What AI Generates by Default vs. With This Spec
+
+| Behavior | ❌ Without Spec (Default AI) | ✅ With 100% Documentation Rule |
+| :--- | :--- | :--- |
+| **API Coverage** | Explains the happy path; leaves options and edge cases undocumented | Documents 100% of exported types, options, flags, and return values |
+| **Code Snippets** | Incomplete snippets with missing imports and `...` ellipsis | Self-contained, copy-and-pasteable TypeScript recipes ready to run |
+| **CLI & TUI Flags** | Implements CLI flags in code but omits them from `README.md` | Documents every flag, default value, and keyboard shortcut in a table |
+| **Recipe Verification** | Untested markdown snippets that rot as APIs evolve | Markdown recipes are mirrored and tested in `test_readme_recipes.test.ts` |
+
+#### Concrete Example: Agent-Generated Feature README
+
+Here is an example of what the AI agent produces when implementing a new feature (e.g., `src/features/billing/README.md`):
+
+````markdown
+# Billing Feature (`src/features/billing`)
+
+Coordinates Stripe subscription lifecycles, webhook event processing, and customer invoice generation.
+
+## 1. Quickstart Recipe (Copy & Paste)
+
+```typescript
+import { createBillingCoordinator } from "./billingCoordinator";
+import { type BillingConfig, type CheckoutSessionResult } from "./billingTypes";
+
+// 1. Initialize coordinator with configuration
+const config: BillingConfig = {
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY!,
+  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET!,
+  currency: "usd",
+  maxRetries: 3,
+};
+
+const billing = createBillingCoordinator(config);
+
+// 2. Create a customer checkout session
+const session: CheckoutSessionResult = await billing.createCheckoutSession({
+  customerId: "cus_987654321",
+  planId: "price_pro_monthly",
+  successUrl: "https://app.example.com/dashboard?billing=success",
+  cancelUrl: "https://app.example.com/dashboard?billing=cancelled",
+});
+
+console.log("Redirect user to:", session.checkoutUrl);
+```
+
+## 2. Complete Exported Types & Signatures
+
+```typescript
+export interface BillingConfig {
+  readonly stripeSecretKey: string;
+  readonly webhookSecret: string;
+  readonly currency: "usd" | "eur" | "gbp";
+  readonly maxRetries?: number; // Defaults to 3 if omitted
+}
+
+export interface CreateCheckoutParams {
+  readonly customerId: string;
+  readonly planId: string;
+  readonly successUrl: string;
+  readonly cancelUrl: string;
+}
+
+export interface CheckoutSessionResult {
+  readonly sessionId: string;
+  readonly checkoutUrl: string;
+  readonly expiresAt: number; // Unix timestamp in seconds
+}
+```
+
+## 3. CLI Commands and Options
+
+| Flag | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `--customer-id <id>` | `string` | *(Required)* | Stripe customer identifier |
+| `--plan <tier>` | `string` | `"pro_monthly"` | Subscription plan identifier |
+| `--currency <code>` | `string` | `"usd"` | Currency code (`usd`, `eur`, `gbp`) |
+| `--dry-run` | `boolean` | `false` | Validates session params without creating a live Stripe session |
+
+## 4. Executable Verification Test
+
+To ensure recipes never rot, the agent creates `src/features/billing/test_readme_recipes.test.ts`:
+
+```typescript
+import { describe, it, expect } from "vitest";
+import { createBillingCoordinator } from "./billingCoordinator";
+
+describe("Billing README Quickstart Recipe", () => {
+  it("compiles and runs the exact recipe published in the README", async () => {
+    const billing = createBillingCoordinator({
+      stripeSecretKey: "sk_test_mock_key_12345",
+      webhookSecret: "whsec_mock_secret_12345",
+      currency: "usd",
+      maxRetries: 1,
+    });
+
+    expect(billing).toBeDefined();
+    expect(typeof billing.createCheckoutSession).toBe("function");
+  });
+});
+```
+````
+
+---
+
 ## Explicitly Forbidden Agent Anti-Patterns
 
 This table highlights why each forbidden pattern is banned for solo developers:
@@ -260,6 +388,8 @@ This table highlights why each forbidden pattern is banned for solo developers:
 | **Deep Inheritance** | Feels organized in theory | Fragile base class problem; changes at the root break children |
 | **Premature DRY Abstractions** | Trained to eliminate duplicate characters | Couples unrelated features into an unwieldy mega-function |
 | **Layer-First Folders** | Default MVC tutorial style | Forces jumping across 6 folders to edit or delete 1 feature |
+| **Documentation Drift & Ghost Flags** | Fast to code and skip docs | Forces developer to inspect source code to discover options or fix broken snippets |
+| **Incomplete Pseudo-Code Snippets** | Saves LLM tokens with `...` placeholders | Forces context-switching to guess missing imports, types, or configs |
 
 ---
 
@@ -277,8 +407,8 @@ Always read and strictly follow the architecture and single-use guidelines in AG
 ```
 
 ### 3. Quick Slash / Conversation Reminder
-If an AI agent ever generates a long monolithic function or deep class hierarchy, use this one-sentence correction:
+If an AI agent ever generates a long monolithic function, leaves APIs undocumented, or uses deep class hierarchies, use this quick reminder:
 
-> *"Refactor this following our AGENTS.md rules: split into single-use Doers and one Coordinator, prefer composition over classes, and keep data structures flat."*
+> *"Refactor this following our AGENTS.md rules: split into single-use Doers and one Coordinator, keep data flat, and provide 100% documented, copy-pasteable RAD recipes in the feature README."*
 
-The agent will immediately dismantle the monolithic code into clean, modular building blocks.
+The agent will immediately dismantle the monolithic code into clean, modular building blocks and generate production-ready, test-verified documentation.
