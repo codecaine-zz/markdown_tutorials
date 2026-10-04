@@ -1,6 +1,6 @@
 # SimpleGUI — Native macOS GUIs in V — Complete Project Guide
 
-A complete, production-grade guide to **SimpleGUI** (`codecaine-zz/vlang_simplegui`), a native Cocoa desktop GUI starter framework and Rapid Application Development (RAD) ecosystem written in the **V programming language** (`vlang`), featuring a built-in Delphi/VB-inspired Visual UI Designer, a headless CLI toolkit (`simplecli`), 30 developer utility modules, and 70+ native macOS demos.
+A complete, production-grade guide to **SimpleGUI** (`codecaine-zz/vlang_simplegui`), a native Cocoa desktop GUI starter framework and Rapid Application Development (RAD) ecosystem written in the **V programming language** (`vlang`), featuring a built-in Delphi/VB-inspired Visual UI Designer, a headless CLI toolkit (`simplecli`), 40 developer utility modules (v2.0.0), 135 native macOS demos, and 50 enterprise workstations.
 
 ---
 
@@ -55,12 +55,12 @@ A complete, production-grade guide to **SimpleGUI** (`codecaine-zz/vlang_simpleg
   - [CLI Flag & Argument Parsing](#cli-flag-argument-parsing)
   - [Interactive Prompts & Multi-Step Pipelines](#interactive-prompts-multi-step-pipelines)
   - [Multi-Level Structured Logging](#multi-level-structured-logging)
-- [14. Developer Utility Suite (30 Modules)](#14-developer-utility-suite-30-modules)
+- [14. Developer Utility Suite (40 Modules)](#14-developer-utility-suite-40-modules)
   - [Core Utility Catalog](#core-utility-catalog)
   - [Practical Examples: strutils, sqliteutils, fileutils](#practical-examples-strutils-sqliteutils-fileutils)
 - [15. Demos Suite & Production Workstations](#15-demos-suite-production-workstations)
-  - [70+ Interactive Demos Catalog](#70-interactive-demos-catalog)
-  - [30+ Production Workstations (Fd, Rg, SQLite, Media Hub)](#30-production-workstations-fd-rg-sqlite-media-hub)
+  - [135 Interactive Demos Catalog](#135-interactive-demos-catalog)
+  - [50 Production Workstations (Fd, Rg, SQLite, Media Hub)](#50-production-workstations-fd-rg-sqlite-media-hub)
 - [16. Compiling & Packaging Standalone macOS Apps](#16-compiling-packaging-standalone-macos-apps)
   - [Compiling Production Binaries](#compiling-production-binaries)
   - [Bundling into macOS .app & Creating DMG Installers](#bundling-into-macos-app-creating-dmg-installers)
@@ -755,53 +755,64 @@ log.error('Failed to establish database socket')
 
 ---
 
-## 14. Developer Utility Suite (30 Modules)
+## 14. Developer Utility Suite (40 Modules)
 
-The repository includes **30 standalone utility packages** (`UTILS_API.md`):
+The repository integrates all **40 production-grade utility packages** from `vlang_utils` v2.0.0 (`UTILS_API.md`), providing zero-dependency tools for data, networking, security, and web services:
 
 ### Core Utility Catalog
 
 | Module | Purpose & Core Capabilities |
 | :--- | :--- |
-| `strutils` | Advanced string manipulation, casing, slugification, and Levenshtein distance. |
-| `sqliteutils`| High-level SQLite wrapper with automated migrations and connection pooling. |
-| `fileutils` | Atomic file writes, recursive directory search, and file checksums. |
-| `httputils` | Fluent HTTP client with connection retry and bearer token injection. |
-| `cacheutils`| High-speed in-memory LRU cache with TTL expiration. |
-| `timeutils` | Humanized timestamps ("2 hours ago"), cron expressions, and parsing. |
-| `cryptoutils`| HMAC, Wyhash, UUID v4 generation, and random tokens. |
+| `webutils` | **New in v2.0.** Express-style web framework, EJS templates, CSRF, CORS, sessions, rate limiters, static files. |
+| `jsonutils` | **New in v2.0.** RFC 6901 JSON pointer, RFC 7386 merge patch, RFC 8785 canonical sort, structural diffing, flatten. |
+| `markdownutils`| **New in v2.0.** CommonMark/GFM rendering (tables, task lists), heading anchors, TOC generation, plain text. |
+| `strutils` | Advanced string manipulation, casing, slugification, and Levenshtein/Jaro-Winkler distance. |
+| `sqliteutils`| High-level SQLite wrapper with automated migrations, KV store, and document store. |
+| `fileutils` | Atomic file writes, RFC 4180 CSV parsing, SHA-256 hashing, recursive directory search. |
+| `httputils` | Fluent HTTP client with exponential retry, bearer tokens, and JSON decoding. |
+| `cacheutils`| True O(1) in-memory LRU cache and TTL cache with auto-expiration. |
+| `timeutils` | Humanized timestamps ("2 hours ago"), ISO 8601 parsing, calendar math, and stopwatches. |
+| `cryptoutils`| CSPRNG tokens, constant-time compare, UUID v4/v7, ULID, and RFC 6238 TOTP. |
 | `validutils`| Email, IPv4/IPv6, URL, credit card, and phone regex validators. |
-| `netutils` | Socket diagnostics, WHOIS lookup, and CIDR subnet calculations. |
-| `colorutils`| Hex, RGB, HSL conversions, color lightening, darkening, and WCAG contrast ratio. |
+| `netutils` | Socket diagnostics, TCP ping, local IP detection, and CIDR subnet calculations. |
+| `colorutils`| Hex, RGB, HSL, OKLab/OKLCH conversions, color lightening, and WCAG contrast ratio. |
+| `asyncutils`| Bounded worker pools, parallel mapping, semaphores, and concurrency limiters. |
+| `flowutils` | Monotonic sliding-window rate limiters, token buckets, and circuit breakers. |
 
-### Practical Examples: strutils, sqliteutils, fileutils
+### Practical Examples: strutils, sqliteutils, fileutils, webutils
 
 ```v
 import strutils
 import sqliteutils
 import fileutils
+import jsonutils
+import webutils
 
 // 1. String utilities
 slug := strutils.slugify('Hello World! This is SimpleGUI.') // "hello-world-this-is-simplegui"
-dist := strutils.levenshtein_distance('kitten', 'sitting')    // 3
+dist := strutils.levenshtein('kitten', 'sitting')            // 3
 
 // 2. High-level SQLite
-mut db := sqliteutils.open('data.db') or { panic(err) }
-db.execute('CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY, text TEXT)')
-db.insert('notes', {'text': 'Remember to test Cocoa bridge'})
+mut db := sqliteutils.open_db('data.db') or { panic(err) }
+sqliteutils.create_kv_table(mut db, 'settings')!
+sqliteutils.set_kv(mut db, 'settings', 'theme', 'Apple Dark')!
 
-// 3. File utilities
+// 3. File utilities & atomic writes
 fileutils.write_file_atomic('config.json', '{"status": "ok"}') or { panic(err) }
-files := fileutils.find_files_by_extension('/Users/codecaine/Projects', '.v')
+hash := fileutils.file_hash_sha256('config.json')!
+
+// 4. JSON pointer & patch
+doc := jsonutils.parse('{"server": {"port": 8080}}')!
+port := jsonutils.pointer_get(doc, '/server/port')!
 ```
 
 ---
 
 ## 15. Demos Suite & Production Workstations
 
-### 70+ Interactive Demos Catalog
+### 135 Interactive Demos Catalog
 
-The `demos/` directory provides over 70 runnable demo applications:
+The `demos/` directory provides **135 runnable demo applications** showcasing every aspect of Cocoa controls, graphics, layouts, and utilities:
 
 | Demo Script | Key Feature Tested |
 | :--- | :--- |
@@ -813,15 +824,20 @@ The `demos/` directory provides over 70 runnable demo applications:
 | `demos/animation_demo.v` | Smooth UI transitions and animated progress meters. |
 | `demos/clipboard_demo.v` | Reading and writing text to the macOS system clipboard. |
 | `demos/context_menus_demo.v` | Right-click Cocoa context popup menus. |
+| `demos/super_controls_demo.v` | Modern tag input, range sliders, code editor, and file drop zone. |
+| `demos/token_field_demo.v` | Native macOS `NSTokenField` for email addresses and tags. |
+| `demos/tab_container_demo.v` | Multi-tab container switching with distinct child view hierarchies. |
+| `demos/system_telemetry_demo.v` | Live CPU, memory, and battery level polling. |
 
 To run any demo:
 
 ```bash
 v run demos/all_controls_demo.v
 v run demos/developer_controls_demo.v
+v run demos/crud_table_demo.v
 ```
 
-### 30+ Production Workstations (Fd, Rg, SQLite, Media Hub)
+### 50 Production Workstations (Fd, Rg, SQLite, Docker, Media Hub)
 
 Located in `applications/`:
 - `fd_studio.v`: High-speed visual file search frontend for `fd`.
@@ -831,13 +847,21 @@ Located in `applications/`:
 - `media_studio_hub.v`: Audio/video conversion and metadata inspector using `ffmpeg`.
 - `brew_studio.v`: Homebrew package manager desktop GUI (installed packages, updates, search).
 - `git_studio.v`: Visual Git commit log and branch manager.
+- `docker_studio.v`: Docker container lifecycle and live log streamer.
+- `task_manager.v`: Native macOS process monitor with CPU/RAM telemetry and process terminate.
+- `nmap_studio.v`: Visual network security scanner and port discovery workbench.
+- `app_bundler_studio.v`: macOS .app packager with icon generator and DMG creation.
+- `crypto_studio.v`: Cryptographic workbench for SHA256, HMAC, AES, and password hashing.
+- `watchexec_studio.v`: Live filesystem watcher with trigger actions.
+- `omnitool_studio.v`: Developer swiss army knife uniting ripgrep, fd, bat, and eza.
 
 Launch any workstation:
 
 ```bash
-v run applications/fd_studio.v
 v run applications/sqlite_studio.v
+v run applications/docker_studio.v
 v run applications/brew_studio.v
+v run applications/app_bundler_studio.v
 ```
 
 ---
