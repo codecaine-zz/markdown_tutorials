@@ -501,3 +501,9 @@ void find_files_by_extension(const std::filesystem::path& dir, std::string_view 
     }
 }
 ```
+
+---
+
+## Related Guides & Ecosystem
+
+- **Desktop GUI Development with EasyQt6**: [EasyQt6 (SimpleGUI) Complete Guide](easy-qt6-simplegui-guide.md) — Zero-boilerplate, modern C++ wrapper around Qt 6 Widgets for rapid desktop GUI development across macOS, Linux, and Windows.
