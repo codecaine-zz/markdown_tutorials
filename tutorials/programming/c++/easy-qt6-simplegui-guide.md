@@ -1066,5 +1066,6 @@ EasyQt6 brings the Rapid Application Development feel of Delphi, Lazarus and Vis
 - **GitHub Repository**: [codecaine-zz/easy_qt6](https://github.com/codecaine-zz/easy_qt6) (MIT License)
 - **Full API Reference**: [docs/API_REFERENCE.md](https://github.com/codecaine-zz/easy_qt6/blob/master/docs/API_REFERENCE.md)
 - **Sister Project (V language)**: [codecaine-zz/vlang_simplegui](https://github.com/codecaine-zz/vlang_simplegui)
-- **Companion Guide**: [Modern C++23 on Apple Silicon](cpp-arm-mac-guide.md)
+- **C++26 Complete Language Guide**: [The C++26 Programming Language: Complete Guide for Beginners & Reference](cpp26-complete-guide.md)
+- **Apple Silicon Guide**: [Modern C++23 on Apple Silicon](cpp-arm-mac-guide.md)
 - **Qt 6**: [qt.io](https://www.qt.io/)
