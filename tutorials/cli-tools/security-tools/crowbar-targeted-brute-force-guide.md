@@ -1,6 +1,6 @@
-# Crowbar — Targeted Network Protocol & Key Brute-Forcing Guide
+# Crowbar - Targeted Network Protocol & Key Brute-Forcing Guide
 
-A complete, production-grade guide to **Crowbar** (`crowbar`), a specialized Python-based penetration testing tool designed to brute-force network protocols that rely on non-standard authentication schemes—such as **RDP with Network Level Authentication (NLA)**, **SSH private keys**, **VNC**, and **OpenVPN** configurations.
+A complete, production-grade guide to **Crowbar** (`crowbar`), a specialized Python-based penetration testing tool designed to brute-force network protocols that rely on non-standard authentication schemes-such as **RDP with Network Level Authentication (NLA)**, **SSH private keys**, **VNC**, and **OpenVPN** configurations.
 
 ---
 

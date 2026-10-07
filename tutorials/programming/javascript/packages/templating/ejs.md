@@ -1,4 +1,4 @@
-# EJS — Practical Tutorial (with Table of Contents)
+# EJS - Practical Tutorial (with Table of Contents)
 
 A concise, copy‑pasteable guide to [EJS (Embedded JavaScript Templates)](https://ejs.co/). It shows core templating syntax, Express integration, partials/layouts, helpers, and common patterns.
 
@@ -213,7 +213,7 @@ app.get('/products', (req, res) => {
   <% for (const p of products) { %>
     <li>
       <a href="/products/<%= p.id %>"><%= p.name %></a>
-      — $<%= p.price.toFixed(2) %>
+      - $<%= p.price.toFixed(2) %>
     </li>
   <% } %>
 </ul>

@@ -2520,7 +2520,7 @@ document.addEventListener('keydown', (e) => {
 
 function showKeyboardShortcuts() {
     const shortcuts = [
-        // Browser Find-in-page tips (cross‑platform) — prioritized at top
+        // Browser Find-in-page tips (cross‑platform) - prioritized at top
         { key: 'Ctrl/⌘ + F', description: 'Find in page (browser)' },
         { key: '⌘ + G (mac), F3 / Ctrl + G (Win/Linux)', description: 'Find next (browser)' },
         { key: 'Shift + ⌘ + G (mac), Shift + F3 / Ctrl + Shift + G (Win/Linux)', description: 'Find previous (browser)'},

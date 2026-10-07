@@ -1,6 +1,6 @@
 # Miller (mlr) Data Processing Complete Guide
 
-`miller` (`mlr`) is a high-performance, multi-format command-line data processing tool designed for name-indexed data. Often described as **`awk` + `sed` + `cut` + `join` + `sort` for CSV, TSV, JSON, and JSON Lines**, `miller` understands header rows, column names, and nested data structures out of the box—eliminating the brittle positional counting required by classic UNIX text tools.
+`miller` (`mlr`) is a high-performance, multi-format command-line data processing tool designed for name-indexed data. Often described as **`awk` + `sed` + `cut` + `join` + `sort` for CSV, TSV, JSON, and JSON Lines**, `miller` understands header rows, column names, and nested data structures out of the box-eliminating the brittle positional counting required by classic UNIX text tools.
 
 ---
 

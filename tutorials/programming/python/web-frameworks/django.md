@@ -1,4 +1,4 @@
-# Django — Practical Tutorial (with Table of Contents)
+# Django - Practical Tutorial (with Table of Contents)
 
 A concise, copy‑pasteable guide to building web apps with [Django](https://docs.djangoproject.com/en/stable/). It covers modern defaults, typical patterns, and small utilities you can drop into projects quickly.
 

@@ -1,4 +1,4 @@
-# John the Ripper (Jumbo) — Complete Password Cracking & Forensics Guide
+# John the Ripper (Jumbo) - Complete Password Cracking & Forensics Guide
 
 A complete, production-grade guide to **John the Ripper (Jumbo Edition)** (`john`), the legendary CPU/GPU offline password auditing and forensic credential recovery framework, specializing in encrypted archives, multi-format hashes, embedded cryptosystems, and intelligent wordlist mutation rules.
 

@@ -1,6 +1,6 @@
 # GDU (gdu-go) Fast Disk Usage Analyzer Complete Guide
 
-`gdu` (**Go Disk Usage**) is an ultra-fast, multi-threaded disk usage analyzer with an interactive terminal user interface (TUI) written in Go. Specially designed and optimized for modern SSDs and NVMe drives, `gdu` crawls directory trees concurrently across all available CPU cores—delivering scanning speeds many times faster than legacy single-threaded tools like `du` or `ncdu`.
+`gdu` (**Go Disk Usage**) is an ultra-fast, multi-threaded disk usage analyzer with an interactive terminal user interface (TUI) written in Go. Specially designed and optimized for modern SSDs and NVMe drives, `gdu` crawls directory trees concurrently across all available CPU cores-delivering scanning speeds many times faster than legacy single-threaded tools like `du` or `ncdu`.
 
 When installed via **Homebrew**, the binary is purposefully installed and linked as **`gdu-go`** to prevent severe naming collisions with GNU Coreutils' `gdu` (GNU `du`). This guide provides a complete, production-ready tutorial for installing `gdu` with Homebrew, understanding the binary conflict, using `gdu-go` across all workflows, and mastering every feature from interactive TUI navigation to scripting, database exports, and embedded web visualization.
 

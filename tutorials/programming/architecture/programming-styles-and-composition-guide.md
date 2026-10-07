@@ -20,7 +20,7 @@ A practical, pragmatic guide to writing clean, maintainable, and resilient softw
 
 ## The Solo Developer Reality and Cognitive Load
 
-When building software alone—whether you are an indie hacker, a solo founder, a freelancer, or the sole engineer on an internal tool—your constraints are fundamentally different from a 50-person engineering team at a Fortune 500 company.
+When building software alone-whether you are an indie hacker, a solo founder, a freelancer, or the sole engineer on an internal tool-your constraints are fundamentally different from a 50-person engineering team at a Fortune 500 company.
 
 ### The Big Company vs Solo Developer Divide
 
@@ -62,7 +62,7 @@ Think of physical tools:
 - A **Swiss Army Knife** has a blade, scissors, tweezers, a magnifying glass, and a toothpick. It can do 20 things, but it is clumsy and awkward at all of them. If the scissors jam, you might break the blade trying to fix them.
 - A **Chef's Knife** has one job: cut food cleanly. It does not open wine bottles or play music. Because it does one thing, it is indestructible, easy to clean, and never fails.
 
-In software, programmers constantly fall into the trap of writing **"God Functions"**—monolithic functions that receive a web request, parse JSON, validate email syntax, connect to Stripe, charge a credit card, write to PostgreSQL, and send a Welcome email via SendGrid, all in one 250-line block!
+In software, programmers constantly fall into the trap of writing **"God Functions"**-monolithic functions that receive a web request, parse JSON, validate email syntax, connect to Stripe, charge a credit card, write to PostgreSQL, and send a Welcome email via SendGrid, all in one 250-line block!
 
 ### The Two Kinds of Functions: "Doers" vs "Coordinators"
 To keep your code clean, divide your functions into two strict categories:
@@ -183,7 +183,7 @@ Notice the superpowers of this design:
 
 One of the most important architectural realizations in computer science history is **"Favor Object Composition Over Class Inheritance"** (Gang of Four, 1994).
 
-For a solo developer, this rule is not just good practice—**it is a survival mechanism**.
+For a solo developer, this rule is not just good practice-**it is a survival mechanism**.
 
 ### The Classic Flaw of Inheritance: The Banana Gorilla Problem
 

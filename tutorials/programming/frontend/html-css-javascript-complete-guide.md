@@ -1812,4 +1812,4 @@ document.addEventListener("keydown", e=>{
 * **Accessibility matters** – Keyboard navigation, ARIA roles, `prefers-reduced-motion`, and colour contrast are not optional; they protect users and improve SEO.  
 * **Modern tooling (optional)** – If you later decide you need a bundler, tools like **Vite** or **esbuild** add zero‑config ES‑module support, TypeScript checking, and minification without sacrificing the simplicity you’ve learned here.
 
-Now you have a **complete, security‑hardened, modern** vanilla‑JS starter kit, plus a library of reusable layout patterns (named‑grid, Flexbox cards, nav bars, image galleries) and ready‑to‑run mini‑apps. Build, experiment, and iterate—*the web is yours to shape safely.* 🚀
+Now you have a **complete, security‑hardened, modern** vanilla‑JS starter kit, plus a library of reusable layout patterns (named‑grid, Flexbox cards, nav bars, image galleries) and ready‑to‑run mini‑apps. Build, experiment, and iterate-*the web is yours to shape safely.* 🚀

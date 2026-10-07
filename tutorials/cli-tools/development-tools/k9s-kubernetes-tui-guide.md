@@ -77,16 +77,16 @@ k9s --readonly
 In `k9s`, press `:` (colon) to open the command bar, type the resource name or short alias, and press `Enter`:
 
 ### Common Resource Views:
-- `:pods` or `:po` — Pods view
-- `:deployments` or `:dp` — Deployments view
-- `:services` or `:svc` — Services view
-- `:nodes` or `:no` — Cluster nodes and CPU/Memory capacity
-- `:configmaps` or `:cm` — ConfigMaps
-- `:secrets` or `:sec` — Secrets (press `x` to decode secret values in TUI)
-- `:ingresses` or `:ing` — Ingress routes
-- `:namespaces` or `:ns` — Namespaces
-- `:crds` — Custom Resource Definitions
-- `:ctx` — Switch between different Kubernetes cluster contexts
+- `:pods` or `:po` - Pods view
+- `:deployments` or `:dp` - Deployments view
+- `:services` or `:svc` - Services view
+- `:nodes` or `:no` - Cluster nodes and CPU/Memory capacity
+- `:configmaps` or `:cm` - ConfigMaps
+- `:secrets` or `:sec` - Secrets (press `x` to decode secret values in TUI)
+- `:ingresses` or `:ing` - Ingress routes
+- `:namespaces` or `:ns` - Namespaces
+- `:crds` - Custom Resource Definitions
+- `:ctx` - Switch between different Kubernetes cluster contexts
 
 ---
 

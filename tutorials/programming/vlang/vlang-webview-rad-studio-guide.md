@@ -1,4 +1,4 @@
-# `vlang_webview_rad_studio` — Cross-Platform Webview Visual RAD Studio Complete Guide
+# `vlang_webview_rad_studio` - Cross-Platform Webview Visual RAD Studio Complete Guide
 
 `vlang_webview_rad_studio` is an enterprise-grade visual Rapid Application Development (RAD) IDE and desktop workstation suite powered by native [V (vlang)](https://vlang.io) and lightweight, hardware-accelerated OS Webviews (macOS Cocoa / WebKit, Windows Win32 / Edge WebView2, and Linux GTK / WebKit2GTK).
 

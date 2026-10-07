@@ -1,4 +1,4 @@
-# Vlang Utils (`vlang_utils`) — 40 Production Modules Complete Guide
+# Vlang Utils (`vlang_utils`) - 40 Production Modules Complete Guide
 
 `vlang_utils` is an enterprise-grade suite of **40 zero-dependency, self-contained utility modules** written in native [V (vlang)](https://vlang.io) for Rapid Application Development (RAD). It eliminates common boilerplate across filesystems, SQLite databases, cryptography, networking, terminal interfaces, concurrency, data structures, and web services.
 
@@ -15,9 +15,9 @@ Repository: [codecaine-zz/vlang_utils](https://github.com/codecaine-zz/vlang_uti
 3. [Installation & Project Integration](#3-installation--project-integration)
 4. [Master 40-Module Classification & Directory](#4-master-40-module-classification--directory)
 5. [The New v2.0 Modules](#5-the-new-v20-modules)
-   - [5.1 `webutils` — Express-Style Web Framework & Template Engine](#51-webutils--express-style-web-framework--template-engine)
-   - [5.2 `jsonutils` — RFC 6901 Pointer, RFC 7386 Merge Patch & Diff](#52-jsonutils--rfc-6901-pointer-rfc-7386-merge-patch--diff)
-   - [5.3 `markdownutils` — GFM Parser, Anchor Slugs & TOC](#53-markdownutils--gfm-parser-anchor-slugs--toc)
+   - [5.1 `webutils` - Express-Style Web Framework & Template Engine](#51-webutils--express-style-web-framework--template-engine)
+   - [5.2 `jsonutils` - RFC 6901 Pointer, RFC 7386 Merge Patch & Diff](#52-jsonutils--rfc-6901-pointer-rfc-7386-merge-patch--diff)
+   - [5.3 `markdownutils` - GFM Parser, Anchor Slugs & TOC](#53-markdownutils--gfm-parser-anchor-slugs--toc)
 6. [Core Data & Filesystem Modules](#6-core-data--filesystem-modules)
    - [`fileutils`, `sqliteutils`, `tomlutils`, `htmlutils`, `tarutils`, `archiveutils`, `compressutils`]
 7. [Strings, Text & SemVer Modules](#7-strings-text--semver-modules)
@@ -40,7 +40,7 @@ Repository: [codecaine-zz/vlang_utils](https://github.com/codecaine-zz/vlang_uti
 
 - **Standards First**: RFCs and specifications are cited directly in code and verified with published test vectors (RFC 4180 CSV, RFC 4226/6238 HOTP/TOTP, RFC 6901 JSON Pointer, RFC 7386 JSON Merge Patch, RFC 8785 Canonical JSON, SemVer 2.0.0, CommonMark/GFM).
 - **Secure by Default**: Cryptographic operations use OS CSPRNG (`crypto.rand`), constant-time byte comparisons (`secure_compare`) to defeat timing attacks, strict `alg` verification in JWTs, automated secret redaction in logging, single-pass HTML entity sanitization, tar-slip / zip-slip traversal blocks, and bounded decompressors against zip/gzip bombs.
-- **Predictable Complexity**: Documented and benchmarked algorithmic complexity—$O(1)$ LRU caching via slab-allocated doubly-linked structures, $O(n)$ hash-set operations, $O(ND)$ Myers diffing, and iterative DFS without stack overflow risks.
+- **Predictable Complexity**: Documented and benchmarked algorithmic complexity-$O(1)$ LRU caching via slab-allocated doubly-linked structures, $O(n)$ hash-set operations, $O(ND)$ Myers diffing, and iterative DFS without stack overflow risks.
 - **Zero Third-Party C Runtime Dependencies**: Built entirely on top of V's native standard library (`vlib`). Compiles directly to compact, standalone native binaries on all architectures.
 - **100% Backward Compatibility**: Public APIs maintain stable function signatures and field structures across minor and major releases.
 
@@ -114,7 +114,7 @@ import cryptoutils
 
 ## 5. The New v2.0 Modules
 
-### 5.1 `webutils` — Express-Style Web Framework & Template Engine
+### 5.1 `webutils` - Express-Style Web Framework & Template Engine
 
 `webutils` provides a production-grade web framework modeled after Express and Koa, built with zero third-party dependencies using V's native standard library.
 
@@ -172,7 +172,7 @@ fn main() {
 
 ---
 
-### 5.2 `jsonutils` — RFC 6901 Pointer, RFC 7386 Merge Patch & Diff
+### 5.2 `jsonutils` - RFC 6901 Pointer, RFC 7386 Merge Patch & Diff
 
 `jsonutils` extends V's native `x.json2` with structural manipulation, RFC standards compliance, and diffing.
 
@@ -215,7 +215,7 @@ fn main() {
 
 ---
 
-### 5.3 `markdownutils` — GFM Parser, Anchor Slugs & TOC
+### 5.3 `markdownutils` - GFM Parser, Anchor Slugs & TOC
 
 `markdownutils` turns Markdown into sanitised HTML, extracts document outlines, and generates tables of contents.
 

@@ -2,7 +2,7 @@
 
 ## A Beginner-Friendly Guide for People Who Find Math Challenging
 
-**Welcome!** This guide is specially designed for anyone who struggles with math or feels anxious about numbers. We break down every trick into small, easy steps with clear examples. No confusing formulas or math jargon—just simple tricks that actually work in real life!
+**Welcome!** This guide is specially designed for anyone who struggles with math or feels anxious about numbers. We break down every trick into small, easy steps with clear examples. No confusing formulas or math jargon-just simple tricks that actually work in real life!
 
 **💡 The Secret:** You don't need to be "good at math" to use these tricks. If you can count, you can do this!
 
@@ -15,7 +15,7 @@
 ### The Right Way to Learn:
 
 1. **Pick ONE trick** that looks useful (start with the easiest ones marked ⭐ EASIEST)
-2. **Read it slowly** until it makes sense—read it twice if needed!
+2. **Read it slowly** until it makes sense-read it twice if needed!
 3. **Do the examples yourself** with a pencil and paper (don't just read them)
 4. **Practice with 5-10 similar problems** using only that trick
 5. **Check your answers** with a calculator to build confidence
@@ -28,7 +28,7 @@
 - **Week 3:** Add 2-3 new tricks
 - **Week 4:** Review and practice all learned tricks
 
-**Remember:** Even learning just ONE trick will make your life easier! There's no rush—take your time.
+**Remember:** Even learning just ONE trick will make your life easier! There's no rush-take your time.
 
 ---
 
@@ -181,7 +181,7 @@ These are the absolute easiest tricks. **Master these before moving on!**
 - 1000 - 845 → (9-8)(9-4)(10-5) = **155**
 - 1000 - 123 → (9-1)(9-2)(10-3) = **877**
 
-**Memory trick:** "Nine, nine, ten—now you win!"
+**Memory trick:** "Nine, nine, ten-now you win!"
 
 ---
 
@@ -304,7 +304,7 @@ These are the absolute easiest tricks. **Master these before moving on!**
 
 **The magic rule:** Any number ending in 5, when squared, follows this pattern:
 
-1. Ignore the 5 for now—look at the digit(s) before it (call this N)
+1. Ignore the 5 for now-look at the digit(s) before it (call this N)
 2. Multiply N × (N+1) *(that means N times the next number)*
 3. Write down your answer from step 2
 4. Stick "25" at the end
@@ -456,7 +456,7 @@ These are the absolute easiest tricks. **Master these before moving on!**
 
 **🎯 Master 10% first!** Once you know how to find 10%, you can find ANY percentage using simple building blocks!
 
-**The Building Block Method:** Think of percentages like Lego blocks—combine simple pieces to make anything!
+**The Building Block Method:** Think of percentages like Lego blocks-combine simple pieces to make anything!
 
 ---
 
@@ -673,7 +673,7 @@ Try these to test yourself! (Answers at the bottom)
 - **Use a calculator to check** (this builds confidence, not weakness)
 - **Celebrate small wins!** (got one problem right? That's progress!)
 
-**You can do this!** Every expert was once a beginner. Every person who's "good at math" just practiced these tricks until they became automatic. There's nothing special about them—they just practiced. And now you're practicing too!
+**You can do this!** Every expert was once a beginner. Every person who's "good at math" just practiced these tricks until they became automatic. There's nothing special about them-they just practiced. And now you're practicing too!
 
 ### 💭 Motivation Reminder:
 
@@ -687,7 +687,7 @@ With just 5 minutes of daily practice, these tricks will become second nature wi
 
 **⚠️ ONLY START THIS SECTION AFTER YOU'VE MASTERED THE BASICS!**
 
-If you can do most of the practice problems without looking back, you're ready for these advanced tricks. If not, spend more time practicing the basics—there's no rush!
+If you can do most of the practice problems without looking back, you're ready for these advanced tricks. If not, spend more time practicing the basics-there's no rush!
 
 ### Before You Continue:
 ✅ You should be comfortable with:
@@ -1280,7 +1280,7 @@ Once you've mastered these advanced tricks:
 
 **🌟 Final Wisdom:**
 
-*"The difference between basics and advanced is just practice time. You're not learning something 'harder'—you're just building on what you already know!"*
+*"The difference between basics and advanced is just practice time. You're not learning something 'harder'-you're just building on what you already know!"*
 
 Every advanced trick uses the same basic principles you've already mastered:
 - Breaking numbers into easier pieces

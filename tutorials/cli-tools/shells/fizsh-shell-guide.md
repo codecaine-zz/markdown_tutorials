@@ -1,6 +1,6 @@
 # Fizsh (Friendly Interactive Zsh) Guide
 
-`fizsh` (Friendly Interactive Zsh) is a lightweight frontend wrapper around the Z shell (`zsh`). It brings `fish`-like interactive features—such as syntax highlighting, auto-suggestions, fuzzy history searching, and prompt formatting—to standard Zsh environments.
+`fizsh` (Friendly Interactive Zsh) is a lightweight frontend wrapper around the Z shell (`zsh`). It brings `fish`-like interactive features-such as syntax highlighting, auto-suggestions, fuzzy history searching, and prompt formatting-to standard Zsh environments.
 
 ---
 

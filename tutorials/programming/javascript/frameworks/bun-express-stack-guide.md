@@ -12,7 +12,7 @@
 
 ## 🧩 Forms & AJAX Starters
 
-Two tiny patterns you’ll use everywhere—full, working examples are in the MySQL+EJS guide.
+Two tiny patterns you’ll use everywhere-full, working examples are in the MySQL+EJS guide.
 
 Classic form (PRG):
 

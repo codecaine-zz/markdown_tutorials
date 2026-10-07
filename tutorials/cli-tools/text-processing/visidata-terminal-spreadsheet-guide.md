@@ -1,4 +1,4 @@
-# VisiData (vd) — Interactive Terminal Spreadsheet & Data Multitool Guide
+# VisiData (vd) - Interactive Terminal Spreadsheet & Data Multitool Guide
 
 A complete, production-grade guide to **VisiData** (`vd`), the terminal spreadsheet and exploratory data analysis powerhouse capable of loading, browsing, sorting, filtering, aggregating, pivoting, and transforming million-row datasets across **CSV**, **TSV**, **JSON**, **SQLite**, **Parquet**, and **Excel** files in milliseconds.
 

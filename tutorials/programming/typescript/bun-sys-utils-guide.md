@@ -11,16 +11,16 @@ Repository: [codecaine-zz/bun_sys_utils](https://github.com/codecaine-zz/bun_sys
 1. [Architectural Overview & Design Principles](#1-architectural-overview--design-principles)
 2. [Included System Utilities](#2-included-system-utilities)
 3. [Tool-by-Tool Usage & Examples](#3-tool-by-tool-usage--examples)
-   - [`fd` — Fast & Intuitive File Finder](#1-fd--fast--intuitive-file-finder)
-   - [`sd` — Intuitive Find & Replace](#2-sd--intuitive-find--replace)
-   - [`rip` — Safe File Removal with Graveyard](#3-rip--safe-file-removal-with-graveyard)
-   - [`procs` — Process Viewer & Interactive Manager](#4-procs--process-viewer--interactive-manager)
-   - [`watchexec` — File Watcher & Command Runner](#5-watchexec--file-watcher--command-runner)
-   - [`tokei` — Fast Code & LOC Counter](#6-tokei--fast-code--loc-counter)
-   - [`gdu` / `gdu-go` — Disk Usage Analyzer](#7-gdu--gdu-go--disk-usage-analyzer)
-   - [`ipinfo` — IP Geolocation & Network Details](#8-ipinfo--ip-geolocation--network-details)
-   - [`subfinder` — Passive Subdomain Discovery](#9-subfinder--passive-subdomain-discovery)
-   - [`doggo` — Human-Friendly DNS Client](#10-doggo--human-friendly-dns-client)
+   - [`fd` - Fast & Intuitive File Finder](#1-fd--fast--intuitive-file-finder)
+   - [`sd` - Intuitive Find & Replace](#2-sd--intuitive-find--replace)
+   - [`rip` - Safe File Removal with Graveyard](#3-rip--safe-file-removal-with-graveyard)
+   - [`procs` - Process Viewer & Interactive Manager](#4-procs--process-viewer--interactive-manager)
+   - [`watchexec` - File Watcher & Command Runner](#5-watchexec--file-watcher--command-runner)
+   - [`tokei` - Fast Code & LOC Counter](#6-tokei--fast-code--loc-counter)
+   - [`gdu` / `gdu-go` - Disk Usage Analyzer](#7-gdu--gdu-go--disk-usage-analyzer)
+   - [`ipinfo` - IP Geolocation & Network Details](#8-ipinfo--ip-geolocation--network-details)
+   - [`subfinder` - Passive Subdomain Discovery](#9-subfinder--passive-subdomain-discovery)
+   - [`doggo` - Human-Friendly DNS Client](#10-doggo--human-friendly-dns-client)
 4. [Unified Hub Architecture](#4-unified-hub-architecture)
 5. [Shell Autocompletions (Zsh, Bash, Fish)](#5-shell-autocompletions-zsh-bash-fish)
 6. [Zero-Dependency Standalone Binary Compilation](#6-zero-dependency-standalone-binary-compilation)
@@ -58,7 +58,7 @@ Repository: [codecaine-zz/bun_sys_utils](https://github.com/codecaine-zz/bun_sys
 
 ## 3. Tool-by-Tool Usage & Examples
 
-### 1. `fd` — Fast & Intuitive File Finder
+### 1. `fd` - Fast & Intuitive File Finder
 
 ```bash
 # Find files by name pattern in current directory
@@ -84,7 +84,7 @@ bun run fd -d 2 "package.json" .
 bun run fd -e ts --exec bun test {}
 ```
 
-### 2. `sd` — Intuitive Find & Replace
+### 2. `sd` - Intuitive Find & Replace
 
 ```bash
 # Simple in-place string replacement in a file
@@ -100,7 +100,7 @@ bun run sd -p "old_version" "new_version" package.json
 echo "hello world" | bun run sd "world" "bun"
 ```
 
-### 3. `rip` — Safe File Removal with Graveyard
+### 3. `rip` - Safe File Removal with Graveyard
 
 ```bash
 # Safely remove files or directories (moves to ~/.local/share/graveyard)
@@ -120,7 +120,7 @@ bun run rip --prune 14
 bun run rip --decompose
 ```
 
-### 4. `procs` — Process Viewer & Interactive Manager
+### 4. `procs` - Process Viewer & Interactive Manager
 
 ```bash
 # View formatted process table
@@ -155,7 +155,7 @@ bun run procs -i
 #   q / Ctrl+C      Exit TUI
 ```
 
-### 5. `watchexec` — File Watcher & Command Runner
+### 5. `watchexec` - File Watcher & Command Runner
 
 ```bash
 # Run unit tests whenever TypeScript files are modified
@@ -174,7 +174,7 @@ bun run watchexec --postpone -e ts -- bun run build
 bun run watchexec -i dist,build -e ts,json -- bun run build
 ```
 
-### 6. `tokei` — Fast Code & LOC Counter
+### 6. `tokei` - Fast Code & LOC Counter
 
 ```bash
 # Count lines of code in current directory
@@ -197,7 +197,7 @@ bun run tokei -j .
 bun run tokei -e "node_modules,dist" .
 ```
 
-### 7. `gdu` / `gdu-go` — Disk Usage Analyzer
+### 7. `gdu` / `gdu-go` - Disk Usage Analyzer
 
 ```bash
 # Launch interactive TUI disk usage explorer
@@ -224,7 +224,7 @@ bun run gdu -m 10M .
 bun run gdu -d
 ```
 
-### 8. `ipinfo` — IP Geolocation & Network Details
+### 8. `ipinfo` - IP Geolocation & Network Details
 
 ```bash
 # Look up current public IP details
@@ -247,7 +247,7 @@ bun run ipinfo 8.8.8.8 -j
 bun run ipinfo 8.8.8.8 -c
 ```
 
-### 9. `subfinder` — Passive Subdomain Discovery
+### 9. `subfinder` - Passive Subdomain Discovery
 
 ```bash
 # Discover subdomains passively using public certificate logs
@@ -272,7 +272,7 @@ bun run subfinder -d example.com -silent
 bun run subfinder -d example.com -json -o results.json
 ```
 
-### 10. `doggo` — Human-Friendly DNS Client
+### 10. `doggo` - Human-Friendly DNS Client
 
 ```bash
 # Standard DNS lookup

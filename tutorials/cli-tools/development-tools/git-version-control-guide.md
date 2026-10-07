@@ -1,4 +1,4 @@
-# 📘 Official‑style **Git** Guide for macOS (Homebrew — 2025 edition)
+# 📘 Official‑style **Git** Guide for macOS (Homebrew - 2025 edition)
 
 > **What’s new?**  
 > The **Git cheat‑sheet** now contains **every core command** (init, clone, add, commit, push, pull, branch, merge, rebase, stash, tag, worktree, etc.) as ready‑to‑copy‑paste one‑liners, each linked to the official Git reference page.  

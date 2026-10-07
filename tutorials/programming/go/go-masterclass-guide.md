@@ -702,7 +702,7 @@ func main() {
 
 ## 13. Interfaces, Duck Typing & Dynamic Dispatch
 
-In Go, **interfaces are satisfied implicitly**. If a type defines all methods declared by an interface, it satisfies that interface automatically—no explicit `implements` keyword exists!
+In Go, **interfaces are satisfied implicitly**. If a type defines all methods declared by an interface, it satisfies that interface automatically-no explicit `implements` keyword exists!
 
 ```
 Interface Stringer { String() string }

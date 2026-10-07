@@ -15,7 +15,7 @@
 
 ### 1. What is `starship`?
 
-`starship` is a fast, customizable, and intelligent cross-shell prompt written in Rust. It works seamlessly across Zsh, Bash, Fish, and PowerShell, providing real-time context about your environment—including current Git status, programming language runtime versions (Node.js, Python, Rust, Go), cloud context (AWS, GCP, Kubernetes), and command execution times.
+`starship` is a fast, customizable, and intelligent cross-shell prompt written in Rust. It works seamlessly across Zsh, Bash, Fish, and PowerShell, providing real-time context about your environment-including current Git status, programming language runtime versions (Node.js, Python, Rust, Go), cloud context (AWS, GCP, Kubernetes), and command execution times.
 
 #### Key Highlights
 * **Zero Overhead:** Blazingly fast execution written in pure Rust.

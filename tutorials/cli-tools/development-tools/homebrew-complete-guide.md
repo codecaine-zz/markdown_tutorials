@@ -1,6 +1,6 @@
 # Homebrew Complete Power-User & Maintenance Guide
 
-`brew` (Homebrew) is the indispensable package manager for macOS and Linux. While most developers know basic `brew install`, mastering Homebrew's advanced features—including **Brewfiles (`brew bundle`)**, **background daemon services (`brew services`)**, **custom taps**, **casks**, and **storage maintenance**—transforms machine setup and environment reproducibility.
+`brew` (Homebrew) is the indispensable package manager for macOS and Linux. While most developers know basic `brew install`, mastering Homebrew's advanced features-including **Brewfiles (`brew bundle`)**, **background daemon services (`brew services`)**, **custom taps**, **casks**, and **storage maintenance**-transforms machine setup and environment reproducibility.
 
 ---
 

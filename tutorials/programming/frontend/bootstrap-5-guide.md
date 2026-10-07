@@ -1077,8 +1077,8 @@ if (saved) document.documentElement.dataset.bsTheme = saved;
 
 * **Start** with the CDN skeleton (§1‑§2).  
 * **Lay out** your page using the **grid** (§3) for the overall skeleton and **flex utilities** (§4) for inner alignment.  
-* **Add components**—navbars, cards, modals, forms—by copying the markup snippets, then **customise** colours or breakpoints via **Sass** (§1️⃣6️⃣) if needed.  
+* **Add components**-navbars, cards, modals, forms-by copying the markup snippets, then **customise** colours or breakpoints via **Sass** (§1️⃣6️⃣) if needed.  
 * **Control everything** with the **Bootstrap JavaScript API** (§1️⃣5️⃣) when you need programmatic show/hide, dynamic content, or custom options.  
 * **Secure** your site with the checklist (§1️⃣8️⃣) and **optimise** with the performance tips (§1️⃣9️⃣).  
 
-You now have a **complete, up‑to‑date Bootstrap 5 guide** that covers markup, utilities, JavaScript, theming, accessibility, security, and performance—all in plain language and ready for copy‑and‑paste into your own projects. Happy building! 🚀
+You now have a **complete, up‑to‑date Bootstrap 5 guide** that covers markup, utilities, JavaScript, theming, accessibility, security, and performance-all in plain language and ready for copy‑and‑paste into your own projects. Happy building! 🚀

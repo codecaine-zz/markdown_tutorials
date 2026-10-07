@@ -1,4 +1,4 @@
-# EasyQt6 (SimpleGUI) — Zero-Boilerplate Qt 6 GUIs in C++ — Complete Guide
+# EasyQt6 (SimpleGUI) - Zero-Boilerplate Qt 6 GUIs in C++ - Complete Guide
 
 A complete, practical guide to **EasyQt6** (`codecaine-zz/easy_qt6`), a lightweight C++17 wrapper around **Qt 6 Widgets** that makes desktop GUI programming feel like **Visual Basic, Delphi, Lazarus or vlang_simplegui**. You build cross-platform apps (macOS, Linux, Windows x64 and Windows ARM64) without `Q_OBJECT`, without `moc`, without subclassing `QMainWindow`, and without ever including a Qt header in your own code.
 
@@ -55,7 +55,7 @@ A complete, practical guide to **EasyQt6** (`codecaine-zz/easy_qt6`), a lightwei
 
 ## 1. Overview & Philosophy
 
-EasyQt6 (the library and namespace are called **SimpleGUI**) uses Qt 6 under the hood — a professional toolkit used by thousands of companies — but you never have to learn Qt. The pattern for **every** program is:
+EasyQt6 (the library and namespace are called **SimpleGUI**) uses Qt 6 under the hood - a professional toolkit used by thousands of companies - but you never have to learn Qt. The pattern for **every** program is:
 
 ```
 create Application → create Window → create controls → arrange in a layout → react to events → show → run
@@ -70,7 +70,7 @@ create Application → create Window → create controls → arrange in a layout
 | **65 controls** | Standard inputs, layouts, charts, dashboard cards, web/PDF/map views, plus futuristic controls (`ToggleSwitch`, `RadialGauge`, `NeonButton`, `LedIndicator`, `RadarScope`, `TerminalView`, `SegmentedControl`, `GlassPanel`). |
 | **Themes** | Modern dark/light, GNOME, KDE, Ubuntu, Windows 11 Fluent, and a **neon** sci-fi theme. |
 | **Safe by default** | Text is always plain text, colors are validated, links are limited to http/https/mailto, out-of-range indexes are ignored instead of crashing. |
-| **Clean architecture** | PIMPL everywhere — your code never includes Qt headers. Controls are `std::shared_ptr`s; every event returns a disconnectable `EventConnection`. |
+| **Clean architecture** | PIMPL everywhere - your code never includes Qt headers. Controls are `std::shared_ptr`s; every event returns a disconnectable `EventConnection`. |
 | **Cross-platform** | macOS, Linux, Windows x64 and Windows ARM64 (CI build matrix via GitHub Actions). |
 
 ### Architecture: PIMPL + shared_ptr + EventConnection
@@ -84,9 +84,9 @@ flowchart LR
     B -.->|"EventConnection tickets"| A
 ```
 
-- **PIMPL** — each public class (`Button`, `Window`, …) holds a pointer to a private implementation, so Qt headers never leak into your translation units. Faster compiles, simpler code.
-- **`std::shared_ptr`** — every control is created with `std::make_shared<T>()`. You never call `delete`.
-- **`EventConnection`** — every `on_...` call returns a ticket you can `disconnect()` later (safe even after the control is gone).
+- **PIMPL** - each public class (`Button`, `Window`, …) holds a pointer to a private implementation, so Qt headers never leak into your translation units. Faster compiles, simpler code.
+- **`std::shared_ptr`** - every control is created with `std::make_shared<T>()`. You never call `delete`.
+- **`EventConnection`** - every `on_...` call returns a ticket you can `disconnect()` later (safe even after the control is gone).
 
 ### Screenshots
 
@@ -199,11 +199,11 @@ window.on_close([]() { return ask_yes_no("Quit?"); });
 | You see | It means |
 |---|---|
 | `auto x = ...;` | "Make a variable `x`; work out its type for me." |
-| `std::make_shared<Button>("OK")` | Create a Button. Cleaned up automatically — never `delete`. |
+| `std::make_shared<Button>("OK")` | Create a Button. Cleaned up automatically - never `delete`. |
 | `x->set_text("Hi")` | Call a function on a control created with `make_shared` (use `->`). |
 | `window.show()` | Call a function on an object created directly (use `.`). |
 | `[label]() { ... }` | A **lambda**. Names inside `[ ]` are the controls the code may use. |
-| `[&window]() { ... }` | Capture by reference — use for `Window` and `Timer` that live in `main`. |
+| `[&window]() { ... }` | Capture by reference - use for `Window` and `Timer` that live in `main`. |
 | `"Hello " + name` | Join `std::string`s with `+`. |
 | `std::to_string(42)` | Number → text. |
 | `{"Red", "Green", "Blue"}` | A list (`std::vector`). |
@@ -224,7 +224,7 @@ window.on_close([]() { return ask_yes_no("Quit?"); });
 | `Button1.Visible := False` | `button->set_visible(false)` or `button->hide()` |
 | `Button1.Hint := '...'` | `button->set_tooltip("...")` |
 | Object Inspector **Name** / V widget id | `edit->set_name("Edit1")` → `find<Edit>("Edit1")` |
-| `TPanel` with `Align := alTop` | `VBox` / `HBox` — no pixel positions |
+| `TPanel` with `Align := alTop` | `VBox` / `HBox` - no pixel positions |
 | `TMainMenu` | `window.add_menu_item("File", "Open", handler, "Ctrl+O")` |
 | `TStatusBar` | `window.set_status_text("Ready")` |
 | `OnCloseQuery` / `Form_QueryUnload` | `window.on_close([]{ return ask_yes_no("Quit?"); })` |
@@ -266,7 +266,7 @@ return app.run();
 |---|---|
 | `"dark"`, `"modern_dark"`, `"apple"`, `"apple_dark"` | Modern dark (macOS style) |
 | `"light"`, `"modern_light"` | Modern light |
-| `"neon"`, `"cyber"`, `"futuristic"` | Neon on black — pairs with futuristic controls |
+| `"neon"`, `"cyber"`, `"futuristic"` | Neon on black - pairs with futuristic controls |
 | `"linux"`, `"adwaita"`, `"linux_adwaita"`, `"gnome"` | GNOME / libadwaita dark |
 | `"breeze"`, `"kde"`, `"linux_breeze"` | KDE Breeze dark |
 | `"yaru"`, `"ubuntu"`, `"linux_yaru"` | Ubuntu Yaru dark |
@@ -277,7 +277,7 @@ return app.run();
 
 ## 8. Window: Menus, Status Bar & Closing
 
-A window holds **one** control — usually a layout that holds everything else.
+A window holds **one** control - usually a layout that holds everything else.
 
 ```cpp
 Window window("Notes", 800, 600);
@@ -307,7 +307,7 @@ window.on_close([]() { return ask_yes_no("Quit without saving?"); });
 
 ## 9. Common Control API
 
-Every control — buttons, labels, charts, even layouts — supports:
+Every control - buttons, labels, charts, even layouts - supports:
 
 | Category | Functions |
 |---|---|
@@ -317,7 +317,7 @@ Every control — buttons, labels, charts, even layouts — supports:
 | Keyboard | `set_focus()`, `has_focus()` |
 | Names | `set_name(name)`, `name()` |
 
-**Colors** may be hex (`"#3b82f6"`, `"#fff"`, `#AARRGGBB` like `"#803b82f6"`) or any standard web color name (`"teal"`, `"orange"`). Invalid colors are silently ignored — a typo can't crash your program.
+**Colors** may be hex (`"#3b82f6"`, `"#fff"`, `#AARRGGBB` like `"#803b82f6"`) or any standard web color name (`"teal"`, `"orange"`). Invalid colors are silently ignored - a typo can't crash your program.
 
 ---
 
@@ -339,7 +339,7 @@ ticket.disconnect();   // handler no longer runs; safe to call twice
 - Multiple handlers per event are allowed; they run in order.
 - Like Delphi's `OnChange`, standard input controls also fire `on_change` when **your code** changes their value.
 - Functions documented as **"does not fire"** (e.g. `ToggleSwitch::set_on`, `SegmentedControl::set_selected_index`, `NavRail::set_selected`) change values silently. `NeonButton::click()` and `ToggleSwitch::toggle()` fire on purpose.
-- Throwing the ticket away does **not** disconnect — the handler lives as long as the control.
+- Throwing the ticket away does **not** disconnect - the handler lives as long as the control.
 
 | EventConnection | What it does |
 |---|---|
@@ -371,7 +371,7 @@ if (auto e = find<Edit>("NameEdit")) {
 
 ![Layouts gallery](https://raw.githubusercontent.com/codecaine-zz/easy_qt6/master/screenshots/gallery_layouts.png)
 
-Layouts arrange controls so windows resize nicely — no pixel coordinates. **Stretch**: `add_child(control, stretch)`; `1` grows to fill spare space, `2` grows twice as much, `0` (default) keeps natural size.
+Layouts arrange controls so windows resize nicely - no pixel coordinates. **Stretch**: `add_child(control, stretch)`; `1` grows to fill spare space, `2` grows twice as much, `0` (default) keeps natural size.
 
 ```cpp
 auto column = std::make_shared<VBox>();
@@ -397,7 +397,7 @@ tabs->on_change([](int index) { /* 0 = first tab */ });
 | `VBox` (column) | `Column`, `Panel` | `add_child(c, stretch)`, `add_stretch()`, `add_spacing(px)`, `remove_child`, `clear`, `child_count`, `set_spacing`, `set_margins(px)` / `(l,t,r,b)` |
 | `HBox` (row) | `Row` | Same as `VBox` |
 | `GroupBox` | `Frame` | `GroupBox(title)`, VBox functions, `set_title`/`get_title` |
-| `GlassPanel` | — | Frosted futuristic card — see [§17](#17-futuristic-controls) |
+| `GlassPanel` | - | Frosted futuristic card - see [§17](#17-futuristic-controls) |
 | `TabView` | `PageControl`, `TabControl`, `Notebook` | `add_tab(title, content)`, `tab_count`, `current_index`/`set_current_index`, `set_tab_title`, `on_change(int)` |
 | `SplitView` | `Splitter` | `SplitView(horizontal = true)`, `add_child`, `set_sizes(a, b)` / `set_sizes({a,b,c})` |
 | `ScrollView` | `ScrollBox`, `ScrollArea` | `set_content(c)`, `scroll_to_top()`, `scroll_to_bottom()` |
@@ -426,10 +426,10 @@ auto phone = std::make_shared<MaskedInput>("(999) 999-9999");
 | `Link` | `HyperLink`, `LinkLabel` | `Link(text, url)`; only `http`, `https`, `mailto` are opened; `on_click(url)` |
 | `TextInput` | `Edit`, `TextBox`, `LineEdit` | `get_text`/`set_text`, `set_placeholder`, `set_read_only`, `set_max_length`, `clear`, `on_change(text)`, `on_enter(text)` |
 | `PasswordInput` | `PasswordEdit` | As `TextInput` + `set_reveal(bool)` |
-| `SearchField` | — | Built-in ✕ clear button; `on_change` for filter-as-you-type |
+| `SearchField` | - | Built-in ✕ clear button; `on_change` for filter-as-you-type |
 | `MaskedInput` | `MaskEdit` | `set_mask`, `is_complete()`, `on_change` |
 | `Textarea` | `Memo`, `TextArea` | `append_text(line)`, `set_read_only`, `clear`, `on_change` |
-| `TokenField` | — | Tag chips: `add_token`, `remove_token`, `set_tokens`, `tokens()`, `has_token`, `on_tokens_changed(list)` |
+| `TokenField` | - | Tag chips: `add_token`, `remove_token`, `set_tokens`, `tokens()`, `has_token`, `on_tokens_changed(list)` |
 
 **MaskedInput mask characters:** `9` digit required · `0` digit optional · `A` letter required · `a` letter optional · `N` letter/digit required · `X` any char required · anything else is literal.
 
@@ -451,11 +451,11 @@ size->on_change([](const std::string& picked) { /* ... */ });
 |---|---|---|
 | `Checkbox` | `CheckBox` | `is_checked`/`set_checked`, `on_change(bool)` |
 | `Radio` | `RadioButton`, `OptionButton` | Radios in the same layout form a group; `on_change(bool)` |
-| `ToggleSwitch` | `Switch` | Animated switch — see [§17](#17-futuristic-controls) |
-| `Dropdown` | — | Pick only (no typing): `add_item`, `set_items`, `get_selected`/`set_selected`, `selected_index`, `on_change(text)` |
-| `ComboBox` | — | Pick **or** type: `get_text`/`set_text`, `set_placeholder`, `on_change(text)` |
-| `ListBox` | — | `add_item`, `insert_item`, `set_item`, `remove_item`, `item(i)`, `count`, `selected_index`/`selected_text`, `set_sorted`, `on_select(i, text)`, `on_double_click(i, text)` |
-| `SegmentedControl` | — | "Day \| Week \| Month" — see [§17](#17-futuristic-controls) |
+| `ToggleSwitch` | `Switch` | Animated switch - see [§17](#17-futuristic-controls) |
+| `Dropdown` | - | Pick only (no typing): `add_item`, `set_items`, `get_selected`/`set_selected`, `selected_index`, `on_change(text)` |
+| `ComboBox` | - | Pick **or** type: `get_text`/`set_text`, `set_placeholder`, `on_change(text)` |
+| `ListBox` | - | `add_item`, `insert_item`, `set_item`, `remove_item`, `item(i)`, `count`, `selected_index`/`selected_text`, `set_sorted`, `on_select(i, text)`, `on_double_click(i, text)` |
+| `SegmentedControl` | - | "Day \| Week \| Month" - see [§17](#17-futuristic-controls) |
 
 ---
 
@@ -469,10 +469,10 @@ size->on_change([](const std::string& picked) { /* ... */ });
 | `Knob(min, max, value)` | `Dial` | Round dial, same API as `Slider` |
 | `NumberInput(min, max, value)` | `SpinEdit`, `SpinBox`, `NumericUpDown` | `set_step`, `set_suffix(" px")`, `on_change(int)` |
 | `DatePicker(date)` | `DateTimePicker`, `DateEdit` | Dates are `"YYYY-MM-DD"`; `set_date` returns `false` for invalid dates; `on_change(date)` |
-| `DateRangePicker(start, end)` | — | Built-in **7D**/**30D** buttons; `set_range`, `set_last_days(n)`, `on_range_changed(start, end)` |
+| `DateRangePicker(start, end)` | - | Built-in **7D**/**30D** buttons; `set_range`, `set_last_days(n)`, `on_range_changed(start, end)` |
 | `ColorWell(color)` | `ColorButton`, `ColorBox` | `get_color()` always `"#rrggbb"`; `on_change(color)` |
-| `Rating(max_stars = 5)` | — | `set_rating`/`get_rating`, `set_read_only`, `on_change(int)` |
-| `FeedbackMood(rating = 0)` | — | Five emoji faces 1–5 (0 = none); `on_change(int)` |
+| `Rating(max_stars = 5)` | - | `set_rating`/`get_rating`, `set_read_only`, `on_change(int)` |
+| `FeedbackMood(rating = 0)` | - | Five emoji faces 1–5 (0 = none); `on_change(int)` |
 
 ---
 
@@ -483,9 +483,9 @@ size->on_change([](const std::string& picked) { /* ... */ });
 | Control | Aliases | Highlights |
 |---|---|---|
 | `ProgressIndicator(min, max, value)` | `ProgressBar` | `set_value`, `set_range`, `set_indeterminate(bool)`, `set_show_text(bool)` |
-| `CircularProgress()` | — | Ring 0–100: `set_value`, `set_color`, `set_show_text`, `set_diameter` |
-| `StatusPill(text, dot_color)` | — | Badge like **● LIVE**: `set_status(text, color)`, `set_text`, `set_color` |
-| `VfdMeter(segments, vertical)` | — | Retro segment meter: `set_value(%)`, `set_segments(n ≥ 3)`, `set_glow(bool)` |
+| `CircularProgress()` | - | Ring 0–100: `set_value`, `set_color`, `set_show_text`, `set_diameter` |
+| `StatusPill(text, dot_color)` | - | Badge like **● LIVE**: `set_status(text, color)`, `set_text`, `set_color` |
+| `VfdMeter(segments, vertical)` | - | Retro segment meter: `set_value(%)`, `set_segments(n ≥ 3)`, `set_glow(bool)` |
 | `LedIndicator`, `RadialGauge` | `Led`/`Lamp`, `Gauge` | See [§17](#17-futuristic-controls) |
 
 ---
@@ -609,7 +609,7 @@ pie->add_slice("Social", 25);
 
 | Telemetry | Key functions |
 |---|---|
-| `Sparkline(color)` | Tiny live graph: `add_sample(v)`, `set_samples`, `set_fill_enabled`, `set_range`, `set_max_samples(n)` — pair with a `Timer` |
+| `Sparkline(color)` | Tiny live graph: `add_sample(v)`, `set_samples`, `set_fill_enabled`, `set_range`, `set_max_samples(n)` - pair with a `Timer` |
 | `CompositionBar()` | Disk-usage style bar: `add_segment(label, value, color)`, `clear_segments` |
 | `ActivityHeatmap(weeks, days)` | GitHub-style grid: `set_data(matrix)` (0–4), `set_cell`, `set_color_scale(base)` |
 
@@ -625,7 +625,7 @@ pie->add_slice("Social", 25);
 | `StatGrid()` | Row of KPI tiles: `add_stat(title, value, trend, is_positive)` |
 | `ProductCard(title, desc, price, badge, rating, button_text)` | `set_in_stock(false)` disables the button; `on_buy()` |
 | `UserProfileCard(name, handle, role, bio, online, action)` | `set_online_status`, `on_action()` |
-| `MediaPlayer(title, artist, "03:45")` | **UI only** — wire `on_play_pause(bool)`, `on_seek(sec)`, `on_previous`, `on_next` to your playback code |
+| `MediaPlayer(title, artist, "03:45")` | **UI only** - wire `on_play_pause(bool)`, `on_seek(sec)`, `on_previous`, `on_next` to your playback code |
 | `KanbanBoard()` | `add_column(id, title)`, `add_card(col, id, title, tag, desc)`, `move_card`, `remove_card`, `card_ids(col)`, `on_card_clicked(id)` |
 | `NavRail()` | `add_item(id, icon, label, badge)`, `set_badge`, `set_selected` (silent), `on_select(id)` |
 | `Breadcrumbs({crumbs})` | Home › Projects › Report: `push`, `pop`, `on_click(index)` |
@@ -678,7 +678,7 @@ if (!file.empty()) { /* user picked a file */ }
 
 | Function | Returns |
 |---|---|
-| `show_message` / `show_info` / `show_warning` / `show_error(text, title)` | — |
+| `show_message` / `show_info` / `show_warning` / `show_error(text, title)` | - |
 | `ask_yes_no(question, title)` | `true` = Yes |
 | `ask_ok_cancel(question, title)` | `true` = OK |
 | `input_box(prompt, title, default)` | Text, or `default` on Cancel |
@@ -696,7 +696,7 @@ File filters: `"Text files (*.txt)"` or `"Images (*.png *.jpg);;All files (*)"`.
 
 ## 23. Timer & run_later
 
-A `Timer` is invisible (Delphi `TTimer`, VB `Timer`). Keep it alive — e.g. as a variable in `main`.
+A `Timer` is invisible (Delphi `TTimer`, VB `Timer`). Keep it alive - e.g. as a variable in `main`.
 
 ```cpp
 Timer clock(1000);                         // every second
@@ -722,7 +722,7 @@ run_later(2000, []() { show_message("Two seconds passed"); });   // one-shot, no
 
 ## 24. Familiar Names (Aliases)
 
-Each alias is **exactly the same class** — mix freely.
+Each alias is **exactly the same class** - mix freely.
 
 | Alias(es) | Same as | Origin |
 |---|---|---|
@@ -778,11 +778,11 @@ Colors and fonts set via the simple helpers are preserved when you call `set_sty
 
 ## 26. Safety Built In
 
-- **Plain text everywhere** — labels, list items, tags, terminal output, dialogs and chart labels never interpret HTML.
-- **Validated colors** — invalid color strings are ignored and can't inject styles.
-- **Restricted links** — `Link` only opens `http`, `https` and `mailto`.
-- **Bounds checking** — out-of-range rows, cells, indexes and ids are ignored (Grid, ListBox, ActivityHeatmap, KanbanBoard, BarChart…).
-- **Managed memory** — controls are freed automatically; event tickets are safe after a control is gone; Canvas images are capped at 8192 × 8192.
+- **Plain text everywhere** - labels, list items, tags, terminal output, dialogs and chart labels never interpret HTML.
+- **Validated colors** - invalid color strings are ignored and can't inject styles.
+- **Restricted links** - `Link` only opens `http`, `https` and `mailto`.
+- **Bounds checking** - out-of-range rows, cells, indexes and ids are ignored (Grid, ListBox, ActivityHeatmap, KanbanBoard, BarChart…).
+- **Managed memory** - controls are freed automatically; event tickets are safe after a control is gone; Canvas images are capped at 8192 × 8192.
 - **MapView** loads its map library with Subresource Integrity hashes from a trusted CDN.
 
 > [!WARNING]
@@ -1038,7 +1038,7 @@ open ./cpp/build/examples_macos/calculator/example_calculator.app     # macOS ap
 | Event handler never runs | Did you `disconnect()` its ticket, or use a setter marked "does not fire"? |
 | `error: 'label' is not captured` | Add it to the lambda capture: `[label]() { ... }`. |
 | Using `window` / `Timer` in a handler | Capture by reference: `[&window]() { window.close(); }`. |
-| `<b>` tags show literally | Intentional — text is always plain for safety. |
+| `<b>` tags show literally | Intentional - text is always plain for safety. |
 | UI freezes during a long loop | Call `Application::process_events()` or split work with a `Timer`. |
 
 > [!TIP]
@@ -1061,7 +1061,7 @@ QWidget* w = button->get_qwidget();   // advanced use only
 
 ## Summary & Links
 
-EasyQt6 brings the Rapid Application Development feel of Delphi, Lazarus and Visual Basic to modern C++17 on top of Qt 6 — 65 controls, themes, charts, dashboards and futuristic widgets, with zero `moc`, zero raw `new`/`delete`, and no Qt headers in your code.
+EasyQt6 brings the Rapid Application Development feel of Delphi, Lazarus and Visual Basic to modern C++17 on top of Qt 6 - 65 controls, themes, charts, dashboards and futuristic widgets, with zero `moc`, zero raw `new`/`delete`, and no Qt headers in your code.
 
 - **GitHub Repository**: [codecaine-zz/easy_qt6](https://github.com/codecaine-zz/easy_qt6) (MIT License)
 - **Full API Reference**: [docs/API_REFERENCE.md](https://github.com/codecaine-zz/easy_qt6/blob/master/docs/API_REFERENCE.md)

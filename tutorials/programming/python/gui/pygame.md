@@ -4,7 +4,7 @@ The structure of the tutorial is unchanged, but the examples follow current best
 
 ---
 
-## Pygame — Practical Tutorial (with Table of Contents)
+## Pygame - Practical Tutorial (with Table of Contents)
 
 A concise, copy‑pasteable guide to building 2‑D games and interactive apps with **Pygame**.  
 All examples are up‑to‑date for the latest stable release (≥ 2.5) and include links to the official reference documentation.

@@ -20,7 +20,7 @@
 
 ## 🔍 Overview & Why Use `dive`?
 
-When writing Dockerfiles, common mistakes (like creating temporary files in one `RUN` step and deleting them in a later `RUN` step) do not reduce the final image size—the data remains trapped in intermediate layers. `dive` analyzes each layer individually and visualizes exact file modifications, additions, and deletions.
+When writing Dockerfiles, common mistakes (like creating temporary files in one `RUN` step and deleting them in a later `RUN` step) do not reduce the final image size-the data remains trapped in intermediate layers. `dive` analyzes each layer individually and visualizes exact file modifications, additions, and deletions.
 
 | Metric | Description |
 | :--- | :--- |

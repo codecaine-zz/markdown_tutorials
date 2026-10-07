@@ -10,7 +10,7 @@ This guide distills the Bun documentation into a practical, copy‑ready referen
 
 ## 1) Install and verify
 
-- macOS/Linux (curl) — see [Installation](https://bun.sh/docs/installation)
+- macOS/Linux (curl) - see [Installation](https://bun.sh/docs/installation)
 
 ```bash
 curl -fsSL https://bun.com/install | bash
@@ -18,7 +18,7 @@ curl -fsSL https://bun.com/install | bash
 # curl -fsSL https://bun.com/install | bash -s "bun-v1.3.0"
 ```
 
-- Windows (PowerShell) — see [Installation](https://bun.sh/docs/installation)
+- Windows (PowerShell) - see [Installation](https://bun.sh/docs/installation)
 
 ```powershell
 powershell -c "irm bun.sh/install.ps1|iex"

@@ -1,4 +1,4 @@
-# Pydantic v2 — Practical Tutorial (with Table of Contents)
+# Pydantic v2 - Practical Tutorial (with Table of Contents)
 
 A concise, copy‑pasteable guide to [Pydantic](https://docs.pydantic.dev/latest/) v2 for data validation, parsing, and settings. Examples favor modern v2 APIs (model_dump, validators, TypeAdapter, etc.).
 

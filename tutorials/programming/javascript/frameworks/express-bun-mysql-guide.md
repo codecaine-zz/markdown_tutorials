@@ -1,4 +1,4 @@
-# Express.js with Bun + MySQL + EJS — Production-Ready Tutorial (ARM Mac optimized)
+# Express.js with Bun + MySQL + EJS - Production-Ready Tutorial (ARM Mac optimized)
 
 Copy‑pasteable guide to build a robust, scalable REST API using Express.js on Bun with MySQL. Features production-ready database wrapper with type safety, connection pooling, and enterprise-grade error handling. Optimized for Apple Silicon (M1/M2/M3+) Macs.
 

@@ -506,5 +506,5 @@ void find_files_by_extension(const std::filesystem::path& dir, std::string_view 
 
 ## Related Guides & Ecosystem
 
-- **The C++26 Programming Language: Complete Guide for Beginners & Reference**: [C++26 Complete Guide](cpp26-complete-guide.md) — Comprehensive guide to modern C++ fundamentals through C++26 features (static reflection, pack indexing, inplace_vector, contracts).
-- **Desktop GUI Development with EasyQt6**: [EasyQt6 (SimpleGUI) Complete Guide](easy-qt6-simplegui-guide.md) — Zero-boilerplate, modern C++ wrapper around Qt 6 Widgets for rapid desktop GUI development across macOS, Linux, and Windows.
+- **The C++26 Programming Language: Complete Guide for Beginners & Reference**: [C++26 Complete Guide](cpp26-complete-guide.md) - Comprehensive guide to modern C++ fundamentals through C++26 features (static reflection, pack indexing, inplace_vector, contracts).
+- **Desktop GUI Development with EasyQt6**: [EasyQt6 (SimpleGUI) Complete Guide](easy-qt6-simplegui-guide.md) - Zero-boilerplate, modern C++ wrapper around Qt 6 Widgets for rapid desktop GUI development across macOS, Linux, and Windows.

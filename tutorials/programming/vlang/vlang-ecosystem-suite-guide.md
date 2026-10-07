@@ -1,4 +1,4 @@
-# Vlang Desktop & Systems Ecosystem Suite — The Master Architectural Guide
+# Vlang Desktop & Systems Ecosystem Suite - The Master Architectural Guide
 
 Welcome to the comprehensive architectural guide to the **V Desktop & Systems Engineering Ecosystem**, authored and maintained by [@codecaine-zz](https://github.com/codecaine-zz).
 
@@ -255,9 +255,9 @@ Across the three GUI repositories, the suite includes over **115 ready-to-run de
 
 Explore each technology stack in depth:
 
-1. [**`vlang-utils-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/vlang-utils-guide.md) — Complete 40-module API guide covering Web, JSON, Markdown, Crypto, SQLite, Concurrency, and System utilities.
-2. [**`simple-gg-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/simple-gg-guide.md) — Cross-platform Sokol `gg` guide with 87 themes, Super Controls, reactive state store, and 47 workstation apps.
-3. [**`vlang-webview-rad-studio-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/vlang-webview-rad-studio-guide.md) — Webview RAD Studio visual form designer, 70+ components, 9 placement presets, and 18 studio apps.
-4. [**`vlang-simplegui-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/vlang-simplegui-guide.md) — Native macOS Cocoa AppKit project guide with 135 demos, 50 workstations, and struct-driven form generation.
-5. [**`simplegui-api-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/simplegui-api-guide.md) — Comprehensive API reference with 23 sections of code examples for Cocoa desktop development.
-6. [**`v-programming-language-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/v-programming-language-guide.md) — The comprehensive textbook guide covering core V language syntax, types, error handling, concurrency, and standard library.
+1. [**`vlang-utils-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/vlang-utils-guide.md) - Complete 40-module API guide covering Web, JSON, Markdown, Crypto, SQLite, Concurrency, and System utilities.
+2. [**`simple-gg-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/simple-gg-guide.md) - Cross-platform Sokol `gg` guide with 87 themes, Super Controls, reactive state store, and 47 workstation apps.
+3. [**`vlang-webview-rad-studio-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/vlang-webview-rad-studio-guide.md) - Webview RAD Studio visual form designer, 70+ components, 9 placement presets, and 18 studio apps.
+4. [**`vlang-simplegui-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/vlang-simplegui-guide.md) - Native macOS Cocoa AppKit project guide with 135 demos, 50 workstations, and struct-driven form generation.
+5. [**`simplegui-api-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/simplegui-api-guide.md) - Comprehensive API reference with 23 sections of code examples for Cocoa desktop development.
+6. [**`v-programming-language-guide.md`**](file:///Users/codecaine/markdown_tutorials/tutorials/programming/vlang/v-programming-language-guide.md) - The comprehensive textbook guide covering core V language syntax, types, error handling, concurrency, and standard library.

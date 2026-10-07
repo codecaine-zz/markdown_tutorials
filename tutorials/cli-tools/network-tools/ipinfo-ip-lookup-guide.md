@@ -1,6 +1,6 @@
 # IPinfo CLI Complete Guide
 
-`ipinfo` is the official command-line interface for IPinfo.io—the premier IP address intelligence and geolocation API. Written in Go, the `ipinfo` CLI provides lightning-fast IP geolocation lookups, ASN intelligence, CIDR and subnet calculation, bulk IP lookups, log-file IP grepping, and world-map visualization directly in your terminal.
+`ipinfo` is the official command-line interface for IPinfo.io-the premier IP address intelligence and geolocation API. Written in Go, the `ipinfo` CLI provides lightning-fast IP geolocation lookups, ASN intelligence, CIDR and subnet calculation, bulk IP lookups, log-file IP grepping, and world-map visualization directly in your terminal.
 
 ---
 

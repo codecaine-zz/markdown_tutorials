@@ -401,4 +401,4 @@ From here you can:
 2. **Write your own Jython/Python extensions** (e.g., a custom encoder).  
 3. **Integrate Burp with CI/CD pipelines** (use `burp`’s command‑line API or the **Burp Suite Enterprise** API for automated scans).  
 
-Enjoy hunting bugs, and remember: the best way to learn security testing is to **capture, modify, and replay** real traffic—Burp makes that simple, even on the newest Apple Silicon Macs. 🚀  
+Enjoy hunting bugs, and remember: the best way to learn security testing is to **capture, modify, and replay** real traffic-Burp makes that simple, even on the newest Apple Silicon Macs. 🚀  

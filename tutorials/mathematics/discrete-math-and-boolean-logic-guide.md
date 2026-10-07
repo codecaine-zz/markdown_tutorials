@@ -28,7 +28,7 @@
 - **Discrete Math** is like a staircase. You are either on step 1, step 2, or step 3. There is no "step 1.7". Things are separate, countable, and distinct.
 
 **Why computers love discrete math:**
-Computers are made of billions of tiny electronic switches (transistors). A switch is either **ON** or **OFF** (1 or 0). It cannot be "half on". Everything in code—pixels on your screen, characters in text, items in an array, decisions in an `if` condition—is built out of separate, distinct pieces.
+Computers are made of billions of tiny electronic switches (transistors). A switch is either **ON** or **OFF** (1 or 0). It cannot be "half on". Everything in code-pixels on your screen, characters in text, items in an array, decisions in an `if` condition-is built out of separate, distinct pieces.
 
 > 💡 **Key Takeaway:** Discrete math is simply the mathematics of computer decisions, data structures, and algorithms!
 

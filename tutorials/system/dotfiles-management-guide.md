@@ -143,7 +143,7 @@ alias pbpaste="xclip -selection clipboard -o"
 
 ## 4. Method 3: The Bare Git Repository Pattern
 
-The Bare Git pattern requires **zero external utilities**—only native `git`. It turns your entire `$HOME` directory into a working tree for a hidden bare git directory (`~/.cfg`).
+The Bare Git pattern requires **zero external utilities**-only native `git`. It turns your entire `$HOME` directory into a working tree for a hidden bare git directory (`~/.cfg`).
 
 ### Setup on Machine 1
 

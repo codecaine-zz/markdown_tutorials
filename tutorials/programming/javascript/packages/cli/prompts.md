@@ -201,4 +201,4 @@ EOF
 bun run index.js
 ```
 
-You now have a fully functional, **import‑based** CLI built with Bun and the `prompts` library—no `require` statements, no Node‑specific confusion. Happy coding!
+You now have a fully functional, **import‑based** CLI built with Bun and the `prompts` library-no `require` statements, no Node‑specific confusion. Happy coding!

@@ -1,4 +1,4 @@
-# Express.js with Bun + SQLite — Practical Tutorial (ARM Mac optimized)
+# Express.js with Bun + SQLite - Practical Tutorial (ARM Mac optimized)
 
 Copy‑pasteable guide to build a fast, tiny REST API using Express.js on Bun and Bun’s built‑in SQLite (`bun:sqlite`). Optimized defaults for Apple Silicon (M1/M2/M3+) Macs, with clean, easy‑to‑read code.
 
@@ -53,7 +53,7 @@ curl -fsSL https://bun.sh/install | bash
 bun --version
 ```
 
-No Homebrew SQLite needed—`bun:sqlite` is built-in.
+No Homebrew SQLite needed-`bun:sqlite` is built-in.
 
 ## Project Setup
 

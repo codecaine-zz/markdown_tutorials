@@ -58,7 +58,7 @@ After installation, `fzf` provides an install script that automatically configur
 
 The setup script enables three powerful keybindings by default.
 
-  * **`Ctrl+T` — Find and paste files or directories**
+  * **`Ctrl+T` - Find and paste files or directories**
     Type part of a command (e.g., ` cat  `) and press `Ctrl+T`. `fzf` will open a file finder. Selecting a file pastes its path onto your command line.
 
     **Example Interaction:** You type ` cat  ` and press `Ctrl+T`. A finder opens.
@@ -80,7 +80,7 @@ The setup script enables three powerful keybindings by default.
     $ cat src/components/Header.jsx_
     ```
 
-  * **`Ctrl+R` — Find and paste commands from history**
+  * **`Ctrl+R` - Find and paste commands from history**
     Press `Ctrl+R` to open a fuzzy search of your entire command history. This is a powerful replacement for the default reverse search.
 
     > **Note on `atuin` conflict:** If you have also installed and configured `atuin`, it will take control of `Ctrl+R` by default. Your shell will use whichever tool's `init` script is loaded last in your `~/.zshrc` file. To choose `fzf` for `Ctrl+R`, ensure its setup lines are *after* `atuin`'s, or comment out the `atuin` init script.
@@ -98,7 +98,7 @@ The setup script enables three powerful keybindings by default.
 
     Pressing `Enter` will paste `brew install fzf` onto your command line, ready to be executed.
 
-  * **`Alt+C` — Find and `cd` into a directory**
+  * **`Alt+C` - Find and `cd` into a directory**
     Press `Alt+C` (or `Option+C` on macOS) from anywhere to fuzzy-find a directory, then immediately `cd` into it.
 
     **Example Interaction:** Press `Alt+C` and type `comp`.

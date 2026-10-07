@@ -298,7 +298,7 @@ Because both **Axios** and **Bun’s file helpers** are pure‑JavaScript, you c
 bun build api-client.js --compile --outfile api-client
 ```
 
-`./api-client` now contains everything (Axios code, your logic, Bun runtime) and can be copied to any machine—no `node_modules` folder needed.
+`./api-client` now contains everything (Axios code, your logic, Bun runtime) and can be copied to any machine-no `node_modules` folder needed.
 
 ---  
 

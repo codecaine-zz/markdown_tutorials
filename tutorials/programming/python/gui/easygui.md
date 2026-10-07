@@ -1,6 +1,6 @@
 # EasyGUI: Complete, Copy‑Paste Tutorial (Python)
 
-EasyGUI lets you build simple pop-up GUIs using plain functions—no event loops or layout managers. This guide is practical and code-first: every section includes a minimal, runnable snippet you can paste into a file and run.
+EasyGUI lets you build simple pop-up GUIs using plain functions-no event loops or layout managers. This guide is practical and code-first: every section includes a minimal, runnable snippet you can paste into a file and run.
 
 - Works best for quick utilities, prompts, and desktop helpers
 - No external windowing code to learn; everything is a function call
@@ -214,7 +214,7 @@ eg.msgbox(f"Folder: {dir_path}")
 Notes:
 
 - Some platforms may ignore parts of the filter spec; keep patterns simple for reliability.
-- If the user cancels, you’ll get None—handle it.
+- If the user cancels, you’ll get None-handle it.
 
 ---
 
@@ -385,11 +385,11 @@ python 09_mini_app.py
 ## 11) Tips, Gotchas, and Version Notes
 
 - Cancel/Close handling: Always check for None/False and branch accordingly.
-- Defaults: Many functions accept `title`, `default`, or `choices`—prefer explicit titles for clarity.
+- Defaults: Many functions accept `title`, `default`, or `choices`-prefer explicit titles for clarity.
 - Long text: Use `textbox` or `codebox` rather than `msgbox` for big content.
 - File filters: Keep them simple; behavior varies slightly by platform.
 - Images: Use common formats (PNG/JPG). Pass absolute paths if relative paths cause issues.
-- Multiple file open: Some EasyGUI versions support `fileopenbox(..., multiple=True)` to return a list; if unavailable in your version, you’ll get a TypeError—omit the parameter in that case.
+- Multiple file open: Some EasyGUI versions support `fileopenbox(..., multiple=True)` to return a list; if unavailable in your version, you’ll get a TypeError-omit the parameter in that case.
 - Demo explorer: `python -m easygui.egdemo` shows most capabilities interactively.
 
 ---

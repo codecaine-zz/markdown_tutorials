@@ -55,7 +55,7 @@ Before distributing workflows to teammates, ensure you:
 
 ## Why This Matters
 
-Automator and Shortcuts allow non-programmers and developers alike to eliminate repetitive tasks—like batch image resizing, PDF merging, file sorting, and automated email notifications—directly within the macOS UI without installing third-party tools.
+Automator and Shortcuts allow non-programmers and developers alike to eliminate repetitive tasks-like batch image resizing, PDF merging, file sorting, and automated email notifications-directly within the macOS UI without installing third-party tools.
 
 ---
 

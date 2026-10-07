@@ -1,4 +1,4 @@
-# Kerbrute — Active Directory Kerberos Enumeration & Password Spraying Guide
+# Kerbrute - Active Directory Kerberos Enumeration & Password Spraying Guide
 
 A complete, production-grade guide to **Kerbrute** (`kerbrute`), the lightning-fast Go-based Active Directory reconnaissance and credential auditing utility that leverages Kerberos pre-authentication to enumerate valid domain users and spray passwords without triggering account lockouts.
 

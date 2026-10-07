@@ -2720,7 +2720,7 @@ _File location: [control_flow/02_Match/match_as_switch_case/match_as_switch_case
 
 ### Lesson: Match As Switch Case
 
-In V, there is no `switch` statement. Instead, the `match` keyword is used for branching on values. The `match` statement is highly readable and type-safe. Each branch is evaluated in order, and unlike in C/Java/Javascript, there is no "fall-through" behavior—the matching block executes and the statement completes immediately. This eliminates bugs caused by forgetting `break` statements. V also enforces that a `match` must cover all possible cases or provide an `else` block.
+In V, there is no `switch` statement. Instead, the `match` keyword is used for branching on values. The `match` statement is highly readable and type-safe. Each branch is evaluated in order, and unlike in C/Java/Javascript, there is no "fall-through" behavior-the matching block executes and the statement completes immediately. This eliminates bugs caused by forgetting `break` statements. V also enforces that a `match` must cover all possible cases or provide an `else` block.
 
 This example shows how to use `match` on string values.
 

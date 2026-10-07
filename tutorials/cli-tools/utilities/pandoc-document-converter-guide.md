@@ -1,6 +1,6 @@
 # Pandoc Document Converter Guide
 
-`pandoc` is the universal document converter—a "Swiss-army knife" for converting text between over 40 markup formats, including **Markdown, HTML, PDF, Microsoft Word (.docx), EPUB ebooks, LaTeX, Jupyter Notebooks (.ipynb), and presentation slides**.
+`pandoc` is the universal document converter-a "Swiss-army knife" for converting text between over 40 markup formats, including **Markdown, HTML, PDF, Microsoft Word (.docx), EPUB ebooks, LaTeX, Jupyter Notebooks (.ipynb), and presentation slides**.
 
 ---
 

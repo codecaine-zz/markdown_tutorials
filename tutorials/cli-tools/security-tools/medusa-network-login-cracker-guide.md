@@ -1,4 +1,4 @@
-# Medusa — Fast, Modular Network Login Brute-Forcer Guide
+# Medusa - Fast, Modular Network Login Brute-Forcer Guide
 
 A complete, production-grade guide to **Medusa** (`medusa`), a high-speed, parallelized, modular network authentication cracker designed for penetration testers and system administrators, featuring thread stability and fine-grained session rate-limiting.
 

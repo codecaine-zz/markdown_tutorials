@@ -1,4 +1,4 @@
-# CeWL — Custom Wordlist Generator via Web Spiders Guide
+# CeWL - Custom Wordlist Generator via Web Spiders Guide
 
 A complete, production-grade guide to **CeWL** (Custom Word List generator), the Ruby-based reconnaissance utility that spiders target websites, extracts unique keywords, harvests corporate email addresses, and extracts metadata from documents to build targeted dictionaries for password cracking.
 

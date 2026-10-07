@@ -1,6 +1,6 @@
 # THC-Hydra (Network Logon Cracker) Complete Guide
 
-`hydra` (THC-Hydra) is a legendary, multi-threaded network logon cracker designed by van Hauser and David Maciejak. Supporting over 50 protocols—including SSH, FTP, HTTP(S) forms, MySQL, Redis, SMB, and VNC—`hydra` is a standard auditing tool for security consultants to benchmark password strength and identify exposed administrative credentials.
+`hydra` (THC-Hydra) is a legendary, multi-threaded network logon cracker designed by van Hauser and David Maciejak. Supporting over 50 protocols-including SSH, FTP, HTTP(S) forms, MySQL, Redis, SMB, and VNC-`hydra` is a standard auditing tool for security consultants to benchmark password strength and identify exposed administrative credentials.
 
 ---
 

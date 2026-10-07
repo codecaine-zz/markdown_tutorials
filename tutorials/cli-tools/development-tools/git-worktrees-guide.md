@@ -23,7 +23,7 @@
 When you are deep in a feature branch with modified files and your team requests an urgent hotfix or code review:
 
 - **Traditional Workflow**: You must run `git stash`, switch branches (`git checkout main`), run tests, fix the bug, switch back (`git checkout feature-x`), and run `git stash pop` (often causing merge conflicts or forcing slow dependency rebuilds).
-- **Worktree Workflow**: You spawn a new directory for `hotfix` with one command, make your changes, commit, push, and delete the folder—leaving your original feature branch completely untouched.
+- **Worktree Workflow**: You spawn a new directory for `hotfix` with one command, make your changes, commit, push, and delete the folder-leaving your original feature branch completely untouched.
 
 | Feature | `git checkout` / `stash` | `git worktree` |
 | :--- | :--- | :--- |

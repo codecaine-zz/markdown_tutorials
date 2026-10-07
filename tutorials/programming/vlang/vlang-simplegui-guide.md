@@ -1,4 +1,4 @@
-# SimpleGUI — Native macOS GUIs in V — Complete Project Guide
+# SimpleGUI - Native macOS GUIs in V - Complete Project Guide
 
 A complete, production-grade guide to **SimpleGUI** (`codecaine-zz/vlang_simplegui`), a native Cocoa desktop GUI starter framework and Rapid Application Development (RAD) ecosystem written in the **V programming language** (`vlang`), featuring a built-in Delphi/VB-inspired Visual UI Designer, a headless CLI toolkit (`simplecli`), 40 developer utility modules (v2.0.0), 135 native macOS demos, and 50 enterprise workstations.
 
@@ -84,7 +84,7 @@ Building graphical applications on macOS has traditionally forced developers to 
 2. **Web Wrappers (Electron / Tauri / Webview)**: Familiar web technologies, but rendering non-native DOM elements that don't match macOS system controls, with higher memory consumption and cold-boot delays.
 3. **Cross-Platform Canvas Toolkits (Flutter / Qt / Dear ImGui)**: Custom simulated controls drawn onto OpenGL or Metal canvases that feel foreign on macOS (missing native spellcheck, dictionary popups, standard keyboard shortcuts, and voice-over accessibility).
 
-**SimpleGUI** solves this problem by directly bridging the **V programming language** to Apple's native **Cocoa (`AppKit`)** framework using lightweight C/Objective-C bindings (`window.m` and `window.h`). When you call `win.add_button()`, SimpleGUI does not draw pixels onto a canvas—it instantiates a genuine Apple `NSButton` managed directly by macOS `NSWindow` and `NSView`.
+**SimpleGUI** solves this problem by directly bridging the **V programming language** to Apple's native **Cocoa (`AppKit`)** framework using lightweight C/Objective-C bindings (`window.m` and `window.h`). When you call `win.add_button()`, SimpleGUI does not draw pixels onto a canvas-it instantiates a genuine Apple `NSButton` managed directly by macOS `NSWindow` and `NSView`.
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

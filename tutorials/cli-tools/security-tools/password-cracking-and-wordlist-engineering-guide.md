@@ -1,6 +1,6 @@
 # Modern Password Cracking & Wordlist Engineering Guide
 
-A complete, production-grade guide to the modern credential recovery ecosystem, tool taxonomy, wordlist mutation methodologies, and pattern engineering workflows—covering **Hashcat**, **John the Ripper**, **CeWL**, **Mentalist**, **PACK** (Password Analysis and Cracking Kit), **Impacket**, **Kerbrute**, **Crowbar**, and **Forensic Memory Extraction**.
+A complete, production-grade guide to the modern credential recovery ecosystem, tool taxonomy, wordlist mutation methodologies, and pattern engineering workflows-covering **Hashcat**, **John the Ripper**, **CeWL**, **Mentalist**, **PACK** (Password Analysis and Cracking Kit), **Impacket**, **Kerbrute**, **Crowbar**, and **Forensic Memory Extraction**.
 
 ---
 

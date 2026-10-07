@@ -1,4 +1,4 @@
-# Aircrack-ng & Wifite2 — Complete Wi-Fi Security Auditing Guide
+# Aircrack-ng & Wifite2 - Complete Wi-Fi Security Auditing Guide
 
 A complete, production-grade guide to **Aircrack-ng** (`aircrack-ng`) and **Wifite2** (`wifite`), the industry-standard 802.11 wireless security auditing toolchain, covering monitor mode setup, packet injection, WPA2 4-way handshake interception, modern PMKID extraction, automated rogue AP auditing, and handoff to Hashcat.
 
@@ -224,7 +224,7 @@ The **PMKID** is calculated as:
 PMKID = HMAC-SHA1-128(PMK, "PMK Name" | MAC_AP | MAC_STA)
 ```
 
-Because the router derives this identifier as part of the Roaming/Key Exchange mechanism, an auditor only needs to send an Association Request to the AP. The AP replies with the PMKID in EAPOL frame 1—no connected clients or deauthentication required.
+Because the router derives this identifier as part of the Roaming/Key Exchange mechanism, an auditor only needs to send an Association Request to the AP. The AP replies with the PMKID in EAPOL frame 1-no connected clients or deauthentication required.
 
 ### Capturing PMKIDs with hcxdumptool
 

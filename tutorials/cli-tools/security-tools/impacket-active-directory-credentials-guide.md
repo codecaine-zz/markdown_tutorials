@@ -1,4 +1,4 @@
-# Impacket — Active Directory Credential Extraction & Kerberos Auditing Guide
+# Impacket - Active Directory Credential Extraction & Kerberos Auditing Guide
 
 A complete, production-grade guide to **Impacket**'s credential extraction and Active Directory attack toolchain, focusing on **`GetNPUsers`** (AS-REP Roasting), **`GetUserSPNs`** (Kerberoasting), and **`secretsdump`** (SAM/NTDS.dit dumping) with direct handoff to Hashcat and John the Ripper.
 
@@ -51,7 +51,7 @@ Both attacks leverage the core design of Kerberos to extract password hashes for
 
 1. **AS-REP Roasting (`GetNPUsers`)**:
    - Targets accounts where the administrative flag `DONT_REQ_PREAUTH` is set.
-   - Requires **ZERO domain credentials**—anyone with network access to the Domain Controller (port 88) can request a Ticket-Granting Ticket (TGT).
+   - Requires **ZERO domain credentials**-anyone with network access to the Domain Controller (port 88) can request a Ticket-Granting Ticket (TGT).
    - The DC returns an encrypted `AS-REP` packet encrypted using the user's password hash.
 
 2. **Kerberoasting (`GetUserSPNs`)**:

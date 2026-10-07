@@ -1,4 +1,4 @@
-# jless — Command-Line Interactive JSON Viewer Guide
+# jless - Command-Line Interactive JSON Viewer Guide
 
 A complete, production-grade guide to **jless** (`jless`), a high-performance interactive terminal JSON viewer written in **Rust**, featuring collapsible syntax trees, Vim-style navigation, JSON path search, clipboard copying, and smooth inspection of massive multi-gigabyte JSON files.
 

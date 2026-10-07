@@ -1,4 +1,4 @@
-# ⚡ Bun RAD Studio (Delphi / Visual Basic Style IDE) — Complete Guide
+# ⚡ Bun RAD Studio (Delphi / Visual Basic Style IDE) - Complete Guide
 
 A comprehensive, production-grade guide to **Bun RAD Studio** (`codecaine-zz/bun_rad_studio`), a high-performance Rapid Application Development (RAD) Visual IDE for **Bun** and **Webview-Bun**, inspired by classic Borland Delphi and Visual Basic 6, built with modern web technologies and TypeScript.
 
@@ -194,17 +194,17 @@ This initializes the Webview-Bun native window, spawns the visual designer canva
 
 The Bun RAD Studio user interface mirrors the three-pane ergonomics of classic Borland Delphi:
 
-1. **Left Pane — Component Palette**:
+1. **Left Pane - Component Palette**:
    - Organized into categorized drawers: **Standard Controls**, **Form Inputs**, **Containers & Layouts**, **Data-Aware Controls**, **Charts & Gauges**, and **System & Diagnostics**.
    - Hover over any widget to view its property schema and default dimensions.
    - Click to add to the canvas or drag directly to a target coordinate.
 
-2. **Center Pane — Visual Form Canvas**:
+2. **Center Pane - Visual Form Canvas**:
    - Represents the physical desktop window.
    - Renders with an adjustable pixel grid (8px, 16px, or freeform).
    - Features multi-control marquee selection, rubber-band dragging, edge and corner resize handles, and alignment guidelines (snap to sibling edges and centers).
 
-3. **Right Pane — Object Inspector & Code Generator**:
+3. **Right Pane - Object Inspector & Code Generator**:
    - **Properties Tab**: Edit control title, font, size, foreground/background color, enabled/read-only flags, and layout anchors.
    - **Events Tab**: Attach click, change, blur, submit, or timer events to TypeScript callbacks.
    - **Code Preview Tab**: Live, syntax-highlighted code output updated in real-time as you drag and configure controls.
@@ -673,7 +673,7 @@ Renders a comprehensive showcase form and lets you cycle through all 63 color pa
 
 ## 11. Enterprise Production Workstations & Utilities
 
-Bun RAD Studio is not just a UI framework—it comes bundled with **16 full-featured desktop workstation applications** located in the `applications/` directory.
+Bun RAD Studio is not just a UI framework-it comes bundled with **16 full-featured desktop workstation applications** located in the `applications/` directory.
 
 ### Workstations Visual Gallery
 

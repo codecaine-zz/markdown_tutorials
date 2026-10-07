@@ -188,7 +188,7 @@ Because of Euler's Totient Theorem, calculating the secret decryption number `d`
 
 ## Cryptographic Hashes: The Digital Blender
 
-A **Cryptographic Hash Function** (such as **SHA-256**) takes any piece of digital data—a short password, an email, or a 50GB video file—and runs it through a mathematical "blender" to produce a fixed **64-character fingerprint**.
+A **Cryptographic Hash Function** (such as **SHA-256**) takes any piece of digital data-a short password, an email, or a 50GB video file-and runs it through a mathematical "blender" to produce a fixed **64-character fingerprint**.
 
 ### The 3 Rules of Cryptographic Hashes:
 1. **Deterministic:** The exact same input will always produce the exact same fingerprint.

@@ -1,6 +1,6 @@
 # HTTPStat (cURL Latency Visualizer) Complete Guide
 
-`httpstat` is an elegant, visual command-line tool that visualizes `curl` statistics into a clean, human-readable ASCII waterfall diagram. Written in Python and Go, `httpstat` breaks down standard HTTP/HTTPS request timing phases—including DNS lookup, TCP handshake, TLS negotiation, server processing (TTFB), and content transfer—making network latency bottlenecks instantly identifiable.
+`httpstat` is an elegant, visual command-line tool that visualizes `curl` statistics into a clean, human-readable ASCII waterfall diagram. Written in Python and Go, `httpstat` breaks down standard HTTP/HTTPS request timing phases-including DNS lookup, TCP handshake, TLS negotiation, server processing (TTFB), and content transfer-making network latency bottlenecks instantly identifiable.
 
 ---
 

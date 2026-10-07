@@ -1,4 +1,4 @@
-# Jinja2 — Practical Tutorial (with Table of Contents)
+# Jinja2 - Practical Tutorial (with Table of Contents)
 
 Jinja2 is a fast, expressive templating engine for Python. It powers Flask and many other projects. This guide is copy‑pasteable and focuses on practical usage, security, and performance.
 

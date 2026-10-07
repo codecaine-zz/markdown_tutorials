@@ -1,4 +1,4 @@
-# Seaborn — Practical Tutorial (with Table of Contents)
+# Seaborn - Practical Tutorial (with Table of Contents)
 
 A hands-on, copy‑pasteable guide for data visualization with Seaborn. It builds on matplotlib and pandas to make statistical plots easier and prettier.
 

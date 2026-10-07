@@ -2,7 +2,7 @@
 
 ## The Visual, No-Jargon Guide Behind 3D Graphics, Game Physics, and AI
 
-> **Welcome!** If you've ever felt intimidated by rows of brackets, Greek symbols, or words like "eigenvector", this guide is here to help. Linear algebra is not dry arithmetic—it is simply the mathematics of **grids of numbers (matrices)** and **arrows in space (vectors)**. It powers everything from 3D video game engines to modern AI image generators and ChatGPT!
+> **Welcome!** If you've ever felt intimidated by rows of brackets, Greek symbols, or words like "eigenvector", this guide is here to help. Linear algebra is not dry arithmetic-it is simply the mathematics of **grids of numbers (matrices)** and **arrows in space (vectors)**. It powers everything from 3D video game engines to modern AI image generators and ChatGPT!
 
 ---
 
@@ -194,7 +194,7 @@ These two words sound intimidating because "Eigen" is a German word meaning *"ow
 
 **The Simple Concept:**  
 When a matrix stretches, squashes, or shears space, almost all vector arrows get knocked off their original direction.  
-However, there are a few special, magical arrows that **stay pointing along the exact same line—they only get stretched or shrunk!**
+However, there are a few special, magical arrows that **stay pointing along the exact same line-they only get stretched or shrunk!**
 
 - **Eigenvector:** The special arrow that doesn't change its direction when transformed.
 - **Eigenvalue:** The factor by which that arrow was stretched (e.g., 2× longer, or 0.5× shorter).

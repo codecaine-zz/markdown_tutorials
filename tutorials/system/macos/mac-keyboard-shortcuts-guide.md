@@ -442,7 +442,7 @@ Shift + Click on tab or Command + Shift + N
 ## Tips for M4 Users Specifically
 
 1. **Touch Bar Optimization**: Since M4 models have a Touch Bar, customize the bar to include frequently used shortcuts.
-2. **Display Settings**: The M4 can handle multiple displays better than previous generations—use Control + Shift + F2 to toggle between display configurations.
+2. **Display Settings**: The M4 can handle multiple displays better than previous generations-use Control + Shift + F2 to toggle between display configurations.
 3. **Battery Management**: For laptops with M4 processors, use System Preferences > Battery to monitor efficiency and extend battery life.
 
 These comprehensive keyboard shortcuts cover all major areas of functionality for Apple Silicon Mac users while ensuring optimal usage patterns across system and productivity applications.

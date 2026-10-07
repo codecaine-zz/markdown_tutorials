@@ -2,7 +2,7 @@
 
 ## The Intuitive, No-Jargon Guide to Gradients, Slopes, and How AI Learns
 
-> **Welcome!** If calculus was presented to you as an endless nightmare of memorizing formulas and Greek letters, this guide will change how you see it forever. Calculus is simply **the mathematics of change and slopes**. It is the engine that allows modern Machine Learning models—from simple predictors to self-driving cars and ChatGPT—to learn from their mistakes!
+> **Welcome!** If calculus was presented to you as an endless nightmare of memorizing formulas and Greek letters, this guide will change how you see it forever. Calculus is simply **the mathematics of change and slopes**. It is the engine that allows modern Machine Learning models-from simple predictors to self-driving cars and ChatGPT-to learn from their mistakes!
 
 ---
 
@@ -114,7 +114,7 @@ The **Chain Rule** states: to find how much the final error (E) changes when you
 ∂E/∂W = (∂E/∂B) × (∂B/∂A) × (∂A/∂W)
 ```
 
-This simple multiplication rule is called **Backpropagation**—the algorithm that trains modern deep learning models like GPT-4!
+This simple multiplication rule is called **Backpropagation**-the algorithm that trains modern deep learning models like GPT-4!
 
 ---
 

@@ -1,4 +1,4 @@
-# `simple_gg` — Cross-Platform Sokol SimpleGUI for V Complete Guide
+# `simple_gg` - Cross-Platform Sokol SimpleGUI for V Complete Guide
 
 `simple_gg` is an enterprise-grade, lightweight UI framework for building native, hardware-accelerated desktop applications in [V (vlang)](https://vlang.io). Built directly on top of V's native `gg` graphics module (powered by the Sokol rendering backend), `simple_gg` delivers uniform, 60+ FPS UI rendering across **macOS, Linux, and Windows** without relying on heavyweight external C, Objective-C, or web runtime dependencies.
 
@@ -293,7 +293,7 @@ println('Surface Background: ${theme.surface}')
 
 ## 7. The Modern Super Controls Suite
 
-`simple_gg` features the **Super Controls Suite**—a set of advanced desktop controls tailored for enterprise IDEs, devtools, and data workstations.
+`simple_gg` features the **Super Controls Suite**-a set of advanced desktop controls tailored for enterprise IDEs, devtools, and data workstations.
 
 ### Tag Input Control (`TagInput`)
 
@@ -459,7 +459,7 @@ println('CPU: ${cpu.model} (${cpu.cores} cores), RAM: ${ram.used_mb}MB / ${ram.t
 
 ## 10. Headless Console RAD Toolkit (`simplecli`)
 
-`simple_gg` includes `simplecli`—a zero-window terminal framework for companion CLI tools:
+`simple_gg` includes `simplecli`-a zero-window terminal framework for companion CLI tools:
 
 ```v
 import simplecli

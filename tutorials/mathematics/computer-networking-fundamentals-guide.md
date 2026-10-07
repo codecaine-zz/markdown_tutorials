@@ -1,6 +1,6 @@
 # Computer Networking Fundamentals for Software Developers
 
-A rigorous understanding of computer networking—from packet encapsulation through TCP flow control and TLS 1.3 cryptographic handshakes—is essential for diagnosing network latency, architecting distributed systems, and securing APIs.
+A rigorous understanding of computer networking-from packet encapsulation through TCP flow control and TLS 1.3 cryptographic handshakes-is essential for diagnosing network latency, architecting distributed systems, and securing APIs.
 
 ---
 
@@ -124,7 +124,7 @@ Client                                  Server
 
 UDP is connectionless, unordered, and lightweight: zero handshakes, no acknowledgments, no head-of-line blocking.
 
-Historically reserved for DNS and real-time audio/video, modern web transport has transitioned to **QUIC**—a reliable transport protocol built on top of UDP that replaces TCP for HTTP/3.
+Historically reserved for DNS and real-time audio/video, modern web transport has transitioned to **QUIC**-a reliable transport protocol built on top of UDP that replaces TCP for HTTP/3.
 
 ---
 

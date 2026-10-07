@@ -1,6 +1,6 @@
-# Modern CLI Replacements — Complete Terminal Upgrade Guide
+# Modern CLI Replacements - Complete Terminal Upgrade Guide
 
-A comprehensive, production-grade guide to the modern command-line toolchain—replacing decades-old Unix utilities (`ls`, `cat`, `grep`, `find`, `cd`, `sed`, `rm`, `top`, `df`, `du`, `diff`, `man`, `curl`, `tar`, `time`, `ps`) with fast, memory-safe, user-friendly alternatives written primarily in **Rust** and **Go**.
+A comprehensive, production-grade guide to the modern command-line toolchain-replacing decades-old Unix utilities (`ls`, `cat`, `grep`, `find`, `cd`, `sed`, `rm`, `top`, `df`, `du`, `diff`, `man`, `curl`, `tar`, `time`, `ps`) with fast, memory-safe, user-friendly alternatives written primarily in **Rust** and **Go**.
 
 ---
 

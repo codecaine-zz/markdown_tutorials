@@ -1,4 +1,4 @@
-# SciPy — Practical Tutorial (with Table of Contents)
+# SciPy - Practical Tutorial (with Table of Contents)
 
 A hands-on, copy‑pasteable guide to core SciPy subpackages for scientific computing. SciPy builds on NumPy arrays and provides algorithms for optimization, integration, interpolation, signal/image processing, statistics, sparse matrices, and more.
 

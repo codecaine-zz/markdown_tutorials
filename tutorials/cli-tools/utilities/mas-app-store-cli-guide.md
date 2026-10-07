@@ -153,7 +153,7 @@ The true power of `mas` is unlocked when you combine it with `homebrew-bundle` t
     brew bundle install
     ```
 
-    Homebrew will read the file and automatically install everything—your `brew` packages, your `casks`, and your `mas` App Store apps.
+    Homebrew will read the file and automatically install everything-your `brew` packages, your `casks`, and your `mas` App Store apps.
 
 ### 7\. Uninstallation
 
