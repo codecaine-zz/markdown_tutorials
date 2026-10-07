@@ -80,6 +80,10 @@ html.theme-dark {
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: clip;
+}
+
 body {
     font-family: var(--font-sans);
     line-height: 1.6;
@@ -87,6 +91,7 @@ body {
     background-color: var(--bg-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
 }
 
 /* Container Layout */
@@ -733,9 +738,11 @@ body {
     }
 }
 
-/* Adjust main content based on sidebar width state (desktop) */
-.sidebar.expanded ~ .main-content { margin-left: var(--sidebar-expanded-width); }
-.sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed-width); }
+/* Adjust main content based on sidebar width state (desktop only) */
+@media (min-width: 901px) {
+    .sidebar.expanded ~ .main-content { margin-left: var(--sidebar-expanded-width); }
+    .sidebar.collapsed ~ .main-content { margin-left: var(--sidebar-collapsed-width); }
+}
 
 /* ===== Modern Toolbar (AAA Glassmorphism) ===== */
 .toolbar {
@@ -1015,11 +1022,17 @@ body {
     transform-origin: top left;
     transform: scale(var(--md-scale, 1));
     width: calc(100% / var(--md-scale, 1));
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
 }
 
-/* Ensure sticky children within content area are not clipped */
+/* Ensure sticky children within content area are not clipped while preventing grid blowouts */
 .main-content, .content-wrapper, .article-layout {
     overflow: visible;
+    min-width: 0;
 }
 
 .markdown-content h1,
@@ -1073,6 +1086,15 @@ body {
     border-left: 4px solid #3498db;
     color: #555;
     font-style: italic;
+    max-width: 100%;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+.theme-dark .markdown-content blockquote {
+    background: var(--bg-surface-elevated, #1e293b);
+    border-left-color: var(--accent-blue);
+    color: var(--text-secondary);
 }
 
 /* Code Block Styling */
@@ -1171,15 +1193,81 @@ body {
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
+/* Responsive Markdown Images */
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5rem auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-subtle, #e2e8f0);
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: zoom-in;
+}
+
+.markdown-content img:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    transform: translateY(-1px);
+}
+
+.markdown-content p:has(> img:only-child) {
+    text-align: center;
+}
+
+.markdown-content a:has(img) {
+    display: inline-block;
+    max-width: 100%;
+}
+
+/* Responsive Table Wrapper */
+.table-responsive {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 20px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table-responsive table {
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
 /* Tables */
 .markdown-content table {
     width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
     background: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border-radius: 8px;
     overflow: hidden;
+}
+
+/* Strict width boundaries and fixed column distribution for tables with images (e.g. side-by-side screenshots) */
+.markdown-content table:has(img),
+.markdown-content table.has-images {
+    table-layout: fixed;
+    width: 100%;
+    max-width: 100%;
+}
+
+.markdown-content td img,
+.markdown-content th img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    margin: 4px auto;
+    display: block;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    cursor: zoom-in;
 }
 
 .markdown-content th,
@@ -1187,6 +1275,7 @@ body {
     padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ecf0f1;
+    word-break: break-word;
 }
 
 .markdown-content th {
@@ -1197,6 +1286,163 @@ body {
 
 .markdown-content tr:hover {
     background: #f8f9fa;
+}
+
+/* Dark theme styling for tables and images */
+.theme-dark .markdown-content table {
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-subtle);
+}
+
+.theme-dark .markdown-content th {
+    background: var(--bg-surface-elevated, #1e293b);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.theme-dark .markdown-content td {
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+}
+
+.theme-dark .markdown-content tr:hover {
+    background: var(--bg-muted, #1e293b);
+}
+
+.theme-dark .markdown-content img {
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+.theme-dark .markdown-content img:hover {
+    box-shadow: 0 8px 26px rgba(0, 0, 0, 0.65);
+}
+
+.theme-dark .markdown-content td img,
+.theme-dark .markdown-content th img {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* Mobile screenshot table stack */
+@media (max-width: 768px) {
+    .markdown-content table:has(img) thead,
+    .markdown-content table.has-images thead {
+        display: none;
+    }
+    .markdown-content table:has(img) tr,
+    .markdown-content table.has-images tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1.25rem;
+        border: 1px solid var(--border-subtle, #ecf0f1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .markdown-content table:has(img) td,
+    .markdown-content table.has-images td {
+        display: block;
+        width: 100% !important;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+}
+
+/* Image Lightbox Modal */
+.image-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 15, 30, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+}
+
+.image-lightbox-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-lightbox-container {
+    position: relative;
+    max-width: 95vw;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.94);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.image-lightbox-overlay.active .image-lightbox-container {
+    transform: scale(1);
+}
+
+.image-lightbox-img {
+    max-width: 92vw;
+    max-height: 78vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65);
+    background: rgba(15, 23, 42, 0.5);
+    user-select: none;
+    transition: transform 0.2s ease;
+}
+
+.image-lightbox-caption {
+    margin-top: 14px;
+    color: #e2e8f0;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-align: center;
+    max-width: 800px;
+    padding: 6px 16px;
+    background: rgba(30, 41, 59, 0.85);
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.image-lightbox-toolbar {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    display: flex;
+    gap: 10px;
+    z-index: 10001;
+}
+
+.image-lightbox-btn {
+    background: rgba(30, 41, 59, 0.85);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.image-lightbox-btn:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.45);
 }
 
 /* Home Page Styling */

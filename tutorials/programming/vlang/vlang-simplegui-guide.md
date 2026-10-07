@@ -345,6 +345,12 @@ Every control in SimpleGUI wraps a native Cocoa `NSView` subclass.
 | **PropertyGrid** | `win.add_property_grid(id, props)` | Delphi-style two-column key-value inspector grid. |
 | **Timeline** | `win.add_timeline(id, events)` | Chronological audit log feed with timestamp pins. |
 
+### Controls Visual Showcase
+
+| All Native Controls Demo | Modern Super Widgets Demo |
+| :---: | :---: |
+| ![All Native Controls Demo](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/all_controls_demo.png) | ![Modern Super Widgets Demo](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/modern_widgets_demo.png) |
+
 ---
 
 ## 6. Advanced Layout Engine: Grids, Flexbox & Cards
@@ -410,6 +416,14 @@ win.add_checkbox('chk_ssl', 'Enforce SSL / TLS Encryption', true)
 
 win.end_card()
 ```
+
+### Layout Engine Visual Showcase
+
+| Tabbed Layouts | Horizontal Row Stacks |
+| :---: | :---: |
+| ![Tabbed Layouts](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/layout_tabs.png) | ![Horizontal Row Stacks](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/layout_horizontal_rows.png) |
+| **Vertical Stack Layout** | **Form Sections & Group Cards** |
+| ![Vertical Stack Layout](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/layout_vertical_stack.png) | ![Form Sections & Group Cards](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/layout_form_sections.png) |
 
 ---
 
@@ -483,6 +497,12 @@ The visual designer provides:
 - **V Code Generator**: Generates clean, idiomatic SimpleGUI V source code with generated callback stubs.
 - **Test Run Form**: Click **"Test Run Form"** (`tb_run`) to spin up an interactive native Cocoa preview window executing the form live.
 - **Undo / Redo**: Full `Cmd+Z` and `Cmd+Shift+Z` history stack.
+
+### Visual Designer & Previewer Gallery
+
+| Visual RAD Designer (Delphi-Inspired) | Developer Tools & Code Previewer |
+| :---: | :---: |
+| ![Visual RAD Designer](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/delphi_inspired_demo.png) | ![Developer Tools & Previewer](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/developer_tools_showcase_demo.png) |
 
 ### RAD Code Explorer & Live Previewer
 
@@ -863,6 +883,16 @@ v run applications/docker_studio.v
 v run applications/brew_studio.v
 v run applications/app_bundler_studio.v
 ```
+
+### Production Workstations Visual Gallery
+
+| Task Manager Studio | Media Studio Hub |
+| :---: | :---: |
+| ![Task Manager Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/task_manager.png) | ![Media Studio Hub](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/media_studio_hub.png) |
+| **SQLite CRUD Studio** | **REST Client API Studio** |
+| ![SQLite CRUD Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/sqlite_crud_demo.png) | ![REST Client API Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/api_studio.png) |
+| **Calculator Studio** | **Colors & Palette Inspector** |
+| ![Calculator Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/calculator.png) | ![Colors & Palette Inspector](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/colors_demo.png) |
 
 ---
 

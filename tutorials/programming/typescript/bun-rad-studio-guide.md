@@ -182,6 +182,14 @@ bun run index.ts
 
 This initializes the Webview-Bun native window, spawns the visual designer canvas, and hooks up the local IPC backend.
 
+<div align="center">
+
+![Bun RAD Studio Command Palette & IDE](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/command_palette_codefreelance.png)
+
+*Figure 1: Bun RAD Studio Visual IDE featuring the Command Palette and CodeFreelance Emerald Theme.*
+
+</div>
+
 ### IDE Layout: Palette, Canvas & Object Inspector
 
 The Bun RAD Studio user interface mirrors the three-pane ergonomics of classic Borland Delphi:
@@ -486,6 +494,16 @@ Bun RAD Studio includes **63+ carefully designed desktop themes** with zero exte
    - `warm_paper`: Eye-friendly sepia and warm cream reading palette.
    - `solarized_light`: Ethan Schoonover's precision-engineered low-contrast palette.
 
+### Visual Theme Gallery
+
+| Ubuntu Dark Theme | Windows 11 Slate Theme |
+| :---: | :---: |
+| ![Ubuntu Dark Theme](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/themes/ubuntu_dark.png) | ![Windows 11 Slate Theme](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/themes/win11_slate.png) |
+| **Sonoma Emerald Theme** | **Vercel Dark Theme** |
+| ![Sonoma Emerald Theme](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/themes/sonoma_emerald.png) | ![Vercel Dark Theme](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/themes/vercel_dark.png) |
+| **Windows 95 Retro Theme** | **Apple Dark Theme** |
+| ![Windows 95 Retro Theme](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/themes/win95.png) | ![Apple Dark Theme](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/themes/apple_dark.png) |
+
 ### Live Theme Preview Switcher
 
 Test any theme live on your desktop:
@@ -656,6 +674,18 @@ Renders a comprehensive showcase form and lets you cycle through all 63 color pa
 ## 11. Enterprise Production Workstations & Utilities
 
 Bun RAD Studio is not just a UI framework—it comes bundled with **16 full-featured desktop workstation applications** located in the `applications/` directory.
+
+### Workstations Visual Gallery
+
+| System Studio Pro | Network Studio Pro |
+| :---: | :---: |
+| ![System Studio Pro](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/system_studio_desktop.png) | ![Network Studio Pro](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/network_studio_desktop.png) |
+| **SQLite Studio Pro** | **Redis Studio Pro** |
+| ![SQLite Studio Pro](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/sqlite_studio_desktop.png) | ![Redis Studio Pro](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/redis_studio_desktop.png) |
+| **Git Studio Desktop** | **API Studio Desktop** |
+| ![Git Studio Desktop](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/git_studio_desktop.png) | ![API Studio Desktop](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/api_studio_desktop.png) |
+| **Database Studio** | **DevTools Studio** |
+| ![Database Studio](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/database_studio_desktop.png) | ![DevTools Studio](https://raw.githubusercontent.com/codecaine-zz/bun_rad_studio/main/screenshots/apps/devtools_studio_desktop.png) |
 
 ### Fd Studio & Rip Studio Pro Workstations
 

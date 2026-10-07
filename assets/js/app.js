@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // After rendering, highlight code blocks
                         hljs.highlightAll();
                         enhanceCodeBlocks();
+                        enhanceMarkdownMedia(contentDiv);
                         addHeadingAnchorLinks(contentDiv);
                         wireInPageLinks(contentDiv); // Enable smooth in-page navigation
                         buildTableOfContents(); // Build ToC from headings
@@ -1539,6 +1540,135 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ===== Responsive Media & Table Enhancement =====
+    function enhanceMarkdownMedia(container) {
+        if (!container) return;
+
+        // Wrap tables in responsive containers and mark tables containing images
+        const tables = container.querySelectorAll('table');
+        tables.forEach(table => {
+            if (!table.parentElement.classList.contains('table-responsive')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-responsive';
+                table.parentNode.insertBefore(wrapper, table);
+                wrapper.appendChild(table);
+            }
+            if (table.querySelector('img')) {
+                table.classList.add('has-images');
+            }
+        });
+
+        // Enhance images with lazy loading, decoding, descriptive titles, and error handling
+        const images = container.querySelectorAll('img');
+        images.forEach(img => {
+            if (!img.getAttribute('loading')) {
+                img.setAttribute('loading', 'lazy');
+            }
+            if (!img.getAttribute('decoding')) {
+                img.setAttribute('decoding', 'async');
+            }
+            const alt = img.getAttribute('alt');
+            if (!img.getAttribute('title')) {
+                if (alt && alt.trim() && alt.toLowerCase() !== 'image') {
+                    img.setAttribute('title', `${alt} (Click to view full size)`);
+                } else {
+                    img.setAttribute('title', 'Click to view full size');
+                }
+            }
+
+            img.addEventListener('error', function onError() {
+                if (this.dataset.failed) return;
+                this.dataset.failed = '1';
+                this.classList.add('img-load-failed');
+                this.style.border = '2px dashed #94a3b8';
+                this.style.padding = '16px';
+                this.style.background = 'rgba(148, 163, 184, 0.08)';
+            }, { once: true });
+        });
+    }
+
+    // ===== Lightbox Modal for Tutorial Images =====
+    function initImageLightbox() {
+        if (document.getElementById('imageLightbox')) return;
+
+        const overlay = document.createElement('div');
+        overlay.id = 'imageLightbox';
+        overlay.className = 'image-lightbox-overlay';
+        overlay.setAttribute('role', 'dialog');
+        overlay.setAttribute('aria-modal', 'true');
+        overlay.setAttribute('aria-label', 'Image preview');
+        overlay.innerHTML = `
+            <div class="image-lightbox-toolbar">
+                <a href="#" class="image-lightbox-btn" id="lightboxOpenTab" target="_blank" rel="noopener noreferrer" title="Open original image in new tab">
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+                <button type="button" class="image-lightbox-btn" id="lightboxClose" title="Close (Esc)" aria-label="Close image preview">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="image-lightbox-container">
+                <img src="" alt="" class="image-lightbox-img" id="lightboxImg">
+                <div class="image-lightbox-caption" id="lightboxCaption"></div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const imgEl = overlay.querySelector('#lightboxImg');
+        const captionEl = overlay.querySelector('#lightboxCaption');
+        const openTabBtn = overlay.querySelector('#lightboxOpenTab');
+        const closeBtn = overlay.querySelector('#lightboxClose');
+
+        function openLightbox(src, alt) {
+            if (!src) return;
+            imgEl.src = src;
+            imgEl.alt = alt || '';
+            openTabBtn.href = src;
+            if (alt && alt.trim() && alt.toLowerCase() !== 'image') {
+                captionEl.textContent = alt;
+                captionEl.style.display = 'block';
+            } else {
+                captionEl.style.display = 'none';
+            }
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            setTimeout(() => {
+                if (!overlay.classList.contains('active')) {
+                    imgEl.src = '';
+                }
+            }, 250);
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay || e.target.classList.contains('image-lightbox-container')) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+
+        // Delegate click for any markdown image (excluding external non-image hyperlinks)
+        document.addEventListener('click', (e) => {
+            const img = e.target.closest('.markdown-content img');
+            if (img) {
+                const parentLink = img.closest('a');
+                if (!parentLink || /\.(png|jpe?g|gif|webp|svg)(\?.*)?$/i.test(parentLink.href)) {
+                    e.preventDefault();
+                    openLightbox(img.currentSrc || img.src, img.alt || '');
+                }
+            }
+        });
+    }
+
     // ===== Floating TOC outline popover =====
     function addFloatingTocElements() {
         if (document.getElementById('floatingTocBtn')) return;
@@ -1848,6 +1978,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     addFloatingTocElements();
     initCommandPalette();
+    initImageLightbox();
 
     // Initialize enhanced features when content is loaded
     if (document.querySelector('.markdown-content')) {

@@ -184,6 +184,14 @@ The visual RAD designer delivers the legendary rapid-prototyping workflow of cla
 3. **Object Inspector**: Live property editor modifying titles, bounds, colors, fonts, and event callbacks.
 4. **Code Generator**: Generates clean, idiomatic V source code from visual FormSpec JSON descriptions.
 
+<div align="center">
+
+![Vlang Webview RAD Studio IDE](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/rad_studio_ide.png)
+
+*Figure 1: Vlang Webview RAD Studio Visual Form Designer and Component Inspector.*
+
+</div>
+
 ### 70+ Component Palette Catalog
 
 | Category | Controls |
@@ -310,6 +318,14 @@ Themes automatically apply CSS variables to all canvas controls:
 }
 ```
 
+### Visual Themes Showcase
+
+| Monokai Pro Theme Showcase | Nord Arctic Theme Showcase |
+| :---: | :---: |
+| ![Monokai Pro Theme Showcase](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/theme_monokai_showcase.png) | ![Nord Arctic Theme Showcase](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/theme_nord_showcase.png) |
+| **CodeFreelance Signature Emerald Theme** | **All Themes & Controls Showcase** |
+| ![CodeFreelance Theme](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/demo_20_codefreelance_theme_demo.png) | ![All Themes Showcase](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/demo_23_all_themes_all_controls_showcase.png) |
+
 ---
 
 ## 8. Bundled Developer Utilities (`vlang_utils` 40-Module Suite)
@@ -363,6 +379,14 @@ v run applications/api_studio.v
 v run applications/docker_studio.v
 ```
 
+### Workstations Visual Gallery
+
+| System Monitor Studio | Kanban Board Studio |
+| :---: | :---: |
+| ![System Monitor Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/system_monitor.png) | ![Kanban Board Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/kanban_board.png) |
+| **Git GUI Workstation** | **REST Client API Studio** |
+| ![Git GUI Workstation](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/git_gui.png) | ![REST Client API Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/rest_client.png) |
+
 ---
 
 ## 10. Companion Headless CLI Tools (16 Utilities)
@@ -408,6 +432,14 @@ v run demos/demo_sqliteutils.v
 # Run all demos sequentially
 v run demos/run_all_demos.v
 ```
+
+### Application Templates & Demos Showcase
+
+| Analytics Dashboard Template | File Explorer & Code IDE Template |
+| :---: | :---: |
+| ![Analytics Dashboard Template](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/demo_08_analytics_dashboard_template.png) | ![File Explorer Template](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/demo_09_file_explorer_ide_template.png) |
+| **Database Studio Query Editor Template** | **SimpleGUI All Controls Showcase** |
+| ![Database Query Editor Template](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/demo_10_db_studio_query_editor_template.png) | ![SimpleGUI All Controls Showcase](https://raw.githubusercontent.com/codecaine-zz/vlang_webview_rad_studio/master/resources/screenshots/demo_15_simplegui_all_controls_showcase.png) |
 
 ---
 

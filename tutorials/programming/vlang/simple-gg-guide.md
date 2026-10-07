@@ -68,6 +68,14 @@ Repository: [codecaine-zz/simple_gg](https://github.com/codecaine-zz/simple_gg)
 - **Fluent Declarative API**: Build complex forms, grids, and dashboards using chainable methods without managing low-level matrix transformations.
 - **Cross-Platform Parity**: Identical appearance, theme tokens, and behavior across all three major desktop operating systems.
 
+<div align="center">
+
+![simple_gg UI Showcase](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/simple_gg_ideals_showcase_demo.png)
+
+*Figure 1: simple_gg Hardware-Accelerated Sokol UI Showcase with Fluent Widgets and Themes.*
+
+</div>
+
 ---
 
 ## 2. Prerequisites & Module Setup
@@ -376,6 +384,14 @@ win.add_context_menu('table_menu', [
     simplegui.MenuItem{ label: 'Delete Record', action: 'delete_row' },
 ])
 ```
+
+### Super Controls Visual Showcase
+
+| Tab 1: Modern Super Controls | Tab 2: Image & Media Studio |
+| :---: | :---: |
+| ![Super Controls Showcase](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/simple_gg_tab1_super_controls.png) | ![Image Media Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/simple_gg_tab2_image_media.png) |
+| **Tab 3: Developer Productivity** | **Full UI Ideals Showcase** |
+| ![Productivity Studio](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/simple_gg_tab3_productivity.png) | ![Ideals Showcase](https://raw.githubusercontent.com/codecaine-zz/vlang_simplegui/master/screenshots/simple_gg_ideals_showcase_demo.png) |
 
 ---
 

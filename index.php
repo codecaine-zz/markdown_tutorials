@@ -75,7 +75,8 @@ class MarkdownTutorialApp {
             <meta name="theme-color" content="#0f172a">
             <!-- Highlight.js with comprehensive language support -->
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
-            <link rel="stylesheet" href="assets/css/style.css">
+            <?php $styleCssV = @filemtime(__DIR__ . '/assets/css/style.css') ?: time(); ?>
+            <link rel="stylesheet" href="assets/css/style.css?v=<?php echo $styleCssV; ?>">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
             <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
             <!-- Highlight.js common bundle (includes popular languages in a single file) -->
